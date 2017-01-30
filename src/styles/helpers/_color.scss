@@ -1,0 +1,30 @@
+/* Cores de texto da Muuving */
+.mv-wine-text { color: $mv-wine !important; }
+.mv-wine-light-text {color: $mv-wine-light !important; }
+.mv-wine-dark-text {color: $mv-wine-dark !important; }
+.mv-red-text { color: $mv-red !important; }
+.mv-black-text { color: $mv-black !important; }
+.mv-black-light-text {color: $mv-black-light !important; }
+.mv-black-dark-text {color: $mv-black-dark !important; }
+.mv-light-black-text { color: $mv-light-black !important; }
+.mv-salmon-text { color: $mv-salmon !important; }
+.mv-ice-text { color: $mv-ice !important; }
+
+/* Cores de fundo da Muuving */
+.mv-wine { background-color: $mv-wine !important; }
+.mv-wine-light {background-color: $mv-wine-light !important; }
+.mv-wine-dark {background-color: $mv-wine-dark !important; }
+.mv-red { background-color: $mv-red !important; }
+.mv-black { background-color: $mv-black !important; }
+.mv-black-light { background-color: $mv-black-light !important; }
+.mv-black-dark { background-color: $mv-black-dark !important; }
+.mv-salmon { background-color: $mv-salmon !important; }
+.mv-ice { background-color: $mv-ice !important; }
+.mv-light-black { background-color: $mv-light-black !important; }
+
+html {
+    color: $mv-wine;
+}
+
+.u-less-bright {-webkit-filter: brightness(50%); filter: brightness(50%);}
+.text-background { background-color: rgba(0,0,0,0.7); display: inline; }

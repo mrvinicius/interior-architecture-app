@@ -1,0 +1,30 @@
+/* Placeholders */
+%u-oversized-parent {
+	position: relative;
+  	overflow: hidden;
+
+	img {
+		position: absolute;
+		top: -9999px;
+		bottom: -9999px;
+		left: -9999px;
+		right: -9999px;
+		margin: auto;
+	}
+}
+
+/*** Layout ***/
+%l-page-center {
+	html,
+	body {
+		height: 100%;
+	}
+	html {
+		display: table;
+		margin: auto;
+	}
+	body {
+		display: table-cell;
+		vertical-align: middle;
+	}
+}

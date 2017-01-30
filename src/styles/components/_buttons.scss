@@ -1,0 +1,5 @@
+.btn {
+    &.btn-flat[disabled] {
+        background-color: transparent !important;
+    }
+}

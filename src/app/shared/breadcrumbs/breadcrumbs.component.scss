@@ -1,0 +1,11 @@
+ul.breadcrumb { padding: 10px 0; margin: 0; list-style: none; font-size: 16px;}
+
+ul.breadcrumb > li { display: inline-block; vertical-align: middle; }
+
+.breadcrumb > li + li:before { padding: 0 4px 0 8px; color: #ccc; content: "/"; }
+
+a:hover { cursor: pointer; }
+
+a.home { vertical-align: middle; display: inline-block; }
+
+a.home i { font-size: 18px; }

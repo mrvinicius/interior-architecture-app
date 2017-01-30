@@ -1,0 +1,25 @@
+@charset "UTF-8";
+@import '../../styles/abstract/abstract';
+
+#projectsList {
+    position: relative;
+    margin-left: $left-space;
+    max-width: calc(100% - #{$left-space});
+    .addButton {
+        position: absolute;
+        top: -28px;
+        left: -6em;
+    }
+}
+
+:host /deep/ .nav-wrapper {
+    margin-left: $left-space;
+    max-width: calc(100% - #{$left-space});
+}
+
+#projectsList tbody {
+    tr {
+        cursor: pointer;
+        cursor: hand;
+    }
+}

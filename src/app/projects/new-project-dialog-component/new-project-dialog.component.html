@@ -1,0 +1,8 @@
+<h1 md-dialog-title>Novo Projeto</h1>
+<form #newProjectForm="ngForm" (ngSubmit)="createProject($event)">
+    <input placeholder="título do projeto" name="projectTitle" [(ngModel)]="newProjectTitle" #projectTitle="ngModel" required md-input>
+    <div class="right-align">
+        <a class="btn btn-flat" (click)="dialogRef.close('yes')">CANCELAR</a>
+        <button class="btn btn-flat" [disabled]="!newProjectForm.form.valid" md-dialog-close>CRIAR</button>
+    </div>
+</form>
