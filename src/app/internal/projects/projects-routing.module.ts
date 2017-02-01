@@ -3,9 +3,16 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ProjectsComponent } from './projects.component';
 import { ProjectListComponent } from './project-list/project-list.component';
+import { ProjectInfoComponent } from './project-info/project-info.component'
 
 const routes: Routes = [
-  { path: '', component: ProjectsComponent }
+  {
+    path: '', component: ProjectsComponent,
+    children: [
+      { path: '', component: ProjectListComponent },
+      { path: ':id', component: ProjectInfoComponent }
+    ]
+  }
 ];
 
 @NgModule({
@@ -14,4 +21,8 @@ const routes: Routes = [
 })
 export class ProjectsRoutingModule { }
 
-export const routedComponents = [ProjectsComponent,ProjectListComponent];
+export const routedComponents = [
+  ProjectsComponent,
+  ProjectListComponent,
+  ProjectInfoComponent
+];

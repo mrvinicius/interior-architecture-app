@@ -1,15 +1,40 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  ComponentFactory,
+  ComponentFactoryResolver,
+  ComponentRef,
+  Input,
+  OnInit,
+  ReflectiveInjector,
+  Type,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
+
+import {
+  ActivatedRouteSnapshot,
+  Event,
+  NavigationEnd,
+  Router,
+} from '@angular/router';
+import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
-  template: `
-    <router-outlet id="internalCmpRouter"></router-outlet>
-  `,
+  templateUrl: './internal.component.html',
+  styleUrls: ['./internal.component.scss'],
 })
 export class InternalComponent implements OnInit {
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor(private router: Router,
+    private componentFactoryResolver: ComponentFactoryResolver) {
   }
+
+  ngOnInit(): void {
+
+  }
+
+  ngOnDestroy(): void {
+  }
+
 
 }

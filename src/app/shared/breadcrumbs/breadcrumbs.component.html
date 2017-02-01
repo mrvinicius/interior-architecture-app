@@ -1,6 +1,0 @@
-<ng-container *ngIf="segments.length > 0">
-    <ng-container *ngFor="let segment of segments; let last = last; let index = index;">
-        <span *ngIf="last" class="breadcrumb">{{ routeName(segment) }}</span>
-        <a *ngIf="!last" (click)="navigateTo(segment)">{{ routeName(segment) }}</a>
-    </ng-container>
-</ng-container>

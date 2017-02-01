@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { ConfirmDialogComponent } from './confirm-dialog.component';
+import { ToolbarSearchComponent } from './toolbar-search.component';
 
-describe('ConfirmDialogComponent', () => {
-  let component: ConfirmDialogComponent;
-  let fixture: ComponentFixture<ConfirmDialogComponent>;
+describe('ToolbarSearchComponent', () => {
+  let component: ToolbarSearchComponent;
+  let fixture: ComponentFixture<ToolbarSearchComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConfirmDialogComponent ]
+      declarations: [ ToolbarSearchComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConfirmDialogComponent);
+    fixture = TestBed.createComponent(ToolbarSearchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

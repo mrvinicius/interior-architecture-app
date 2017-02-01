@@ -9,7 +9,8 @@ const routes: Routes = [
         children: [
             // { path: '', redirectTo: '/projetos', pathMatch: 'full' },
             { path: 'clientes', loadChildren: './client/client.module#ClientModule' },
-            { path: 'projetos', loadChildren: './projects/projects.module#ProjectsModule' }
+            { path: 'projetos', loadChildren: './projects/projects.module#ProjectsModule' },
+            
         ]
     },
 ];
