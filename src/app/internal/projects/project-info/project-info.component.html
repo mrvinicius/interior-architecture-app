@@ -6,8 +6,8 @@
     <div fxLayout="row">
       <div fxFlex="50%" fxFlex.sm="100%" class="mv-col" fxFlex>
         <mdl-select floating-label [ngModel]="project.client.id" placeholder="cliente">
-          <mdl-option (click)="newClientToggle(true)" [value]><em>-- Adicionar cliente --</em></mdl-option>
-          <mdl-option (click)="newClientToggle(false); updateClient(c.id)" *ngFor="let c of clients" [value]="c.id">{{c.name}}</mdl-option>
+          <mdl-option (click)="newClientToggle(true)" [value] class="new-option"><em>- Adicionar cliente -</em></mdl-option>
+          <mdl-option (click)="newClientToggle(false); updateClient(c.id);" *ngFor="let c of clients" [value]="c.id">{{c.name}}</mdl-option>
         </mdl-select>
         <ng-container *ngIf="isNewClient">
           <mdl-textfield [(ngModel)]="newClient.name" label="nome" type="text" floating-label maxlength="30"></mdl-textfield>
@@ -22,7 +22,7 @@
     </div>
   </md2-accordion-tab>
 
-  <md2-accordion-tab>
+  <md2-accordion-tab *ngIf="currentProfessional">
     <md2-accordion-header>
       <md-icon>business</md-icon>Profissional
     </md2-accordion-header>
@@ -39,16 +39,24 @@
             <input placeholder="Selecione um arquivo" class="file-path validate" type="text">
           </div>
         </div>
-        <mdl-select floating-label placeholder="princípios do escritório">
-          <mdl-option [value]><em>-- Adicionar príncipio --</em></mdl-option>
-        </mdl-select>
       </div>
 
       <div fxFlex="50%" fxFlex.sm="100%" class="flex-item" class="mv-col" fxFlex>
-        <mdl-select floating-label placeholder="descrição do escritório">
-          <mdl-option [value]><em>-- Adicionar descrição --</em></mdl-option>
+        <mdl-textfield [(ngModel)]="currentProfessional.description" label="descrição do escritório" rows="5" maxrows="10" floating-label
+          maxlength="500"></mdl-textfield>
+      </div>
+    </div>
+
+    <div fxLayout="row">
+      <div fxFlex.gt-xs="50%" fxFlex.xs="100%" fxFlex class="mv-col">
+        <mdl-select floating-label [(ngModel)]="project.professionalPartnersIds" multiple="true" placeholder="profissionais participantes">
+          <!--<mdl-option (click)="newClientToggle(true)" [value]><em>- Adicionar profissional -</em></mdl-option>-->
+          <option (click)="showNewProfessionalDialog()" class="new-option" style="display: block;">
+            <mdl-option [value] class="not-is-option"><em>- Adicionar profissional -</em></mdl-option>
+          </option>
+          <!--<mdl-option (click)="newClientToggle(false); updateClient(c.id)" *ngFor="let c of clients" [value]="c.id">{{c.name}}</mdl-option>-->
+          <mdl-option *ngFor="let proPart of currentProfessional.professionalPartners" [value]="proPart.id">{{proPart.name}}</mdl-option>
         </mdl-select>
-        <mdl-textfield label="descrição do escritório" type="text" floating-label></mdl-textfield>
       </div>
     </div>
   </md2-accordion-tab>

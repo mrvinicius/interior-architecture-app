@@ -8,12 +8,13 @@ import { ClientsService } from '../client/shared/clients.service';
 
 import { ProjectsService } from './shared/projects.service';
 
+import { NewProPartnerDialogComponent } from './project-info/new-pro-partner-dialog.component';
+import { NewProjectDialogComponent } from './project-list/new-project-dialog.component';
 import { ProjectsComponent } from './projects.component';
 import { ProjectListComponent } from './project-list/project-list.component';
-import { NewProjectDialogComponent } from './project-list/new-project-dialog.component';
+import { ProjectInfoComponent } from './project-info/project-info.component';
 
 import { ProjectsRoutingModule } from './projects-routing.module';
-import { ProjectInfoComponent } from './project-info/project-info.component';
 
 @NgModule({
   imports: [
@@ -26,9 +27,13 @@ import { ProjectInfoComponent } from './project-info/project-info.component';
     ProjectsComponent,
     ProjectListComponent,
     ProjectInfoComponent,
-    NewProjectDialogComponent
+    NewProjectDialogComponent,
+    NewProPartnerDialogComponent,
   ],
   providers: [ProjectsService, ClientsService],
-  entryComponents: [NewProjectDialogComponent]
+  entryComponents: [
+    NewProjectDialogComponent,
+    NewProPartnerDialogComponent
+  ]
 })
-export class ProjectsModule {}
+export class ProjectsModule { }

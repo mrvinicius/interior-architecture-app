@@ -9,4 +9,5 @@ export class Project {
     wasPaid?: boolean;
     status?: ProjectStatus;
     received?: number;
+    professionalPartnersIds?: number[];
 }

@@ -1,5 +1,7 @@
-export class Professional {
-    id: number;
-    name?: string;
-    
+import { User } from '../../../core/user/shared/user';
+
+export class Professional extends User {
+    description?: string;
+    logo?;
+    professionalPartners?: Professional[];
 }

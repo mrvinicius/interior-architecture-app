@@ -3,9 +3,10 @@ import { Router, Event, NavigationEnd } from '@angular/router';
 import { MdDialog, MdDialogConfig, MdDialogRef } from '@angular/material';
 import { ISubscription, Subscription } from 'rxjs/Subscription';
 
-import { NewProjectDialogComponent } from './new-project-dialog.component';
 import { ToolbarService } from '../../shared/toolbar/shared/toolbar.service';
 import { ToolbarSearchComponent } from '../../shared/toolbar/toolbar-search/toolbar-search.component';
+
+import { NewProjectDialogComponent } from './new-project-dialog.component';
 
 import {
   Project,

@@ -19,4 +19,4 @@ c4.name = 'Roberta Silva';
 
 export const CLIENTS: Client[] = [
     c1, c2, c3, c4
-]
+];

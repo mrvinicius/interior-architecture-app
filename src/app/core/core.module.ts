@@ -6,7 +6,8 @@ import { CommonModule } from '@angular/common';
 
 import { AuthService } from './auth.service';
 import { StringHelperService } from './string-helper.service';
-import { UserService } from './user.service';
+import { UserService } from './user/shared/user.service';
+
 
 @NgModule({
   imports: [
@@ -31,7 +32,7 @@ export class CoreModule {
     return {
       ngModule: CoreModule,
       // Add Services that should have only one instance - Singletons - App-wide
-      providers: [StringHelperService]
+      providers: [StringHelperService, UserService]
     };
   }
 }

@@ -16,15 +16,15 @@ export class AuthService {
     });
   }
 
-  public login() {
-    // Call the show method to display the widget.
-    this.lock.show();
-  }
-
   public authenticated() {
     // Check if there's an unexpired JWT
     // This searches for an item in localStorage with key == 'id_token'
     // return tokenNotExpired();
+  }
+
+  public login() {
+    // Call the show method to display the widget.
+    this.lock.show();
   }
 
   public logout() {
