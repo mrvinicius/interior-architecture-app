@@ -5,13 +5,21 @@ import { PROJECTS } from './mock-projects';
 
 import { StringHelperService } from '../../../core/string-helper.service';
 
-
 @Injectable()
 export class ProjectsService {
 
   constructor(
     private stringHelper: StringHelperService
   ) { }
+
+  addProject(title: string): number {
+    PROJECTS.push({
+      id: 99,
+      title: title
+    });
+
+    return 99;
+  }
 
   getAll(): Promise<Project[]> {
     let projects: Project[] = PROJECTS;
@@ -31,15 +39,6 @@ export class ProjectsService {
     return Promise.resolve(project);
   }
 
-  addProject(title: string): number {
-    PROJECTS.push({
-      id: 99,
-      title: title
-    });
-
-    return 99;
-  }
-
   search(title: string): Promise<Project[]> {
     title = this.stringHelper.replaceSpecialChars(title);
 
@@ -50,4 +49,7 @@ export class ProjectsService {
     return Promise.resolve(projects);
   }
 
+  updateProject(project: Project): void {
+    
+  }
 }

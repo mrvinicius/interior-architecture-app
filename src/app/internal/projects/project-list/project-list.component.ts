@@ -33,7 +33,7 @@ export class ProjectListComponent implements OnInit {
     private router: Router,
     @Optional()
     private toolbarService: ToolbarService,
-    public mdDialog: MdDialog,
+    private mdDialog: MdDialog,
     private viewContainerRef: ViewContainerRef
   ) {
     this.subscription = toolbarService.searched$.subscribe(
@@ -70,7 +70,8 @@ export class ProjectListComponent implements OnInit {
     this.dialogRef = this.mdDialog.open(NewProjectDialogComponent, dialogConfig);
     this.dialogRef.componentInstance.param1 = "Test"
     this.dialogRef.afterClosed().subscribe(result => {
-      this.beginNewProject(result);  
+      if (result)
+        this.beginNewProject(result);
     });
   }
 

@@ -2,7 +2,22 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-
+import { FlexLayoutModule } from '@angular/flex-layout';
+import {
+  MdInputModule,
+  MdIconModule,
+} from '@angular/material';
+import {
+  MdlExpansionPanelModule
+} from '@angular2-mdl-ext/expansion-panel';
+import {
+  MdlSelectModule
+} from '@angular2-mdl-ext/select';
+import {
+  MdlModule,
+  MdlTextFieldModule,
+} from 'angular2-mdl';
+import { Md2AccordionModule } from 'md2';
 
 @NgModule({
   imports: [
@@ -12,15 +27,16 @@ import { RouterModule } from '@angular/router';
   declarations: [],
   exports: [
     CommonModule,
-    FormsModule
+    FlexLayoutModule,
+    FormsModule,
+    MdInputModule,
+    MdIconModule,
+    MdlModule,
+    MdlTextFieldModule,
+    MdlExpansionPanelModule,
+    MdlSelectModule,
+    Md2AccordionModule
   ],
   providers: []
 })
-export class SharedModule {
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: SharedModule,
-      providers: []
-    };
-  }
-}
+export class SharedModule {}

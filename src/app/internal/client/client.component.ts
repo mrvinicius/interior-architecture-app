@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   template: `
-    <h2>hi!</h2>
+    <h1>Clientes</h1>
     <!--<router-outlet></router-outlet>-->
   `
 })

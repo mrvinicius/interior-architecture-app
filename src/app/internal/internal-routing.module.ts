@@ -7,10 +7,9 @@ const routes: Routes = [
     {
         path: '', component: InternalComponent,
         children: [
-            // { path: '', redirectTo: '/projetos', pathMatch: 'full' },
+            // { path: 'projetos', redirectTo: '/projetos', pathMatch: 'full' },
             { path: 'clientes', loadChildren: './client/client.module#ClientModule' },
             { path: 'projetos', loadChildren: './projects/projects.module#ProjectsModule' },
-            
         ]
     },
 ];

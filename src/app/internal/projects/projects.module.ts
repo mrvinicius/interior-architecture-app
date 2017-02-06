@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MdInputModule } from '@angular/material';
+import { NgModule, ModuleWithProviders } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MdlTextFieldModule } from 'angular2-mdl';
 
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { SharedModule } from '../../shared/shared.module';
+import { ClientsService } from '../client/shared/clients.service';
 
 import { ProjectsService } from './shared/projects.service';
 
@@ -17,11 +17,9 @@ import { ProjectInfoComponent } from './project-info/project-info.component';
 
 @NgModule({
   imports: [
-    CommonModule,
-    FormsModule,
-    MdInputModule,
-    MdlTextFieldModule,
+    SharedModule,
     FlexLayoutModule,
+    ReactiveFormsModule,
     ProjectsRoutingModule
   ],
   declarations: [
@@ -30,7 +28,7 @@ import { ProjectInfoComponent } from './project-info/project-info.component';
     ProjectInfoComponent,
     NewProjectDialogComponent
   ],
-  providers: [ProjectsService],
+  providers: [ProjectsService, ClientsService],
   entryComponents: [NewProjectDialogComponent]
 })
-export class ProjectsModule { }
+export class ProjectsModule {}

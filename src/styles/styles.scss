@@ -4,33 +4,25 @@
 @import "abstract/abstract";
 
 /*** Vendors ***/
+@import "vendors/angular-material-2";
+@import "vendors/angular2-mdl";
+@import "vendors/angular2-mdl-ext";
+@import "vendors/materialize-css";
 
 /*** Helpers ***/
 @import "helpers/color";
+@import "helpers/structure";
 
 /*** Base ***/
-@import "base/container";
+@import "base/color";
+@import "base/global";
+@import "base/structure";
 @import "base/table";
-
-/*** Layout ***/
+@import "base/typography";
 
 /*** Components ***/
+@import "components/accordion";
 @import "components/buttons";
+@import "components/forms";
 
 /*** Theme ***/
-// Angular Material 2
-@import '~@angular/material/core/theming/prebuilt/deeppurple-amber.css';
-
-// Angular 2 MDL 
-@import "~angular2-mdl/scss/color-definitions";
-
-$color-primary: $palette-blue-500;
-$color-primary-dark: $palette-blue-700;
-$color-accent: $palette-amber-A200;
-$color-primary-contrast: $color-dark-contrast;
-$color-accent-contrast: $color-dark-contrast;
-
-@import '~angular2-mdl/scss/material-design-lite';
-
-/*** Shame. Refactor this ***/
-@import "shame";

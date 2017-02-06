@@ -69,6 +69,18 @@
   dependencies:
     tsickle "^0.2"
 
+"@angular2-mdl-ext/expansion-panel@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@angular2-mdl-ext/expansion-panel/-/expansion-panel-0.0.1.tgz#72f6cc4d42ec82444f08e6dee885aa55d49dc96b"
+
+"@angular2-mdl-ext/popover@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@angular2-mdl-ext/popover/-/popover-0.5.0.tgz#f3337557075794b12df537a8f834901547e94591"
+
+"@angular2-mdl-ext/select@^0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@angular2-mdl-ext/select/-/select-0.8.2.tgz#fcb57f57b51a21bce259613c1d0e84afc3ac0433"
+
 "@ngtools/json-schema@^1.0.0":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@ngtools/json-schema/-/json-schema-1.0.1.tgz#41e073079f9017983525ceb1f367b2101e9c7924"
@@ -3134,6 +3146,10 @@ math-expression-evaluator@^1.2.14:
   resolved "https://registry.yarnpkg.com/math-expression-evaluator/-/math-expression-evaluator-1.2.15.tgz#38dc5f0194c5bf5ff1c690ad4c4b64df71ac0187"
   dependencies:
     lodash.indexof "^4.0.5"
+
+md2@^0.0.13-1:
+  version "0.0.13-1"
+  resolved "https://registry.yarnpkg.com/md2/-/md2-0.0.13-1.tgz#2c52002367bee72ad93e9b82e514a67cd7ba1c1b"
 
 mdurl@~1.0.0:
   version "1.0.1"

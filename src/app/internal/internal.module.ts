@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MdInputModule ,MdDialogModule } from '@angular/material';
-import { MdlModule } from 'angular2-mdl';
-import { MdlTableModule, MdlTextFieldModule } from 'angular2-mdl';
 
+import { SharedModule } from '../shared/shared.module';
+import { BudgetsModule } from './budgets/budgets.module';
 import { ToolbarService } from './shared/toolbar/shared/toolbar.service';
 
 import { InternalComponent } from './internal.component';
@@ -13,11 +11,8 @@ import { ToolbarSearchComponent } from './shared/toolbar/toolbar-search/toolbar-
 
 @NgModule({
   imports: [
-    CommonModule,
-    MdlModule,
-    MdlTextFieldModule.forRoot(),
-    MdlTableModule.forRoot(),
-    MdDialogModule.forRoot(),
+    SharedModule,
+    BudgetsModule,
     InternalRoutingModule,
   ],
   declarations: [

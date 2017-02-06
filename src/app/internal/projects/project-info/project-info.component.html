@@ -1,69 +1,105 @@
-<div fxLayout="row" class="flex-container">
-  <div fxFlex="50%" fxFlex.gt-sm="40%" fxFlex class="flex-item">
-    <div class="collection">
+<md2-accordion *ngIf="project" [multiple]="multiple" class="collapsible">
+  <md2-accordion-tab>
+    <md2-accordion-header>
+      <md-icon>face</md-icon>Cliente
+    </md2-accordion-header>
+    <div fxLayout="row">
+      <div fxFlex="50%" fxFlex.sm="100%" class="mv-col" fxFlex>
+        <mdl-select floating-label [ngModel]="project.client.id" placeholder="cliente">
+          <mdl-option (click)="newClientToggle(true)" [value]><em>-- Adicionar cliente --</em></mdl-option>
+          <mdl-option (click)="newClientToggle(false); updateClient(c.id)" *ngFor="let c of clients" [value]="c.id">{{c.name}}</mdl-option>
+        </mdl-select>
+        <ng-container *ngIf="isNewClient">
+          <mdl-textfield [(ngModel)]="newClient.name" label="nome" type="text" floating-label maxlength="30"></mdl-textfield>
+          <mdl-textfield [(ngModel)]="newClient.email" label="email" type="email" floating-label maxlength="50"></mdl-textfield>
+          <mdl-textfield [(ngModel)]="newClient.cpf" label="CPF" floating-label maxlength="30"></mdl-textfield>
+        </ng-container>
+      </div>
 
-      <a href="#!" class="collection-item avatar">
-        <i class="material-icons circle red">play_arrow</i>
-        <span class="title">Title</span>
-        <p>First Line
-        </p>
-        <a href="#!" class="secondary-content hide"><i class="material-icons">grade</i></a>
-      </a>
-
-      <a href="#!" class="collection-item avatar">
-        <i class="material-icons circle red">play_arrow</i>
-        <span class="title">Title</span>
-        <p>First Line
-        </p>
-      </a>
-
-      <a href="#!" class="collection-item avatar">
-        <i class="material-icons circle red">play_arrow</i>
-        <span class="title">Title</span>
-        <p>First Line
-        </p>
-      </a>
-
-      <a href="#!" class="collection-item avatar">
-        <i class="material-icons circle red">play_arrow</i>
-        <span class="title">Title</span>
-        <p>First Line
-        </p>
-      </a>
-
-      <a href="#!" class="collection-item avatar">
-        <i class="material-icons circle red">play_arrow</i>
-        <span class="title">Title</span>
-        <p>First Line
-        </p>
-      </a>
-
-      <a href="#!" class="collection-item avatar">
-        <i class="material-icons circle red">play_arrow</i>
-        <span class="title">Title</span>
-        <p>First Line
-        </p>
-      </a>
-
-      <a href="#!" class="collection-item avatar">
-        <i class="material-icons circle red">play_arrow</i>
-        <span class="title">Title</span>
-        <p>First Line
-        </p>
-      </a>
-
-      <a href="#!" class="collection-item avatar">
-        <i class="material-icons circle red">play_arrow</i>
-        <span class="title">Title</span>
-        <p>First Line
-        </p>
-      </a>
+      <div fxFlex="50%" fxFlex.sm="100%" class="mv-col" fxFlex>
+        <mdl-textfield [(ngModel)]="project.briefing" label="briefing" rows="5" maxrows="10" floating-label maxlength="500"></mdl-textfield>
+      </div>
     </div>
-  </div>
-  <div fxHide.lt-md fxFlex class="flex-item">
-    <p *ngIf="project">
-      {{project.id}} {{project.title}}
-    </p>
-  </div>
+  </md2-accordion-tab>
 
+  <md2-accordion-tab>
+    <md2-accordion-header>
+      <md-icon>business</md-icon>Profissional
+    </md2-accordion-header>
+    <div fxLayout="row">
+
+      <div fxFlex="50%" fxFlex.sm="100%" class="mv-col" fxFlex>
+        <mdl-textfield label="nome do escritório ou profissional" type="text" floating-label></mdl-textfield>
+        <div class="file-field input-field">
+          <div class="btn">
+            <span>LOGO</span>
+            <input type="file">
+          </div>
+          <div class="file-path-wrapper">
+            <input placeholder="Selecione um arquivo" class="file-path validate" type="text">
+          </div>
+        </div>
+        <mdl-select floating-label placeholder="princípios do escritório">
+          <mdl-option [value]><em>-- Adicionar príncipio --</em></mdl-option>
+        </mdl-select>
+      </div>
+
+      <div fxFlex="50%" fxFlex.sm="100%" class="flex-item" class="mv-col" fxFlex>
+        <mdl-select floating-label placeholder="descrição do escritório">
+          <mdl-option [value]><em>-- Adicionar descrição --</em></mdl-option>
+        </mdl-select>
+        <mdl-textfield label="descrição do escritório" type="text" floating-label></mdl-textfield>
+      </div>
+    </div>
+  </md2-accordion-tab>
+
+  <md2-accordion-tab>
+    <md2-accordion-header>
+      <md-icon>description</md-icon>Detalhes da Proposta
+    </md2-accordion-header>
+    <div fxLayout="row">
+
+      <div fxFlex.gt-sm="40%" fxFlex.sm="100%" fxFlex.xs="100%" fxFlex class="mv-col">
+        <mdl-textfield label="introdução da proposta" rows="5" maxrows="10" floating-label></mdl-textfield>
+      </div>
+      <div fxFlex.gt-sm="60%" fxFlex.sm="100%" fxFlex.xs="100%" fxFlex class="mv-col">
+        <p>Serviços</p>
+        <mdl-expansion-panel-group #panelGroup>
+          <mdl-expansion-panel>
+            <mdl-expansion-panel-header>
+              <mdl-expansion-panel-header-list-content>Primary Title {{i}}</mdl-expansion-panel-header-list-content>
+              <mdl-expansion-panel-header-secondary-content>Secondary Value {{i}}</mdl-expansion-panel-header-secondary-content>
+            </mdl-expansion-panel-header>
+            <mdl-expansion-panel-content>
+              <mdl-expansion-panel-body>
+                <p>This is expansion panel {{i}}</p>
+              </mdl-expansion-panel-body>
+              <mdl-expansion-panel-footer>
+                <mdl-button>Cancel</mdl-button>
+                <mdl-button>Save</mdl-button>
+              </mdl-expansion-panel-footer>
+            </mdl-expansion-panel-content>
+          </mdl-expansion-panel>
+        </mdl-expansion-panel-group>
+      </div>
+    </div>
+  </md2-accordion-tab>
+
+  <md2-accordion-tab>
+    <md2-accordion-header>
+      <md-icon>monetization_on</md-icon>Recebimento
+    </md2-accordion-header>
+    <p>Custo total: R$ <span *ngIf="p && p.cost">{{p.cost}}</span></p>
+    <!--<p>
+      Cobrar:
+      <mdl-radio value="Continental" mdl-ripple>Continental</mdl-radio>
+    </p>
+    <p>
+      Receber:
+      <mdl-radio value="British" mdl-ripple>British</mdl-radio>
+    </p>-->
+  </md2-accordion-tab>
+</md2-accordion>
+<div class="right-align mv-col">
+  <button (click)="saveProject()" mdl-button mdl-button-type="raised" mdl-colored="accent">Salvar</button>
 </div>
