@@ -13,7 +13,6 @@ import { Professional } from '../../professional/shared/professional';
                     name="name"
                     [(ngModel)]="professional.name"
                     
-
                     placeholder="nome"
                     md-input
                     ngDefaultControl
@@ -27,8 +26,7 @@ import { Professional } from '../../professional/shared/professional';
 
                     placeholder="email"
                     md-input
-                    ngDefaultControl
-                    required>
+                    ngDefaultControl>
             </md-input-container>
 
 
