@@ -19,6 +19,8 @@ import {
 } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 
+import { UserService } from '../core/user/shared/user.service';
+
 import { professionalPartners, currentProfessional } from './professional/shared/mock-professional';
 
 @Component({
@@ -27,12 +29,15 @@ import { professionalPartners, currentProfessional } from './professional/shared
 })
 export class InternalComponent implements OnInit {
 
-  constructor(private router: Router,
-    private componentFactoryResolver: ComponentFactoryResolver) {
+  constructor(
+    private router: Router,
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private userService: UserService
+    ) {
   }
 
   ngOnInit(): void {
-    localStorage.setItem('currentUser', JSON.stringify(currentProfessional));
+    this.userService.setCurrentUser(currentProfessional);
   }
 
   ngOnDestroy(): void {

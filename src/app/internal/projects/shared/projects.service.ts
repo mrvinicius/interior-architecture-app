@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { Client } from '../../client/shared/client';
 import { Project } from './project';
 import { PROJECTS } from './mock-projects';
 
@@ -15,7 +16,8 @@ export class ProjectsService {
   addProject(title: string): number {
     PROJECTS.push({
       id: 99,
-      title: title
+      title: title,
+      client: new Client()
     });
 
     return 99;

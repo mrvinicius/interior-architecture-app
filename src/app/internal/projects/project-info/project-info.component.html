@@ -3,12 +3,14 @@
     <md2-accordion-header>
       <md-icon>face</md-icon>Cliente
     </md2-accordion-header>
-    <div fxLayout="row">
-      <div fxFlex="50%" fxFlex.sm="100%" class="mv-col" fxFlex>
-        <mdl-select floating-label [ngModel]="project.client.id" placeholder="cliente">
-          <mdl-option (click)="newClientToggle(true)" [value] class="new-option"><em>- Adicionar cliente -</em></mdl-option>
-          <mdl-option (click)="newClientToggle(false); updateClient(c.id);" *ngFor="let c of clients" [value]="c.id">{{c.name}}</mdl-option>
-        </mdl-select>
+    <div fxLayout="row" fxLayout.xs="column">
+      <div fxFlex.gt-xs="50%" fxFlex="100%" class="mv-col">
+        <ng-container *ngIf="project && project.client">
+          <mdl-select floating-label [ngModel]="project.client.id" placeholder="cliente">
+            <mdl-option (click)="newClientToggle(true)" [value] class="new-option"><em>- Adicionar cliente -</em></mdl-option>
+            <mdl-option (click)="newClientToggle(false); updateClient(c.id);" *ngFor="let c of clients" [value]="c.id">{{c.name}}</mdl-option>
+          </mdl-select>
+        </ng-container>
         <ng-container *ngIf="isNewClient">
           <mdl-textfield [(ngModel)]="newClient.name" label="nome" type="text" floating-label maxlength="30"></mdl-textfield>
           <mdl-textfield [(ngModel)]="newClient.email" label="email" type="email" floating-label maxlength="50"></mdl-textfield>
@@ -16,7 +18,7 @@
         </ng-container>
       </div>
 
-      <div fxFlex="50%" fxFlex.sm="100%" class="mv-col" fxFlex>
+      <div fxFlex.gt-xs="50%" fxFlex="100%" class="mv-col">
         <mdl-textfield [(ngModel)]="project.briefing" label="briefing" rows="5" maxrows="10" floating-label maxlength="500"></mdl-textfield>
       </div>
     </div>
@@ -26,22 +28,22 @@
     <md2-accordion-header>
       <md-icon>business</md-icon>Profissional
     </md2-accordion-header>
-    <div fxLayout="row">
-
-      <div fxFlex="50%" fxFlex.sm="100%" class="mv-col" fxFlex>
-        <mdl-textfield label="nome do escritório ou profissional" type="text" floating-label></mdl-textfield>
-        <div class="file-field input-field">
-          <div class="btn">
-            <span>LOGO</span>
-            <input type="file">
+    <div fxLayout="row" fxLayout.xs="column">
+      <div fxFlex.gt-xs="50%" fxFlex.xs="100%" fxFlex class="mv-col">
+        <mdl-textfield [(ngModel)]="currentProfessional.professionalName" label="nome do escritório ou profissional" type="text"
+          floating-label></mdl-textfield>
+          <div class="file-field input-field">
+            <div class="btn">
+              <span>LOGO</span>
+              <input type="file">
+            </div>
+            <div class="file-path-wrapper">
+              <input placeholder="Selecione um arquivo" class="file-path validate" type="text">
+            </div>
           </div>
-          <div class="file-path-wrapper">
-            <input placeholder="Selecione um arquivo" class="file-path validate" type="text">
-          </div>
-        </div>
       </div>
 
-      <div fxFlex="50%" fxFlex.sm="100%" class="flex-item" class="mv-col" fxFlex>
+      <div fxFlex.gt-xs="50%" fxFlex.xs="100%" fxFlex class="mv-col">
         <mdl-textfield [(ngModel)]="currentProfessional.description" label="descrição do escritório" rows="5" maxrows="10" floating-label
           maxlength="500"></mdl-textfield>
       </div>
@@ -65,30 +67,61 @@
     <md2-accordion-header>
       <md-icon>description</md-icon>Detalhes da Proposta
     </md2-accordion-header>
-    <div fxLayout="row">
-
-      <div fxFlex.gt-sm="40%" fxFlex.sm="100%" fxFlex.xs="100%" fxFlex class="mv-col">
+    <div fxLayout="column" fxLayout.gt-sm="row">
+      <div fxFlex="100%" fxFlex.gt-sm="30%" class="mv-col">
         <mdl-textfield label="introdução da proposta" rows="5" maxrows="10" floating-label></mdl-textfield>
       </div>
-      <div fxFlex.gt-sm="60%" fxFlex.sm="100%" fxFlex.xs="100%" fxFlex class="mv-col">
+      <div fxFlex="100%" fxFlex.gt-sm="70%" class="mv-col">
         <p>Serviços</p>
-        <mdl-expansion-panel-group #panelGroup>
-          <mdl-expansion-panel>
+        <mdl-expansion-panel-group #panelGroup *ngIf="project.services && project.services.length">
+          <mdl-expansion-panel *ngFor="let service of project.services">
+            <!--Panel header-->
             <mdl-expansion-panel-header>
-              <mdl-expansion-panel-header-list-content>Primary Title {{i}}</mdl-expansion-panel-header-list-content>
-              <mdl-expansion-panel-header-secondary-content>Secondary Value {{i}}</mdl-expansion-panel-header-secondary-content>
+              <mdl-expansion-panel-header-list-content>{{service.description}}</mdl-expansion-panel-header-list-content>
+              <mdl-expansion-panel-header-secondary-content>{{service.cost}}</mdl-expansion-panel-header-secondary-content>
             </mdl-expansion-panel-header>
+
+            <!--Panel content-->
             <mdl-expansion-panel-content>
-              <mdl-expansion-panel-body>
-                <p>This is expansion panel {{i}}</p>
+              <mdl-expansion-panel-body fxLayout="row" fxLayout.xs="column">
+                <div fxFlex="50%" fxFlex.xs="100%" class="mv-col">
+                  <mdl-select floating-label [(ngModel)]="service.serviceType" placeholder="tipo de serviço">
+                    <mdl-option (click)="suggestDefaultDesc(service, ServiceType.Tipo1);" [value]="ServiceType.Tipo1">Tipo 1</mdl-option>
+                    <mdl-option (click)="suggestDefaultDesc(service, ServiceType.Tipo2);" [value]="ServiceType.Tipo2">Tipo 2</mdl-option>
+                  </mdl-select>
+                  <mdl-textfield #serviceDescInput [ngModel]="service.description" label="descrição do serviço" rows="5" maxrows="10" floating-label></mdl-textfield>
+                  <mdl-switch mdl-ripple>tonrar esta a padrão</mdl-switch>
+                </div>
+
+                <div fxFlex="50%" fxFlex.xs="100%" class="mv-col">
+                  <p>prazo de entrega</p>
+                  <div fxLayout="row">
+                    <mdl-textfield fxFlex="25%" min="1" floating-label type="number" label="quant." pattern="-?[0-9]*(\.[0-9]+)?" style="padding-right: 0.5rem"></mdl-textfield>
+                    <mdl-select fxFlex="75%" floating-label placeholder="tempo">
+                      <mdl-option [value]="'day'">dia(s)</mdl-option>
+                      <mdl-option [value]="'week'">semana(s)</mdl-option>
+                      <mdl-option [value]="'month'">mês(es)</mdl-option>
+                    </mdl-select>
+                  </div>
+                </div>
               </mdl-expansion-panel-body>
+              <!--Panel footer-->
               <mdl-expansion-panel-footer>
-                <mdl-button>Cancel</mdl-button>
-                <mdl-button>Save</mdl-button>
+                <mdl-button>Excluir</mdl-button>
+                <mdl-button>Salvar</mdl-button>
               </mdl-expansion-panel-footer>
             </mdl-expansion-panel-content>
           </mdl-expansion-panel>
         </mdl-expansion-panel-group>
+        <div class="center-align" style="padding-top: 15px;">
+          <button [disabled]="hasNewService"
+            (click)="addService()"
+            mdl-button
+            mdl-button-type="mini-fab"
+            mdl-colored="primary">
+            <mdl-icon>add</mdl-icon>
+            </button>
+        </div>
       </div>
     </div>
   </md2-accordion-tab>
@@ -108,6 +141,7 @@
     </p>-->
   </md2-accordion-tab>
 </md2-accordion>
+
 <div class="right-align mv-col">
   <button (click)="saveProject()" mdl-button mdl-button-type="raised" mdl-colored="accent">Salvar</button>
 </div>

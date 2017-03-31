@@ -1,6 +1,7 @@
 import { Project } from './project';
 import { ProjectStatus } from './project-status.enum';
 import { CLIENTS } from '../../client/shared/mock-client';
+import { services } from './mock-services';
 
 let p1 = new Project(),
     p2 = new Project(),
@@ -12,6 +13,10 @@ p1.title = 'Pálacio de Marajá';
 p1.client = CLIENTS[0];
 p1.wasPaid = false;
 p1.status = ProjectStatus.Waiting;
+p1.services = [
+    services[0],
+    services[1]
+];
 
 p2.id = 2;
 p2.title = 'Casa na Árvore';

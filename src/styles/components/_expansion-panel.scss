@@ -1,0 +1,11 @@
+mdl-expansion-panel {
+    .mdl-expansion-panel__content {
+        overflow-y: visible;
+    }
+
+    &:not(.expanded) {
+        .mdl-expansion-panel__content {
+            display: none;
+        }
+    }
+}

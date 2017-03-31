@@ -1,3 +1,4 @@
+import { Service } from './service';
 import { ProjectStatus } from './project-status.enum';
 import { Client } from '../../client/shared/client';
 
@@ -10,4 +11,5 @@ export class Project {
     status?: ProjectStatus;
     received?: number;
     professionalPartnersIds?: number[];
+    services?: Service[];
 }

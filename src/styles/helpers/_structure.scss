@@ -1,7 +1,12 @@
 /* Classes */
+
 .u-helper {}
+
 .u-utility {}
-.u-utility-name {} // Exemplo
+
+.u-utility-name {}
+
+// Exemplo
 // .u-center-transform { position: absolute; left: 50%; -webkit-transform: translate(-50%); -ms-transform: translate(-50%); transform: translate(-50%);}
 // .u-row { @extend .row; margin-bottom: 0;}
 // .u-row .u-col, .row .u-col { @extend .col; padding-left: 0; padding-right: 0;}
@@ -10,7 +15,6 @@
 // .u-hidden {opacity: 0;}
 // .u-no-margin {margin: 0;}
 // .u-no-margin-start {margin-top: 0;}
-
 // .float {
 // 	@include box-shadow(6px, 6px, 5px, 0);
 // 	position: absolute;
@@ -18,15 +22,17 @@
 // 	top: 10px;
 // 	bottom: initial;
 // 	right: initial;
-
 // 	&.top-right { position: absolute; top: 10px; right: 10px; bottom: initial; left: initial;}
 // 	&.top-left { position: absolute; top: 10px; left: 10px; bottom: initial; right: initial;}
 // 	&.bottom-left { position: absolute; bottom: 10px; left: 10px; top: initial; right: initial;}
 // 	&.bottom-right { position: absolute; bottom: 10px; right: 10px; top: initial; left: initial;}
 // }
-
 .mv-col {
-	box-sizing: border-box;
-	padding: 0 $gutter-width / 2;
+    box-sizing: border-box;
+    padding: 0 $gutter-width / 2;
     min-height: 1px;
+	
+    @media #{$small-and-down} {
+        padding: 0;
+    }
 }

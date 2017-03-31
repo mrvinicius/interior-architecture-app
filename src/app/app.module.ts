@@ -21,7 +21,6 @@ import { Md2AccordionModule } from 'md2';
 import { AppComponent } from './app.component';
 
 import { CoreModule } from './core/core.module';
-import { UsersModule } from './users/users.module';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -35,7 +34,6 @@ import { AppRoutingModule } from './app-routing.module';
     FormsModule,
     HttpModule,
     CoreModule.forRoot(),
-    UsersModule,
 
     // Material 2
     MaterialModule.forRoot(),

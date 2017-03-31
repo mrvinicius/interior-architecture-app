@@ -69,7 +69,7 @@ export class ProjectListComponent implements OnInit {
     dialogConfig.viewContainerRef = this.viewContainerRef;
 
     this.dialogRef = this.mdDialog.open(NewProjectDialogComponent, dialogConfig);
-    this.dialogRef.componentInstance.param1 = "Test"
+    // this.dialogRef.componentInstance.param1 = "Test"
     this.dialogRef.afterClosed().subscribe(result => {
       if (result)
         this.beginNewProject(result);

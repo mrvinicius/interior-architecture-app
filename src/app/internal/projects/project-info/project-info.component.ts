@@ -1,15 +1,16 @@
-import { Component, Input, OnInit, AfterViewInit, Renderer, ViewContainerRef } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, Renderer, ViewChild, ViewContainerRef } from '@angular/core';
 import { MdDialog, MdDialogConfig, MdDialogRef } from '@angular/material';
 import { ActivatedRoute, Params } from '@angular/router';
 import 'rxjs/add/operator/switchMap';
 
+
 import { Client } from '../../client/shared/client';
-import { Professional } from '../../professional/shared/professional';
-
 import { ClientsService } from '../../client/shared/clients.service';
-
 import { NewProPartnerDialogComponent } from './new-pro-partner-dialog.component';
-
+import { Professional } from '../../professional/shared/professional';
+import { ServiceType, serviceTypesDesc } from '../shared/service-type.enum';
+import { UserService } from '../../../core/user/shared/user.service';
+import { Service } from '../shared/service';
 
 import {
   Project,
@@ -22,11 +23,14 @@ import {
   styleUrls: ['./project-info.component.scss']
 })
 export class ProjectInfoComponent implements OnInit, AfterViewInit {
+  @Input() project: Project;
   clients: Client[];
   currentProfessional: Professional;
   dialogRef: MdDialogRef<any>;
-
-  @Input() project: Project;
+  hasNewService: boolean = false;
+  ServiceType = ServiceType;
+  serviceTypesDesc = serviceTypesDesc;
+  @ViewChild('serviceDescInput') serviceDescInput;
 
   private isNewClient: boolean;
   private newClient: Client;
@@ -37,8 +41,24 @@ export class ProjectInfoComponent implements OnInit, AfterViewInit {
     private renderer: Renderer,
     private clientsService: ClientsService,
     private mdDialog: MdDialog,
-    private viewContainerRef: ViewContainerRef
-  ) { }
+    private viewContainerRef: ViewContainerRef,
+    private userService: UserService
+  ) {
+    // console.log(serviceTypesDesc[ServiceType[ServiceType.Tipo1]]);
+  }
+
+  addService() {
+    if (!this.project.services)
+      this.project.services = [];
+
+    if (this.project.services[this.project.services.length - 1].id) {
+      this.hasNewService = true;
+
+      this.project.services.push({
+        description: 'Novo serviço...'
+      });
+    }
+  }
 
   getClients() {
     this.clientsService.getAll().then(clients => this.clients = clients);
@@ -54,9 +74,7 @@ export class ProjectInfoComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    if (localStorage.getItem('currentUser')) {
-      this.currentProfessional = JSON.parse(localStorage.getItem('currentUser')) as Professional;
-    }
+    this.currentProfessional = this.userService.getCurrentUser();
 
     this.route.params
       .switchMap((params: Params) => this.projectService.getProject(+params['id']))
@@ -75,6 +93,8 @@ export class ProjectInfoComponent implements OnInit, AfterViewInit {
       console.log(this.project)
       console.log(this.newClient);
     }
+
+
   }
 
   showNewProfessionalDialog() {
@@ -84,9 +104,25 @@ export class ProjectInfoComponent implements OnInit, AfterViewInit {
     this.dialogRef = this.mdDialog.open(NewProPartnerDialogComponent, dialogConfig);
     this.dialogRef.componentInstance.param1 = "Test"
     this.dialogRef.afterClosed().subscribe(professional => {
-    // if (professional)
-    //     this.beginNewProject(result);
+      // if (professional)
+      //     this.beginNewProject(result);
     });
+  }
+
+  suggestDefaultDesc(service: Service, serviceType: ServiceType, input) {
+    let defaultDescription;
+    switch (serviceType) {
+      case ServiceType.Tipo1:
+        defaultDescription = serviceTypesDesc[ServiceType[ServiceType.Tipo1]].defaultDescription;
+        break;
+      case ServiceType.Tipo2:
+        defaultDescription = serviceTypesDesc[ServiceType[ServiceType.Tipo2]].defaultDescription;
+        break;
+      default:
+        break;
+    }
+    
+    this.serviceDescInput.value = defaultDescription;
   }
 
   updateClient(id: number): void {
