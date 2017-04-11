@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Http, Headers } from '@angular/http';
 
 import { Client } from '../../client/shared/client';
 import { Project } from './project';
@@ -8,6 +9,8 @@ import { StringHelperService } from '../../../core/string-helper.service';
 
 @Injectable()
 export class ProjectsService {
+  http: Http;
+  headers: Headers;
 
   constructor(
     private stringHelper: StringHelperService
@@ -23,23 +26,30 @@ export class ProjectsService {
     return 99;
   }
 
-  getAll(): Promise<Project[]> {
-    let projects: Project[] = PROJECTS;
+  // getAll(): Promise<Project[]> {
+  //   this.headers = new Headers();
+  //   this.headers.append("Content-Type", 'application/json');
+  //   this.headers.append("Authorization", "Basic YTpi");
 
-    return Promise.resolve(projects);
-  }
+  //   let result = this.http.get('http://52.67.21.201/muuving/api/profissao/getall', {headers: this.headers})
+  //   .map(res => res.json().data);
 
-  getProject(id: number): Promise<Project> {
-    let project: Promise<Project>;
+  //   // let projects: Project[] = PROJECTS;
+  //   // return Promise.resolve(result);
+  //   // return Promise.resolve(projects);
+  // }
 
-    project = this.getAll().then(
-      projects => projects.find(
-        project => project.id === id
-      )
-    );
+  // getProject(id: number): Promise<Project> {
+  //   let project: Promise<Project>;
 
-    return Promise.resolve(project);
-  }
+  //   project = this.getAll().then(
+  //     projects => projects.find(
+  //       project => project.id === id
+  //     )
+  //   );
+
+  //   return Promise.resolve(project);
+  // }
 
   search(title: string): Promise<Project[]> {
     title = this.stringHelper.replaceSpecialChars(title);

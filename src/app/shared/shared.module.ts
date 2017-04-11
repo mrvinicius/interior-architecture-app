@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {
-  MdInputModule,
-  MdIconModule,
-} from '@angular/material';
+// import {
+//   MdInputModule,
+//   MdIconModule,
+// } from '@angular/material';
 import {
   MdlExpansionPanelModule
 } from '@angular2-mdl-ext/expansion-panel';
@@ -29,8 +29,8 @@ import { Md2AccordionModule } from 'md2';
     CommonModule,
     FlexLayoutModule,
     FormsModule,
-    MdInputModule,
-    MdIconModule,
+    // MdInputModule,
+    // MdIconModule,
     MdlModule,
     MdlTextFieldModule,
     MdlExpansionPanelModule,

@@ -21,6 +21,7 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     SharedModule,
     FlexLayoutModule,
     ReactiveFormsModule,
+    
     ProjectsRoutingModule
   ],
   declarations: [

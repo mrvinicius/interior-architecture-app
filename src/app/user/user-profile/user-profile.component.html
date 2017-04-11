@@ -1,0 +1,11 @@
+<table>
+  <thead>
+  
+  </thead>
+  <tbody *ngIf="list">
+    <tr *ngFor="let item of list">
+      <td>{{item.id}}</td>
+      <td>{{item.desc}}</td>
+    </tr>
+  </tbody>
+</table>

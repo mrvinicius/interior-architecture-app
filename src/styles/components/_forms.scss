@@ -1,7 +1,16 @@
+// Table of Contents:
+//
+//  1. MD & MDL Select
+//  2. File Input
+//  3. Icon Prefix
+
+/* 1. MD & MDL Select
+========================================================================== */
+
 md-input-container,
 mdl-textfield,
 .mdl-textfield {
-    width: 100% !important;
+    width: 100%;
 }
 
 mdl-option {
@@ -48,8 +57,8 @@ mdl-select {
 }
 
 
-/* File Input
-   ========================================================================== */
+/* 2. File Input
+========================================================================== */
 
 .file-field {
     position: relative;
@@ -92,5 +101,53 @@ mdl-select {
         cursor: pointer;
         opacity: 0;
         filter: alpha(opacity=0);
+    }
+}
+
+
+/* 3. Icon Prefix
+========================================================================== */
+
+.prefix {
+    position: absolute;
+    width: $input-height;
+    font-size: 2rem;
+    transition: color .2s;
+    &.active {
+        color: $input-focus-color;
+    }
+}
+
+.prefix~input,
+.prefix~mdl-textfield,
+.prefix~md-textfield,
+.prefix~textarea,
+.prefix~label,
+.prefix~.validate~label,
+.prefix~.autocomplete-content {
+    margin-left: 3rem;
+    width: 92%;
+    width: calc(100% - 3rem);
+}
+
+.prefix~label {
+    margin-left: 3rem;
+}
+
+@media #{$medium-and-down} {
+    .prefix~input,
+    .prefix~mdl-textfield,
+    .prefix~md-textfield {
+        width: 86%;
+        width: calc(100% - 3rem);
+    }
+}
+
+@media #{$small-and-down} {
+    .prefix~input,
+    .prefix~mdl-textfield,
+    .prefix~md-textfield {
+        width: 80%;
+        width: calc(100% - 3rem);
     }
 }
