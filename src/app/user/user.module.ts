@@ -11,14 +11,12 @@ import {
 } from 'ng2-materialize';
 
 import { SharedModule } from '../shared/shared.module';
-
-import { UserComponent } from './user.component';
-import { UserEntryComponent } from './user-entry/user-entry.component';
-
-import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserRoutingModule } from './user-routing.module';
 
 import { UserService } from './shared/user.service';
+
+import { UserComponent } from './user.component';
+import { UserEntryComponent } from './user-entry/user-entry.component';
 
 @NgModule({
   imports: [
@@ -34,7 +32,6 @@ import { UserService } from './shared/user.service';
   declarations: [
     UserComponent,
     UserEntryComponent,
-    UserProfileComponent
   ],
   providers: [
     UserService

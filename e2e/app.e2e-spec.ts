@@ -1,6 +1,6 @@
 import { MuuboxPage } from './app.po';
 
-describe('muubox App', function() {
+describe('muubox App', () => {
   let page: MuuboxPage;
 
   beforeEach(() => {

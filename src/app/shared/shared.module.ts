@@ -7,17 +7,17 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 //   MdInputModule,
 //   MdIconModule,
 // } from '@angular/material';
-import {
-  MdlExpansionPanelModule
-} from '@angular2-mdl-ext/expansion-panel';
-import {
-  MdlSelectModule
-} from '@angular2-mdl-ext/select';
-import {
-  MdlModule,
-  MdlTextFieldModule,
-} from 'angular2-mdl';
-import { Md2AccordionModule } from 'md2';
+// import {
+//   MdlExpansionPanelModule
+// } from '@angular2-mdl-ext/expansion-panel';
+// import {
+//   MdlSelectModule
+// } from '@angular2-mdl-ext/select';
+// import {
+//   MdlModule,
+//   MdlTextFieldModule,
+// } from 'angular2-mdl';
+// import { Md2AccordionModule } from 'md2';
 
 @NgModule({
   imports: [
@@ -31,11 +31,11 @@ import { Md2AccordionModule } from 'md2';
     FormsModule,
     // MdInputModule,
     // MdIconModule,
-    MdlModule,
-    MdlTextFieldModule,
-    MdlExpansionPanelModule,
-    MdlSelectModule,
-    Md2AccordionModule
+    // MdlModule,
+    // MdlTextFieldModule,
+    // MdlExpansionPanelModule,
+    // MdlSelectModule,
+    // Md2AccordionModule
   ],
   providers: []
 })
