@@ -9,6 +9,7 @@ const routes: Routes = [
     {
         path: '', component: UserComponent,
         children: [
+            { path: '', redirectTo: '/entrar', pathMatch: 'full' },
             { path: 'entrar', component: UserEntryComponent },
             { path: 'cadastro', component: UserRegisterComponent }
         ]

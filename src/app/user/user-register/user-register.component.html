@@ -1,6 +1,6 @@
 <div id="entry-container">
   <main id="entry-card-wrapper">
-    <div class="card-panel z-depth-5 reduced-padding" style="padding-bottom: 1px;">
+    <div class="card-panel z-depth-5" style="padding-bottom: 1px;">
       <form [formGroup]="registerForm" class="col s12" novalidate>
         <mz-input-container class="col s12">
           <!--<i mz-icon-mdi mz-input-prefix class="material-icons">email</i>-->
@@ -15,8 +15,8 @@
         </div>
       </form>
       <div fxLayout="column" fxLayout.gt-sm="row" class="row">
-        <div fxFlex="50%" class="mv-col">
-          <a>Já sou cadastrado</a>
+        <div fxFlex="50%">
+          <a routerLink="/entrar">Já sou cadastrado</a>
         </div>
       </div>
     </div>

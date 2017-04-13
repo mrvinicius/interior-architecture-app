@@ -1,6 +1,6 @@
 <div id="entry-container">
   <main id="entry-card-wrapper">
-    <div class="card-panel z-depth-5 reduced-padding" style="padding-bottom: 1px;">
+    <div class="card-panel z-depth-5" style="padding-bottom: 1px;">
       <form [formGroup]="loginForm" #newProPartForm="ngForm" (ngSubmit)="login($event)" class="col s12">
         <!--<mdl-textfield [(ngModel)]="email" name="email" label="email" type="email" error-msg="Insira um email válido" floating-label></mdl-textfield>
         <mdl-textfield [(ngModel)]="password" name="password" label="senha" type="password" floating-label></mdl-textfield>-->
@@ -17,11 +17,11 @@
         </div>
       </form>
       <div fxLayout="column" fxLayout.gt-sm="row" class="row">
-        <div fxFlex="50%" class="mv-col">
-          <a>Recuperar conta</a>
+        <div fxFlex="50%">
+          <a disabled class="grey-text">Recuperar conta</a>
         </div>
-        <div fxFlex="50%" class="mv-col right-align">
-          <a>Cadastre-se</a>
+        <div fxFlex="50%" class="right-align">
+          <a routerLink="/cadastro">Cadastre-se</a>
         </div>
       </div>
     </div>
