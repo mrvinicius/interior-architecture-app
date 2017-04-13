@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { NoPreloading, PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 export const routes: Routes = [
-  // { path: '', loadChildren: './internal/internal.module#InternalModule' }
+  { path: '', loadChildren: './internal/internal.module#InternalModule' }
 ];
 
 @NgModule({

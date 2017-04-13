@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http, Jsonp, Response, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch'
 import 'rxjs/add/operator/toPromise';
+
+import { User } from "./user";
 
 const baseUrl: string = 'http://52.67.21.201/';
 
@@ -12,16 +16,23 @@ export class UserService {
     private http: Http
   ) { }
 
-  /** API Usage example */
-  // getAll(): Promise<Any[]> {
+  // add(user) {
   //   let options = new RequestOptions({ headers: this.getHeaders() });
 
   //   return this.http
-  //     .get(baseUrl + 'muuving/api/profissao/getall', options)
+  //     .put(baseUrl + 'muuving/api/profissional/add', {nome: "Vinicius", email: "vinicius.rocha@muuving.com.br"}, options)
   //     .toPromise()
   //     .then(this.extractData)
   //     .catch(this.handleError);
   // }
+
+  add(user) {
+    let options = new RequestOptions({ headers: this.getHeaders() });
+    console.log(user);
+    return this.http.put(baseUrl + 'muuving/api/profissional/add', { email: user.email, nome: user.name }, options)
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
 
   private extractData(res: Response) {
     let body = res.json();

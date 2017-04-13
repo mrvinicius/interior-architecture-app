@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {
   MdlModule,
   MdlButtonModule,
   MdlTextFieldModule,
 } from 'angular2-mdl';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { 
+import {
   MaterializeModule
 } from 'ng2-materialize';
 
@@ -17,6 +17,7 @@ import { UserService } from './shared/user.service';
 
 import { UserComponent } from './user.component';
 import { UserEntryComponent } from './user-entry/user-entry.component';
+import { UserRegisterComponent } from './user-register/user-register.component';
 
 @NgModule({
   imports: [
@@ -26,15 +27,15 @@ import { UserEntryComponent } from './user-entry/user-entry.component';
     MdlTextFieldModule,
     MaterializeModule,
     ReactiveFormsModule,
+    FormsModule,
 
     UserRoutingModule
   ],
   declarations: [
     UserComponent,
     UserEntryComponent,
+    UserRegisterComponent,
   ],
-  providers: [
-    UserService
-  ]
+  providers: [UserService]
 })
-export class UserModule {}
+export class UserModule { }

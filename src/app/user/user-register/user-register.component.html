@@ -1,0 +1,24 @@
+<div id="entry-container">
+  <main id="entry-card-wrapper">
+    <div class="card-panel z-depth-5 reduced-padding" style="padding-bottom: 1px;">
+      <form [formGroup]="registerForm" class="col s12" novalidate>
+        <mz-input-container class="col s12">
+          <!--<i mz-icon-mdi mz-input-prefix class="material-icons">email</i>-->
+          <input mz-input label='name' formControlName="name" name="Name" id="name" type="text">
+        </mz-input-container>
+        <mz-input-container class="col s12">
+          <!--<i mz-icon-mdi mz-input-prefix class="material-icons">email</i>-->
+          <input mz-input label='email' formControlName="email" [validate]="true" name="Email" id="email" type="email">
+        </mz-input-container>
+        <div class="right-align row">
+          <button (click)="addNewUser()" type="button" mz-button style="width: 100%">Enviar</button>
+        </div>
+      </form>
+      <div fxLayout="column" fxLayout.gt-sm="row" class="row">
+        <div fxFlex="50%" class="mv-col">
+          <a>Já sou cadastrado</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
