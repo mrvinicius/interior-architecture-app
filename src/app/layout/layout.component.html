@@ -1,5 +1,5 @@
 <!--mdl-layout-fixed-drawer-->
-<mdl-layout mdl-layout-fixed-header mdl-layout-fixed-drawer>  
+<mdl-layout mdl-layout-fixed-header mdl-layout-fixed-drawer>
     <mdl-layout-drawer>
         <mdl-layout-title>
             Muubox
@@ -12,10 +12,7 @@
     </mdl-layout-drawer>
 
     <mdl-layout-header>
-        <button (click)="toolbarService.halfwayFabClick()" *ngIf="hasFab" [ngClass]="{'left': fabSide == ToolbarFabSide.Left}" mdl-button mdl-button-type="fab" mdl-colored="accent"
-            class="btn-floating btn-large halfway-fab left">
-            <mdl-icon>add</mdl-icon>
-        </button>
+
         <mdl-layout-header-row>
 
             <mdl-layout-title>Muubox</mdl-layout-title>
@@ -23,7 +20,7 @@
             <mdl-layout-spacer>
             </mdl-layout-spacer>
 
-            <template #dynamicToolbarHeader></template>
+         
         </mdl-layout-header-row>
         <mdl-layout-header-row>
 
@@ -46,9 +43,6 @@
       3
     </mdl-layout-tab-panel>-->
         <!--Dynamic toolbar content-->
-        <div #dynamicToolbarContent>
-
-        </div>
         <ng-content select="router-outlet"></ng-content>
     </mdl-layout-content>
 </mdl-layout>

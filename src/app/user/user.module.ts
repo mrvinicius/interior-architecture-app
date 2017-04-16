@@ -18,6 +18,7 @@ import { UserService } from './shared/user.service';
 import { UserComponent } from './user.component';
 import { UserEntryComponent } from './user-entry/user-entry.component';
 import { UserRegisterComponent } from './user-register/user-register.component';
+import { AlmostThereComponent } from './user-register/almost-there.component';
 
 @NgModule({
   imports: [
@@ -32,6 +33,7 @@ import { UserRegisterComponent } from './user-register/user-register.component';
     UserRoutingModule
   ],
   declarations: [
+    AlmostThereComponent,
     UserComponent,
     UserEntryComponent,
     UserRegisterComponent,

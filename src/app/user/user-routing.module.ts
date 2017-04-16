@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { UserComponent } from './user.component';
 import { UserEntryComponent } from './user-entry/user-entry.component';
 import { UserRegisterComponent } from "./user-register/user-register.component";
+import { AlmostThereComponent } from './user-register/almost-there.component';
 
 const routes: Routes = [
     {
@@ -11,7 +12,8 @@ const routes: Routes = [
         children: [
             { path: '', redirectTo: '/entrar', pathMatch: 'full' },
             { path: 'entrar', component: UserEntryComponent },
-            { path: 'cadastro', component: UserRegisterComponent }
+            { path: 'cadastro', component: UserRegisterComponent },
+            { path: 'quase', component: AlmostThereComponent }
         ]
     }
 ];

@@ -12,20 +12,25 @@ import { HttpModule } from '@angular/http';
 // import { MdlExpansionPanelModule } from '@angular2-mdl-ext/expansion-panel';
 // import { MdlSelectModule } from '@angular2-mdl-ext/select';
 import {
-  MdlModule,
-  MdlLayoutModule,
-  MdlTextFieldModule,
   MdlButtonModule,
+  MdlIconModule,
+  MdlModule,
+  MdlTextFieldModule,
 } from 'angular2-mdl';
 
-import { 
-  MaterializeModule
-} from 'ng2-materialize';
+import { MaterializeModule } from 'ng2-materialize';
 
+/* App Root */
 import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
+
+/* Feature Modules */
 import { CoreModule } from './core/core.module';
 import { UserModule } from './user/user.module';
+import { LayoutModule } from './layout/layout.module';
+import { ProjectsModule } from './projects/projects.module';
+
+/* Routing Module */
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -37,7 +42,10 @@ import { UserModule } from './user/user.module';
     FormsModule,
     HttpModule,
     CoreModule.forRoot(),
-    
+    UserModule,
+    LayoutModule,
+    ProjectsModule,
+
     /** Material 2 **/
     // MaterialModule.forRoot(),
     // MdDialogModule.forRoot(),
@@ -46,17 +54,16 @@ import { UserModule } from './user/user.module';
     // FlexLayoutModule.forRoot(),
 
     /** MDL 2 **/
-    MdlModule,
-    MdlButtonModule.forRoot(),
-    MdlLayoutModule.forRoot(),
-    MdlTextFieldModule.forRoot(),
+    // MdlModule,
+    // MdlButtonModule.forRoot(),
+    // MdlIconModule.forRoot(),
+    // MdlTextFieldModule.forRoot(),
     // MdlExpansionPanelModule.forRoot(),
     // MdlSelectModule.forRoot(),
 
     /** Ng2 Materialize **/
     MaterializeModule.forRoot(),
 
-    UserModule,
     AppRoutingModule
   ],
   providers: [],

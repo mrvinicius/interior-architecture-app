@@ -3,21 +3,26 @@ import {
   Optional, SkipSelf
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MaterializeModule } from 'ng2-materialize';
 
 import { AuthService } from './auth.service';
+import { SpinnerComponent } from './spinner/spinner.component';
+import { SpinnerService } from './spinner/spinner.service';
 import { StringHelperService } from './string-helper.service';
 import { UserService } from './user/shared/user.service';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    MaterializeModule.forRoot()
   ],
-  declarations: [],
+  declarations: [
+    SpinnerComponent,
+  ],
   exports: [
+    SpinnerComponent
   ],
-  providers: [
-    StringHelperService,
-  ],
+  providers: [],
 })
 export class CoreModule {
   constructor( @Optional() @SkipSelf() parentModule: CoreModule) {
@@ -32,6 +37,7 @@ export class CoreModule {
       // Add Services that should have only one instance - Singletons - App-wide
       providers: [
         AuthService,
+        SpinnerService,
         StringHelperService,
         UserService
       ]

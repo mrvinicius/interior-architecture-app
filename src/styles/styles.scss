@@ -5,7 +5,7 @@
 
 /*** Vendors ***/
 // @import "vendors/angular-material-2";
-// @import "vendors/angular2-mdl";
+@import "vendors/angular2-mdl";
 // @import "vendors/angular2-mdl-ext";
 @import "vendors/materialize-css";
 
@@ -18,7 +18,7 @@
 // @import "base/global";
 @import "base/structure";
 // @import "base/table";
-// @import "base/typography";
+@import "base/typography";
 
 /*** Components ***/
 // @import "components/accordion";

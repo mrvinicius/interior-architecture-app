@@ -6,4 +6,43 @@
 // $color-primary-contrast: $color-dark-contrast;
 // $color-accent-contrast: $color-dark-contrast;
 
-@import '~angular2-mdl/scss/material-design-lite';
+// Variables and mixins
+@import '~angular2-mdl/scss/variables';
+@import '~angular2-mdl/scss/mixins';
+
+// Resets and dependencies
+// @import "~angular2-mdl/scss/mdl/resets/resets";
+// @import "~angular2-mdl/scss/mdl/typography/typography";
+
+// Components
+// @import "~angular2-mdl/scss/mdl/palette/palette";
+@import "~angular2-mdl/scss/mdl/ripple/ripple";
+@import "~angular2-mdl/scss/mdl/animation/animation";
+// @import "~angular2-mdl/scss/mdl/badge/badge";
+// @import "~angular2-mdl/scss/mdl/button/button";
+// @import "~angular2-mdl/scss/mdl/card/card";
+// @import "~angular2-mdl/scss/mdl/checkbox/checkbox";
+// @import "~angular2-mdl/scss/mdl/chip/chip";
+// @import "~angular2-mdl/scss/mdl/data-table/data-table";
+// @import "~angular2-mdl/scss/mdl/dialog/dialog";
+// @import "~angular2-mdl/scss/mdl/footer/mega_footer";
+// @import "~angular2-mdl/scss/mdl/footer/mini_footer";
+// @import "~angular2-mdl/scss/mdl/icon-toggle/icon-toggle";
+// @import "~angular2-mdl/scss/mdl/list/list";
+// @import "~angular2-mdl/scss/mdl/menu/menu";
+// @import "~angular2-mdl/scss/mdl/progress/progress";
+@import "~angular2-mdl/scss/mdl/layout/layout";
+// @import "~angular2-mdl/scss/mdl/radio/radio";
+// @import "~angular2-mdl/scss/mdl/slider/slider";
+// @import "~angular2-mdl/scss/mdl/snackbar/snackbar";
+// @import "~angular2-mdl/scss/mdl/spinner/spinner";
+// @import "~angular2-mdl/scss/mdl/switch/switch";
+@import "~angular2-mdl/scss/mdl/tabs/tabs";
+// @import "~angular2-mdl/scss/mdl/textfield/textfield";
+// @import "~angular2-mdl/scss/mdl/tooltip/tooltip";
+// @import "~angular2-mdl/scss/mdl/shadow/shadow";
+// @import "~angular2-mdl/scss/mdl/grid/grid";
+
+@import "~angular2-mdl/scss/extensions/tabs/tabs";
+
+// @import "~angular2-mdl/scss/image-fix";

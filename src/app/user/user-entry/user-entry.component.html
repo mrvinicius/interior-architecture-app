@@ -1,27 +1,28 @@
 <div id="entry-container">
   <main id="entry-card-wrapper">
-    <div class="card-panel z-depth-5" style="padding-bottom: 1px;">
-      <form [formGroup]="loginForm" #newProPartForm="ngForm" (ngSubmit)="login($event)" class="col s12">
-        <!--<mdl-textfield [(ngModel)]="email" name="email" label="email" type="email" error-msg="Insira um email válido" floating-label></mdl-textfield>
-        <mdl-textfield [(ngModel)]="password" name="password" label="senha" type="password" floating-label></mdl-textfield>-->
-        <mz-input-container class="col s12">
-          <!--<i mz-icon-mdi mz-input-prefix class="material-icons">email</i>-->
-          <input mz-input label='email' formControlName="email" [validate]="true" id="email" type="email">
-        </mz-input-container>
-        <mz-input-container class="col s12">
-          <!--<i mz-icon-mdi mz-input-prefix class="material-icons">lock</i>-->
-          <input mz-input label='senha' formControlName="password" [validate]="false" id="password" type="password">
-        </mz-input-container>
-        <div class="right-align row">
-          <button mz-button style="width: 100%">Próximo</button>
-        </div>
-      </form>
-      <div fxLayout="column" fxLayout.gt-sm="row" class="row">
-        <div fxFlex="50%">
-          <a disabled class="grey-text">Recuperar conta</a>
-        </div>
-        <div fxFlex="50%" class="right-align">
-          <a routerLink="/cadastro">Cadastre-se</a>
+    <div class="card z-depth-5" style="padding-bottom: 1px;">
+      <div class="card-content">
+        <p *ngIf="errorMessage && errorMessage.length" class="red-text">{{errorMessage}}</p>
+        <form [formGroup]="loginForm" class="col s12">
+          <mz-input-container class="col s12">
+            <!--<i mz-icon-mdi mz-input-prefix class="material-icons">email</i>-->
+            <input mz-input label='email' formControlName="email" [validate]="true" name="Email" id="email" type="email">
+          </mz-input-container>
+          <mz-input-container class="col s12">
+            <!--<i mz-icon-mdi mz-input-prefix class="material-icons">lock</i>-->
+            <input (keyup.enter)="login()" mz-input label='senha' formControlName="password" [validate]="true" name="Password" id="password" type="password">
+          </mz-input-container>
+          <div class="right-align row">
+            <button (click)="login()" mz-button style="width: 100%">Próximo</button>
+          </div>
+        </form>
+        <div fxLayout="column" fxLayout.gt-sm="row" class="row">
+          <div fxFlex="50%">
+            <a disabled class="grey-text">Recuperar conta</a>
+          </div>
+          <div fxFlex="50%" class="right-align">
+            <a routerLink="/cadastro">Cadastre-se</a>
+          </div>
         </div>
       </div>
     </div>
