@@ -38,7 +38,9 @@ export class UserRegisterComponent implements OnInit {
   ngOnInit() { }
 
   addUser() {
-    if (this.registerForm.valid) {
+    if (this.registerForm.invalid) {
+      return;
+    } else {
       this.spinnerService.toggleLoadingIndicator(true);
 
       let values = this.registerForm.value;
@@ -47,10 +49,11 @@ export class UserRegisterComponent implements OnInit {
       this.userService.add(user).subscribe(
         response => {
           this.spinnerService.toggleLoadingIndicator(false);
+          console.log(response);
           if (response.HasError) {
             this.errorMessage = response.ErrorMessage;
           } else {
-            this.router.navigate(['quase']);
+            this.router.navigate(['quase-la']);
           }
         },
         error => {
@@ -58,8 +61,6 @@ export class UserRegisterComponent implements OnInit {
           console.log(error)
         }
       );
-    } else {
-      return;
     }
   }
 }

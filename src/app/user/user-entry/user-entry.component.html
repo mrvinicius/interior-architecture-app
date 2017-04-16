@@ -13,7 +13,7 @@
             <input (keyup.enter)="login()" mz-input label='senha' formControlName="password" [validate]="true" name="Password" id="password" type="password">
           </mz-input-container>
           <div class="right-align row">
-            <button (click)="login()" mz-button style="width: 100%">Próximo</button>
+            <button (click)="login()" [disabled]="loginForm.invalid" mz-button style="width: 100%">Próximo</button>
           </div>
         </form>
         <div fxLayout="column" fxLayout.gt-sm="row" class="row">

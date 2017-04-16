@@ -6,6 +6,7 @@ import {
   MzInputContainerComponent
 } from 'ng2-materialize';
 
+import { AuthService } from '../../core/auth.service';
 import { UserService } from '../shared/user.service';
 import { SpinnerService } from '../../core/spinner/spinner.service';
 
@@ -26,6 +27,7 @@ export class UserEntryComponent implements OnInit {
   }
 
   constructor(
+    private auth: AuthService,
     private fb: FormBuilder,
     private router: Router,
     private spinnerService: SpinnerService,
@@ -37,11 +39,29 @@ export class UserEntryComponent implements OnInit {
   ngOnInit() { }
 
   login() {
-    if (this.loginForm.valid) {
-      this.spinnerService.toggleLoadingIndicator(true);
-
+    if (this.loginForm.invalid) {
+      return;
+    } else {
       let values = this.loginForm.value;
 
+      // Ativa o spinner
+      this.spinnerService.toggleLoadingIndicator(true);
+
+      this.auth.login(values.email, values.password).subscribe(
+        result => {
+          this.spinnerService.toggleLoadingIndicator(false);
+          console.log(result);
+
+          if (result) {
+            this.router.navigate(['/projetos']);
+          } else {
+            this.errorMessage = "Dados incorretos."
+            // email nao cadastrado
+            // senha incorreta
+            // outros erros
+          }
+        }
+      );
       // this.userService.auth(values.email, values.password).subscribe(
       //   response => {
       //     this.spinnerService.toggleLoadingIndicator(false);
@@ -52,22 +72,20 @@ export class UserEntryComponent implements OnInit {
       //   }
       // );
 
-      this.userService.auth(values.email, values.password)
-        .then(response => {
-          console.log(response)
-          if (response && response.user) {
-            this.spinnerService.toggleLoadingIndicator(false);
-          } else {
-            this.spinnerService.toggleLoadingIndicator(false);
-            this.errorMessage = "Dados incorretos."
-            // email nao cadastrado
-            // senha incorreta
-            // outros erros
-          }
-        })
-        .catch();
-    } else {
-      return;
+      // this.userService.auth(values.email, values.password)
+      //   .then(response => {
+      //     console.log(response)
+      //     if (response && response.user) {
+      //       this.spinnerService.toggleLoadingIndicator(false);
+      //     } else {
+      //       this.spinnerService.toggleLoadingIndicator(false);
+      //       this.errorMessage = "Dados incorretos."
+      //       // email nao cadastrado
+      //       // senha incorreta
+      //       // outros erros
+      //     }
+      //   })
+      //   .catch();
     }
   }
 

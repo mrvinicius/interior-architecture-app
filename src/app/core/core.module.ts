@@ -5,6 +5,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { MaterializeModule } from 'ng2-materialize';
 
+import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { SpinnerService } from './spinner/spinner.service';
@@ -36,6 +37,7 @@ export class CoreModule {
       ngModule: CoreModule,
       // Add Services that should have only one instance - Singletons - App-wide
       providers: [
+        AuthGuard,
         AuthService,
         SpinnerService,
         StringHelperService,

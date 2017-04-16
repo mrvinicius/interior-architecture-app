@@ -1,16 +1,26 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { AuthGuard } from '../core/auth.guard';
+
 import { ProjectsComponent } from './projects.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectInfoComponent } from './project-info/project-info.component';
 
 const routes: Routes = [
   {
-    path: '', component: ProjectsComponent,
+    path: 'projetos',
+    component: ProjectsComponent,
+    canActivate: [AuthGuard],
     children: [
-      { path: 'projetos', component: ProjectListComponent },
-      { path: 'project-info', component: ProjectInfoComponent }
+      {
+        path: '',
+        canActivateChild: [AuthGuard],
+        children: [
+          { path: '', component: ProjectListComponent },
+          { path: 'project-info', component: ProjectInfoComponent }
+        ]
+      }
     ]
   },
 ];

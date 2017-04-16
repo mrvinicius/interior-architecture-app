@@ -6,14 +6,14 @@
         <form [formGroup]="registerForm" class="col s12" novalidate>
           <mz-input-container class="col s12">
             <!--<i mz-icon-mdi mz-input-prefix class="material-icons">email</i>-->
-            <input mz-input label='name' formControlName="name" name="Name" id="name" type="text">
+            <input mz-input label='email' formControlName="email" [validate]="true" name="Email" id="email" type="email">
           </mz-input-container>
           <mz-input-container class="col s12">
             <!--<i mz-icon-mdi mz-input-prefix class="material-icons">email</i>-->
-            <input (keyup.enter)="addUser()" mz-input label='email' formControlName="email" [validate]="true" name="Email" id="email" type="email">
+            <input (keyup.enter)="addUser()" mz-input label='nome' formControlName="name" name="Name" id="name" type="text">
           </mz-input-container>
           <div class="right-align row">
-            <button (click)="addUser()" type="button" mz-button style="width: 100%">Enviar</button>
+            <button (click)="addUser()" [disabled]="registerForm.invalid" type="button" mz-button style="width: 100%">Enviar</button>
           </div>
         </form>
         <div fxLayout="column" fxLayout.gt-sm="row" class="row">

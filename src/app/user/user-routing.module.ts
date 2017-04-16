@@ -13,7 +13,7 @@ const routes: Routes = [
             { path: '', redirectTo: '/entrar', pathMatch: 'full' },
             { path: 'entrar', component: UserEntryComponent },
             { path: 'cadastro', component: UserRegisterComponent },
-            { path: 'quase', component: AlmostThereComponent }
+            { path: 'quase-la', component: AlmostThereComponent }
         ]
     }
 ];

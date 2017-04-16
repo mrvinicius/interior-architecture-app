@@ -78,8 +78,4 @@ export class UserService {
     console.error(errMsg);
     return Observable.throw(errMsg);
   }
-
-  private showData(json) {
-    console.log(json);
-  }
 }
