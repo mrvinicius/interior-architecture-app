@@ -17,10 +17,11 @@
 // @import "base/color";
 // @import "base/global";
 @import "base/structure";
-// @import "base/table";
+@import "base/table";
 @import "base/typography";
 
 /*** Components ***/
+@import "components/modal";
 // @import "components/accordion";
 // @import "components/buttons";
 // @import "components/expansion-panel";

@@ -1,13 +1,9 @@
 html,
 body {
-    font-family: Questrial;
+    font-family: $body-font;
 }
 
-// Input 
-.mdl-textfield__input {
-    font-family: $mv-font;
-}
-
-.mdl-select .mdl-list__item {
-    font-family: $mv-font;
+// Apply font family to all mdl components
+[class*="mdl-"] {
+    font-family: $body-font;
 }

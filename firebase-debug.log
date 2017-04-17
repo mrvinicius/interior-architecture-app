@@ -1,0 +1,15 @@
+[debug] ----------------------------------------------------------------------
+[debug] Command:      /home/vinicius/.nvm/versions/node/v7.9.0/bin/node /home/vinicius/.nvm/versions/node/v7.9.0/bin/firebase deploy
+[debug] CLI Version:  3.6.1
+[debug] Platform:     linux
+[debug] Node Version: v7.9.0
+[debug] Time:         Mon Apr 17 2017 11:52:38 GMT-0300 (-03)
+[debug] ----------------------------------------------------------------------
+[debug] 
+[debug] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/muubox-6b5db  
+ Mon Apr 17 2017 11:52:38 GMT-0300 (-03)
+[debug] <<< HTTP RESPONSE 200
+[debug] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/muubox-6b5db/tokens  
+ Mon Apr 17 2017 11:52:40 GMT-0300 (-03)
+[debug] <<< HTTP RESPONSE 200

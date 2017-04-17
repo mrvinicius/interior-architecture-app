@@ -5,6 +5,7 @@ import { AuthGuard } from '../core/auth.guard';
 
 import { ProjectsComponent } from './projects.component';
 import { ProjectListComponent } from './project-list/project-list.component';
+import { ProjectManagerComponent } from './project-manager/project-manager.component';
 
 const routes: Routes = [
   {
@@ -17,7 +18,7 @@ const routes: Routes = [
         canActivateChild: [AuthGuard],
         children: [
           { path: '', component: ProjectListComponent },
-          // { path: 'project-info', component: ProjectInfoComponent }
+          { path: ':id', component: ProjectManagerComponent }
         ]
       }
     ]

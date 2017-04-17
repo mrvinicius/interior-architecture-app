@@ -9,14 +9,13 @@ import { SpinnerService } from './spinner.service';
   template: `
   <div [style.visibility]="isLoading ? 'visible' : 'hidden'" class="loading-container">
     <mz-spinner class="animation-container"
-      [color]
-      [size]="medium">
+      [color]>
     </mz-spinner>
   </div>
   `
 })
 export class SpinnerComponent implements OnInit {
-  private isLoading = false;
+  isLoading = false;
   private subscription: any;
 
   //we probably want a reference to ElementRef here to do some DOM manipulations
