@@ -1,11 +1,16 @@
 import { Injectable } from '@angular/core';
 
 @Injectable()
-export class StringHelperService {
+export class UtilsService {
 
     constructor() { }
 
-    replaceSpecialChars(str): string {
+    public static removeSpaces(str): string {
+        str = str.trim();
+        return str.replace(/ /g, '');
+    }
+
+    public static replaceSpecialChars(str): string {
         str = str.replace(/[ÀÁÂÃÄÅ]/g, "A");
         str = str.replace(/[àáâãäå]/g, "a");
         str = str.replace(/[ÈÉÊËẼ]/g, "E");
@@ -20,10 +25,5 @@ export class StringHelperService {
         str = str.replace(/[ç]/g, "c");
 
         return str;
-    }
-
-    removeSpaces(str): string {
-        str = str.trim();
-        return str.replace(/ /g, '');
     }
 }

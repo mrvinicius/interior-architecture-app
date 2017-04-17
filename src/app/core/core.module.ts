@@ -9,7 +9,6 @@ import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { SpinnerService } from './spinner/spinner.service';
-import { StringHelperService } from './string-helper.service';
 import { UserService } from './user/shared/user.service';
 
 @NgModule({
@@ -40,7 +39,6 @@ export class CoreModule {
         AuthGuard,
         AuthService,
         SpinnerService,
-        StringHelperService,
         UserService
       ]
     };

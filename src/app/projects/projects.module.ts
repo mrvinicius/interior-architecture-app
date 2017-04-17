@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { LayoutModule } from '../layout/layout.module';
 
 import { ProjectsComponent } from './projects.component';
-import { ProjectInfoComponent } from './project-info/project-info.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 
 import { ProjectsRoutingModule } from './projects-routing.module';
@@ -17,7 +16,6 @@ import { ProjectsRoutingModule } from './projects-routing.module';
   ],
   declarations: [
     ProjectsComponent,
-    ProjectInfoComponent,
     ProjectListComponent
   ]
 })
