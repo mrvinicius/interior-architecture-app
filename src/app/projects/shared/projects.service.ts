@@ -1,13 +1,20 @@
-import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
+import { Subject } from "rxjs/Subject";
 
 import { Client } from './../../client/shared/client';
 import { projects } from './mock-projects';
 import { Project } from './project';
+import { ProjectStatus } from './project-status.enum';
 import { UtilsService } from './../../shared/utils/utils.service';
 
 @Injectable()
 export class ProjectsService {
+  // Observable string sources
+  private newProjectTitleDefinedSource = new Subject<string>();
+
+  // Observable string streams
+  newProjectTitleDefined$ = this.newProjectTitleDefinedSource.asObservable();
 
   constructor() { }
 
@@ -15,7 +22,8 @@ export class ProjectsService {
     projects.push({
       id: 99,
       title: title,
-      client: new Client()
+      client: new Client(),
+      status: ProjectStatus.NotSent
     });
 
     return 99;
@@ -23,6 +31,10 @@ export class ProjectsService {
 
   getAll(): Observable<Project[]> {
     return Observable.of(projects);
+  }
+
+  defineNewProjectTitleName(name: string) {
+    this.newProjectTitleDefinedSource.next(name);
   }
 
   // getAll(): Promise<Project[]> {
@@ -63,5 +75,7 @@ export class ProjectsService {
   updateProject(project: Project): void {
 
   }
+
+
 
 }

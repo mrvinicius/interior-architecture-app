@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { MzModalService } from "ng2-materialize";
+import { MzModalService, MzBaseModal } from "ng2-materialize";
 
 import { NewProjectModalComponent } from './new-project-modal.component';
 import { Project } from './../shared/project';
@@ -15,12 +15,16 @@ import { ProjectStatus } from '../shared/project-status.enum';
 export class ProjectListComponent implements OnInit {
   projects: Project[];
   ProjectStatus = ProjectStatus;
+  // @ViewChild(NewProjectModalComponent)
+  // private newProjectModal: NewProjectModalComponent;
 
   constructor(
     private projectsService: ProjectsService,
     private router: Router,
     private modalService: MzModalService
-  ) { }
+  ) {
+    projectsService.newProjectTitleDefined$.subscribe(projectTitle => this.initProject(projectTitle));
+  }
 
   getProjects(): void {
     this.projectsService.getAll()
@@ -30,15 +34,27 @@ export class ProjectListComponent implements OnInit {
     // .then(projects => this.projectsService = projects);
   }
 
+
   ngOnInit() {
     this.getProjects();
   }
 
-  openNewProjectModal() {
-    this.modalService.open(NewProjectModalComponent);
+  private initProject(title: string) {
+    let id = this.projectsService.addProject(title);
+    this.redirectToProject(id, title);
   }
 
-  redirectToProject(id: number, title?: string): void {
+  private openNewProjectModal() {
+    // let modal: NewProjectModalComponent;
+    let modalRef = this.modalService.open(NewProjectModalComponent, { });
+
+    // this.newProjectModal.
+    // modalRef
+    // modal.modalComponent.onClose();
+    // modal.afterClosed().subscribe(result => {});
+  }
+
+  private redirectToProject(id: number, title?: string): void {
     this.router.navigate(['/projetos', id]);
   }
 }

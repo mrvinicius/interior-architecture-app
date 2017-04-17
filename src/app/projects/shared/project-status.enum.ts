@@ -1,5 +1,6 @@
 export enum ProjectStatus {
     Approved,
-    Waiting,
-    Disabled
+    Disabled,
+    NotSent,
+    Waiting
 }

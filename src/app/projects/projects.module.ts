@@ -5,12 +5,15 @@ import { MaterializeModule } from 'ng2-materialize';
 
 import { LayoutModule } from '../layout/layout.module';
 
-import { ProjectsComponent } from './projects.component';
-import { ProjectListComponent } from './project-list/project-list.component';
+import { ProjectsService } from './shared/projects.service';
+
 
 import { NewProjectModalComponent } from './project-list/new-project-modal.component';
-import { ProjectsRoutingModule } from './projects-routing.module';
+import { ProjectsComponent } from './projects.component';
+import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectManagerComponent } from './project-manager/project-manager.component';
+
+import { ProjectsRoutingModule } from './projects-routing.module';
 
 @NgModule({
   imports: [
@@ -27,6 +30,7 @@ import { ProjectManagerComponent } from './project-manager/project-manager.compo
     ProjectListComponent,
     ProjectManagerComponent
   ],
+  providers: [ProjectsService],
   entryComponents: [NewProjectModalComponent]
 })
 export class ProjectsModule { }

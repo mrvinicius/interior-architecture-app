@@ -26,6 +26,7 @@
                                 <span *ngSwitchCase="ProjectStatus.Waiting">Aguardando</span>
                                 <span *ngSwitchCase="ProjectStatus.Approved">Aprovado</span>
                                 <span *ngSwitchCase="ProjectStatus.Disabled">Desativado</span>
+                                <span *ngSwitchCase="ProjectStatus.NotSent">Proposta não enviada</span>
                             </div>
                         </td>
                         <td class="right-align"><span *ngIf="!p.received">-</span></td>
