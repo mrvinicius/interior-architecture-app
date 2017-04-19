@@ -9,14 +9,14 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // } from '@angular/material';
 // import {
 //   MdlExpansionPanelModule
-// } from '@angular2-mdl-ext/expansion-panel';
+// } from '@@angular-mdl-ext/expansion-panel';
 // import {
 //   MdlSelectModule
-// } from '@angular2-mdl-ext/select';
+// } from '@@angular-mdl-ext/select';
 // import {
 //   MdlModule,
 //   MdlTextFieldModule,
-// } from 'angular2-mdl';
+// } from '@angular-mdl';
 // import { Md2AccordionModule } from 'md2';
 
 @NgModule({

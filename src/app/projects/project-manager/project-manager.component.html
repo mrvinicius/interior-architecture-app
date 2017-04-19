@@ -1,3 +1,209 @@
-<p>
-  project-manager works!
-</p>
+<main>
+  <md2-accordion class="mv-collapsible">
+    <md2-accordion-tab>
+      <md2-accordion-header class="collapsible-header"><i class="material-icons">face</i>Cliente</md2-accordion-header>
+      <section *ngIf="project" class="row">
+        <div class="col s12 m6">
+          <mz-textarea-container>
+            <i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>
+            <textarea mz-textarea label='briefing' id="briefing" length="150"></textarea>
+          </mz-textarea-container>
+        </div>
+        <div class="col s12 m6">
+          <mz-select-container class="has-add-option">
+            <select mz-select label="cliente">
+            <option>- novo cliente -</option>
+            <option>Option 1</option>
+            <option>Option 3</option>
+          </select>
+          </mz-select-container>
+          <ng-container *ngIf="true">
+            <mz-input-container>
+              <input mz-input label="nome" name="Name" id='clientName' type='text'>
+            </mz-input-container>
+            <mz-input-container>
+              <input mz-input label="email" name='Email' id='clientEmail' type='email'>
+            </mz-input-container>
+            <mz-input-container>
+              <input mz-input label="CPF" name='Cpf' id='cpf' type='text'>
+            </mz-input-container>
+          </ng-container>
+        </div>
+      </section>
+    </md2-accordion-tab>
+
+    <md2-accordion-tab>
+      <md2-accordion-header class="collapsible-header"><i class="material-icons">business</i>Profissional</md2-accordion-header>
+      <section class="row">
+        <div class="col s12 m6">
+          <mz-input-container>
+            <input mz-input label="nome profissional" name='BusinessName' id='businessName' type='text'>
+          </mz-input-container>
+          <div class="file-field input-field">
+            <div class="btn">
+              <i class="material-icons white-text">file_upload</i>
+              <input type="file">
+            </div>
+            <div class="file-path-wrapper">
+              <input class="file-path validate" placeholder="selecione sua logo" type="text">
+            </div>
+          </div>
+          <mz-select-container class="has-add-option">
+            <select mz-select label="profissionais envolvidos" multiple>
+            <option class="italic" [disabled]="true">- adicionar profissional -</option>
+            <option>Option 1</option>
+            <option>Option 3</option>
+          </select>
+          </mz-select-container>
+          <!--<div class="chips"></div>
+        <div class="chips chips-initial"></div>
+        <div class="chips chips-placeholder"></div>
+        <div class="chips chips-autocomplete"></div>-->
+        </div>
+        <div class="col s12 m6">
+          <mz-textarea-container>
+            <!--<i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>-->
+            <textarea mz-textarea label='descrição profissional' id='businessDescription' length='200'></textarea>
+          </mz-textarea-container>
+        </div>
+      </section>
+    </md2-accordion-tab>
+
+    <md2-accordion-tab>
+      <md2-accordion-header class="collapsible-header"><i class="material-icons">description</i>Detalhes da proposta</md2-accordion-header>
+      <section class="row">
+        <div class="col s12 m4">
+          <mz-textarea-container>
+            <!--<i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>-->
+            <textarea mz-textarea label='introdução da proposta' id='propIntro' length='200'></textarea>
+          </mz-textarea-container>
+        </div>
+        <div class="col s12 m8">
+          <p>serviços</p>
+          <mdl-expansion-panel-group #panelGroup>
+
+            <!--ngFor-->
+            <mdl-expansion-panel #pane2l>
+              <mdl-expansion-panel-header>
+                <mdl-expansion-panel-header-list-content (click)="pane2l.toggle()">Primary Title</mdl-expansion-panel-header-list-content>
+                <mdl-expansion-panel-header-secondary-content (click)="pane2l.toggle()">Secondary value</mdl-expansion-panel-header-secondary-content>
+              </mdl-expansion-panel-header>
+              <mdl-expansion-panel-content>
+                <mdl-expansion-panel-body class="row">
+                  <div class="col s12 m5">
+                    <mz-select-container>
+                      <select mz-select label="tipo de serviço">
+                        <option>Executivo</option>
+                        <option>Option 3</option>
+                      </select>
+                    </mz-select-container>
+                    <mz-textarea-container>
+                      <textarea mz-textarea label='descrição do serviço' id='serviceDescription' length='80'></textarea>
+                    </mz-textarea-container>
+                    <div class="switch">
+                      <label>
+                        <input type="checkbox"/>
+                        <span class="lever"></span>
+                        descrição a padrão
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col s12 m7" style="padding: 0">
+                    <div class="col s12">
+                      <span>prazo de entrega</span>
+                    </div>
+                    <div class="col s4">
+                      <mz-input-container>
+                        <input mz-input label="quant." id="timeQuant" type="email">
+                      </mz-input-container>
+                    </div>
+                    <div class="col s8">
+                      <mz-select-container>
+                        <select mz-select label="tempo">
+                          <option>dia(s)</option>
+                          <option>semana(s)</option>
+                          <option>mês(es)</option>
+                        </select>
+                      </mz-select-container>
+                    </div>
+                  </div>
+                  <div class="col s12 m7" style="padding: 0">
+                    <div class="col s12">
+                      <span>prazo de pagamento</span>
+                    </div>
+                    <div class="col s4">
+                      <mz-input-container>
+                        <input mz-input label="custo" id="cost" type="email">
+                      </mz-input-container>
+                    </div>
+                    <div class="col s8">
+                      <input type="date" class="datepicker">
+                    </div>
+                  </div>
+
+                </mdl-expansion-panel-body>
+                <mdl-expansion-panel-footer>
+                  <button class="btn-flat waves-effect" type='button'>REMOVER</button>
+                  <button class="btn-flat waves-effect" type='button'>SALVAR</button>
+                </mdl-expansion-panel-footer>
+              </mdl-expansion-panel-content>
+            </mdl-expansion-panel>
+          </mdl-expansion-panel-group>
+
+        </div>
+      </section>
+    </md2-accordion-tab>
+
+    <md2-accordion-tab>
+      <md2-accordion-header class="collapsible-header"><i class="material-icons">attach_money</i>Recebimento</md2-accordion-header>
+      <div class="row">
+        <div class="col s12">
+          <h6>Total: <b>R$ 3.000,00</b></h6>
+          <span class="italic small-font">Cobramos 15% para compensar nosso serviço</span>
+        </div>
+        <div class="col s12 m6 l4">
+          <mz-radio-button-container>
+            <input mz-radio-button label="Cobrar R$ 3.000,00" id='cobrarOp' value="1" name="radio-group" type="radio" />
+          </mz-radio-button-container>
+          <mz-radio-button-container>
+            <input mz-radio-button label="Receber R$ 3.000,00" id='receberOp' value="2" name="radio-group" type="radio" />
+          </mz-radio-button-container>
+        </div>
+        <div class="col s12 m6 l4" style="padding: 0;">
+          <mz-select-container class="has-add-option col s12">
+            <select mz-select label="sua conta bancária">
+              <option>- Nova conta -</option>
+              <option>Option 1</option>
+              <option>Option 3</option>
+            </select>
+          </mz-select-container>
+          <mz-select-container class=" col s12">
+            <select mz-select label="banco">
+              <option>Option 1</option>
+              <option>Option 3</option>
+            </select>
+          </mz-select-container>
+          <div class="row">
+            <mz-input-container class="col s4">
+              <input mz-input label="agência" id="agency">
+            </mz-input-container>
+            <mz-input-container class="col s8">
+              <input mz-input label="conta" id="account">
+            </mz-input-container>
+          </div>
+          <div class="switch">
+            <label>
+              <input type="checkbox"/>
+              <span class="lever"></span>
+              Salvar conta
+            </label>
+          </div>
+        </div>
+      </div>
+    </md2-accordion-tab>
+  </md2-accordion>
+  <div class="right-align" style="margin-top: 1rem">
+    <button class="btn-flat waves-effect">visualizar proposta</button>
+    <button class="btn-flat waves-effect">enviar<span class="hide-on-small-only"> ao cliente</span></button>
+  </div>
+</main>

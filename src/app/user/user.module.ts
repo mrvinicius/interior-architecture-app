@@ -4,7 +4,7 @@ import {
   MdlModule,
   MdlButtonModule,
   MdlTextFieldModule,
-} from 'angular2-mdl';
+} from '@angular-mdl/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import {
   MaterializeModule

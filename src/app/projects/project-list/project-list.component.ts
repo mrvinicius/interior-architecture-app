@@ -44,7 +44,7 @@ export class ProjectListComponent implements OnInit {
     this.redirectToProject(id, title);
   }
 
-  private openNewProjectModal() {
+  openNewProjectModal() {
     // let modal: NewProjectModalComponent;
     let modalRef = this.modalService.open(NewProjectModalComponent, { });
 

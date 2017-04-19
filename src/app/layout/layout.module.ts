@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { MdlModule, MdlLayoutModule } from 'angular2-mdl';
+import { MdlModule, MdlLayoutModule } from '@angular-mdl/core';
 
 import { LayoutComponent } from './layout.component';
 

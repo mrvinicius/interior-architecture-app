@@ -29,14 +29,19 @@ export class ProjectsService {
     return 99;
   }
 
-  getAll(): Observable<Project[]> {
-    return Observable.of(projects);
-  }
-
   defineNewProjectTitleName(name: string) {
     this.newProjectTitleDefinedSource.next(name);
   }
 
+  getAll(): Observable<Project[]> {
+    return Observable.of(projects);
+  }
+
+  getProject(id: number): Promise<Project> {
+    let project: Project = projects.find(project => project.id === id );
+
+    return Promise.resolve(project);
+  }
   // getAll(): Promise<Project[]> {
   //   this.headers = new Headers();
   //   this.headers.append("Content-Type", 'application/json');

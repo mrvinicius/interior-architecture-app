@@ -2,6 +2,18 @@
 # yarn lockfile v1
 
 
+"@angular-mdl/core@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@angular-mdl/core/-/core-4.0.3.tgz#9c52c8da1f8094db4d1b01d7d2faa366f6f35159"
+
+"@angular-mdl/expansion-panel@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@angular-mdl/expansion-panel/-/expansion-panel-0.0.4.tgz#7e1c8186dee824fa44730ff9fb40efad70906559"
+
+"@angular/animations@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-4.0.2.tgz#79f6a77d8b6e19b2d1fd9fa175f78143cd689727"
+
 "@angular/cli@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-1.0.0.tgz#7bfde1e7c5f28bf5bed4dda1352ee67ee887302f"
@@ -232,10 +244,6 @@ alphanum-sort@^1.0.1, alphanum-sort@^1.0.2:
 amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
-
-angular2-mdl@^2.13.2:
-  version "2.13.2"
-  resolved "https://registry.yarnpkg.com/angular2-mdl/-/angular2-mdl-2.13.2.tgz#66aec904f2e92c2375ec26be943fc0d14e274935"
 
 ansi-align@^1.1.0:
   version "1.1.0"
@@ -2907,6 +2915,10 @@ materialize-css@0.98.1, materialize-css@^0.98.1:
 math-expression-evaluator@^1.2.14:
   version "1.2.16"
   resolved "https://registry.yarnpkg.com/math-expression-evaluator/-/math-expression-evaluator-1.2.16.tgz#b357fa1ca9faefb8e48d10c14ef2bcb2d9f0a7c9"
+
+md2@^0.0.17-2:
+  version "0.0.17-2"
+  resolved "https://registry.yarnpkg.com/md2/-/md2-0.0.17-2.tgz#550fb40b727eb12b6650ee1653708b9d46110a5a"
 
 media-typer@0.3.0:
   version "0.3.0"

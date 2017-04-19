@@ -6,7 +6,7 @@
 /*** Vendors ***/
 // @import "vendors/angular-material-2";
 @import "vendors/angular2-mdl";
-// @import "vendors/angular2-mdl-ext";
+@import "vendors/angular2-mdl-ext";
 @import "vendors/materialize-css";
 
 /*** Helpers ***/
@@ -14,7 +14,7 @@
 @import "helpers/structure";
 
 /*** Base ***/
-// @import "base/color";
+@import "base/color";
 // @import "base/global";
 @import "base/structure";
 @import "base/table";
@@ -22,9 +22,9 @@
 
 /*** Components ***/
 @import "components/modal";
-// @import "components/accordion";
+@import "components/accordion";
 // @import "components/buttons";
-// @import "components/expansion-panel";
-// @import "components/forms";
+@import "components/expansion-panel";
+@import "components/forms";
 
 /*** Theme ***/
