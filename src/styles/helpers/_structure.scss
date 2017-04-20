@@ -6,10 +6,12 @@
 
 .u-utility-name {}
 
+.u-row { @extend .row; margin-bottom: 0;}
+.u-row .u-col, .row .u-col { @extend .col; padding-left: 0; padding-right: 0;}
+.u-row .col { @extend .col; }
+
 // Exemplo
 // .u-center-transform { position: absolute; left: 50%; -webkit-transform: translate(-50%); -ms-transform: translate(-50%); transform: translate(-50%);}
-// .u-row { @extend .row; margin-bottom: 0;}
-// .u-row .u-col, .row .u-col { @extend .col; padding-left: 0; padding-right: 0;}
 // .u-icon-and-text { display: flex; align-items: flex-start; i {margin-right: .25em;}}
 // .u-no-scroll {overflow-y: hidden;}
 // .u-hidden {opacity: 0;}

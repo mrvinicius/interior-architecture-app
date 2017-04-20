@@ -10,7 +10,6 @@ import { LayoutModule } from '../layout/layout.module';
 
 import { ProjectsService } from './shared/projects.service';
 
-
 import { NewProjectModalComponent } from './project-list/new-project-modal.component';
 import { ProjectsComponent } from './projects.component';
 import { ProjectListComponent } from './project-list/project-list.component';

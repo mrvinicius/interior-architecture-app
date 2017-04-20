@@ -12,6 +12,7 @@ import { CoreModule } from './core/core.module';
 import { UserModule } from './user/user.module';
 import { LayoutModule } from './layout/layout.module';
 import { ProjectsModule } from './projects/projects.module';
+import { ClientModule } from './client/client.module';
 
 /* Routing Module */
 import { AppRoutingModule } from './app-routing.module';
@@ -29,6 +30,7 @@ import { AppRoutingModule } from './app-routing.module';
     UserModule,
     LayoutModule,
     ProjectsModule,
+    ClientModule,
     AppRoutingModule
   ],
   providers: [],
