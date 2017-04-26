@@ -13,8 +13,6 @@ import {
 import { SharedModule } from '../shared/shared.module';
 import { UserRoutingModule } from './user-routing.module';
 
-import { UserService } from './shared/user.service';
-
 import { UserComponent } from './user.component';
 import { UserEntryComponent } from './user-entry/user-entry.component';
 import { UserRegisterComponent } from './user-register/user-register.component';
@@ -38,6 +36,6 @@ import { AlmostThereComponent } from './user-register/almost-there.component';
     UserEntryComponent,
     UserRegisterComponent,
   ],
-  providers: [UserService]
+  providers: []
 })
 export class UserModule { }

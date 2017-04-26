@@ -1,6 +1,10 @@
-export class Client {
-    id: number;
-    name: string;
-    email: string;
-    cpf: string;
+import { User } from '../../core/user';
+
+export class Client extends User {
+    cpfCnpj: string;
+
+
+    constructor(name?: string, email?: string, id?: string) {
+        super(name, email, id);
+    }
 }

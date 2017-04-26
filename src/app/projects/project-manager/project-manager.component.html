@@ -1,71 +1,88 @@
 <main>
-  <md2-accordion class="mv-collapsible">
+  <md2-accordion (open)="accordionChanged($event.index)" (close)="accordionChanged($event.index)" class="mv-collapsible">
     <md2-accordion-tab>
       <md2-accordion-header class="collapsible-header"><i class="material-icons">face</i>Cliente</md2-accordion-header>
-      <section *ngIf="project" class="row">
-        <div class="col s12 m6">
-          <mz-textarea-container>
-            <i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>
-            <textarea mz-textarea label='briefing' id="briefing" length="150"></textarea>
-          </mz-textarea-container>
-        </div>
-        <div class="col s12 m6">
-          <mz-select-container class="has-add-option">
-            <select mz-select label="cliente">
-            <option>- novo cliente -</option>
-            <option>Option 1</option>
-            <option>Option 3</option>
-          </select>
-          </mz-select-container>
-          <ng-container *ngIf="true">
-            <mz-input-container>
-              <input mz-input label="nome" name="Name" id='clientName' type='text'>
-            </mz-input-container>
-            <mz-input-container>
-              <input mz-input label="email" name='Email' id='clientEmail' type='email'>
-            </mz-input-container>
-            <mz-input-container>
-              <input mz-input label="CPF" name='Cpf' id='cpf' type='text'>
-            </mz-input-container>
-          </ng-container>
-        </div>
+      <section *ngIf="project && project.client && clientForm" class="row">
+        <form [formGroup]="clientForm">
+          <div class="col s12 m6">
+            <mz-textarea-container>
+              <i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>
+              <textarea mz-textarea formControlName="briefing" label='briefing' id="briefing" length="150"></textarea>
+            </mz-textarea-container>
+          </div>
+          <div class="col s12 m6">
+            <mz-select-container class="has-add-option">
+              <select mz-select #clientSelectInput formControlName="clientId" id='clientSelect' label="cliente">
+              <option [value]="0">- novo cliente -</option>
+              <ng-container *ngIf="allClients && allClients.length">
+                <option [value]="c.id" *ngFor="let c of allClients" [selected]="c.id === project.client.id">{{c.name}}</option>
+              </ng-container>
+            </select>
+            </mz-select-container>
+            <ng-container *ngIf="clientForm && clientForm.value && clientForm.value.clientId">
+              <!--<p>P.C.ID: {{project.client.id}}</p>
+              <p>Select value: {{clientForm.value.clientId}}</p>-->
+              <ng-container *ngIf="clientForm.value.clientId == 0">
+                <mz-input-container>
+                  <input mz-input formControlName="name" label="nome" name="Name" id='clientName' type='text'>
+                </mz-input-container>
+                <mz-input-container>
+                  <input mz-input formControlName="email" label="email" name='Email' id='clientEmail' type='email'>
+                </mz-input-container>
+                <mz-input-container>
+                  <input mz-input formControlName="cpfCnpj" label="CPF ou CNPJ" name='CpfCnpj' id='cpfCnpj' type='text'>
+                </mz-input-container>
+                <!--<div class="switch">
+              <label>
+              <input #saveClientSwitch (change)="saveNewClientSwitchChange(saveClientSwitch.checked)"  type="checkbox"/>
+              <span class="lever" style="margin-left: 0;"></span>
+              salvar cliente
+            </label>
+            </div>-->
+              </ng-container>
+            </ng-container>
+
+
+          </div>
+        </form>
       </section>
     </md2-accordion-tab>
 
     <md2-accordion-tab>
       <md2-accordion-header class="collapsible-header"><i class="material-icons">business</i>Profissional</md2-accordion-header>
-      <section class="row">
-        <div class="col s12 m6">
-          <mz-input-container>
-            <input mz-input label="nome profissional" name='BusinessName' id='businessName' type='text'>
-          </mz-input-container>
-          <div class="file-field input-field">
-            <div class="btn">
-              <i class="material-icons white-text">file_upload</i>
-              <input type="file">
+      <section *ngIf="professional && profForm" class="row">
+        <form [formGroup]="profForm">
+          <div class="col s12 m6">
+            <mz-input-container>
+              <input mz-input formControlName="name" [value]="professional.name" label="nome profissional" name='BusinessName' id='businessName'
+                type='text'>
+            </mz-input-container>
+            <div class="file-field input-field">
+              <div class="btn">
+                <i class="material-icons white-text">file_upload</i>
+                <input type="file">
+              </div>
+              <div class="file-path-wrapper">
+                <input [value]="" class="file-path validate" placeholder="selecione sua logo" type="text">
+              </div>
             </div>
-            <div class="file-path-wrapper">
-              <input class="file-path validate" placeholder="selecione sua logo" type="text">
-            </div>
+            <mdl-select formControlName="partnersIds" [autocomplete]="true" multiple="true" placeholder="profissionais envolvidos">
+              <option (click)="openNewPartnerModal()" class="new-option" style="display: block;">
+                - adicionar profissional -
+                <mdl-option [value] class="not-is-option"><em>- adicionar profissional -</em></mdl-option>
+              </option>
+              <ng-container *ngIf="allProfessionals && allProfessionals.length">
+                <mdl-option mdl-ripple *ngFor="let p of allProfessionals" [value]="p.id">{{ p.name }}</mdl-option>
+              </ng-container>
+            </mdl-select>
           </div>
-          <mz-select-container class="has-add-option">
-            <select mz-select label="profissionais envolvidos" multiple>
-            <option class="italic" [disabled]="true">- adicionar profissional -</option>
-            <option>Option 1</option>
-            <option>Option 3</option>
-          </select>
-          </mz-select-container>
-          <!--<div class="chips"></div>
-        <div class="chips chips-initial"></div>
-        <div class="chips chips-placeholder"></div>
-        <div class="chips chips-autocomplete"></div>-->
-        </div>
-        <div class="col s12 m6">
-          <mz-textarea-container>
-            <!--<i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>-->
-            <textarea mz-textarea label='descrição profissional' id='businessDescription' length='200'></textarea>
-          </mz-textarea-container>
-        </div>
+          <div class="col s12 m6">
+            <mz-textarea-container>
+              <textarea mz-textarea formControlName="description" [value]="professional.description" label='descrição profissional' id='businessDescription'
+                length='400'></textarea>
+            </mz-textarea-container>
+          </div>
+        </form>
       </section>
     </md2-accordion-tab>
 
@@ -195,7 +212,7 @@
             <label>
               <input type="checkbox"/>
               <span class="lever"></span>
-              Salvar conta
+              salvar conta
             </label>
           </div>
         </div>

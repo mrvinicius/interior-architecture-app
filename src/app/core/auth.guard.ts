@@ -1,3 +1,4 @@
+import { ProfessionalService } from './professional.service';
 import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
@@ -14,6 +15,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
   constructor(
     private authService: AuthService,
+    private profService: ProfessionalService,
     private router: Router
   ) { }
 
@@ -33,7 +35,12 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   checkLogin(url: string): boolean {
     // Two approaches
     // if (this.authService.isLoggedIn) { return true; }
-    if (localStorage.getItem('currentUser')) { return true; }
+    if (localStorage.getItem('currentUser')) {
+      // console.log(this.profService.serviceId);
+      // console.log(this.profService.professional);
+      
+      return true;
+    }
 
     // Store the attempted URL for redirecting
     this.authService.redirectUrl = url;

@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Rx';
 import { Subject } from "rxjs/Subject";
 
 import { Client } from './../../client/shared/client';
+import { Professional } from '../../core/professional';
 import { projects } from './mock-projects';
 import { Project } from './project';
 import { ProjectStatus } from './project-status.enum';
@@ -10,6 +11,7 @@ import { UtilsService } from './../../shared/utils/utils.service';
 
 @Injectable()
 export class ProjectsService {
+  
   // Observable string sources
   private newProjectTitleDefinedSource = new Subject<string>();
 
@@ -18,10 +20,35 @@ export class ProjectsService {
 
   constructor() { }
 
+  getHash() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i = 0; i < 5; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+  }
+
+  add(title: string): Observable<Project> {
+    let newProject: Project = {
+      id: this.getHash(),
+      title: title,
+      professional: new Professional(),
+      client: new Client(),
+      status: ProjectStatus.NotSent
+    };
+
+    projects.push(newProject);
+
+    return Observable.of(newProject);
+  }
+
   addProject(title: string): number {
     projects.push({
-      id: 99,
+      id: this.getHash(),
       title: title,
+      professional: new Professional(),
       client: new Client(),
       status: ProjectStatus.NotSent
     });
@@ -37,8 +64,8 @@ export class ProjectsService {
     return Observable.of(projects);
   }
 
-  getProject(id: number): Promise<Project> {
-    let project: Project = projects.find(project => project.id === id );
+  getProject(id: string): Promise<Project> {
+    let project: Project = projects.find(project => project.id === id);
 
     return Promise.resolve(project);
   }

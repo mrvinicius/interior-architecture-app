@@ -14,7 +14,7 @@ import { ProjectsService } from './../shared/projects.service';
                 <form #newProjectForm="ngForm">
                     <mz-input-container class="">
                         <!--<i mz-icon-mdi mz-input-prefix class="material-icons">email</i>-->
-                        <input mz-input #projectTitle (keyup.enter)="submit(projectTitle.value)" [(ngModel)]="projectTitleValue" label='título do projeto' name="ProjectTitle" [validate]="true" id="projectTitle" type="text" required>
+                        <input mz-input #projectTitle (keyup.enter)="submit(projectTitle.value, newProjectForm.form.valid)" [(ngModel)]="projectTitleValue" label='título do projeto' name="ProjectTitle" [validate]="true" id="projectTitle" type="text" required>
                     </mz-input-container>
                 </form>
             </mz-modal-content>
@@ -37,7 +37,10 @@ export class NewProjectModalComponent extends MzBaseModal {
         super();        
     }
 
-    submit(name: string) {
+    submit(name: string, formValid?: boolean) {
+        if (formValid !== undefined)
+            if (!formValid) return;
+
         this.projectsService.defineNewProjectTitleName(name);
         this.modalComponent.close();
     }

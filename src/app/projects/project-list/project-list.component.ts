@@ -28,10 +28,9 @@ export class ProjectListComponent implements OnInit {
 
   getProjects(): void {
     this.projectsService.getAll()
-      .subscribe(
-      (result: Project[]) => { this.projects = result }
-      );
-    // .then(projects => this.projectsService = projects);
+      .subscribe((result: Project[]) => {
+        this.projects = result
+      });
   }
 
 
@@ -39,14 +38,9 @@ export class ProjectListComponent implements OnInit {
     this.getProjects();
   }
 
-  private initProject(title: string) {
-    let id = this.projectsService.addProject(title);
-    this.redirectToProject(id, title);
-  }
-
   openNewProjectModal() {
     // let modal: NewProjectModalComponent;
-    let modalRef = this.modalService.open(NewProjectModalComponent, { });
+    let modalRef = this.modalService.open(NewProjectModalComponent, {});
 
     // this.newProjectModal.
     // modalRef
@@ -54,7 +48,13 @@ export class ProjectListComponent implements OnInit {
     // modal.afterClosed().subscribe(result => {});
   }
 
-  private redirectToProject(id: number, title?: string): void {
+  private initProject(title: string) {
+    this.projectsService.add(title).subscribe((project: Project) => {
+      // this.redirectToProject(project.id); // TODO: Resolver problema de adição de projetos 
+    });
+  }
+
+  private redirectToProject(id: string, title?: string): void {
     this.router.navigate(['/projetos', id]);
   }
 }

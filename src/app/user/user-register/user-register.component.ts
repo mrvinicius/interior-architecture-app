@@ -6,12 +6,11 @@ import {
   MzInputContainerComponent
 } from 'ng2-materialize';
 
-import { User } from '../shared/user';
-import { UserService } from '../shared/user.service';
 import { SpinnerService } from '../../core/spinner/spinner.service';
+import { UserService } from './../../core/user.service';
 
 @Component({
-  selector: 'app-user-register',
+  selector: 'mbx-user-register',
   templateUrl: './user-register.component.html',
   styleUrls: ['./user-register.component.scss']
 })
@@ -44,9 +43,8 @@ export class UserRegisterComponent implements OnInit {
       this.spinnerService.toggleLoadingIndicator(true);
 
       let values = this.registerForm.value;
-      let user: User = { email: values.email, name: values.name };
 
-      this.userService.add(user).subscribe(
+      this.userService.add(values.email, values.name).subscribe(
         response => {
           this.spinnerService.toggleLoadingIndicator(false);
           console.log(response);

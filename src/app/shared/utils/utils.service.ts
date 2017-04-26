@@ -5,6 +5,17 @@ export class UtilsService {
 
     constructor() { }
 
+    public static isCpfCnpj(cpfCnpj: string): boolean {
+        var re = /([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})/;
+        // return re.test(cpfCnpj);l // TODO: Reativar
+        return true;
+    }
+
+    public static isEmail(email: string): boolean {
+        var re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    }
+
     public static removeSpaces(str): string {
         str = str.trim();
         return str.replace(/ /g, '');

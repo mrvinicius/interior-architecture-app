@@ -1,5 +1,9 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
+import { AuthService } from './core/auth.service';
+import { ProfessionalService } from './core/professional.service';
+import { UserService } from './core/user.service';
+
 @Component({
   selector: 'app',
   template: `
@@ -11,4 +15,13 @@ import { Component, ViewEncapsulation } from '@angular/core';
 })
 export class AppComponent {
   loading = false;
+
+  /**
+   *
+   */
+  constructor(
+    private auth: AuthService,
+    private profService: ProfessionalService
+  ) {
+  }
 }

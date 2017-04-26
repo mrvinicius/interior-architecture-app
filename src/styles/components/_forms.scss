@@ -1,82 +1,31 @@
 // Table of Contents:
-//
-//  1. MD & MDL Select
+//  1. Checkbox
 //  2. File Input
 //  3. Icon Prefix
 
-/* 1. MD & MDL Select
+/* 1. Checkbox
 ========================================================================== */
 
-md-input-container,
-mdl-textfield,
-.mdl-textfield {
-    width: 100%;
+.mdl-checkbox__tick-outline {
+    -webkit-mask: url('/assets/images/tick-mask.svg?embed');
+    mask: url('/assets/images/tick-mask.svg?embed');
 }
 
-.has-add-option {
-    .not-is-option,
-    .select-dropdown li.disabled {
-        color: $secondary-color;
-        &:hover {
-            background-color: #eee;
-        }
-        span {
-            color: $secondary-color;
-        }
-        // Workaroung to hide checkbox on multiple select
-        [type='checkbox'],
-        label {
-            display: none;
-        }
-    }
-}
-
-mdl-option,
-.multiple-select-dropdown {
-    &.not-is-option {
-        .mdl-checkbox {
-            display: none;
-        }
-    }
-}
-
-mdl-select {
-    option.new-option {
-        font-style: italic;
-        font-size: 16px;
-        font-weight: 400;
-        letter-spacing: 0.04em;
-        line-height: 1;
-        display: -ms-flexbox;
-        display: flex;
-        min-height: 48px;
-        box-sizing: border-box;
-        -webkit-box-orient: horizontal;
-        -webkit-box-direction: normal;
-        -ms-flex-direction: row;
-        flex-direction: row;
-        -ms-flex-wrap: nowrap;
-        flex-wrap: nowrap;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        align-items: center;
-        padding: 16px; // color: rgba(0, 0, 0, 0.87);
-        overflow: hidden;
-        &:hover {
-            background-color: rgb(238, 238, 238);
-        }
-    }
-    .new-option {
-        // background-color: transparent;
-        &:hover {
-            background-color: rgb(238, 238, 238);
-        }
-    }
+.mdl-checkbox.is-checked .mdl-checkbox__tick-outline {
+    -webkit-mask: url('/assets/images/tick.svg?embed');
+    mask: url('/assets/images/tick.svg?embed');
+    background-image: url('/assets/images/tick-mask.svg?embed');
 }
 
 
 /* 2. File Input
 ========================================================================== */
+
+.mdl-select {
+    .mdl-textfield__input {
+        margin-bottom: 0;
+    }
+}
 
 .file-field {
     position: relative;

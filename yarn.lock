@@ -10,6 +10,14 @@
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/@angular-mdl/expansion-panel/-/expansion-panel-0.0.4.tgz#7e1c8186dee824fa44730ff9fb40efad70906559"
 
+"@angular-mdl/popover@^0.6.3":
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/@angular-mdl/popover/-/popover-0.6.3.tgz#8cd85de2cb4a77c5ec6cc1632f8d511f8a5371ef"
+
+"@angular-mdl/select@^0.10.4":
+  version "0.10.4"
+  resolved "https://registry.yarnpkg.com/@angular-mdl/select/-/select-0.10.4.tgz#09062a2e2f6ca005d85ea19230ef11c538dd3762"
+
 "@angular/animations@^4.0.2":
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-4.0.2.tgz#79f6a77d8b6e19b2d1fd9fa175f78143cd689727"

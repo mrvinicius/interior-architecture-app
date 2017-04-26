@@ -8,11 +8,11 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 
 /* Feature Modules */
+import { ClientModule } from './client/client.module';
 import { CoreModule } from './core/core.module';
-import { UserModule } from './user/user.module';
 import { LayoutModule } from './layout/layout.module';
 import { ProjectsModule } from './projects/projects.module';
-import { ClientModule } from './client/client.module';
+import { UserModule } from './user/user.module';
 
 /* Routing Module */
 import { AppRoutingModule } from './app-routing.module';
@@ -26,11 +26,12 @@ import { AppRoutingModule } from './app-routing.module';
     BrowserModule,
     FormsModule,
     HttpModule,
-    CoreModule.forRoot(),
     UserModule,
     LayoutModule,
     ProjectsModule,
     ClientModule,
+    
+    CoreModule.forRoot(),
     AppRoutingModule
   ],
   providers: [],

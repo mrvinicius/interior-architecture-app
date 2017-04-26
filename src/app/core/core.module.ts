@@ -1,3 +1,4 @@
+import { UserService } from './user.service';
 import {
   ModuleWithProviders, NgModule,
   Optional, SkipSelf
@@ -7,9 +8,9 @@ import { MaterializeModule } from 'ng2-materialize';
 
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
+import { ProfessionalService } from './professional.service';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { SpinnerService } from './spinner/spinner.service';
-import { UserService } from './user/shared/user.service';
 
 @NgModule({
   imports: [
@@ -17,7 +18,7 @@ import { UserService } from './user/shared/user.service';
     MaterializeModule.forRoot()
   ],
   declarations: [
-    SpinnerComponent,
+    SpinnerComponent
   ],
   exports: [
     SpinnerComponent
@@ -38,8 +39,9 @@ export class CoreModule {
       providers: [
         AuthGuard,
         AuthService,
+        ProfessionalService,
         SpinnerService,
-        UserService
+        UserService,
       ]
     };
   }

@@ -7,11 +7,11 @@ import {
 } from 'ng2-materialize';
 
 import { AuthService } from '../../core/auth.service';
-import { UserService } from '../shared/user.service';
 import { SpinnerService } from '../../core/spinner/spinner.service';
+import { UserService } from '../../core/user.service';
 
 @Component({
-  selector: 'app-user-entry',
+  selector: 'mbx-user-entry',
   templateUrl: './user-entry.component.html',
   styleUrls: ['./user-entry.component.scss']
 })
@@ -55,37 +55,13 @@ export class UserEntryComponent implements OnInit {
           if (result) {
             this.router.navigate(['/projetos']);
           } else {
-            this.errorMessage = "Dados incorretos."
+            this.errorMessage = "Dados incorretos"
             // email nao cadastrado
             // senha incorreta
             // outros erros
           }
         }
       );
-      // this.userService.auth(values.email, values.password).subscribe(
-      //   response => {
-      //     this.spinnerService.toggleLoadingIndicator(false);
-      //   },
-      //   error => {
-      //     this.spinnerService.toggleLoadingIndicator(false);
-      //     console.log(error);
-      //   }
-      // );
-
-      // this.userService.auth(values.email, values.password)
-      //   .then(response => {
-      //     console.log(response)
-      //     if (response && response.user) {
-      //       this.spinnerService.toggleLoadingIndicator(false);
-      //     } else {
-      //       this.spinnerService.toggleLoadingIndicator(false);
-      //       this.errorMessage = "Dados incorretos."
-      //       // email nao cadastrado
-      //       // senha incorreta
-      //       // outros erros
-      //     }
-      //   })
-      //   .catch();
     }
   }
 

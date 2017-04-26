@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ProjectsService } from './shared/projects.service';
+import { ProfessionalService } from './../core/professional.service';
 
 @Component({
   selector: 'mbp-projects',
-  // Change to module-level when create Supplier or Client features
-  // providers: [ProjectsService],
   template: `
     <mb-layout>
       <router-outlet id="projectsRouter"></router-outlet>
@@ -14,9 +12,21 @@ import { ProjectsService } from './shared/projects.service';
 })
 export class ProjectsComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    // private clientsService: ClientService
+    private profService: ProfessionalService
+  ) { }
 
   ngOnInit() {
+    // let user = this.userService.getCurrentUser();
+    // if (user && user.clients === undefined || user.clients === null) {
+    //   this.clientsService.getAllByProfessional(user.Id).subscribe(
+    //     result => {
+    //       user.clients = result;
+    //       this.userService.setCurrentUser(user);
+    //     })
+    // }
+
   }
 
 }

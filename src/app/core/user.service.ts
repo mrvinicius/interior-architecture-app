@@ -1,56 +1,37 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http, Jsonp, Response, RequestOptions } from '@angular/http';
+import { Headers, Http, Response, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch'
 import 'rxjs/add/operator/toPromise';
 
 import { User } from './user';
-import { users } from './mock-user';
-
-const baseUrl: string = 'http://52.67.21.201/';
 
 @Injectable()
 export class UserService {
+  public user: User;
+  private readonly baseUrl: string = 'http://52.67.21.201/muuving/api/';
 
   constructor(
     private http: Http
   ) { }
 
-  // add(user) {
-  //   let options = new RequestOptions({ headers: this.getHeaders() });
-
-  //   return this.http
-  //     .put(baseUrl + 'muuving/api/profissional/add', {nome: "Vinicius", email: "vinicius.rocha@muuving.com.br"}, options)
-  //     .toPromise()
-  //     .then(this.extractData)
-  //     .catch(this.handleError);
-  // }
-
-  add(user) {
+  add(email: string, name: string) {
     let options = new RequestOptions({ headers: this.getHeaders() });
 
-    return this.http.put(baseUrl + 'muuving/api/profissional/add', { email: user.email, nome: user.name }, options)
+    return this.http.put(this.baseUrl + 'profissional/add', { email: email, nome: name }, options)
       .map(this.extractData)
       .catch(this.handleError);
   }
 
-  auth(email: string, password: string): Promise<any> {
-    let options = new RequestOptions({ headers: this.getHeaders() });
-    let response = { user: null };
-    response.user = users.find(user => {
-      if (user.email !== email && user.password !== password) {
-        return false;
-      } else if (user.email == email && user.password == password) {
-        return true;
-      }
-      
-      return false;
-    });
-
-
-    return Promise.resolve(response);
+  getCurrentUser() {
+    return JSON.parse(localStorage.getItem('currentUser'));
   }
+
+  setCurrentUser(user: User): void {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  }
+
 
   private extractData(res: Response) {
     return res.json();
