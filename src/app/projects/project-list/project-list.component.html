@@ -2,38 +2,48 @@
     <a (click)="openNewProjectModal()" class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">add</i></a>
 </div>
 
-<div class="row">
+<main class="layout-content left-space u-row">
     <div class="col s12">
-        <table id="projectsList" class="highlight">
-            <thead>
+        <table *ngIf="getProjects().length && getClients().length" id="projectsList" class="highlight fixed-header">
+            <thead class="grey-text text-darken-1">
                 <tr>
-                    <th data-field="title">Título</th>
-                    <th data-field="client">Cliente</th>
-                    <th data-field="status">Aprovação</th>
-                    <th data-field="wasPaid">Pagamento</th>
-                    <th data-field="received" class="right-align">Valor (R$)</th>
-                    <!--<th class="right-align"></th>-->
+                    <th data-field="title">Projeto</th>
+                    <th data-field="client" class="hide-on-small-only">Cliente</th>
+                    <th data-field="wasPaid" class="hide-on-small-only">Pagamento</th>
+                    <!--<th data-field="status" hidden>Status</th>-->
+                    <th data-field="received" class="right-align">Valor<span class="hide-on-small-only"> (R$)</span></th>
+
+                    <th class="right-align"></th>
                 </tr>
             </thead>
             <tbody>
-                <ng-container *ngFor="let p of projects">
-                    <tr (click)="redirectToProject(p.id)">
-                        <td>{{p.title}}</td>
-                        <td><span *ngIf="p.client && p.client.name">{{p.client.name}}</span></td>
-                        <td><span *ngIf="p.wasPaid !== null">{{p.wasPaid ? 'Pago' : 'Não'}}</span></td>
-                        <td>
+                <ng-container *ngFor="let p of getProjects()">
+                    <!--(click)="redirectToProject(p.title)"-->
+                    <tr *ngIf="p.isActive">
+                        <td (click)="redirectToProject(p.title)" class="pointer">{{p.title}}</td>
+                        <td (click)="redirectToProject(p.title)" class="pointer hide-on-small-only"><span *ngIf="p.client && p.client.id">{{getClientName(p.client.id)}}</span></td>
+                        <td (click)="redirectToProject(p.title)" class="pointer hide-on-small-only"><span *ngIf="p.wasPaid !== null">{{p.wasPaid ? 'Pago' : 'Pendente'}}</span></td>
+                        <!--<td hidden>
                             <div *ngIf="p.status !== null" [ngSwitch]="p.status">
                                 <span *ngSwitchCase="ProjectStatus.Waiting">Aguardando</span>
                                 <span *ngSwitchCase="ProjectStatus.Approved">Aprovado</span>
                                 <span *ngSwitchCase="ProjectStatus.Disabled">Desativado</span>
                                 <span *ngSwitchCase="ProjectStatus.NotSent">Proposta não enviada</span>
                             </div>
+                        </td>-->
+                        <td (click)="redirectToProject(p.title)" class="pointer right-align"><span *ngIf="!p.received">-</span></td>
+                        <td (click)="redirectToProject(p.title)" class="pointer right-align"><span *ngIf="p.received">{{p.received}}</span></td>
+                        <td>
+                            <a (click)="disableProject(p.id)" class="btn-floating btn-small waves-effect waves-dark transparent table-action-cell" style="box-shadow: none">
+                                <i class="material-icons grey-text text-grey-darken-1">delete</i>
+                            </a>
                         </td>
-                        <td class="right-align"><span *ngIf="!p.received">-</span></td>
-                        <td class="right-align"><span *ngIf="p.received">{{p.received}}</span></td>
                     </tr>
                 </ng-container>
             </tbody>
         </table>
     </div>
-</div>
+    <div *ngIf="getProjects().length < 1" class="center-align">
+        <h5>Você ainda não adicionou projetos</h5>
+    </div>
+</main>

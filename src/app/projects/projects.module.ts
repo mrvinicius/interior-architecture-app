@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterializeModule } from 'ng2-materialize';
@@ -19,6 +19,7 @@ import { ProjectManagerComponent } from './project-manager/project-manager.compo
 import { NewPartnerModalComponent } from './project-manager/new-partner-modal.component';
 
 import { ProjectsRoutingModule } from './projects-routing.module';
+import { ProjectAmbienceComponent } from './project-ambience/project-ambience.component';
 
 @NgModule({
   imports: [
@@ -40,12 +41,29 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     NewProjectModalComponent,
     ProjectsComponent,
     ProjectListComponent,
-    ProjectManagerComponent
+    ProjectManagerComponent,
+    ProjectAmbienceComponent
   ],
-  providers: [ProjectsService],
+  providers: [],
   entryComponents: [
     NewPartnerModalComponent,
     NewProjectModalComponent
   ]
 })
-export class ProjectsModule { }
+export class ProjectsModule {
+  constructor( @Optional() @SkipSelf() parentModule: ProjectsModule) {
+    if (parentModule) {
+      throw new Error(
+        'ProjectsModule is already loaded. Import it in the AppModule only');
+    }
+  }
+  static forRoot(): ModuleWithProviders {    
+    return {
+      ngModule: ProjectsModule,
+      // Add Services that should have only one instance - Singletons - App-wide
+      providers: [
+        ProjectsService
+      ]
+    };
+  }
+}

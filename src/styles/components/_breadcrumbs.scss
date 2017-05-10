@@ -1,0 +1,7 @@
+.breadcrumb {
+    &.show-on-small, .show-on-small {
+        @media #{$small-and-down} {
+            display: inline !important;
+        }
+    }
+}

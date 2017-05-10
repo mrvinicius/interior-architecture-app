@@ -11,12 +11,14 @@ import {
 } from 'ng2-materialize';
 
 import { SharedModule } from '../shared/shared.module';
+import { LayoutModule } from '../layout/layout.module';
 import { UserRoutingModule } from './user-routing.module';
 
 import { UserComponent } from './user.component';
 import { UserEntryComponent } from './user-entry/user-entry.component';
 import { UserRegisterComponent } from './user-register/user-register.component';
 import { AlmostThereComponent } from './user-register/almost-there.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 @NgModule({
   imports: [
@@ -27,6 +29,7 @@ import { AlmostThereComponent } from './user-register/almost-there.component';
     MaterializeModule,
     ReactiveFormsModule,
     FormsModule,
+    LayoutModule,
 
     UserRoutingModule
   ],
@@ -35,6 +38,7 @@ import { AlmostThereComponent } from './user-register/almost-there.component';
     UserComponent,
     UserEntryComponent,
     UserRegisterComponent,
+    UserProfileComponent,
   ],
   providers: []
 })

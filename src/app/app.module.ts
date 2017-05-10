@@ -28,8 +28,8 @@ import { AppRoutingModule } from './app-routing.module';
     HttpModule,
     UserModule,
     LayoutModule,
-    ProjectsModule,
-    ClientModule,
+    ProjectsModule.forRoot(),
+    ClientModule.forRoot(),
     
     CoreModule.forRoot(),
     AppRoutingModule

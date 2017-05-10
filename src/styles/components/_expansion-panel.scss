@@ -6,8 +6,11 @@
             overflow-y: visible;
         }
     }
+}
+
+.mdl-expansion-panel {
     .mdl-expansion-panel__content {
-        overflow: auto;
+        overflow: visible;
         overflow-y: visible;
     }
 }

@@ -1,0 +1,179 @@
+<main class="row">
+  <div class="col s12 m6">
+    <mz-select-container class="has-add-option">
+      <select mz-select id='ambienceType' label="tipo de ambiente">
+        <option [value]="0">- outro -</option>
+      </select>
+    </mz-select-container>
+  </div>
+  <div class="col s12 m6">
+    <mz-input-container>
+      <input mz-input min="0" max="9999" label="área m²" type='number'>
+    </mz-input-container>
+  </div>
+
+  <div class="col s12">
+    <div style="display: flex; align-items: baseline;">
+      <span style="margin-right: 1rem">Serviços</span>
+      <span>
+        <a (click)="showNewServicePanel()" class="btn-floating btn-small waves-effect waves-dark transparent" style="box-shadow: none">
+          <i style="color: #ee6e73 !important;" class="material-icons">add</i>
+        </a>
+      </span>
+    </div>
+
+
+    <mdl-expansion-panel-group #servicesPanels>
+      <ng-container *ngIf="false">
+        <mdl-expansion-panel *ngFor="let s of currentAmbience.services; let i=index">
+          <mdl-expansion-panel-header>
+            <mdl-expansion-panel-header-list-content (click)="newServicePanel.toggle()">
+              <ng-container *ngIf="s.serviceType">{{s.serviceType.type}}</ng-container>
+            </mdl-expansion-panel-header-list-content>
+          </mdl-expansion-panel-header>
+
+          <mdl-expansion-panel-content>
+            <mdl-expansion-panel-body class="u-row">
+              <form *ngIf="servicesForms.length" [formGroup]="servicesForms[i]">
+                <div class="col s12 m6">
+                  <ng-container *ngIf="serviceTypes() && serviceTypes().length">
+                    <mz-select-container>
+                      <select mz-select formControlName="serviceTypeId" placeholder="Tipo de serviço">
+                      <option *ngFor="let sType of serviceTypes()" [value]="sType.id">{{sType.type}}</option>
+                    </select>
+                    </mz-select-container>
+                  </ng-container>
+                  <ng-container *ngIf="servicesForms[i].value.serviceTypeId">
+                    <mz-textarea-container>
+                      <textarea mz-textarea formControlName="serviceDesc" [value]="getServiceTypeDescription(servicesForms[i].value.serviceTypeId)"
+                        label='descrição do serviço' id='serviceDescription' class="ng-touched" length='100'></textarea>
+                    </mz-textarea-container>
+                    <div class="switch">
+                      <label>
+                      <input type="checkbox"/>
+                      <span class="lever" style="margin-left: 0;"></span>
+                      descrição a padrão
+                    </label>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <div class="col s12 m6">
+                  <p style="margin-bottom: 0;">Prazo de entrega</p>
+                  <div class="row">
+                    <div class="col s3" style="padding-left: 0;">
+                      <mz-input-container>
+                        <input mz-input label="quantidade" value="1" min="1" id="timeCount" class="right-align" type='number'>
+                      </mz-input-container>
+                    </div>
+                    <div class="col s9" style="padding-right: 0;">
+                      <mz-select-container>
+                        <select mz-select id='timeUnit' label="tempo">
+                      <option [value]="1">Dia(s)</option>
+                      <option [value]="7">Semana(s)</option>
+                      <option [value]="30" [selected]="true">Mes(es)</option>
+                    </select>
+                      </mz-select-container>
+                    </div>
+                  </div>
+
+                  <p style="margin-bottom: 0;">Pagamento</p>
+                  <div class="row">
+                    <div class="col s3" style="padding-left: 0;">
+                      <mz-input-container>
+                        <input mz-input label="custo" id="serviceCost" type='number'>
+                      </mz-input-container>
+                    </div>
+                    <div class="col s9" style="padding-right: 0;">
+                      <label for="paymentDeadline" class="">prazo de pagamento</label>
+                      <input type="date" class="datepicker" style="height: 2.5rem;">
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </mdl-expansion-panel-body>
+            <mdl-expansion-panel-footer>
+              <button class="btn-flat waves-effect" type='button'>CANCELAR</button>
+              <button class="btn-flat waves-effect" type='button'>SALVAR</button>
+            </mdl-expansion-panel-footer>
+          </mdl-expansion-panel-content>
+        </mdl-expansion-panel>
+      </ng-container>
+
+      <mdl-expansion-panel [hidden]="newServiceForm === undefined" id="newServicePanel" #newServicePanel>
+        <mdl-expansion-panel-header>
+          <mdl-expansion-panel-header-list-content (click)="newServicePanel.toggle()">
+            Novo serviço
+          </mdl-expansion-panel-header-list-content>
+        </mdl-expansion-panel-header>
+
+        <mdl-expansion-panel-content>
+          <mdl-expansion-panel-body class="u-row" *ngIf="newServiceForm">
+            <form [formGroup]="newServiceForm">
+              <div class="col s12 m6">
+                <ng-container *ngIf="serviceTypes() && serviceTypes().length">
+                  <mz-select-container>
+                    <select mz-select formControlName="serviceTypeId" placeholder="tipo de serviço">
+                        <option *ngFor="let sType of serviceTypes()" [value]="sType.id">{{sType.type}}</option>
+                    </select>
+                  </mz-select-container>
+                </ng-container>
+                <ng-container *ngIf="newServiceForm.value.serviceTypeId">
+                  <mz-textarea-container>
+                    <textarea mz-textarea formControlName="serviceDesc" [value]="getServiceTypeDescription(newServiceForm.value.serviceTypeId)"
+                      label='descrição do serviço' id='serviceDescription' class="ng-touched" length='100'></textarea>
+                  </mz-textarea-container>
+                  <div class="switch">
+                    <label>
+                    <input type="checkbox"/>
+                    <span class="lever" style="margin-left: 0;"></span>
+                    descrição a padrão
+                  </label>
+                  </div>
+                </ng-container>
+              </div>
+
+              <div class="col s12 m6">
+                <p style="margin-bottom: 0;">Prazo de entrega</p>
+                <div class="row">
+                  <div class="col s3" style="padding-left: 0;">
+                    <mz-input-container>
+                      <input mz-input label="quantidade" value="1" min="1" id="timeCount" class="right-align" type='number'>
+                    </mz-input-container>
+                  </div>
+                  <div class="col s9" style="padding-right: 0;">
+                    <mz-select-container>
+                      <select mz-select id='timeUnit' label="tempo">
+                      <option [value]="1">Dia(s)</option>
+                      <option [value]="7">Semana(s)</option>
+                      <option [value]="30" [selected]="true">Mes(es)</option>
+                    </select>
+                    </mz-select-container>
+                  </div>
+                </div>
+
+                <p style="margin-bottom: 0;">Pagamento</p>
+                <div class="row">
+                  <div class="col s3" style="padding-left: 0;">
+                    <mz-input-container>
+                      <input mz-input label="custo" id="serviceCost" type='number'>
+                    </mz-input-container>
+                  </div>
+                  <div class="col s9" style="padding-right: 0;">
+                    <label for="paymentDeadline" class="">prazo de pagamento</label>
+                    <input type="date" class="datepicker" style="height: 2.5rem;">
+                  </div>
+                </div>
+              </div>
+            </form>
+          </mdl-expansion-panel-body>
+          <mdl-expansion-panel-footer>
+            <button class="btn-flat waves-effect" type='button'>CANCELAR</button>
+            <button class="btn-flat waves-effect" type='button'>SALVAR</button>
+          </mdl-expansion-panel-footer>
+        </mdl-expansion-panel-content>
+      </mdl-expansion-panel>
+    </mdl-expansion-panel-group>
+
+  </div>
+</main>

@@ -92,6 +92,7 @@ export class ProfessionalService {
         professional.cpfCnpj = body.CpfCnpj;
         professional.celular = body.Celular;
         professional.professionId = body.ProfissaoId;
+        professional.description = body.Descricao;
 
         return professional;
       })
@@ -109,7 +110,7 @@ export class ProfessionalService {
         let body = JSON.parse(response.text());
 
         return body.map((professional) => {
-          return new Professional(String(professional.Nome), String(professional.Email), String(professional.Id));
+          return new Professional(professional.Nome, professional.Email, professional.Id);
         });
       })
       .catch(this.handleError);
@@ -118,13 +119,12 @@ export class ProfessionalService {
   /**
    * Atualiza o Profissional local e da base
    */
-  // update(id: string, name?: string, email?: string, cpfCnpj?: string, celular?: string, professionId?: string) {
   update(prof: Professional) {
     let options = new RequestOptions({ headers: this.getHeaders() });
 
     if (prof.name) this._professional.name = prof.name;
     if (prof.email) this._professional.email = prof.email;
-    if (prof.description) this._professional.description = prof.description;
+    if (prof.description !== undefined) this._professional.description = prof.description;
     if (prof.cpfCnpj) this._professional.cpfCnpj = prof.cpfCnpj;
     if (prof.celular) this._professional.celular = prof.celular;
     if (prof.professionId) this._professional.professionId = prof.professionId;
@@ -143,9 +143,7 @@ export class ProfessionalService {
 
     return this.http.post(this.baseUrl + '/update', data, options)
       .map(response => {
-        console.log('Profissional', this._professional);
-        console.log('Data', data);
-        console.log('Response', response);
+        return response;
       })
       .catch(this.handleError);
   }

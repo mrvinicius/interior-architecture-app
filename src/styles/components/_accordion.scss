@@ -26,12 +26,18 @@ md2-accordion-header {
         .md2-accordion-header {
             padding: 0;
             border-bottom: none;
-            min-height: 45px;
+            min-height: 43px;
             box-shadow: none;
             background-color: $collapsible-header-color;
         }
         .md2-accordion-tab-content {
-            padding: 2rem;
+            padding: .75rem;
+            @media #{$medium-and-up} {
+                padding: 1rem;
+            }
+            @media #{$large-and-up} {
+                padding: 2rem;
+            }
         }
         &.md2-accordion-tab-active {
             >.md2-accordion-header {
@@ -43,11 +49,6 @@ md2-accordion-header {
     }
 }
 
-.md2-accordion-header,
-md2-accordion-header {
-    min-height: 49px;
-    line-height: 49px;
-}
 
 .collapsible-header {
     padding: 0 1rem;

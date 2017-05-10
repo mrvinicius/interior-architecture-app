@@ -1,0 +1,43 @@
+<mb-layout>
+  <main class="layout-content row">
+    <form [formGroup]="userProfileForm">
+      <div class="col s12 m6 l5">
+        <mz-input-container>
+          <input mz-input formControlName="name" [value]="user.name" label="nome profissional" name='BusinessName' id='businessName'
+            type='text'>
+        </mz-input-container>
+        <!--<mz-input-container>
+          <input mz-input formControlName="cpf" [value]="user.cpf" label="CPF" name='Cpf' id='cpf' type='text'>
+        </mz-input-container>-->
+        <div>
+          <label>profissão</label>
+          <mz-radio-button-container>
+            <input mz-radio-button label="Estudante" id='studentOp' value="1" name="profession-group" type="radio" />
+          </mz-radio-button-container>
+          <mz-radio-button-container>
+            <input mz-radio-button label="Arquiteto" id='architectOp' value="2" name="profession-group" type="radio" />
+          </mz-radio-button-container>
+          <mz-radio-button-container>
+            <input mz-radio-button label="Designer de Interiores" id='designerOp' value="3" name="profession-group" type="radio" />
+          </mz-radio-button-container>
+        </div>
+      </div>
+
+      <div class="col s12 m6 l5">
+        <div class="file-field input-field">
+          <div class="btn disabled">
+            <i class="material-icons white-text">file_upload</i>
+            <input type="file">
+          </div>
+          <div class="file-path-wrapper">
+            <input [value]="" disabled class="file-path validate" placeholder="selecione sua logo" type="text">
+          </div>
+        </div>
+        <!--<mz-textarea-container>
+          <textarea mz-textarea formControlName="description" [value]="user.description" label='descrição profissional' id='businessDescription'
+            length='400'></textarea>
+        </mz-textarea-container>-->
+      </div>
+    </form>
+  </main>
+</mb-layout>

@@ -23,7 +23,7 @@ $mv-black-light: lighten($mv-black, 5%);
 $mv-black-dark: darken($mv-black, 15%);
 $mv-light-black: rgba($mv-black, 0.7);
 $mv-red: #D44D5C;
-$mv-red-light: lighten($mv-red, 10%);
+$mv-red-light: #e45e6e;
 $mv-red-dark: darken($mv-red, 10%);
 $mv-graphite: #444;
 
@@ -91,3 +91,20 @@ $button-floating-color: #fff;
 $button-floating-size: 40px;
 $button-floating-large-size: 56px;
 $button-floating-radius: 50%;
+
+// 11. Global
+// ==========================================================================
+
+// Media Query Ranges
+$small-screen-up: 601px !default;
+$medium-screen-up: 993px !default;
+$large-screen-up: 1201px !default;
+$small-screen: 600px !default;
+$medium-screen: 992px !default;
+$large-screen: 1200px !default;
+
+$medium-and-up: "only screen and (min-width : #{$small-screen-up})" !default;
+$large-and-up: "only screen and (min-width : #{$medium-screen-up})" !default;
+$small-and-down: "only screen and (max-width : #{$small-screen})" !default;
+$medium-and-down: "only screen and (max-width : #{$medium-screen})" !default;
+$medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})" !default;

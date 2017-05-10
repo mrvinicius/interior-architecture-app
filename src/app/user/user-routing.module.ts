@@ -3,7 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { UserComponent } from './user.component';
 import { UserEntryComponent } from './user-entry/user-entry.component';
-import { UserRegisterComponent } from "./user-register/user-register.component";
+import { UserProfileComponent } from './user-profile/user-profile.component';
+import { UserRegisterComponent } from './user-register/user-register.component';
 import { AlmostThereComponent } from './user-register/almost-there.component';
 
 const routes: Routes = [
@@ -13,7 +14,8 @@ const routes: Routes = [
             { path: '', redirectTo: '/entrar', pathMatch: 'full' },
             { path: 'entrar', component: UserEntryComponent },
             { path: 'cadastro', component: UserRegisterComponent },
-            { path: 'quase-la', component: AlmostThereComponent }
+            { path: 'quase-la', component: AlmostThereComponent },
+            { path: 'perfil', component: UserProfileComponent }
         ]
     }
 ];

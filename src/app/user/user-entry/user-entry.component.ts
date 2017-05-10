@@ -44,18 +44,18 @@ export class UserEntryComponent implements OnInit {
     } else {
       let values = this.loginForm.value;
 
-      // Ativa o spinner
       this.spinnerService.toggleLoadingIndicator(true);
 
       this.auth.login(values.email, values.password).subscribe(
         result => {
           this.spinnerService.toggleLoadingIndicator(false);
-          console.log(result);
 
           if (result) {
             this.router.navigate(['/projetos']);
           } else {
             this.errorMessage = "Dados incorretos"
+
+            // TODO: implement correct feedbacks
             // email nao cadastrado
             // senha incorreta
             // outros erros

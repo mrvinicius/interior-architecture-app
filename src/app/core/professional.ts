@@ -13,8 +13,4 @@ export class Professional extends User {
     constructor(name?: string, email?: string, id?: string) {
         super(name, email, id);
     }
-
-    addClient(client: Client): void {
-        this.clients.push(client);
-    }
 }

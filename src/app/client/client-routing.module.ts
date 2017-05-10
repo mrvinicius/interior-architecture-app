@@ -14,7 +14,7 @@ const routes: Routes = [
                 path: '',
                 canActivateChild: [AuthGuard],
                 children: [
-                    { path: '', component: ClientListComponent },
+                    { path: '', component: ClientListComponent, data: { breadcrumb: 'Clientes' } },
                 ]
             }
         ]

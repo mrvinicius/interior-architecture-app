@@ -6,11 +6,12 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/delay';
 
 import { User } from './user';
+import { Professional } from './professional';
 
 @Injectable()
 export class AuthService {
   public token: string;
-  public currentUser: User;
+  public currentUser: Professional;
   isLoggedIn: boolean = false;
   // store the URL so we can redirect after logging in
   redirectUrl: string;

@@ -1,7 +1,6 @@
 /* 1. MD Select, MDL Select, Mz Select
 ========================================================================== */
 
-
 .mdl-popover .mdl-list {
     @extend .z-depth-1;
 }
@@ -77,5 +76,8 @@ mdl-select {
         &:hover {
             background-color: rgb(238, 238, 238);
         }
+    }
+    .mdl-popover.direction-up {
+        bottom: -225px;
     }
 }

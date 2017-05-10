@@ -1,15 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 
+import { AuthService } from '../core/auth.service';
+
 @Component({
   selector: 'mb-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent implements OnInit {
+  userName;
 
-  constructor() { }
+  constructor(
+    private authService: AuthService
+  ) { }
 
   ngOnInit() {
+    this.userName = this.authService.currentUser.name;
   }
 
 }

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Optional, SkipSelf, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { LayoutModule } from '../layout/layout.module';
@@ -12,15 +12,29 @@ import { ClientRoutingModule } from './client-routing.module';
   imports: [
     CommonModule,
     LayoutModule,
-    
+
     ClientRoutingModule
   ],
   declarations: [
     ClientListComponent,
     ClientComponent
   ],
-  providers: [
-    ClientService
-  ]
+  providers: []
 })
-export class ClientModule { }
+export class ClientModule {
+  constructor( @Optional() @SkipSelf() parentModule: ClientModule) {
+    if (parentModule) {
+      throw new Error(
+        'ClientModule is already loaded. Import it in the AppModule only');
+    }
+  }
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: ClientModule,
+      // Add Services that should have only one instance - Singletons - App-wide
+      providers: [
+        ClientService
+      ]
+    };
+  }
+}

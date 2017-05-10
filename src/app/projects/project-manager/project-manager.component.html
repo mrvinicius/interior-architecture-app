@@ -1,27 +1,31 @@
-<main>
+<main class="row">
   <md2-accordion (open)="accordionChanged($event.index)" (close)="accordionChanged($event.index)" class="mv-collapsible">
     <md2-accordion-tab>
       <md2-accordion-header class="collapsible-header"><i class="material-icons">face</i>Cliente</md2-accordion-header>
-      <section *ngIf="project && project.client && clientForm" class="row">
+      <section *ngIf="project && clientForm" class="row">
         <form [formGroup]="clientForm">
           <div class="col s12 m6">
             <mz-textarea-container>
               <i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>
               <textarea mz-textarea formControlName="briefing" label='briefing' id="briefing" length="150"></textarea>
             </mz-textarea-container>
+            <mz-select-container>
+              <select mz-select formControlName="estado" id='stateSelect'  placeholder="estado da obra">
+              <option [value]="e" *ngFor="let e of estados" [selected]="e === project.activeProposal.uf">{{e}}</option>
+            </select>
+            </mz-select-container>
           </div>
           <div class="col s12 m6">
             <mz-select-container class="has-add-option">
               <select mz-select #clientSelectInput formControlName="clientId" id='clientSelect' label="cliente">
               <option [value]="0">- novo cliente -</option>
-              <ng-container *ngIf="allClients && allClients.length">
-                <option [value]="c.id" *ngFor="let c of allClients" [selected]="c.id === project.client.id">{{c.name}}</option>
-              </ng-container>
+              <option [value]="c.id" *ngFor="let c of allClients()" [selected]="c.id === project.client.id">{{c.name}}</option>
             </select>
             </mz-select-container>
             <ng-container *ngIf="clientForm && clientForm.value && clientForm.value.clientId">
               <!--<p>P.C.ID: {{project.client.id}}</p>
-              <p>Select value: {{clientForm.value.clientId}}</p>-->
+              <p>Select value: {{clientForm.value.clientId}}</p>
+              <p>Form Unsaved: {{clientFormUnsaved}}</p>-->
               <ng-container *ngIf="clientForm.value.clientId == 0">
                 <mz-input-container>
                   <input mz-input formControlName="name" label="nome" name="Name" id='clientName' type='text'>
@@ -57,7 +61,7 @@
               <input mz-input formControlName="name" [value]="professional.name" label="nome profissional" name='BusinessName' id='businessName'
                 type='text'>
             </mz-input-container>
-            <div class="file-field input-field">
+            <div class="file-field input-field" hidden>
               <div class="btn">
                 <i class="material-icons white-text">file_upload</i>
                 <input type="file">
@@ -66,14 +70,12 @@
                 <input [value]="" class="file-path validate" placeholder="selecione sua logo" type="text">
               </div>
             </div>
-            <mdl-select formControlName="partnersIds" [autocomplete]="true" multiple="true" placeholder="profissionais envolvidos">
+            <mdl-select formControlName="partnersIds" multiple="true" placeholder="profissionais envolvidos">
               <option (click)="openNewPartnerModal()" class="new-option" style="display: block;">
                 - adicionar profissional -
                 <mdl-option [value] class="not-is-option"><em>- adicionar profissional -</em></mdl-option>
               </option>
-              <ng-container *ngIf="allProfessionals && allProfessionals.length">
-                <mdl-option mdl-ripple *ngFor="let p of allProfessionals" [value]="p.id">{{ p.name }}</mdl-option>
-              </ng-container>
+              <mdl-option mdl-ripple *ngFor="let p of allProfessionals()" [value]="p.id">{{ p.name }}</mdl-option>
             </mdl-select>
           </div>
           <div class="col s12 m6">
@@ -88,86 +90,67 @@
 
     <md2-accordion-tab>
       <md2-accordion-header class="collapsible-header"><i class="material-icons">description</i>Detalhes da proposta</md2-accordion-header>
-      <section class="row">
-        <div class="col s12 m4">
-          <mz-textarea-container>
-            <!--<i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>-->
-            <textarea mz-textarea label='introdução da proposta' id='propIntro' length='200'></textarea>
-          </mz-textarea-container>
+      <section *ngIf="project" class="row">
+        <div class="col s12">
+          <form [formGroup]="proposalForm">
+            <mz-textarea-container>
+              <!--<i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>-->
+              <textarea mz-textarea formControlName="proposalIntro" label='introdução da proposta' id='propIntro' length='200'></textarea>
+            </mz-textarea-container>
+          </form>
         </div>
-        <div class="col s12 m8">
-          <p>serviços</p>
-          <mdl-expansion-panel-group #panelGroup>
 
-            <!--ngFor-->
-            <mdl-expansion-panel #pane2l>
-              <mdl-expansion-panel-header>
-                <mdl-expansion-panel-header-list-content (click)="pane2l.toggle()">Primary Title</mdl-expansion-panel-header-list-content>
-                <mdl-expansion-panel-header-secondary-content (click)="pane2l.toggle()">Secondary value</mdl-expansion-panel-header-secondary-content>
-              </mdl-expansion-panel-header>
-              <mdl-expansion-panel-content>
-                <mdl-expansion-panel-body class="u-row">
-                  <div class="col s12 m5">
-                    <mz-select-container>
-                      <select mz-select label="tipo de serviço">
-                        <option>Executivo</option>
-                        <option>Option 3</option>
-                      </select>
-                    </mz-select-container>
-                    <mz-textarea-container>
-                      <textarea mz-textarea label='descrição do serviço' id='serviceDescription' length='80'></textarea>
-                    </mz-textarea-container>
-                    <div class="switch">
-                      <label>
-                        <input type="checkbox"/>
-                        <span class="lever"></span>
-                        descrição a padrão
-                      </label>
-                    </div>
-                  </div>
-                  <div class="col s12 m7" style="padding: 0">
-                    <div class="col s12">
-                      <span>prazo de entrega</span>
-                    </div>
-                    <div class="col s4">
-                      <mz-input-container>
-                        <input mz-input label="quant." id="timeQuant" type="email">
-                      </mz-input-container>
-                    </div>
-                    <div class="col s8">
-                      <mz-select-container>
-                        <select mz-select label="tempo">
-                          <option>dia(s)</option>
-                          <option>semana(s)</option>
-                          <option>mês(es)</option>
-                        </select>
-                      </mz-select-container>
-                    </div>
-                  </div>
-                  <div class="col s12 m7" style="padding: 0">
-                    <div class="col s12">
-                      <span>prazo de pagamento</span>
-                    </div>
-                    <div class="col s4">
-                      <mz-input-container>
-                        <input mz-input label="custo" id="cost" type="email">
-                      </mz-input-container>
-                    </div>
-                    <div class="col s8">
-                      <input type="date" class="datepicker">
-                    </div>
-                  </div>
-
-                </mdl-expansion-panel-body>
-                <mdl-expansion-panel-footer>
-                  <button class="btn-flat waves-effect" type='button'>REMOVER</button>
-                  <button class="btn-flat waves-effect" type='button'>SALVAR</button>
-                </mdl-expansion-panel-footer>
-              </mdl-expansion-panel-content>
-            </mdl-expansion-panel>
-          </mdl-expansion-panel-group>
-
+        <div class="col s12">
+          <div style="display: flex; align-items: baseline;">
+            <span style="margin-right: 1rem">
+              Ambientes
+            </span>
+            <span>
+              <a (click)="myPopover.toggle($event)" class="btn-floating btn-small waves-effect waves-dark transparent" style="box-shadow: none"><i style="color: #ee6e73 !important;" class="material-icons">add</i></a>
+              <mdl-popover #myPopover [style.width.px]="250" class="mv-popover z-depth-2"> 
+                <div mdl-shadow="6">
+                  <mz-card class="u-no-padding no-title">
+                    <mz-card-content>
+                      <!--if currentProfessional.ambiences-->
+                      <ul style="margin: 0"> 
+                        <li style="padding: 14px 16px;">
+                          <mz-checkbox-container>
+                            <input mz-checkbox
+                              [label]="'Ambience Title'"
+                              id="checkbox-id"
+                              type="checkbox">
+                          </mz-checkbox-container>
+                        </li>
+                        <li style="padding: 14px 16px;">
+                          <mz-checkbox-container>
+                            <input mz-checkbox
+                              [label]="'Ambience Title'"
+                              id="checkbox-id2"
+                              type="checkbox">
+                          </mz-checkbox-container>
+                        </li>
+                      </ul>
+                    </mz-card-content>
+                    <mz-card-action class="right-align">
+                      <a (click)="beginAmbience()" style="cursor: pointer"><i class="material-icons right">navigate_next</i>Criar ambiente</a>
+                    </mz-card-action>
+                  </mz-card>
+                </div>
+              </mdl-popover>
+            </span>
+          </div>
+          <div *ngIf="project.ambiences && project.ambiences.length" class="collection">
+            <a [routerLink]="['/projetos/ambiente', amb.id]" *ngFor="let amb of project.ambiences" class="collection-item">
+              <div>{{amb.title}}<span class="secondary-content"><i class="material-icons">navigate_next</i></span></div>
+            </a>
+          </div>
+          <div class="collection">
+            <a href class="collection-item">
+              <div>Ambience Title<span class="secondary-content"><i class="material-icons">navigate_next</i></span></div>
+            </a>
+          </div>
         </div>
+
       </section>
     </md2-accordion-tab>
 
@@ -219,8 +202,9 @@
       </div>
     </md2-accordion-tab>
   </md2-accordion>
-  <div class="right-align" style="margin-top: 1rem">
+
+  <div class="col s12 right-align" style="margin-top: 1rem">
     <button class="btn-flat waves-effect">visualizar proposta</button>
-    <button class="btn-flat waves-effect">enviar<span class="hide-on-small-only"> ao cliente</span></button>
+    <button class="btn waves-effect">enviar<span class="hide-on-small-only"> ao cliente</span></button>
   </div>
 </main>

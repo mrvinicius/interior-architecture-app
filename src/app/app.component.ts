@@ -1,7 +1,9 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
 import { AuthService } from './core/auth.service';
+import { ClientService } from './client/shared/client.service';
 import { ProfessionalService } from './core/professional.service';
+import { ProjectsService } from './projects/shared/projects.service';
 import { UserService } from './core/user.service';
 
 @Component({
@@ -19,9 +21,6 @@ export class AppComponent {
   /**
    *
    */
-  constructor(
-    private auth: AuthService,
-    private profService: ProfessionalService
-  ) {
+  constructor() {
   }
 }

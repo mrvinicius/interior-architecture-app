@@ -13,9 +13,9 @@ export class SpinnerService {
       observer => this._observer = observer).share();
   }
   
-  toggleLoadingIndicator(name) {
+  toggleLoadingIndicator(isAtive) {
     if (this._observer) {
-      this._observer.next(name);
+      this._observer.next(isAtive);
     }
   }
 }

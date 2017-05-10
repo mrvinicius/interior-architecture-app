@@ -1,0 +1,14 @@
+.u-no-padding {
+    .card-content {
+        padding: 0;
+    }
+}
+
+.card,
+mz-card {
+    &.no-title {
+        .card-title {
+            display: none !important;
+        }
+    }
+}

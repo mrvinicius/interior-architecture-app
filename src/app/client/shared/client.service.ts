@@ -1,4 +1,3 @@
-import { AuthService } from './../../core/auth.service';
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions, Response, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -6,6 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch'
 
+import { AuthService } from '../../core/auth.service';
 import { Client } from './client';
 import { clients } from './mock-client';
 import { Professional } from '../../core/professional';
@@ -13,7 +13,7 @@ import { ProfessionalService } from '../../core/professional.service';
 
 @Injectable()
 export class ClientService {
-  public allClients: Client[];
+  public allClients: Client[] = [];
   allClientsChange$: Subject<Client[]> = new Subject<Client[]>();
   private readonly baseUrl: string = 'http://52.67.21.201/muuving/api/cliente';
 
@@ -22,11 +22,8 @@ export class ClientService {
     private auth: AuthService,
     private profService: ProfessionalService
   ) {
-    // console.log(this.profService.professional)
-    // console.log(this.profService.serviceId)
-    // console.log('Client Service ctor');
     this.getAllByProfessional(this.auth.currentUser.id).subscribe((clients: Client[]) => {
-      this.allClients = clients;
+      this.allClients = clients;      
       this.allClientsChange$.next(this.allClients);
     });
 
@@ -67,12 +64,18 @@ export class ClientService {
       .map((response: Response) => {
         let body = JSON.parse(response.text());
         return body.map((client) => {
-          
+
           return new Client(String(client.Nome), String(client.Email), String(client.ID));
         });
 
       })
       .catch(this.handleError);
+  }
+
+  getOne(id: string): Observable<Client> {
+    return Observable.of(this.allClients.find((client: Client) => {
+      return client.id === id;
+    }));
   }
 
   private extractData(res: Response) {

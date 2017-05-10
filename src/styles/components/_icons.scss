@@ -1,3 +1,23 @@
 .material-icons {
     font-family: 'Material Icons';
 }
+
+img {
+    &.detailed-icons {
+        &.small {
+            $size: 32px;
+            height: $size;
+            width: $size;
+        }
+        &.medium {
+            $size: 38px;
+            height: $size;
+            width: $size;
+        }
+        &.large {
+            $size: 46px;
+            height: $size;
+            width: $size;
+        }
+    }
+}
