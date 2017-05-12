@@ -7,7 +7,7 @@ import { AmbienceService } from './shared/ambience.service';
 
 @Component({
   selector: 'mbp-projects',
-  providers: [AmbienceService, ProjectServicesService],
+  providers: [ProjectServicesService],
   template: `
     <mb-layout>
       <router-outlet id="projectsRouter"></router-outlet>

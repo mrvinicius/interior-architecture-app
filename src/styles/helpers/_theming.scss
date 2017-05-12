@@ -1,0 +1,7 @@
+ul {
+    &.striped {
+        li:nth-child(odd) {
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+    }
+}

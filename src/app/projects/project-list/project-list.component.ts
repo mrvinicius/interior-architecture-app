@@ -18,10 +18,7 @@ import { ProjectStatus } from '../shared/project-status.enum';
   styleUrls: ['./project-list.component.scss']
 })
 export class ProjectListComponent implements OnInit {
-  projects: Project[];
   ProjectStatus = ProjectStatus;
-  // @ViewChild(NewProjectModalComponent)
-  // private newProjectModal: NewProjectModalComponent;
   allClientsChangeSubinscription: Subscription;
   newProjectTitleDefinedSubinscription: Subscription;
 

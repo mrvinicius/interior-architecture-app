@@ -27,7 +27,7 @@ import { AppRoutingModule } from './app-routing.module';
     FormsModule,
     HttpModule,
     UserModule,
-    LayoutModule,
+    LayoutModule.forRoot(),
     ProjectsModule.forRoot(),
     ClientModule.forRoot(),
     

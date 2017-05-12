@@ -18,9 +18,9 @@ import { Client } from '../../client/shared/client';
 import { ClientService } from '../../client/shared/client.service';
 import { Ambience } from '../shared/ambience';
 import { AmbienceService } from '../shared/ambience.service';
-import { Service } from '../shared/service';
-import { ServiceType } from '../shared/service-type';
+// import { Service } from '../shared/service';
 import { Estado } from '../../shared/estado.enum';
+import { SpinnerService } from '../../core/spinner/spinner.service';
 
 @Component({
   selector: 'mbp-project-manager',
@@ -29,6 +29,8 @@ import { Estado } from '../../shared/estado.enum';
 })
 export class ProjectManagerComponent implements OnInit, OnDestroy {
   project: Project;
+  projectSlugTitle: string;
+  ambienceSlug: string;
   estados: string[];
 
   clientForm: FormGroup;
@@ -43,14 +45,19 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
   proposalFormUnsaved: boolean = false;
   proposalFormChangesSubscription: Subscription;
 
-  @ViewChild('newAmbiencePanel') newAmbiencePanel: MdlExpansionPanelComponent;
-  newAmbienceForm: FormGroup = undefined;
+  ambiencesForms: FormGroup[] = [];
+  newAmbienceForm: FormGroup;
+  newAmbienceFormUnsaved: boolean = false;
+  newAmbienceFormChangesSubscription: Subscription;
 
-  @ViewChild('newServicePanel') newServicePanel: MdlExpansionPanelComponent;
-  newServiceDescription: string;
-  newServiceForm: FormGroup = undefined;
-  newServiceUnsaved: boolean = false; // track if is there new service unsaved 
-  servicesForms: FormGroup[];
+  // @ViewChild('newAmbiencePanel') newAmbiencePanel: MdlExpansionPanelComponent;
+  // newAmbienceForm: FormGroup = undefined;
+
+  // @ViewChild('newServicePanel') newServicePanel: MdlExpansionPanelComponent;
+  // newServiceDescription: string;
+  // newServiceForm: FormGroup = undefined;
+  // newServiceUnsaved: boolean = false; // track if is there new service unsaved 
+  // servicesForms: FormGroup[];
 
   constructor(
     private activateRoute: ActivatedRoute,
@@ -61,7 +68,8 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
     private profService: ProfessionalService,
     private projectsService: ProjectsService,
     private projectServService: ProjectServicesService,
-    private router: Router
+    private router: Router,
+    private spinnerService: SpinnerService
   ) {
     this.estados = UtilsService.estados;
   }
@@ -74,23 +82,18 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
     // add to local services
     // send throw API
 
-    this.newServiceForm = undefined;
+    // this.newServiceForm = undefined;
   }
 
   accordionChanged(tabIndex) {
     switch (tabIndex) {
-      // Client tab change
       case 0:
         this.saveClientInfo();
         break;
-      // Professional tab change
       case 1:
         this.saveProfessionalInfo();
         break;
-      // Proposal details tab change
       case 2:
-        // Prop intro sync
-        // Check services changes
         this.saveProposalInfo();
         break;
       case 3:
@@ -102,6 +105,74 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
     return this.clientService.allClients;
   }
 
+
+
+
+  // checkNewAmbienceForm(): boolean {
+  //   let ambienceDesc = this.newAmbienceForm.value.description;
+  //   let area = this.newAmbienceForm.value.area;
+  //   let
+
+  //   return true;
+  // }
+
+  // beginNewAmbience() {
+  //   console.log('new ambience begun');
+
+  // }
+
+  // showNewAmbienceFormInvalidAlert() {
+  //   console.log('showNewAmbienceFormInvalidAlert');
+
+  // }
+
+  beginAmbience() {
+    if (this.project.ambiences === undefined)
+      this.project.ambiences = []
+
+    let amb = new Ambience();
+
+    this.ambiencesForms[this.project.ambiences.length] =
+      this.createAmbienceForm(amb);
+
+    this.project.ambiences[this.project.ambiences.length] = amb;
+  }
+
+  removeAmbience(ambienceIndex: number) {
+    // Update project
+    this.ambiencesForms.splice(ambienceIndex, 1);
+    this.project.ambiences.splice(ambienceIndex, 1);
+  }
+
+  setAmbienceForm(ambienceIndex: number) {
+    if (this.ambiencesForms[ambienceIndex] === undefined)
+      this.ambiencesForms[ambienceIndex] = this.createAmbienceForm(this.project.ambiences[ambienceIndex]);
+
+    return true;
+  }
+
+  // getAmbienceForm(ambienceIndex: number): string {
+  //   this.ambiencesForms[ambienceIndex] = this.createAmbienceForm(this.project.ambiences[ambienceIndex]);
+  //   return 'ambiencesForms['+ambienceIndex+']';
+  // }
+
+  private createAmbienceForm(ambience: Ambience): FormGroup {
+    let description = ambience.description ? ambience.description : '';
+    let area = ambience.area ? ambience.area : 0;
+    let servicesIds: string[] =
+      ambience.services ? ambience.services.map(service => { return service.id }) : [];
+
+    return this.fb.group({
+      description: [description],
+      area: [area],
+      services: [servicesIds]
+    });
+  }
+
+
+
+
+
   getProjects(): Project[] {
     return this.projectsService.allProjects;
   }
@@ -110,27 +181,29 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
     return this.profService.allProfessionals;
   }
 
-  beginAmbience() {
-    this.router.navigate(['/projetos/ambiente/novo']);
+  // beginAmbience(projectId) {
+  //   console.log(projectId);
 
-    // this.ambienceService.
 
-    // this.projectsService.add(title).subscribe((project: Project) => {
-    //   // this.redirectToProject(project.id); // TODO: Resolver problema de adição de projetos 
-    // });
-  }
+  //   this.spinnerService.toggleLoadingIndicator(true);
+  //   this.ambienceService.add(projectId).subscribe((ambience: Ambience) => {
+  //     this.project.ambiences.push(ambience);
+  //     this.projectsService.update(this.project).subscribe(response => {
+  //       console.log(response);
 
-  getServiceTypeDescription(id: string): string {
-    let sType = this.getServiceTypes().find((sType: ServiceType) => {
-      return sType.id === id;
-    });
+  //       this.spinnerService.toggleLoadingIndicator(false);
 
-    return sType.typeDescription;
-  }
+  //       let ambienceSlugTitle = UtilsService.slugify(ambience.description);
+  //       this.router.navigate(['/projetos/' + this.projectSlugTitle], ambienceSlugTitle);
+  //     });
+  //   });
 
-  getServiceTypes(): ServiceType[] {
-    return this.projectServService.serviceTypes;
-  }
+  //   // this.ambienceService.
+
+  //   // this.projectsService.add(title).subscribe((project: Project) => {
+  //   //   // this.redirectToProject(project.id); // TODO: Resolver problema de adição de projetos 
+  //   // });
+  // }
 
   ngOnInit() {
     this.activateRoute.data
@@ -138,6 +211,9 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
         console.log(data.project);
 
         this.project = data.project;
+        this.projectSlugTitle = UtilsService.slugify(this.project.title);
+        this.ambienceSlug = '/projetos/' + this.projectSlugTitle;
+
         this.clientForm =
           this.createClientForm(data.project.briefing, data.project.client, this.project.activeProposal.uf);
         this.clientFormChangesSubscription = this.subscribeToClientChanges();
@@ -145,12 +221,10 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
         this.profForm =
           this.createProfessionalForm(this.professional, data.project.activeProposal.professionalsIds);
         this.profFormChangesSubscription = this.subscribeToProfessionalChanges();
+
+        this.proposalForm = this.createProposalForm(this.project);
+        this.proposalFormChangesSubscription = this.subscribeToProposalChanges();
       });
-
-
-    this.proposalForm = this.createProposalForm(this.project);
-    this.proposalFormChangesSubscription = this.subscribeToProposalChanges();
-    // this.servicesForms = this.createServicesForms(this.project.services);
 
     this.profService.professionalAdded$.subscribe((newProfessional: Professional) => {
       // if  !this.project.partnersIds.length) this.project.partnersIds = []
@@ -158,15 +232,17 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
       this.profForm.value.partnersIds.push(newProfessional.id);
     });
 
-    let s = new Service();
-    s.serviceType = new ServiceType();
-    this.newServiceForm = this.createServiceForm(s);
+    this.newAmbienceForm = this.createAmbienceForm(new Ambience());
+    this.newAmbienceFormChangesSubscription = this.subscribeToNewAmbienceChanges();
+
   }
 
   ngOnDestroy() {
     this.clientFormChangesSubscription.unsubscribe();
     this.profFormChangesSubscription.unsubscribe();
-  } // TODO: Check destroy necessity
+    this.proposalFormChangesSubscription.unsubscribe();
+    this.newAmbienceFormChangesSubscription.unsubscribe();
+  }
 
   openNewPartnerModal() {
     let modalRef = this.modalService.open(NewPartnerModalComponent, {});
@@ -220,12 +296,16 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
 
   /* Atualiza as informações Profissionais no Usuário e na Proposta */
   saveProfessionalInfo() {
-    let name = this.profForm.value.name;
-    let description = this.profForm.value.description;
-    let partnersIds = this.profForm.value.partnersIds;
+    let name;
+    let description;
+    let partnersIds;
+    let currentProf;
 
     if (this.profFormUnsaved) {
-      let currentProf = this.professional;
+      name = this.profForm.value.name;
+      description = this.profForm.value.description;
+      partnersIds = this.profForm.value.partnersIds;
+      currentProf = this.professional;
       currentProf.name = name;
       currentProf.description = description;
 
@@ -241,42 +321,25 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
       });
 
       this.profFormUnsaved = false;
-
     }
   }
 
-  saveProposalInfo() { }
+  saveProposalInfo() {
+    let intro;
 
-  showNewAmbiencePanel() {
-    let ambience: Ambience;
-    this.newAmbiencePanel.expand();
-
-    if (this.newAmbienceForm !== undefined) {
-      // Já existe um novo ambiente não salvo ainda
-      return;
-    } else {
-      ambience = new Ambience();
-      this.newAmbienceForm = this.createAmbienceForm(ambience);
+    if (this.newAmbienceFormUnsaved) {
 
     }
-  }
 
-  showNewServicePanel() {
-    let service: Service;
+    if (this.proposalFormUnsaved) {
+      intro = this.proposalForm.value.proposalIntro;
+      this.project.activeProposal.intro = intro;
 
-    if (this.newServiceUnsaved || this.newServiceForm !== undefined) {
-      return;
-    } else {
-      service = new Service();
-
-      this.newServiceUnsaved = true;
-      this.newServicePanel.expand();
-      // this.newServiceForm = this.createServiceForm();
-      // check another new service
-      // push projeto
-      // build form
-      // add DOM
-
+      this.projectsService.update(this.project)
+        .subscribe(response => {
+          console.log(response)
+          this.proposalFormUnsaved = false;
+        });
     }
   }
 
@@ -290,13 +353,6 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
       email: [''],
       cpfCnpj: [''],
       name: ['']
-    });
-  }
-
-  private createAmbienceForm(ambience: Ambience): FormGroup {
-    return this.fb.group({
-      ambienceTypeId: [null, []],
-      ambienceArea: [0, []],
     });
   }
 
@@ -314,37 +370,17 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
   }
 
   private createProposalForm(project: Project): FormGroup {
-    return this.fb.group({
-      proposalIntro: [] // TODO: Last created and Active Proposal
-    });
-  }
+    let introValue = '';
 
-  private createServiceForm(service: Service): FormGroup {
-    let serviceType: ServiceType =
-      service.serviceType !== undefined ? service.serviceType : new ServiceType();
-    let typeDescription: string =
-      service.serviceType.typeDescription !== undefined ? service.serviceType.typeDescription : '';
+    if (project.activeProposal.intro !== undefined)
+      introValue = project.activeProposal.intro;
+
 
     return this.fb.group({
-      serviceTypeId: [],
-      serviceDesc: []
+      proposalIntro: [introValue]
     });
   }
 
-  private createServicesForms(services: Service[]): FormGroup[] {
-    let servicesFormGroups: FormGroup[] = [];
-
-    services.forEach((service: Service, index, array) => {
-      let formGroup = this.fb.group({
-        serviceTypeId: [service.serviceType.id],
-        serviceDesc: [service.description]
-      });
-
-      servicesFormGroups.push(formGroup);
-    });
-
-    return servicesFormGroups;
-  }
 
   private redirectToAmbience(id?: string, title?: string): void {
     this.router.navigate(['/projetos', id]);
@@ -377,5 +413,14 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
       });
 
     // Listen to service panels changes
+  }
+
+  private subscribeToNewAmbienceChanges() {
+    const newAmbienceFormChanges$ = this.newAmbienceForm.valueChanges;
+
+    return newAmbienceFormChanges$
+      .subscribe(data => {
+        this.newAmbienceFormUnsaved = true;
+      });
   }
 }

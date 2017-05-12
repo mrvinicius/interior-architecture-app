@@ -1,8 +1,8 @@
+import { ProjectAmbienceResolver } from './shared/project-ambience-resolver.service';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard } from '../core/auth.guard';
-
 import { ProjectsComponent } from './projects.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectManagerComponent } from './project-manager/project-manager.component';
@@ -19,11 +19,29 @@ const routes: Routes = [
         path: '',
         canActivateChild: [AuthGuard],
         children: [
-          { path: '', component: ProjectListComponent },
           {
-            path: ':title', component: ProjectManagerComponent, resolve: { project: ProjectManagerResolver }
+            path: '',
+            component: ProjectListComponent
           },
-          { path: 'ambiente/:title', component: ProjectAmbienceComponent },
+          {
+            path: ':title',
+            component: ProjectManagerComponent,
+            resolve: { project: ProjectManagerResolver },
+            children: [
+              // {
+              //   path: ':ambience-title',
+              //   component: ProjectAmbienceComponent,
+              //   // resolve: { ambience: ProjectAmbienceResolver }
+              // }
+            ]
+          },
+          {
+            path: ':title/:ambience-title',
+            component: ProjectAmbienceComponent,
+            // resolve: { ambience: ProjectAmbienceResolver }
+          },
+          // { path: ':title/ambiente/:ambience-title', component: ProjectAmbienceComponent, resolve: { ambience: ProjectAmbienceResolver } },
+          // { path: 'ambiente/:ambience-title', component: ProjectAmbienceComponent },
           // { path: 'ambiente/novo', component: ProjectAmbienceComponent, data: { breadcrumb: 'Ambientes' } },
         ]
       }
@@ -34,7 +52,10 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [ProjectManagerResolver]
+  providers: [
+    ProjectManagerResolver,
+    ProjectAmbienceResolver
+  ]
 })
 export class ProjectsRoutingModule { }
 

@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MdlModule, MdlLayoutModule } from '@angular-mdl/core';
 
 import { LayoutComponent } from './layout.component';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import { BreadcrumbsService } from './shared/breadcrumbs.service';
+import { LayoutHeaderService } from './shared/layout-header.service';
 
 @NgModule({
   imports: [
@@ -16,8 +17,23 @@ import { BreadcrumbsService } from './shared/breadcrumbs.service';
   ],
   exports: [LayoutComponent],
   declarations: [LayoutComponent, BreadcrumbsComponent],
-  providers: [
-    BreadcrumbsService
-  ],
+  providers: [],
 })
-export class LayoutModule { }
+export class LayoutModule {
+  constructor( @Optional() @SkipSelf() parentModule: LayoutModule) {
+    if (parentModule) {
+      throw new Error(
+        'LayoutModule is already loaded. Import it in the AppModule only');
+    }
+  }
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: LayoutModule,
+      // Add Services that should have only one instance - Singletons - App-wide
+      providers: [
+        BreadcrumbsService,
+        LayoutHeaderService
+      ]
+    };
+  }
+}

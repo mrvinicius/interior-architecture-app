@@ -18,17 +18,20 @@ export class ProjectManagerResolver implements Resolve<Project> {
     ) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<Project> {
-        let title = route.params['title'];        
+        let title = route.params['title'];
 
-        return this.projectService.getProjectBySlugTitle(title)
-            .toPromise()
-            .then(project => {
-                if (project) {
-                    return project
-                } else {
-                    this.router.navigate(['/projetos']);
-                    return null
-                }
-            });
+        let project = this.projectService.getOneBySlugTitle(title);
+        if (!project) this.router.navigate(['/projetos']);
+        return Promise.resolve(project ? project : null);
+
+            // .toPromise()
+            // .then(project => {
+            //     if (project) {
+            //         return project
+            //     } else {
+            //         this.router.navigate(['/projetos']);
+            //         return null
+            //     }
+            // });
     }
 }

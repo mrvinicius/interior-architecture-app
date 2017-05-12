@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Rx';
 import { Subject } from "rxjs/Subject";
 
 import { AuthService } from '../../core/auth.service';
+import { Ambience } from './ambience';
 import { Client } from '../../client/shared/client';
 import { ClientService } from '../../client/shared/client.service';
 import { Professional } from '../../core/professional';
@@ -12,24 +13,27 @@ import { ProjectStatus } from './project-status.enum';
 import { Proposal } from './proposal';
 import { ProposalStatus } from './proposal-status.enum';
 import { UtilsService } from '../../shared/utils/utils.service';
+import { ServicesGroup } from './services-group.enum';
 
 @Injectable()
 export class ProjectsService {
   public allProjects: Project[] = [];
-  currentProfessional: Professional;
-  private readonly baseUrl = 'http://52.67.21.201/muuving/api/projeto';
-  static readonly proposalStatusIds = {
+  public static readonly proposalStatusIds = {
     Approved: '23D887C3-E7A8-4D15-8724-D86D7D72472D',
     Disabled: '569253EC-BCEA-41EA-9A41-08A9B7D66C9B',
     NotSent: 'DD202B41-E8D6-4670-A097-D5581FFDBBFD',
     Waiting: '9E762380-E8E3-4EB4-AF35-4E5F8476EE7C',
-    Deprecated: '0554212D-8FA9-49A1-A782-61895AE8D4CE',
-    0: '23D887C3-E7A8-4D15-8724-D86D7D72472D',
-    1: '569253EC-BCEA-41EA-9A41-08A9B7D66C9B',
-    2: 'DD202B41-E8D6-4670-A097-D5581FFDBBFD',
-    3: '9E762380-E8E3-4EB4-AF35-4E5F8476EE7C',
-    4: '0554212D-8FA9-49A1-A782-61895AE8D4CE'
+    Deprecated: '0554212D-8FA9-49A1-A782-61895AE8D4CE'
   };
+  public static readonly servicesGroupIds = {
+    Low: "D0F1E14A-F206-49A0-9FB4-6F3203140D60",
+    Medium: "948DB5BB-6F98-4399-95D0-51EA1E40024C",
+    High: "9B1D97F4-50DF-415D-872A-9448C822DF1D"
+  }
+
+  currentProfessional: Professional;
+
+  private readonly baseUrl = 'http://52.67.21.201/muuving/api/projeto';
   // Observable string sources
   private newProjectTitleDefinedSource = new Subject<string>();
   // Observable string streams
@@ -41,12 +45,20 @@ export class ProjectsService {
     private auth: AuthService,
     private clientService: ClientService
   ) {
+    ProjectsService.proposalStatusIds[0] = ProjectsService.proposalStatusIds.Approved;
+    ProjectsService.proposalStatusIds[1] = ProjectsService.proposalStatusIds.Disabled;
+    ProjectsService.proposalStatusIds[2] = ProjectsService.proposalStatusIds.NotSent;
+    ProjectsService.proposalStatusIds[3] = ProjectsService.proposalStatusIds.Waiting;
+    ProjectsService.proposalStatusIds[4] = ProjectsService.proposalStatusIds.Deprecated;
+
+    ProjectsService.servicesGroupIds[0] = ProjectsService.servicesGroupIds.Low;
+    ProjectsService.servicesGroupIds[1] = ProjectsService.servicesGroupIds.Medium;
+    ProjectsService.servicesGroupIds[2] = ProjectsService.servicesGroupIds.High;
+
     this.currentProfessional = this.auth.currentUser;
-
     this.getAllByProfessional(this.currentProfessional.id).subscribe((projects: Project[]) => {
-      this.allProjects = projects;
-      console.log(projects);
-
+      this.allProjects = projects.filter(project => { return project.isActive; });
+      console.log(this.allProjects);
     });
   }
 
@@ -104,8 +116,7 @@ export class ProjectsService {
       ProfissionalId: professionalId
     }, options).map((response: Response) => {
       let body = JSON.parse(response.text());
-      console.log(body);
-
+      // console.log(body);
 
       return body.map((project) => {
         // if (!project.IsActive) return;
@@ -113,28 +124,53 @@ export class ProjectsService {
           p: Project,
           c: Client;
         // TODO: Get last and active proposal
+        let ambiences: Ambience[] = project.ProjetoComodo.map(ambience => {
+          let amb: Ambience = new Ambience(ambience.ComodoId, ambience.Descricao);
 
+          switch (ambience.GrupoServicoId.toUpperCase()) {
+            case ProjectsService.servicesGroupIds.Low.toUpperCase():
+              amb.servicesGroup = ServicesGroup.LOW;
+              break;
+            case ProjectsService.servicesGroupIds.Medium.toUpperCase():
+              amb.servicesGroup = ServicesGroup.MEDIUM;
+              break;
+            case ProjectsService.servicesGroupIds.High.toUpperCase():
+              amb.servicesGroup = ServicesGroup.HIGH;
+              break;
+            default:
+              console.error('Grupo de serviços inválido', ambience.GrupoServicoId);
+              break;
+          }
+
+          amb.comments = ambience.Observacao;
+          amb.area = ambience.MetragemArea;
+          amb.cost = ambience.Valor;
+          amb.isActive = ambience.IsActive;
+
+          return amb;
+        });
         let proposals: Proposal[] = project.Proposta.map(proposal => {
           let propStatus: ProposalStatus;
           let prop: Proposal;
 
-          switch (proposal.StatusId) {
-            case ProjectsService.proposalStatusIds.Approved:
+          switch (proposal.StatusId.toUpperCase()) {
+            case ProjectsService.proposalStatusIds.Approved.toUpperCase():
               propStatus = ProposalStatus.Approved;
               break;
-            case ProjectsService.proposalStatusIds.Deprecated:
+            case ProjectsService.proposalStatusIds.Deprecated.toUpperCase():
               propStatus = ProposalStatus.Deprecated;
               break;
-            case ProjectsService.proposalStatusIds.Disabled:
+            case ProjectsService.proposalStatusIds.Disabled.toUpperCase():
               propStatus = ProposalStatus.Disabled;
               break;
-            case ProjectsService.proposalStatusIds.Waiting:
+            case ProjectsService.proposalStatusIds.Waiting.toUpperCase():
               propStatus = ProposalStatus.Waiting;
               break;
-            case ProjectsService.proposalStatusIds.NotSent:
+            case ProjectsService.proposalStatusIds.NotSent.toUpperCase():
               propStatus = ProposalStatus.NotSent;
               break;
             default:
+              console.error('Status de proposta inválido: ', proposal.StatusId);
               propStatus = ProposalStatus.NotSent;
               break;
           }
@@ -168,6 +204,7 @@ export class ProjectsService {
           new Proposal(false, ProposalStatus.NotSent);
         }
 
+        p.ambiences = ambiences;
         p.proposals = proposals;
         c.id = project.ClienteId;
         p.client = c;
@@ -176,7 +213,16 @@ export class ProjectsService {
         return p;
       });
     }).catch(this.handleError);
+  }
 
+  getOne(id: string): Project {
+    return this.allProjects.find((project: Project) => {
+      return project.id === id;
+    });
+
+    // return Observable.of(this.allProjects.find((project: Project) => {
+    //   return project.id === id;
+    // }));
   }
 
   getProjectsByTitle(title: string): Observable<Project> {
@@ -189,12 +235,10 @@ export class ProjectsService {
       });
   }
 
-  getProjectBySlugTitle(slugTitle: string): Observable<Project> {
-    let p = this.allProjects.find((project: Project) => {
+  getOneBySlugTitle(slugTitle: string): Project {
+    return this.allProjects.find((project: Project) => {
       return UtilsService.slugify(project.title) === slugTitle;
     });
-
-    return Observable.of(p);
   }
 
   // TODO: Implement Search with layout search input
@@ -224,11 +268,11 @@ export class ProjectsService {
           'Descricao': project.activeProposal.intro,
           'CustoTotal': project.activeProposal.cost,
           'StatusId': ProjectsService.proposalStatusIds[2],
+          'UF': project.activeProposal.uf,
+          'PropostaProfissionaisParticipantes': [],
           // 'ValorCobrado': 14000,
           // 'ValorRecebido': 0,
           // 'NumeroComodos': 2,
-          'UF': project.activeProposal.uf,
-          'PropostaProfissionaisParticipantes': [],
           // 'CEP': '04052652',
           // 'MetragemArea': 12,
           // 'BancoId': null,
@@ -245,7 +289,26 @@ export class ProjectsService {
           //   }
           // ]
         }
-      ]
+      ],
+      'ProjetoComodo': []
+    }
+
+    if (project.ambiences.length) {
+      project.ambiences.forEach(ambience => {
+        let ambienceData: any = {
+          "ProjetoId": project.id,
+          "ComodoId": ambience.id,
+          "GrupoServicoId": ProjectsService.servicesGroupIds[ambience.servicesGroup],
+          "Descricao": ambience.description,
+          "MetragemArea": ambience.area,
+          // "MemorialDescritivo": "descrição detalhada",
+          "Observacao": ambience.comments,
+          "Valor": ambience.cost,
+          "IsActive": ambience.isActive
+        };
+
+        data.ProjetoComodo.push(ambienceData);
+      });
     }
 
     if (project.activeProposal.professionalsIds !== undefined) {

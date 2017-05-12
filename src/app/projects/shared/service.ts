@@ -1,11 +1,11 @@
-import { ServiceType } from './service-type';
+// import { ServiceType } from './service-type';
 
 export class Service {
-    id?: number;
-    serviceType?: ServiceType;
+    id?: string;
     description?: string;
-    deadline?: Date;
-    cost?: number;
-    paymentDeadline?: Date;
-    subServices?: string[];
+    // serviceType?: ServiceType;
+    // deadline?: Date;
+    // cost?: number;
+    // paymentDeadline?: Date;
+    // subServices?: string[];
 }

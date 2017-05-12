@@ -6,9 +6,21 @@
 
 .u-utility-name {}
 
-.u-row { @extend .row; margin-bottom: 0;}
-.u-row .u-col, .row .u-col { @extend .col; padding-left: 0; padding-right: 0;}
-.u-row .col { @extend .col; }
+.u-row {
+    @extend .row;
+    margin-bottom: 0;
+}
+
+.u-row .u-col,
+.row .u-col {
+    @extend .col;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.u-row .col {
+    @extend .col;
+}
 
 // Exemplo
 // .u-center-transform { position: absolute; left: 50%; -webkit-transform: translate(-50%); -ms-transform: translate(-50%); transform: translate(-50%);}
@@ -33,7 +45,6 @@
     box-sizing: border-box;
     padding: 0 $gutter-width / 2;
     min-height: 1px;
-	
     @media #{$small-and-down} {
         padding: 0;
     }
@@ -42,6 +53,23 @@
 .reduced-padding {
     &.card-content,
     &.card-panel {
-        padding: 0.75rem;
+        padding: calc(20px - 0.75rem);
+    }
+}
+
+tr,
+li {
+    &.row-inputs {
+        .input-field {
+            margin-top: 0;
+        }
+        input,
+        input.select-dropdown {
+            margin-bottom: 0;
+        }
+
+        // &:nth-child(odd) {
+        //     background-color: rgba(0, 0, 0, 0.03);
+        // }
     }
 }

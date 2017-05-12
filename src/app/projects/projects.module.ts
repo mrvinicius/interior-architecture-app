@@ -9,15 +9,13 @@ import { MdlPopoverModule } from '@angular-mdl/popover';
 import { MdlSelectModule } from '@angular-mdl/select';
 
 import { LayoutModule } from '../layout/layout.module';
-
 import { ProjectsService } from './shared/projects.service';
-
+import { AmbienceService } from './shared/ambience.service';
 import { NewProjectModalComponent } from './project-list/new-project-modal.component';
 import { ProjectsComponent } from './projects.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectManagerComponent } from './project-manager/project-manager.component';
 import { NewPartnerModalComponent } from './project-manager/new-partner-modal.component';
-
 import { ProjectsRoutingModule } from './projects-routing.module';
 import { ProjectAmbienceComponent } from './project-ambience/project-ambience.component';
 
@@ -62,7 +60,8 @@ export class ProjectsModule {
       ngModule: ProjectsModule,
       // Add Services that should have only one instance - Singletons - App-wide
       providers: [
-        ProjectsService
+        ProjectsService,
+        AmbienceService
       ]
     };
   }

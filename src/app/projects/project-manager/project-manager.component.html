@@ -10,7 +10,7 @@
               <textarea mz-textarea formControlName="briefing" label='briefing' id="briefing" length="150"></textarea>
             </mz-textarea-container>
             <mz-select-container>
-              <select mz-select formControlName="estado" id='stateSelect'  placeholder="estado da obra">
+              <select mz-select formControlName="estado" id='stateSelect' placeholder="estado da obra">
               <option [value]="e" *ngFor="let e of estados" [selected]="e === project.activeProposal.uf">{{e}}</option>
             </select>
             </mz-select-container>
@@ -90,66 +90,80 @@
 
     <md2-accordion-tab>
       <md2-accordion-header class="collapsible-header"><i class="material-icons">description</i>Detalhes da proposta</md2-accordion-header>
-      <section *ngIf="project" class="row">
-        <div class="col s12">
-          <form [formGroup]="proposalForm">
-            <mz-textarea-container>
-              <!--<i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>-->
-              <textarea mz-textarea formControlName="proposalIntro" label='introdução da proposta' id='propIntro' length='200'></textarea>
-            </mz-textarea-container>
-          </form>
+      <section *ngIf="project">
+        <div class="u-row">
+          <div class="col s12">
+            <form [formGroup]="proposalForm">
+              <mz-textarea-container>
+                <!--<i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>-->
+                <textarea mz-textarea formControlName="proposalIntro" label='introdução da proposta' id='propIntro' length='200'></textarea>
+              </mz-textarea-container>
+            </form>
+          </div>
         </div>
 
-        <div class="col s12">
-          <div style="display: flex; align-items: baseline;">
-            <span style="margin-right: 1rem">
-              Ambientes
-            </span>
-            <span>
-              <a (click)="myPopover.toggle($event)" class="btn-floating btn-small waves-effect waves-dark transparent" style="box-shadow: none"><i style="color: #ee6e73 !important;" class="material-icons">add</i></a>
-              <mdl-popover #myPopover [style.width.px]="250" class="mv-popover z-depth-2"> 
-                <div mdl-shadow="6">
-                  <mz-card class="u-no-padding no-title">
-                    <mz-card-content>
-                      <!--if currentProfessional.ambiences-->
-                      <ul style="margin: 0"> 
-                        <li style="padding: 14px 16px;">
-                          <mz-checkbox-container>
-                            <input mz-checkbox
-                              [label]="'Ambience Title'"
-                              id="checkbox-id"
-                              type="checkbox">
-                          </mz-checkbox-container>
-                        </li>
-                        <li style="padding: 14px 16px;">
-                          <mz-checkbox-container>
-                            <input mz-checkbox
-                              [label]="'Ambience Title'"
-                              id="checkbox-id2"
-                              type="checkbox">
-                          </mz-checkbox-container>
-                        </li>
-                      </ul>
-                    </mz-card-content>
-                    <mz-card-action class="right-align">
-                      <a (click)="beginAmbience()" style="cursor: pointer"><i class="material-icons right">navigate_next</i>Criar ambiente</a>
-                    </mz-card-action>
-                  </mz-card>
-                </div>
-              </mdl-popover>
-            </span>
-          </div>
-          <div *ngIf="project.ambiences && project.ambiences.length" class="collection">
-            <a [routerLink]="['/projetos/ambiente', amb.id]" *ngFor="let amb of project.ambiences" class="collection-item">
-              <div>{{amb.title}}<span class="secondary-content"><i class="material-icons">navigate_next</i></span></div>
-            </a>
-          </div>
-          <div class="collection">
-            <a href class="collection-item">
-              <div>Ambience Title<span class="secondary-content"><i class="material-icons">navigate_next</i></span></div>
-            </a>
+        <div class="u-row">
+          <div class="col s12">
+            <p>Ambientes</p>
           </div>
         </div>
+        <!--<p>newAmbienceFormUnsaved: {{newAmbienceFormUnsaved}}</p>-->
+        <ul class="striped" style="-webkit-margin-before: 0; padding: 0 0.75rem">
+          <ng-container *ngIf="project.ambiences">
+            <li *ngFor="let amb of project.ambiences; let i = index" class="u-row row-inputs" style="display: flex;">
+              <ng-container *ngIf="setAmbienceForm(i)">
+                <form [formGroup]="ambiencesForms[i]" class="u-col s10 m11">
+                  <div class="col s7 m4">
+                    <mz-select-container>
+                      <select mz-select formControlName="description" id='ambienceSelect' placeholder="ambiente">
+                      <option [value]="Sala">Sala</option>
+                      <option [value]="Quarto">Quarto</option>
+                      <option [value]="Cozinha">Cozinha</option>
+                    </select>
+                    </mz-select-container>
+                  </div>
+                  <div class="col s5 m2">
+                    <mz-input-container>
+                      <input mz-input formControlName="area" id="area" min="0" max="9999" placeholder="área (m²)" type='number'>
+                    </mz-input-container>
+                  </div>
+                  <div class="col s12 m6" style="margin-bottom: 0.75rem;">
+                    <mz-select-container>
+                      <select mz-select formControlName="services" id='servicesSelect' placeholder="serviços do ambiente" multiple>
+                      <option [value]="0">Layout de distribuição de móveis</option>
+                      <option [value]="1">Projeto de Arquitetura de Interiores</option>
+                      <option [value]="2">Escolha de acabamentos</option>
+                      <option [value]="3">Distribuição e localização de pontos elétricos e hidráulicos</option>
+                      <option [value]="4">Detalhamento de banheiros e cozinhas</option>
+                      <option [value]="5">Detalhamento de 1 ou 2 móveis</option>
+                      <option [value]="6">Detalhamento de todo mobiliário</option>
+                      <option [value]="7">Escolha de tecidos, móveis, revestimentos e luminárias</option>
+                      <option [value]="8">Detalhamento de forro</option>
+                    </select>
+                    </mz-select-container>
+                  </div>
+                </form>
+              </ng-container>
+
+              <div class="col s2 m1 valign-wrapper" style="padding: 0; justify-content: center;">
+                <a (click)="removeAmbience(i)" class="btn-floating btn-small waves-effect waves-dark transparent table-action-cell" style="box-shadow: none">
+                  <i class="material-icons grey-text text-grey-darken-1">delete</i>
+                </a>
+              </div>
+            </li>
+          </ng-container>
+        </ul>
+        <div class="row">
+          <div class="col s12">
+            <span style="display: inline-block;">
+              <a (click)="beginAmbience()" class="pointer" style="display: flex; align-items: flex-end;">
+                Adicionar ambiente
+                <i class="material-icons right">add</i>
+              </a>
+            </span>
+          </div>
+        </div>
+
 
       </section>
     </md2-accordion-tab>
@@ -204,7 +218,7 @@
   </md2-accordion>
 
   <div class="col s12 right-align" style="margin-top: 1rem">
-    <button class="btn-flat waves-effect">visualizar proposta</button>
-    <button class="btn waves-effect">enviar<span class="hide-on-small-only"> ao cliente</span></button>
+    <button class="btn-flat waves-effect">veja a proposta</button>
+    <button class="btn waves-effect">enviar<span class="hide-on-small-only"> proposta</span></button>
   </div>
 </main>

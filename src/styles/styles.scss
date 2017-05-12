@@ -10,9 +10,10 @@
 @import "vendors/materialize-css";
 
 /*** Helpers ***/
+@import "helpers/behaviors-and-states";
 @import "helpers/color";
 @import "helpers/structure";
-@import "helpers/behaviors-and-states";
+@import "helpers/theming";
 
 /*** Base ***/
 @import "base/color";

@@ -3,7 +3,7 @@ import { Client } from '../../client/shared/client';
 import { Professional } from '../../core/professional';
 import { ProjectStatus } from './project-status.enum';
 import { Proposal } from './proposal';
-import { Service } from './service';
+// import { Service } from './service';
 
 export class Project {
     id?: string;
@@ -21,6 +21,10 @@ export class Project {
         this.id = id;
         this.title = title;
         this.professional = professional;
+
+        this.proposals = [];
+        this.ambiences = [];
+        this.isActive = true;
     }
 }
 
