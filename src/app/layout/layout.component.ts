@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 
 import { AuthService } from '../core/auth.service';
 
@@ -18,4 +18,7 @@ export class LayoutComponent implements OnInit {
     this.userName = this.authService.currentUser.name;
   }
 
+  logout() {
+    this.authService.logout();
+  }
 }

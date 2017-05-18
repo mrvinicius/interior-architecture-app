@@ -1,3 +1,18 @@
+.collapsible-header {
+    padding: 0 1rem;
+    .spinner {
+        display: inline-block;
+        margin-right: 1rem;
+        width: 2rem;
+        text-align: center;
+
+        .preloader-wrapper {
+            vertical-align: middle;
+            @extend .tiny;
+        }
+    }
+}
+
 .collapsible-header,
 md2-accordion-header {
     display: block;
@@ -47,11 +62,6 @@ md2-accordion-header {
             }
         }
     }
-}
-
-
-.collapsible-header {
-    padding: 0 1rem;
 }
 
 .collapsible {

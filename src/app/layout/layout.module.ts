@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MdlModule, MdlLayoutModule } from '@angular-mdl/core';
+import { MdlPopoverModule } from '@angular-mdl/popover';
 
 import { LayoutComponent } from './layout.component';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
@@ -13,6 +14,7 @@ import { LayoutHeaderService } from './shared/layout-header.service';
     CommonModule,
     MdlModule,
     MdlLayoutModule,
+    MdlPopoverModule,
     RouterModule
   ],
   exports: [LayoutComponent],

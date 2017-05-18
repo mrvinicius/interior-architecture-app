@@ -1,32 +1,55 @@
-@mixin sprite-define($width, $height, $x, $y: 0){
-	width: $width;
-	height: $height;
-	background-position: $x $y;
+@mixin sprite-define($width, $height, $x, $y: 0) {
+    width: $width;
+    height: $height;
+    background-position: $x $y;
 }
 
-@mixin transition($property, $duration, $timing-function: ease, $delay: 0ms){
-	-webkit-transition: $property $duration $timing-function $delay;
-	-moz-transition: $property $duration $timing-function $delay;
-	-o-transition: $property $duration $timing-function $delay;
-	transition: $property $duration $timing-function $delay;
+@mixin transition($property, $duration, $timing-function: ease, $delay: 0ms) {
+    -webkit-transition: $property $duration $timing-function $delay;
+    -moz-transition: $property $duration $timing-function $delay;
+    -o-transition: $property $duration $timing-function $delay;
+    transition: $property $duration $timing-function $delay;
 }
 
-@mixin box-shadow($horizontal-length, $vertical-length, $blur-radius, $spread-radius, $opacity: 0.5){
-	-webkit-box-shadow: $horizontal-length $vertical-length $blur-radius $spread-radius rgba(0,0,0,$opacity);
-	-moz-box-shadow: $horizontal-length $vertical-length $blur-radius $spread-radius rgba(0,0,0,$opacity);
-	box-shadow: $horizontal-length $vertical-length $blur-radius $spread-radius rgba(0,0,0,$opacity);
+@mixin box-shadow($horizontal-length, $vertical-length, $blur-radius, $spread-radius, $opacity: 0.5) {
+    -webkit-box-shadow: $horizontal-length $vertical-length $blur-radius $spread-radius rgba(0, 0, 0, $opacity);
+    -moz-box-shadow: $horizontal-length $vertical-length $blur-radius $spread-radius rgba(0, 0, 0, $opacity);
+    box-shadow: $horizontal-length $vertical-length $blur-radius $spread-radius rgba(0, 0, 0, $opacity);
 }
 
 @mixin brightness($brightness: 0.5) {
-	-webkit-filter: brightness($brightness);
-	-moz-filter: brightness($brightness);
-	-ms-filter: brightness($brightness);
-	-o-filter: brightness($brightness);
-	filter: brightness($brightness);
+    -webkit-filter: brightness($brightness);
+    -moz-filter: brightness($brightness);
+    -ms-filter: brightness($brightness);
+    -o-filter: brightness($brightness);
+    filter: brightness($brightness);
 }
 
+@mixin placeholder {
+    :placeholder {
+        @content;
+    }
+    ::-webkit-input-placeholder {
+        @content;
+    }
+    :-moz-placeholder {
+        @content;
+    }
+    ::-moz-placeholder {
+        @content;
+    }
+    :-ms-input-placeholder {
+        @content;
+    }
+}
+
+
 /*** Animations with CSS keyframes ***/
+
+
 /* Usage */
+
+
 /*
 @include keyframes(move-the-object) {
   0%   { left: 100px; }
@@ -38,36 +61,38 @@
 }
 */
 
+
 /* Declaration */
+
 @mixin keyframes($animationName) {
-	@-webkit-keyframes #{$animationName} {
-		@content;
-	}
-	@-moz-keyframes #{$animationName} {
-		@content;
-	}
-	@-o-keyframes #{$animationName} {
-		@content;
-	}
-	@keyframes #{$animationName} {
-		@content;
-	}
+    @-webkit-keyframes #{$animationName} {
+        @content;
+    }
+    @-moz-keyframes #{$animationName} {
+        @content;
+    }
+    @-o-keyframes #{$animationName} {
+        @content;
+    }
+    @keyframes #{$animationName} {
+        @content;
+    }
 }
 
+
 /* Calling */
+
 @mixin animation($animate...) {
-	$max: length($animate);
-	$animations: '';
-
-	@for $i from 1 through $max {
-		$animations: #{$animations + nth($animate, $i)};
-
-		@if $i < $max {
-			$animations: #{$animations + ", "};
-		}
-	}
-	-webkit-animation: $animations;
-	-moz-animation:    $animations;
-	-o-animation:      $animations;
-	animation:         $animations;
+    $max: length($animate);
+    $animations: '';
+    @for $i from 1 through $max {
+        $animations: #{$animations + nth($animate, $i)};
+        @if $i < $max {
+            $animations: #{$animations + ", "};
+        }
+    }
+    -webkit-animation: $animations;
+    -moz-animation: $animations;
+    -o-animation: $animations;
+    animation: $animations;
 }

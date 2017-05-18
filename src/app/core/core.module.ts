@@ -11,6 +11,7 @@ import { AuthService } from './auth.service';
 import { ProfessionalService } from './professional.service';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { SpinnerService } from './spinner/spinner.service';
+import { CanDeactivateGuard } from './can-deactivate-guard.service';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ export class CoreModule {
       providers: [
         AuthGuard,
         AuthService,
+        CanDeactivateGuard,
         ProfessionalService,
         SpinnerService,
         UserService,

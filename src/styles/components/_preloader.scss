@@ -1,0 +1,10 @@
+.preloader-wrapper.tiny {
+    width: 24px;
+    height: 24px;
+}
+
+mz-spinner.tiny {
+    .preloader-wrapper {
+        @extend .tiny;
+    }
+}

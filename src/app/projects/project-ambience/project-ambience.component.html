@@ -15,11 +15,11 @@
   <div class="col s12">
     <div style="display: flex; align-items: baseline;">
       <span style="margin-right: 1rem">Serviços</span>
-      <span>
+      <!--<span>
         <a (click)="showNewServicePanel()" class="btn-floating btn-small waves-effect waves-dark transparent" style="box-shadow: none">
           <i style="color: #ee6e73 !important;" class="material-icons">add</i>
         </a>
-      </span>
+      </span>-->
     </div>
 
 
@@ -100,7 +100,7 @@
         </mdl-expansion-panel>
       </ng-container>
 
-      <mdl-expansion-panel [hidden]="newServiceForm === undefined" id="newServicePanel" #newServicePanel>
+      <!--<mdl-expansion-panel [hidden]="newServiceForm === undefined" id="newServicePanel" #newServicePanel>
         <mdl-expansion-panel-header>
           <mdl-expansion-panel-header-list-content (click)="newServicePanel.toggle()">
             Novo serviço
@@ -172,7 +172,7 @@
             <button class="btn-flat waves-effect" type='button'>SALVAR</button>
           </mdl-expansion-panel-footer>
         </mdl-expansion-panel-content>
-      </mdl-expansion-panel>
+      </mdl-expansion-panel>-->
     </mdl-expansion-panel-group>
 
   </div>

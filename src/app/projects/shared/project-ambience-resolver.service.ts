@@ -21,22 +21,23 @@ export class ProjectAmbienceResolver implements Resolve<Ambience> {
         let projectTitle = route.params['title'];
         let ambienceTitle = route.params['ambience-title'];
 
-        let ambience = this.ambienceService.getBySlugTitle(ambienceTitle, projectTitle);
-        if (!ambience) this.router.navigate(['/projetos']);
-        return Promise.resolve(ambience ? ambience : null);
-        // return this.ambienceService.getBySlugTitle(ambienceTitle, projectTitle)
-        //     .toPromise()
-        //     .then()
+        return Promise.resolve(null);
+        // let ambience = this.ambienceService.getBySlugTitle(ambienceTitle, projectTitle);
+        // if (!ambience) this.router.navigate(['/projetos']);
+        // return Promise.resolve(ambience ? ambience : null);
+        // // return this.ambienceService.getBySlugTitle(ambienceTitle, projectTitle)
+        // //     .toPromise()
+        // //     .then()
 
-        // return this.projectService.getProjectBySlugTitle(title)
-        //     .toPromise()
-        //     .then(project => {
-        //         if (project) {
-        //             return project
-        //         } else {
-        //             this.router.navigate(['/projetos']);
-        //             return null
-        //         }
-        //     });
+        // // return this.projectService.getProjectBySlugTitle(title)
+        // //     .toPromise()
+        // //     .then(project => {
+        // //         if (project) {
+        // //             return project
+        // //         } else {
+        // //             this.router.navigate(['/projetos']);
+        // //             return null
+        // //         }
+        // //     });
     }
 }

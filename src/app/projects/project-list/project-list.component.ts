@@ -1,3 +1,7 @@
+import { Ambience } from './../shared/ambience';
+import { Proposal } from './../shared/proposal';
+import { ProposalStatus } from './../shared/proposal-status.enum';
+
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MzModalService, MzBaseModal } from "ng2-materialize";
@@ -29,13 +33,30 @@ export class ProjectListComponent implements OnInit {
     private modalService: MzModalService,
     private spinnerService: SpinnerService
   ) {
-    
+    /*
+    * MOCK
+    let prop = new Proposal(false, ProposalStatus.NotSent);
+    let p = new Project(prop);
+    p.title = 'Projeto MOCK'
+    let amb1 = new Ambience(), amb2 = new Ambience();
+    amb1.ambienceDescription = AmbienceDesc;
+    amb1.area = 10;
+    amb1.services = ['0', '2']
+    amb2.description = "Quarto";
+    amb2.area = 22;
+    amb2.services = ['4', '7']
+    p.client = new Client();
+    p.ambiences = [amb1, amb2];
+
+    this.projectsService.allProjects.push(p);
+      */
+
   }
 
   disableProject(id: string) {
     this.projectsService.disableProject(id).subscribe(response => {
       console.log(response);
-      
+
     });
   }
 
@@ -69,10 +90,21 @@ export class ProjectListComponent implements OnInit {
 
   private beginProject(title: string) {
     this.spinnerService.toggleLoadingIndicator(true);
+    let sameNameProjects: Project[] = this.projectsService.allProjects.filter(project => {
+      return UtilsService.slugify(title) === UtilsService.slugify(project.title);
+    });
+
+    if (sameNameProjects.length > 0) {
+      title += ' (' + sameNameProjects.length + ')';
+    }
+    console.log(title);
+    
     this.projectsService.add(title).subscribe((project: Project) => {
       this.spinnerService.toggleLoadingIndicator(false);
       this.redirectToProject(project.title);
     });
+
+
   }
 
   // private initProject(title: string) {

@@ -1,0 +1,94 @@
+{
+  "Id": "7ee6ac20-75e5-4a08-8075-8bdd929a8141",
+  "ProfissionalId": "c11752b0-0475-4d31-9c01-223d1a98aa9f",
+  "ClienteId": "2547efb9-858f-4aa0-afbb-95c462a4beb9",
+  "Descricao": "Hall (2)",
+  "Briefing": null,
+  "IsActive": true,
+  "UF": "SP",
+  "Proposta": [
+    {
+      "Id": "55abe7bc-a181-452e-9adc-d53cd9589d55",
+      "Descricao": null,
+      "StatusId": "DD202B41-E8D6-4670-A097-D5581FFDBBFD",
+      "NumeroComodos": 3,
+      "MetragemArea": 38,
+      "PropostaProfissionaisParticipantes": [
+        {
+          "PropostaId": "55abe7bc-a181-452e-9adc-d53cd9589d55",
+          "ProfissionalId": "4cf5c95c-60cb-4ecf-aed2-690227d63269"
+        },
+        {
+          "PropostaId": "55abe7bc-a181-452e-9adc-d53cd9589d55",
+          "ProfissionalId": "4171d742-08ad-4a33-ab76-ba58625be779"
+        },
+        {
+          "PropostaId": "55abe7bc-a181-452e-9adc-d53cd9589d55",
+          "ProfissionalId": "0758c814-8d5e-4e95-8bf8-fe9f1905444c"
+        }
+      ]
+    }
+  ],
+  "ProjetoComodo": [
+    {
+      "ProjetoId": "7ee6ac20-75e5-4a08-8075-8bdd929a8141",
+      "ComodoId": "c6abd6e8-110e-4740-9fc1-02164af49eae",
+      "GrupoServicoId": "9B1D97F4-50DF-415D-872A-9448C822DF1D",
+      "Descricao": "Banheiro simples",
+      "MetragemArea": 27,
+      "IsActive": true,
+      "ProjetoComodoServicos": [
+        {
+          "TipoServicoId": "4b4b67ec-c5b8-4ecf-8072-05b60fe1eb1f"
+        },
+        {
+          "TipoServicoId": "bf6d5c12-fa55-4fa6-8207-84b6cc7246b0"
+        },
+        {
+          "TipoServicoId": "6134c278-45be-4db3-a1b2-061f21077a2b"
+        },
+        {
+          "TipoServicoId": "d55a5ae8-441c-446b-88f8-f60be01558f6"
+        },
+        {
+          "TipoServicoId": "044f2b80-cdf2-44c1-979e-91726b571eca"
+        },
+        {
+          "TipoServicoId": "997cc89b-d375-4455-8d0a-86abe19e3076"
+        },
+        {
+          "TipoServicoId": "612cdb70-0bb6-4ada-a9b5-13bf6ab0da27"
+        }
+      ]
+    },
+    {
+      "ProjetoId": "7ee6ac20-75e5-4a08-8075-8bdd929a8141",
+      "ComodoId": "8e5e2c64-01dd-4732-a45a-b870fb1a11f5",
+      "GrupoServicoId": "D0F1E14A-F206-49A0-9FB4-6F3203140D60",
+      "Descricao": "Cozinha americana",
+      "MetragemArea": 5,
+      "IsActive": true,
+      "ProjetoComodoServicos": [
+        {
+          "TipoServicoId": "4b4b67ec-c5b8-4ecf-8072-05b60fe1eb1f"
+        },
+        {
+          "TipoServicoId": "bf6d5c12-fa55-4fa6-8207-84b6cc7246b0"
+        }
+      ]
+    },
+    {
+      "ProjetoId": "7ee6ac20-75e5-4a08-8075-8bdd929a8141",
+      "ComodoId": "d66cdbfb-ddea-4543-a10b-fb44347461d5",
+      "GrupoServicoId": "948DB5BB-6F98-4399-95D0-51EA1E40024C",
+      "Descricao": "Cozinha planejada",
+      "MetragemArea": 6,
+      "IsActive": true,
+      "ProjetoComodoServicos": [
+        {
+          "TipoServicoId": "6134c278-45be-4db3-a1b2-061f21077a2b"
+        }
+      ]
+    }
+  ]
+}

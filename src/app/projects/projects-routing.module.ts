@@ -1,8 +1,8 @@
-import { ProjectAmbienceResolver } from './shared/project-ambience-resolver.service';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard } from '../core/auth.guard';
+import { CanDeactivateGuard } from '../core/can-deactivate-guard.service';
 import { ProjectsComponent } from './projects.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectManagerComponent } from './project-manager/project-manager.component';
@@ -19,30 +19,13 @@ const routes: Routes = [
         path: '',
         canActivateChild: [AuthGuard],
         children: [
+          { path: '', component: ProjectListComponent },
           {
-            path: '',
-            component: ProjectListComponent
-          },
-          {
-            path: ':title',
-            component: ProjectManagerComponent,
+            path: ':title', component: ProjectManagerComponent,
             resolve: { project: ProjectManagerResolver },
-            children: [
-              // {
-              //   path: ':ambience-title',
-              //   component: ProjectAmbienceComponent,
-              //   // resolve: { ambience: ProjectAmbienceResolver }
-              // }
-            ]
+            canDeactivate: [CanDeactivateGuard]
           },
-          {
-            path: ':title/:ambience-title',
-            component: ProjectAmbienceComponent,
-            // resolve: { ambience: ProjectAmbienceResolver }
-          },
-          // { path: ':title/ambiente/:ambience-title', component: ProjectAmbienceComponent, resolve: { ambience: ProjectAmbienceResolver } },
-          // { path: 'ambiente/:ambience-title', component: ProjectAmbienceComponent },
-          // { path: 'ambiente/novo', component: ProjectAmbienceComponent, data: { breadcrumb: 'Ambientes' } },
+          // { path: ':title/:ambience-title', component: ProjectAmbienceComponent, },
         ]
       }
     ]
@@ -53,8 +36,7 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
   providers: [
-    ProjectManagerResolver,
-    ProjectAmbienceResolver
+    ProjectManagerResolver
   ]
 })
 export class ProjectsRoutingModule { }

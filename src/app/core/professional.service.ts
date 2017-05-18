@@ -9,10 +9,19 @@ import 'rxjs/add/operator/toPromise';
 
 import { Client } from './../client/shared/client';
 import { Professional } from './professional';
+import { Profession } from '../shared/profession.enum';
 
 @Injectable()
 export class ProfessionalService {
   public allProfessionals: Professional[] = [];
+  public static readonly professionIds: any = {
+    0: 'ARQ',
+    1: 'DES',
+    2: 'EST',
+    'ARQ': 0,
+    'DES': 1,
+    'EST': 2
+  }
   professionalChange$: Subject<Professional> = new Subject<Professional>();
   professionalAdded$: Subject<Professional> = new Subject<Professional>();
   allProfessionalsChange$: Subject<Professional[]> = new Subject<Professional[]>();
@@ -25,13 +34,16 @@ export class ProfessionalService {
   ) {
     this._professional = new Professional();
     this._professional.id = this.auth.currentUser.id;
-    // this._professional.name = this.auth.currentUser.name;
-    // this._professional.email = this.auth.currentUser.email;
-    // this._professional.logo = 'https://archathon.com.br/img/logo-casacor.png';
-    // this._professional.description = 'Raphael Interior Designer é um escritório que atua no mercado há 18 anos diferenciando-se pelo trabalho personalizado em projetos comerciais e residenciais. Com um portifólio extenso, assina projetos que se destacaram no cenário paulistano nos últimos anos, sendo considerado um dos mais respeitados escritórios da área, graças ao talento e ao profissionalismo com que atua.';
-
+    this._professional.email = this.auth.currentUser.email;
+    this._professional.profession = Profession.Arquiteto; // TODO: Remove mock
+    
     this.getOne(this.auth.currentUser.id).subscribe((currentProf: Professional) => {
-      this._professional = currentProf;
+      this._professional.name = currentProf.name;
+      this._professional.description = currentProf.description;
+      this._professional.cpfCnpj = currentProf.cpfCnpj;
+      this._professional.celular = currentProf.celular;
+      this._professional.profession = currentProf.profession;
+
       this.professionalChange$.next(this._professional);
     });
 
@@ -49,10 +61,7 @@ export class ProfessionalService {
     return Object.assign(this._professional);
   }
 
-  /**
-   * Adiciona um novo profissional à base e atualiza os dados locais
-   * @param prof 
-   */
+  // Adiciona um novo profissional à base e atualiza os dados locais
   add(prof: Professional) {
     let options = new RequestOptions({ headers: this.getHeaders() });
 
@@ -71,10 +80,7 @@ export class ProfessionalService {
       });
   }
 
-  /**
-   * Adiciona um novo cliente associado a este profissional à base e atualiza os dados locais
-   * @param client 
-   */
+  // Adiciona um novo cliente associado a este profissional à base e atualiza os dados locais
   addClients(clients: Client | Client[]) {
     if (this._professional.clients === undefined) this._professional.clients = []
 
@@ -91,7 +97,7 @@ export class ProfessionalService {
         let professional = new Professional(body.Nome, body.Email, body.Id)
         professional.cpfCnpj = body.CpfCnpj;
         professional.celular = body.Celular;
-        professional.professionId = body.ProfissaoId;
+        professional.profession = ProfessionalService.professionIds[body.ProfissaoId];
         professional.description = body.Descricao;
 
         return professional;
@@ -116,9 +122,7 @@ export class ProfessionalService {
       .catch(this.handleError);
   }
 
-  /**
-   * Atualiza o Profissional local e da base
-   */
+  // Update data base and local Professional User
   update(prof: Professional) {
     let options = new RequestOptions({ headers: this.getHeaders() });
 
@@ -127,19 +131,24 @@ export class ProfessionalService {
     if (prof.description !== undefined) this._professional.description = prof.description;
     if (prof.cpfCnpj) this._professional.cpfCnpj = prof.cpfCnpj;
     if (prof.celular) this._professional.celular = prof.celular;
-    if (prof.professionId) this._professional.professionId = prof.professionId;
+    if (prof.profession) this._professional.profession = prof.profession;
 
     let data: any = {
       id: this._professional.id,
       Nome: this._professional.name,
       Email: this._professional.email,
-      Descricao: ''
+      Descricao: this._professional.description,
+      CpfCnpj: this._professional.cpfCnpj,
+      Celular: this._professional.celular,
+      ProfissaoId: ProfessionalService.professionIds[this._professional.profession]
     };
-    
-    if (this._professional.description && this._professional.description.length > 0) data.Descricao = this._professional.description;
-    if (this._professional.cpfCnpj) data.CpfCnpj = this._professional.cpfCnpj;
-    if (this._professional.celular) data.Celular = this._professional.celular;
-    if (this._professional.professionId) data.ProfissaoId = this._professional.professionId;
+
+    // if (this._professional.description && this._professional.description.length > 0) data.Descricao = this._professional.description;
+    // if (this._professional.cpfCnpj) data.CpfCnpj = this._professional.cpfCnpj;
+    // if (this._professional.celular) data.Celular = this._professional.celular;
+    // if (this._professional.professionId) data.ProfissaoId = this._professional.professionId;
+
+    // console.log(data);
 
     return this.http.post(this.baseUrl + '/update', data, options)
       .map(response => {

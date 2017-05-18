@@ -10,14 +10,21 @@ $large-and-up: "only screen and (min-width : #{$medium-screen-up})" !default;
 $small-and-down: "only screen and (max-width : #{$small-screen})" !default;
 $medium-and-down: "only screen and (max-width : #{$medium-screen})" !default;
 $medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})" !default;
-
 [class*="layout__header"] {
     background-color: #D44D5C;
 }
 
 .side-bar {
+    .mdl-navigation {
+        height: calc(100% - 70px);
+    }
     .title {
         padding-right: 40px;
+    }
+    .side-bar__link {
+        &:last-of-type {
+            margin-top: auto;
+        }
     }
 }
 
@@ -26,7 +33,6 @@ $medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width 
         display: flex;
         flex-direction: row;
         align-items: center;
-
         .link-label {
             margin-left: 1rem;
         }
@@ -40,3 +46,9 @@ $medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width 
         }
     }
 }
+
+// img.detailed-icons.medium {
+//     padding: 5px;
+//     height: 4rem;
+//     width: 4rem;
+// }

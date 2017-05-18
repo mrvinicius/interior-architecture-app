@@ -47,7 +47,7 @@ export class ClientService {
 
         this.allClients.push(newClient);
         this.allClientsChange$.next(this.allClients);
-
+        this.profService.addClients(newClient);
         return newClient;
       })
       .catch(this.handleError);

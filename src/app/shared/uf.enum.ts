@@ -1,5 +1,5 @@
-export enum Estado {
-    'AC',
+export enum UF {
+    'AC' = 0,
     'AL',
     'AP',
     'AM',

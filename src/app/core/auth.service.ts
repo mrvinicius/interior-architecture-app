@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
@@ -16,7 +17,10 @@ export class AuthService {
   // store the URL so we can redirect after logging in
   redirectUrl: string;
 
-  constructor(private http: Http) {
+  constructor(
+    private http: Http,
+    private router: Router
+  ) {
     this.currentUser = {
       id: 'c11752b0-0475-4d31-9c01-223d1a98aa9f',
       name: 'Raphael',
@@ -46,6 +50,8 @@ export class AuthService {
   logout(): void {
     this.isLoggedIn = false;
     localStorage.removeItem('id_token');
+    localStorage.removeItem('currentUser');
+    this.router.navigate(['/entrar']);
   }
 
   // getUser(): Observable<User> | User {

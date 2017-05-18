@@ -1,31 +1,23 @@
 <main class="row">
-  <md2-accordion (open)="accordionChanged($event.index)" (close)="accordionChanged($event.index)" class="mv-collapsible">
+  <md2-accordion class="mv-collapsible">
     <md2-accordion-tab>
-      <md2-accordion-header class="collapsible-header"><i class="material-icons">face</i>Cliente</md2-accordion-header>
+      <md2-accordion-header class="collapsible-header">
+        <i *ngIf="!clientDataBeingSaved" class="material-icons">face</i>
+        <mz-spinner *ngIf="clientDataBeingSaved" [color]="'black'" class="tiny spinner"></mz-spinner>
+        Cliente
+      </md2-accordion-header>
       <section *ngIf="project && clientForm" class="row">
         <form [formGroup]="clientForm">
-          <div class="col s12 m6">
-            <mz-textarea-container>
-              <i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>
-              <textarea mz-textarea formControlName="briefing" label='briefing' id="briefing" length="150"></textarea>
-            </mz-textarea-container>
-            <mz-select-container>
-              <select mz-select formControlName="estado" id='stateSelect' placeholder="estado da obra">
-              <option [value]="e" *ngFor="let e of estados" [selected]="e === project.activeProposal.uf">{{e}}</option>
-            </select>
-            </mz-select-container>
-          </div>
           <div class="col s12 m6">
             <mz-select-container class="has-add-option">
               <select mz-select #clientSelectInput formControlName="clientId" id='clientSelect' label="cliente">
               <option [value]="0">- novo cliente -</option>
-              <option [value]="c.id" *ngFor="let c of allClients()" [selected]="c.id === project.client.id">{{c.name}}</option>
+              <option *ngFor="let c of allClients()"
+                [value]="c.id"
+                [selected]="c.id === project.client.id">{{c.name}}</option>
             </select>
             </mz-select-container>
             <ng-container *ngIf="clientForm && clientForm.value && clientForm.value.clientId">
-              <!--<p>P.C.ID: {{project.client.id}}</p>
-              <p>Select value: {{clientForm.value.clientId}}</p>
-              <p>Form Unsaved: {{clientFormUnsaved}}</p>-->
               <ng-container *ngIf="clientForm.value.clientId == 0">
                 <mz-input-container>
                   <input mz-input formControlName="name" label="nome" name="Name" id='clientName' type='text'>
@@ -36,24 +28,32 @@
                 <mz-input-container>
                   <input mz-input formControlName="cpfCnpj" label="CPF ou CNPJ" name='CpfCnpj' id='cpfCnpj' type='text'>
                 </mz-input-container>
-                <!--<div class="switch">
-              <label>
-              <input #saveClientSwitch (change)="saveNewClientSwitchChange(saveClientSwitch.checked)"  type="checkbox"/>
-              <span class="lever" style="margin-left: 0;"></span>
-              salvar cliente
-            </label>
-            </div>-->
               </ng-container>
             </ng-container>
-
-
+          </div>
+          <div class="col s12 m6">
+            <mz-textarea-container>
+              <i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>
+              <textarea mz-textarea formControlName="briefing" label='briefing' id="briefing" length="150"></textarea>
+            </mz-textarea-container>
+            <mz-select-container>
+              <select mz-select formControlName="ufId" id='stateSelect' placeholder="localização da obra">
+              <option *ngFor="let uf of ufs; let i = index"
+                [value]="i"
+                [selected]="i === project.uf">{{uf}}</option>
+            </select>
+            </mz-select-container>
           </div>
         </form>
       </section>
     </md2-accordion-tab>
 
     <md2-accordion-tab>
-      <md2-accordion-header class="collapsible-header"><i class="material-icons">business</i>Profissional</md2-accordion-header>
+      <md2-accordion-header class="collapsible-header">
+        <i *ngIf="!profDataBeingSaved" class="material-icons">business</i>
+        <mz-spinner *ngIf="profDataBeingSaved" [color]="'black'" class="tiny spinner"></mz-spinner>
+        Profissional
+      </md2-accordion-header>
       <section *ngIf="professional && profForm" class="row">
         <form [formGroup]="profForm">
           <div class="col s12 m6">
@@ -89,7 +89,11 @@
     </md2-accordion-tab>
 
     <md2-accordion-tab>
-      <md2-accordion-header class="collapsible-header"><i class="material-icons">description</i>Detalhes da proposta</md2-accordion-header>
+      <md2-accordion-header class="collapsible-header">
+        <i *ngIf="!proposalDataBeingSaved && !ambiencesDataBeingSaved" class="material-icons">description</i>
+        <mz-spinner *ngIf="proposalDataBeingSaved || ambiencesDataBeingSaved" [color]="'black'" class="tiny spinner"></mz-spinner>
+        Detalhes da proposta
+      </md2-accordion-header>
       <section *ngIf="project">
         <div class="u-row">
           <div class="col s12">
@@ -104,10 +108,32 @@
 
         <div class="u-row">
           <div class="col s12">
+            <p>Entregas</p>
+          </div>
+        </div>
+        <ul class="striped" style="-webkit-margin-before: 0; padding: 0 0.75rem">
+          <li class="u-row row-inputs" style="display: flex;">
+            <div class="col s12">
+
+            </div>
+          </li>
+        </ul>
+        <div class="row">
+          <div class="col s12">
+            <span style="display: inline-block;">
+              <a class="pointer" style="display: flex; align-items: flex-end;">
+                Nova entrega
+                <i class="material-icons right">add</i>
+              </a>
+            </span>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="u-row">
+          <div class="col s12">
             <p>Ambientes</p>
           </div>
         </div>
-        <!--<p>newAmbienceFormUnsaved: {{newAmbienceFormUnsaved}}</p>-->
         <ul class="striped" style="-webkit-margin-before: 0; padding: 0 0.75rem">
           <ng-container *ngIf="project.ambiences">
             <li *ngFor="let amb of project.ambiences; let i = index" class="u-row row-inputs" style="display: flex;">
@@ -116,29 +142,24 @@
                   <div class="col s7 m4">
                     <mz-select-container>
                       <select mz-select formControlName="description" id='ambienceSelect' placeholder="ambiente">
-                      <option [value]="Sala">Sala</option>
-                      <option [value]="Quarto">Quarto</option>
-                      <option [value]="Cozinha">Cozinha</option>
-                    </select>
+                        <option *ngFor="let ambDesc of ambienceDescriptions;"
+                          [value]="ambienceDescriptions.indexOf(ambDesc)"
+                          [selected]="ambienceDescriptions.indexOf(ambDesc) === amb.ambienceDescription">{{ambDesc}}</option>
+                  
+                      </select>
                     </mz-select-container>
                   </div>
                   <div class="col s5 m2">
                     <mz-input-container>
-                      <input mz-input formControlName="area" id="area" min="0" max="9999" placeholder="área (m²)" type='number'>
+                      <input mz-input formControlName="area" id="area" step="0.1" max="9999" placeholder="área (m²)" type='number'>
                     </mz-input-container>
                   </div>
                   <div class="col s12 m6" style="margin-bottom: 0.75rem;">
                     <mz-select-container>
                       <select mz-select formControlName="services" id='servicesSelect' placeholder="serviços do ambiente" multiple>
-                      <option [value]="0">Layout de distribuição de móveis</option>
-                      <option [value]="1">Projeto de Arquitetura de Interiores</option>
-                      <option [value]="2">Escolha de acabamentos</option>
-                      <option [value]="3">Distribuição e localização de pontos elétricos e hidráulicos</option>
-                      <option [value]="4">Detalhamento de banheiros e cozinhas</option>
-                      <option [value]="5">Detalhamento de 1 ou 2 móveis</option>
-                      <option [value]="6">Detalhamento de todo mobiliário</option>
-                      <option [value]="7">Escolha de tecidos, móveis, revestimentos e luminárias</option>
-                      <option [value]="8">Detalhamento de forro</option>
+                      <option *ngFor="let sv of services"
+                        [value]="services.indexOf(sv)"
+                        [selected]="amb.services.includes(services.indexOf(sv))">{{sv}}</option>
                     </select>
                     </mz-select-container>
                   </div>
@@ -147,11 +168,12 @@
 
               <div class="col s2 m1 valign-wrapper" style="padding: 0; justify-content: center;">
                 <a (click)="removeAmbience(i)" class="btn-floating btn-small waves-effect waves-dark transparent table-action-cell" style="box-shadow: none">
-                  <i class="material-icons grey-text text-grey-darken-1">delete</i>
+                  <i class="material-icons mv-red-light-text">delete</i>
                 </a>
               </div>
             </li>
           </ng-container>
+
         </ul>
         <div class="row">
           <div class="col s12">
@@ -161,6 +183,11 @@
                 <i class="material-icons right">add</i>
               </a>
             </span>
+            <span style="display: inline-block;">
+              <!--<a (click)="showState()" class="pointer" style="display: flex; align-items: flex-end;">
+                SHOW STATE
+              </a>-->
+            </span>
           </div>
         </div>
 
@@ -169,51 +196,70 @@
     </md2-accordion-tab>
 
     <md2-accordion-tab>
-      <md2-accordion-header class="collapsible-header"><i class="material-icons">attach_money</i>Recebimento</md2-accordion-header>
-      <div class="row">
-        <div class="col s12">
-          <h6>Total: <b>R$ 3.000,00</b></h6>
-          <span class="italic small-font">Cobramos 15% para compensar nosso serviço</span>
-        </div>
-        <div class="col s12 m6 l4">
-          <mz-radio-button-container>
-            <input mz-radio-button label="Cobrar R$ 3.000,00" id='cobrarOp' value="1" name="radio-group" type="radio" />
-          </mz-radio-button-container>
-          <mz-radio-button-container>
-            <input mz-radio-button label="Receber R$ 3.000,00" id='receberOp' value="2" name="radio-group" type="radio" />
-          </mz-radio-button-container>
-        </div>
-        <div class="col s12 m6 l4" style="padding: 0;">
-          <mz-select-container class="has-add-option col s12">
-            <select mz-select label="sua conta bancária">
+      <md2-accordion-header class="collapsible-header">
+        <i *ngIf="!paymentDataBeingSaved" class="material-icons">attach_money</i>
+        <mz-spinner *ngIf="paymentDataBeingSaved" [color]="'black'" class="tiny spinner"></mz-spinner>
+        Recebimento
+      </md2-accordion-header>
+      <section class="row">
+        <form [formGroup]="paymentForm">
+          <div class="col s12">
+            <!--<h5 style="margin-bottom: 0;">Total: <b>R$ 3.000,00</b></h5>-->
+            <h5 style="margin-bottom: 0;">Total: <b>{{project.activeProposal.cost | currency:'BRL':true}}</b></h5>
+            <span class="italic small-font" style="font-size: .8rem">Cobramos 3% para compensar nosso serviço</span>
+          </div>
+          {{paymentForm.value.costFinal}}
+          <p>{{project.activeProposal.costToReceive}}</p>
+          <div class="col s12 m6 l4" *ngIf="project.activeProposal.cost">
+            <mz-radio-button-container>
+              <input mz-radio-button formControlName="costFinal" label="Cobrar {{project.activeProposal.cost | currency:'BRL':true}}" id='cobrarOp'
+                value="{{project.activeProposal.costToReceive}}" name="costFinal" type="radio" />
+            </mz-radio-button-container>
+            <mz-radio-button-container>
+              <input mz-radio-button formControlName="costFinal" label="Receber {{project.activeProposal.cost | currency:'BRL':true}}"
+                id='receberOp' value="{{project.activeProposal.costToClient}}" name="costFinal" type="radio" />
+            </mz-radio-button-container>
+            <p *ngIf="paymentForm.value.costFinal == project.activeProposal.costToReceive">Você receberá <b>{{project.activeProposal.costToReceive | currency:'BRL':true}}</b></p>
+            <p *ngIf="paymentForm.value.costFinal == project.activeProposal.costToClient">Seu cliente deverá pagar <b>{{project.activeProposal.costToClient | currency:'BRL':true}}</b></p>
+          </div>
+          <div class="col s12 m6 l4" style="padding: 0;">
+            <mz-select-container class="has-add-option col s12">
+              <select mz-select label="sua conta bancária">
               <option>- Nova conta -</option>
               <option>Option 1</option>
               <option>Option 3</option>
             </select>
-          </mz-select-container>
-          <mz-select-container class=" col s12">
-            <select mz-select label="banco">
+            </mz-select-container>
+            <mz-select-container class=" col s12">
+              <select mz-select label="banco">
               <option>Option 1</option>
               <option>Option 3</option>
             </select>
-          </mz-select-container>
-          <div class="row">
-            <mz-input-container class="col s4">
-              <input mz-input label="agência" id="agency">
-            </mz-input-container>
-            <mz-input-container class="col s8">
-              <input mz-input label="conta" id="account">
-            </mz-input-container>
-          </div>
-          <div class="switch">
-            <label>
+            </mz-select-container>
+            <div class="row">
+              <mz-input-container class="col s4">
+                <input mz-input label="agência" id="agency">
+              </mz-input-container>
+              <mz-input-container class="col s8">
+                <input mz-input label="conta" id="account">
+              </mz-input-container>
+              <mz-input-container class="col s12">
+                <input mz-input label="titular da conta" id="titular">
+              </mz-input-container>
+              <mz-input-container class="col s12">
+                <input mz-input label="CPF ou CNPF" id="cpfCnpj">
+              </mz-input-container>
+            </div>
+            <div class="switch">
+              <label>
               <input type="checkbox"/>
               <span class="lever"></span>
               salvar conta
             </label>
+            </div>
           </div>
-        </div>
-      </div>
+        </form>
+      </section>
     </md2-accordion-tab>
   </md2-accordion>
 

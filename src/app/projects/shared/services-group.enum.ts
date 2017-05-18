@@ -1,5 +1,5 @@
 export enum ServicesGroup {
-    LOW,
-    MEDIUM,
-    HIGH
+    Low,
+    Medium,
+    High
 }

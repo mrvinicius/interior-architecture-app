@@ -100,4 +100,28 @@ export class UtilsService {
 
         return str;
     }
+
+    public static getEnumKeyValue(e: any): any {
+        let keyValue: any = {};
+
+        for (var member in e) {
+            if (typeof e[member] === 'string') {
+                keyValue[member] = e[member]
+            }
+        }
+
+        return keyValue;
+    }
+
+    public static getEnumArray(e: any): any[] {
+        let array: any = [];
+
+        for (var member in e) {
+            if (typeof e[member] === 'string') {
+                array.push(e[member])
+            }
+        }
+
+        return array;
+    }
 }
