@@ -131,6 +131,7 @@ export class ProfessionalService {
     if (prof.description !== undefined) this._professional.description = prof.description;
     if (prof.cpfCnpj) this._professional.cpfCnpj = prof.cpfCnpj;
     if (prof.celular) this._professional.celular = prof.celular;
+    if (prof.password) this._professional.password = prof.password; 
     if (prof.profession) this._professional.profession = prof.profession;
 
     let data: any = {
@@ -140,6 +141,7 @@ export class ProfessionalService {
       Descricao: this._professional.description,
       CpfCnpj: this._professional.cpfCnpj,
       Celular: this._professional.celular,
+      Senha: this._professional.password,
       ProfissaoId: ProfessionalService.professionIds[this._professional.profession]
     };
 

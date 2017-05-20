@@ -13,11 +13,13 @@
             <input (keyup.enter)="addUser()" mz-input label='nome' formControlName="name" name="Name" id="name" type="text">
           </mz-input-container>
           <div class="right-align row">
-            <button (click)="addUser()" [disabled]="registerForm.invalid" type="button" mz-button style="width: 100%">Enviar</button>
+            <button (click)="addUser()" [disabled]="registerForm.invalid" type="button" mz-button style="width: 100%">Continuar</button>
           </div>
         </form>
-        <div fxLayout="column" fxLayout.gt-sm="row" class="row">
-          <div fxFlex="50%">
+        <!--<div fxLayout="column" fxLayout.gt-sm="row" class="row">-->
+        <div class="row">
+          <!--<div fxFlex="50%">-->
+          <div>
             <a routerLink="/entrar">Já sou cadastrado</a>
           </div>
         </div>

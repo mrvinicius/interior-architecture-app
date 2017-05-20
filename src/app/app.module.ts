@@ -13,6 +13,7 @@ import { CoreModule } from './core/core.module';
 import { LayoutModule } from './layout/layout.module';
 import { ProjectsModule } from './projects/projects.module';
 import { UserModule } from './user/user.module';
+import { FinancialModule } from './financial/financial.module';
 
 /* Routing Module */
 import { AppRoutingModule } from './app-routing.module';
@@ -30,6 +31,7 @@ import { AppRoutingModule } from './app-routing.module';
     LayoutModule.forRoot(),
     ProjectsModule.forRoot(),
     ClientModule.forRoot(),
+    FinancialModule.forRoot(),
     
     CoreModule.forRoot(),
     AppRoutingModule

@@ -23,7 +23,7 @@ export class ClientService {
     private profService: ProfessionalService
   ) {
     this.getAllByProfessional(this.auth.currentUser.id).subscribe((clients: Client[]) => {
-      this.allClients = clients;      
+      this.allClients = clients;
       this.allClientsChange$.next(this.allClients);
     });
 
@@ -55,17 +55,18 @@ export class ClientService {
 
   getAllByProfessional(profissionalId: string, take: number = 999, skip?: number): Observable<Client[]> {
     let options = new RequestOptions({ headers: this.getHeaders() });
+    let data = {
+      Skip: skip,
+      Take: take,
+      ProfissionalId: profissionalId
+    };
+
     return this.http
-      .post(this.baseUrl + '/getall', {
-        Skip: skip,
-        Take: take,
-        ProfissionalId: profissionalId
-      }, options)
+      .post(this.baseUrl + '/getall', data, options)
       .map((response: Response) => {
         let body = JSON.parse(response.text());
         return body.map((client) => {
-
-          return new Client(String(client.Nome), String(client.Email), String(client.ID));
+          return new Client(client.Nome, client.Email, client.ID);
         });
 
       })

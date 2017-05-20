@@ -1,3 +1,4 @@
+import { BankAccount } from './../../financial/shared/bank-account';
 import { ProposalStatus } from './proposal-status.enum';
 import { TimeUnity } from '../../shared/time-unity.enum';
 
@@ -5,7 +6,7 @@ export class Proposal {
     id?: string;
     intro?: string;
     professionalsIds?: string[];
-    cost?: number;
+    private _cost?: number;
     costToReceive?: number;
     costToClient?: number;
     costFinal?: number;
@@ -14,6 +15,7 @@ export class Proposal {
     comments?: string;
     deadlineCount: number;
     deadlineTimeUnity: TimeUnity;
+    bankAccount: BankAccount;
 
     constructor(wasPaid: boolean, status: ProposalStatus, id?: string) {
         this.id = id;
@@ -25,5 +27,17 @@ export class Proposal {
         let proposal: Proposal;
 
         return proposal;
+    }
+
+    get cost(): number {
+        return this._cost;
+    }
+
+    set cost(cost: number) {
+        if (cost) {
+            cost = parseFloat(cost.toFixed(2));
+        }
+
+        this._cost = cost;
     }
 }

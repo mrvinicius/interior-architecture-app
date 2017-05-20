@@ -253,6 +253,12 @@ amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
+angular2-text-mask@^8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/angular2-text-mask/-/angular2-text-mask-8.0.1.tgz#2e6e29c286c814043b343ad3584876260a9574a2"
+  dependencies:
+    text-mask-core "^5.0.0"
+
 ansi-align@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/ansi-align/-/ansi-align-1.1.0.tgz#2f0c1658829739add5ebb15e6b0c6e3423f016ba"
@@ -4725,6 +4731,14 @@ term-size@^0.1.0:
   resolved "https://registry.yarnpkg.com/term-size/-/term-size-0.1.1.tgz#87360b96396cab5760963714cda0d0cbeecad9ca"
   dependencies:
     execa "^0.4.0"
+
+text-mask-addons@^3.5.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/text-mask-addons/-/text-mask-addons-3.5.1.tgz#3b3de80a5665b0dbf5be7680d570aca423ea8b81"
+
+text-mask-core@^5.0.0:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/text-mask-core/-/text-mask-core-5.0.1.tgz#86db742bdfe3b4c383bb51a3b4ca342c86110639"
 
 through@X.X.X, through@^2.3.6:
   version "2.3.8"

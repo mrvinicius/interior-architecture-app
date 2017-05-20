@@ -7,22 +7,29 @@ import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/distinctUntilChanged';
+import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 
-import { UtilsService } from '../../shared/utils/utils.service';
-import { NewPartnerModalComponent } from './new-partner-modal.component';
+
+import { Ambience } from '../shared/ambience';
+import { AmbienceDescription } from '../shared/ambience-description.enum';
+import { AmbienceService } from '../shared/ambience.service';
+import { Bank } from '../../financial/shared/bank';
+import { BankService } from '../../financial/shared/bank.service';
+import { BankAccountService } from './../../financial/shared/bank-account.service';
+import { BankAccount } from '../../financial/shared/bank-account';
 import { CanComponentDeactivate } from '../../core/can-deactivate-guard.service';
+import { Client } from '../../client/shared/client';
+import { ClientService } from '../../client/shared/client.service';
+import { NewPartnerModalComponent } from './new-partner-modal.component';
 import { Professional } from '../../core/professional';
 import { ProfessionalService } from '../../core/professional.service';
 import { Project } from '../shared/project';
 import { ProjectsService } from '../shared/projects.service';
-import { Client } from '../../client/shared/client';
-import { ClientService } from '../../client/shared/client.service';
-import { Ambience } from '../shared/ambience';
-import { AmbienceService } from '../shared/ambience.service';
-import { AmbienceDescription } from '../shared/ambience-description.enum';
-import { UF } from '../../shared/uf.enum';
-import { SpinnerService } from '../../core/spinner/spinner.service';
+import { Proposal } from './../shared/proposal';
 import { Service } from '../shared/service.enum';
+import { SpinnerService } from '../../core/spinner/spinner.service';
+import { UF } from '../../shared/uf.enum';
+import { UtilsService } from '../../shared/utils/utils.service';
 
 @Component({
   selector: 'mbp-project-manager',
@@ -38,6 +45,16 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
   projectSlugTitle: string;
   services: string[];
   ufs: string[];
+  mascaraReal = createNumberMask({
+    prefix: '',
+    thousandsSeparatorSymbol: '.',
+    decimalSymbol: ',',
+    // allowLeadingZeroes: true,
+    allowDecimal: true,
+    // requireDecimal: true
+  });
+  allBanks: Bank[];
+  bankAccounts: BankAccount[];
 
   // Refers to Client section variables
   clientDataHasChanged: boolean;
@@ -74,6 +91,11 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
   paymentForm: FormGroup;
   paymentFormChangesSubscription: Subscription;
 
+  bankAccountDataHasChanges: boolean;
+  bankAccountDataBeingSaved: boolean;
+  bankAccountForm: FormGroup;
+  bankAccountFormChangesSubscription: Subscription;
+
   constructor(
     private activateRoute: ActivatedRoute,
     private ambienceService: AmbienceService,
@@ -83,7 +105,9 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     private profService: ProfessionalService,
     private projectsService: ProjectsService,
     private router: Router,
-    private spinnerService: SpinnerService
+    private spinnerService: SpinnerService,
+    private bankService: BankService,
+    private bankAccService: BankAccountService
   ) {
     this.ufs = UtilsService.getEnumArray(UF);
     this.ambienceDescriptions = UtilsService.getEnumArray(AmbienceDescription);
@@ -144,6 +168,7 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
         console.log(data.project);
 
         this.project = data.project;
+        // this.project.activeProposal = 
         this.clientForm =
           this.createClientForm(data.project.briefing, data.project.client, this.project.uf);
         this.clientFormChangesSubscription = this.subscribeToFormChanges(this.clientForm, () => {
@@ -179,8 +204,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
             this.profDataBeingSaved = true;
             this.saveProfessionalInfo().subscribe(response => {
               if (response !== undefined) {
-                console.log('response: ', response);
-
                 this.saveProjectInfo((success) => {
                   if (success) {
                     this.profDataBeingSaved = false;
@@ -202,8 +225,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
             this.proposalDataBeingSaved = true;
             this.saveProposalInfo().subscribe(result => {
               if (result !== undefined) {
-                console.log('result: ', result);
-
                 this.saveProjectInfo((success) => {
                   if (success) {
                     this.proposalDataBeingSaved = false;
@@ -212,30 +233,107 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
               }
             });
           }
-
         });
 
-        this.paymentForm = this.createPaymentForm();
-        this.paymentFormChangesSubscription = this.subscribeToFormChanges(this.paymentForm, () => {
-          this.paymentDataHasChanges = true;
-        }, (formData) => {
-          if (!this.paymentDataBeingSaved) {
-            this.paymentDataHasChanges = false;
-            this.paymentDataBeingSaved = true;
-            this.savePaymentInfo().subscribe(result => {
-              if (result !== undefined) {
-                console.log('result: ', result);
+        this.paymentForm = this.createPaymentForm(this.project.activeProposal.cost, this.project.activeProposal.costFinal);
 
-                this.saveProjectInfo((success) => {
-                  if (success) {
-                    this.paymentDataBeingSaved = false;
-                  }
-                });
+        const costValueChanges$ = this.paymentForm.get('cost').valueChanges;
+        costValueChanges$.debounceTime(1000).subscribe((value: string) => {
+          value = value.replace(/[.]/g, '')
+            .replace(/[,]/g, '.');
+          let changedValue = parseFloat(value);
+          console.log(this.project.activeProposal.cost, changedValue);
+
+          let highest = Math.max(changedValue, this.project.activeProposal.cost)
+          let lower = Math.min(changedValue, this.project.activeProposal.cost)
+
+          let valueDifference = highest % lower;
+          if (valueDifference === NaN) valueDifference = 0;
+
+          this.project.activeProposal.cost = valueDifference > 2 ? changedValue : undefined;
+
+          this.saveProjectInfo((success) => {
+
+          });
+        });
+
+        const paymentOptChanges$ = this.paymentForm.get('paymentOpt').valueChanges;
+        paymentOptChanges$.debounceTime(1000).subscribe((option: any) => {
+          option = Number(option);
+          this.paymentDataHasChanges = false;
+          this.paymentDataBeingSaved = true;
+
+          if (option === 1) {
+            this.project.activeProposal.costFinal = this.project.activeProposal.cost;
+          } else if (option === 2) {
+            this.project.activeProposal.costFinal = this.project.activeProposal.costToClient;
+          }
+
+          if (option === 1 || option === 2) {
+            this.saveProjectInfo((success) => {
+              if (success) {
+                this.paymentDataBeingSaved = false;
               }
             });
           }
         });
 
+        // this.paymentFormChangesSubscription = this.subscribeToFormChanges(this.paymentForm, () => {
+        //   this.paymentDataHasChanges = true;
+        // }, (formData) => {
+        //   if (!this.paymentDataBeingSaved) {
+        //     this.paymentDataHasChanges = false;
+        //     this.paymentDataBeingSaved = true;
+        //     this.savePaymentInfo(formData).subscribe(result => {
+        //       if (result !== undefined) {
+        //         if (!result) {
+        //           this.paymentDataBeingSaved = false;
+        //         } else {
+        //           this.saveProjectInfo((success) => {
+        //             if (success) {
+        //               this.paymentDataBeingSaved = false;
+        //             }
+        //           });
+        //         }
+        //       }
+        //     });
+        //   }
+        // });
+
+        this.bankService.getAll().subscribe(banks => {
+          this.allBanks = banks
+        });
+        this.bankAccService.getAllByProfessional(this.professional.id)
+          .subscribe(bankAccs => {
+            this.bankAccounts = bankAccs ? bankAccs : []
+          });
+
+        this.bankAccountForm = this.createBankAccountForm(this.professional, this.project.activeProposal.bankAccount);
+        this.bankAccountFormChangesSubscription = this.subscribeToFormChanges(this.bankAccountForm, () => {
+          this.bankAccountDataHasChanges = true;
+        }, (formData) => {
+          if (!this.bankAccountDataBeingSaved) {
+            this.bankAccountDataHasChanges = false;
+            this.bankAccountDataBeingSaved = true;
+            this.saveBankAccountInfo(formData).subscribe((bankAcc: BankAccount) => {
+              console.log(bankAcc);
+
+              if (bankAcc !== undefined) {
+                this.bankAccounts.push(bankAcc);
+                this.project.activeProposal.bankAccount = bankAcc;
+                this.saveProjectInfo((success) => {
+                  if (success) {
+                    this.bankAccountForm.reset();
+                    this.bankAccountForm.value.bankAccountId = bankAcc.id;
+                    this.bankAccountDataBeingSaved = false;
+                  }
+                });
+              } else {
+                this.bankAccountDataBeingSaved = false;
+              }
+            });
+          }
+        });
       });
 
     this.professionalAddedSubscription = this.profService.professionalAdded$
@@ -268,8 +366,8 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
       if (!subscription.closed) subscription.unsubscribe()
     });
 
-    if (!this.paymentFormChangesSubscription.closed)
-      this.paymentFormChangesSubscription.unsubscribe();
+    // if (!this.paymentFormChangesSubscription.closed)
+    //   this.paymentFormChangesSubscription.unsubscribe();
 
     if (!this.professionalAddedSubscription.closed)
       this.professionalAddedSubscription.unsubscribe();
@@ -353,10 +451,10 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
   }
 
   private createClientForm(briefing: string, client: Client, uf: UF): FormGroup {
-    if (client === undefined)
-      client = new Client();
-    let clientId: string = client.id !== undefined && client.id !== null ?
-      client.id : '0';
+    let clientId = '0';
+    if (client && client.id && client.id.length) {
+      clientId = client.id;
+    }
 
     return this.clientForm = this.fb.group({
       briefing: [briefing],
@@ -365,6 +463,22 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
       email: [''],
       cpfCnpj: [''],
       name: ['']
+    });
+  }
+
+  private createPaymentForm(cost: number, costFinal: number): FormGroup {
+    let paymentOpId: number = 0;
+    // console.log(Math.round(costFinal), Math.round(this.project.activeProposal.cost));
+    // console.log(Math.round(costFinal), Math.round(this.project.activeProposal.costToClient));
+    
+    if (Math.round(costFinal) === Math.round(this.project.activeProposal.cost))
+      paymentOpId = 1
+    if (Math.round(costFinal) === Math.round(this.project.activeProposal.costToClient))
+      paymentOpId = 2
+
+    return this.fb.group({
+      cost: [Math.round(cost)],
+      paymentOpt: [paymentOpId]
     });
   }
 
@@ -393,10 +507,90 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     });
   }
 
-  private createPaymentForm(): FormGroup {
+  private createBankAccountForm(prof: Professional, bankAccount: BankAccount): FormGroup {
+    let bankAccountId: string = 'new';
+    let cpfCnpj: string = '';
+
+    if (bankAccount && bankAccount.id && bankAccount.id.length) {
+      bankAccountId = bankAccount.id;
+    }
+
+    if (prof.cpfCnpj && prof.cpfCnpj.length) {
+      cpfCnpj = prof.cpfCnpj;
+    }
+
     return this.fb.group({
-      costFinal: []
+      bankAccountId: [bankAccountId],
+      bankId: [''],
+      agencyNumber: [''],
+      accountNumber: [''],
+      accountDigit: [''],
+      titular: [prof.name],
+      accountCpfCnpj: [cpfCnpj],
+      saveAccount: [true]
     });
+  }
+
+  private saveBankAccountInfo(formData: any): Observable<BankAccount> {
+    console.log(formData);
+
+    if (formData.bankAccountId === 'new' || formData.bankAccountId === 'undefined') {
+      let bankAccount: BankAccount;
+      let bankAccountDataValid =
+        // formData.bankId &&
+        String(formData.agencyNumber).length > 2 &&
+        formData.accountNumber.length > 3 &&
+        formData.titular.length > 1 &&
+        formData.accountCpfCnpj.length > 12 &&
+        UtilsService.isCpfCnpj(formData.accountCpfCnpj);
+
+      if (bankAccountDataValid) {
+        bankAccount = new BankAccount(formData.agencyNumber, formData.accountNumber, formData.accountDigit);
+        bankAccount.bank = this.allBanks.find(bank => bank.id === Number(formData.bankId))
+
+        if (formData.saveAccount) {
+          return this.bankAccService.addByProfessional(bankAccount, this.professional.id);
+        }
+
+        return Observable.of(bankAccount);
+
+
+      } else {
+        return Observable.of(undefined);
+      }
+    } else {
+      return this.bankAccService.getOne(formData.bankAccountId);
+    }
+
+    // this.project.briefing = briefing;
+
+    // this.project.uf = ufId;
+    // // check newclient option selected
+    // if (String(selectedClientId) === '0') {
+    //   newClient = new Client();
+    //   newClient = {
+    //     name: newClientName,
+    //     email: newClientEmail,
+    //     cpfCnpj: newClientCpfCnpj
+    //   };
+
+    //   let newClientValid = newClient.name && newClient.name.length > 0 &&
+    //     newClient.email && UtilsService.isEmail(newClient.email) &&
+    //     newClient.cpfCnpj && UtilsService.isCpfCnpj(newClient.cpfCnpj);
+
+    //   if (newClientValid) {
+    //     this.clientForm.reset();
+    //     return this.clientService
+    //       .addByProfessional(newClient, this.professional.id);
+    //   } else {
+    //     return Observable.of(undefined);
+    //   }
+    // } else {
+    //   // Associate to an existing Client
+    //   return this.clientService
+    //     .getOne(selectedClientId);
+    // }
+    // return Observable.of(undefined);
   }
 
   /* Atualiza os Clientes relacionados ao Usuário e o Cliente da Proposta */
@@ -439,14 +633,19 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     }
   }
 
-  private savePaymentInfo(): Observable<any> {
+  private savePaymentInfo(formData: any): Observable<boolean> {
+    if (formData.paymentOpt == 1) {
+      this.project.activeProposal.costFinal = this.project.activeProposal.cost;
+    } else if (formData.paymentOpt == 2) {
+      this.project.activeProposal.costFinal = this.project.activeProposal.costToClient;
+    } else {
+      return Observable.of(false);
+    }
+
     return Observable.of(true);
   }
 
   private saveProfessionalInfo(): Observable<any> {
-    let toggleLoading = (isLoading?: boolean) => {
-      this.profDataBeingSaved = isLoading !== undefined ? isLoading : !this.profDataBeingSaved
-    };
     let name;
     let description;
     let partnersIds;
@@ -458,7 +657,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     currentProf = this.professional;
     currentProf.name = name;
     currentProf.description = description;
-
     this.project.activeProposal.professionalsIds = partnersIds;
     this.project.professional = currentProf;
 
@@ -467,19 +665,20 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
   private saveProjectInfo(callback?: (success) => void) {
     this.projectsService.update(this.project).subscribe((project: Project) => {
+      console.log('Update result: ', project);
+
       this.project.activeProposal.cost = project.activeProposal.cost;
       this.project.activeProposal.costToClient = project.activeProposal.costToClient;
       this.project.activeProposal.costToReceive = project.activeProposal.costToReceive;
       if (callback !== undefined) {
         callback(true);
       }
-
     });
 
   }
 
   private saveProposalInfo(): Observable<any> {
-    this.project.activeProposal.intro = this.proposalForm.value.proposalIntro;;
+    this.project.activeProposal.intro = this.proposalForm.value.proposalIntro;
     return Observable.of(true);
   }
 
@@ -525,5 +724,4 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
     return formChanges$.do(data => doIt()).debounceTime(3000).subscribe(data => callback(data));
   }
-
 }

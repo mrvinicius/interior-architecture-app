@@ -11,11 +11,11 @@
           <div class="col s12 m6">
             <mz-select-container class="has-add-option">
               <select mz-select #clientSelectInput formControlName="clientId" id='clientSelect' label="cliente">
-              <option [value]="0">- novo cliente -</option>
-              <option *ngFor="let c of allClients()"
-                [value]="c.id"
-                [selected]="c.id === project.client.id">{{c.name}}</option>
-            </select>
+                <option [value]="0">- novo cliente -</option>
+                <option *ngFor="let c of allClients()"
+                  [value]="c.id"
+                  [selected]="c.id === project.client.id">{{c.name}}</option>
+             </select>
             </mz-select-container>
             <ng-container *ngIf="clientForm && clientForm.value && clientForm.value.clientId">
               <ng-container *ngIf="clientForm.value.clientId == 0">
@@ -197,66 +197,145 @@
 
     <md2-accordion-tab>
       <md2-accordion-header class="collapsible-header">
-        <i *ngIf="!paymentDataBeingSaved" class="material-icons">attach_money</i>
-        <mz-spinner *ngIf="paymentDataBeingSaved" [color]="'black'" class="tiny spinner"></mz-spinner>
+        <i *ngIf="!paymentDataBeingSaved && !bankAccountDataBeingSaved" class="material-icons">attach_money</i>
+        <mz-spinner *ngIf="paymentDataBeingSaved || bankAccountDataBeingSaved" [color]="'black'" class="tiny spinner"></mz-spinner>
         Recebimento
       </md2-accordion-header>
       <section class="row">
         <form [formGroup]="paymentForm">
           <div class="col s12">
-            <!--<h5 style="margin-bottom: 0;">Total: <b>R$ 3.000,00</b></h5>-->
-            <h5 style="margin-bottom: 0;">Total: <b>{{project.activeProposal.cost | currency:'BRL':true}}</b></h5>
-            <span class="italic small-font" style="font-size: .8rem">Cobramos 3% para compensar nosso serviço</span>
+            <!--<h5 style="margin-bottom: 0;">
+              Total: <b>{{project.activeProposal.cost | currency:'BRL':true}}</b>
+            </h5>-->
+            <!--<span>Total: </span>-->
+            <div class="u-col s12 m5 l4">
+              <mz-input-container class="large-text-input">
+                <input mz-input [textMask]="{mask: mascaraReal, placeholderChar: '\u2000'}" formControlName="cost" #costInput label="Total (R$)"
+                  id="finalCost" style="margin-bottom:0; text-align: right;" type="text">
+              </mz-input-container>
+              <span class="italic small-font" style="font-size: .8rem">Cobramos 3% para compensar nosso serviço</span>
+              <!--<p>ProjectCost: {{project.activeProposal.cost}}</p>
+              <p>FormProjectCost: {{paymentForm.value.cost}}</p>-->
+            </div>
           </div>
-          {{paymentForm.value.costFinal}}
-          <p>{{project.activeProposal.costToReceive}}</p>
-          <div class="col s12 m6 l4" *ngIf="project.activeProposal.cost">
-            <mz-radio-button-container>
-              <input mz-radio-button formControlName="costFinal" label="Cobrar {{project.activeProposal.cost | currency:'BRL':true}}" id='cobrarOp'
-                value="{{project.activeProposal.costToReceive}}" name="costFinal" type="radio" />
-            </mz-radio-button-container>
-            <mz-radio-button-container>
-              <input mz-radio-button formControlName="costFinal" label="Receber {{project.activeProposal.cost | currency:'BRL':true}}"
-                id='receberOp' value="{{project.activeProposal.costToClient}}" name="costFinal" type="radio" />
-            </mz-radio-button-container>
-            <p *ngIf="paymentForm.value.costFinal == project.activeProposal.costToReceive">Você receberá <b>{{project.activeProposal.costToReceive | currency:'BRL':true}}</b></p>
-            <p *ngIf="paymentForm.value.costFinal == project.activeProposal.costToClient">Seu cliente deverá pagar <b>{{project.activeProposal.costToClient | currency:'BRL':true}}</b></p>
+          <div class="col s12 m6 l4 row" *ngIf="project.activeProposal.cost">
+            <ng-container *ngIf="paymentForm.value.paymentOpt !== undefined">
+              <mz-radio-button-container>
+                <input mz-radio-button formControlName="paymentOpt" label="Cobrar {{project.activeProposal.cost | currency:'BRL':true}}"
+                  id='cobrarOp' name="paymentOpt" value="1" type="radio" />
+              </mz-radio-button-container>
+              <mz-radio-button-container>
+                <input mz-radio-button formControlName="paymentOpt" label="Receber {{project.activeProposal.cost | currency:'BRL':true}}"
+                  id='receberOp' name="paymentOpt" value="2" type="radio" />
+              </mz-radio-button-container>
+            </ng-container>
+            <ng-container *ngIf="paymentForm.value.paymentOpt">
+              <p *ngIf="paymentForm.value.paymentOpt == 1">Você receberá <b>{{project.activeProposal.costToReceive | currency:'BRL':true}}</b></p>
+              <p *ngIf="paymentForm.value.paymentOpt == 2">Seu cliente deverá pagar <b>{{project.activeProposal.costToClient | currency:'BRL':true}}</b></p>
+
+            </ng-container>
           </div>
-          <div class="col s12 m6 l4" style="padding: 0;">
+          <!--<p>{{paymentForm.value.costFinal == 1 && !receiveOp.checked && !collectionOp.checked}}</p>
+          <p>{{paymentForm.value.costFinal == 2 && !receiveOp.checked && !collectionOp.checked}}</p>-->
+        </form>
+        <form [formGroup]="bankAccountForm">
+          <div class="col s12 m6 l5 offset-l1" style="padding: 0;">
             <mz-select-container class="has-add-option col s12">
-              <select mz-select label="sua conta bancária">
-              <option>- Nova conta -</option>
-              <option>Option 1</option>
-              <option>Option 3</option>
+              <select mz-select formControlName="bankAccountId" label="sua conta bancária">
+                <option [value]="'new'">- nova conta -</option>
+                <ng-container *ngIf="bankAccounts && bankAccounts.length">
+                  <option *ngFor="let acc of bankAccounts"
+                    [value]="acc.id"
+                    [selected]="acc.id === project.activeProposal.id">{{acc.bank.name}} - {{acc.agency}}</option>
+                </ng-container>
             </select>
             </mz-select-container>
-            <mz-select-container class=" col s12">
-              <select mz-select label="banco">
-              <option>Option 1</option>
-              <option>Option 3</option>
-            </select>
+            <ng-container *ngIf="bankAccountForm.value.bankAccountId === 'new' || bankAccountForm.value.bankAccountId === 'undefined'">
+              <mz-select-container class=" col s12">
+                <select mz-select formControlName="bankId" label="banco">
+                  <ng-container *ngIf="allBanks && allBanks.length">
+                    <ng-container *ngIf="project.activeProposal.bankAccount && project.activeProposal.bankAccount.bank">
+                      <option #wasLoaded *ngFor="let b of allBanks"
+                        [value]="b.id"
+                        [selected]="b.id === project.activeProposal.bankAccount.bank.id">{{b.name}}</option>
+                    </ng-container>
+                    <ng-container *ngIf="!wasLoaded"><!-- project.activeProposal.bankAccount && project.activeProposal.bankAccount.bank-->
+                      <option *ngFor="let b of allBanks" [value]="b.id">{{b.name}}</option>
+                    </ng-container>
+                  </ng-container>
+        
+                  <!--<ng-container *ngIf="allBanks && allBanks.length && project.activeProposal.bankAccount && project.activeProposal.bankAccount.bank">
+                    <option *ngFor="let b of allBanks"
+                      [value]="b.id"
+                      [selected]="b.id === project.activeProposal.bankAccount.bank.id">{{b.name}}</option>
+                  </ng-container>
+                  <ng-container *ngIf="allBanks && allBanks.length && !(!project.activeProposal.bankAccount || !project.activeProposal.bankAccount.bank)">
+
+                  </ng-container>-->
+                </select>
+              </mz-select-container>
+              <div class="u-row">
+                <mz-input-container class="col s4">
+                  <input mz-input formControlName="agencyNumber" label="agência" id="agency" type="number">
+                </mz-input-container>
+                <mz-input-container class="col s6" style="padding-right: 0;">
+                  <input mz-input formControlName="accountNumber" label="conta" id="account" maxlength="9" type="text">
+                </mz-input-container>
+                <mz-input-container class="col s2" style="padding-left: 0;">
+                  <input mz-input formControlName="accountDigit" label="dígito" id="digit" maxlength="2" type="text">
+                </mz-input-container>
+                <mz-input-container class="col s12">
+                  <input mz-input formControlName="titular" label="titular da conta" id="titular" type="text">
+                </mz-input-container>
+                <mz-input-container class="col s12">
+                  <input mz-input formControlName="accountCpfCnpj" label="CPF ou CNPF" id="accountCpfCnpj" type="text">
+                </mz-input-container>
+              </div>
+              <div class="row">
+                <div class="u-col s6">
+                  <div class="switch">
+                    <label>
+                      <input type="checkbox"  formControlName="saveAccount" checked>
+                      <span class="lever"></span>
+                      salvar conta
+                    </label>
+                  </div>
+                </div>
+                <!--<mz-input-container class="col s7">
+                  <input mz-input formControlName="accountNick" label="CPF ou CNPF" id="accountCpfCnpj" type="text">
+                </mz-input-container>-->
+              </div>
+            </ng-container>
+            <!--
+            <mz-select-container class="has-add-option">
+              <select mz-select #clientSelectInput formControlName="clientId" id='clientSelect' label="cliente">
+                <option [value]="0">- novo cliente -</option>
+                <option *ngFor="let c of allClients()"
+                  [value]="c.id"
+                  [selected]="c.id === project.client.id">{{c.name}}</option>
+             </select>
             </mz-select-container>
-            <div class="row">
-              <mz-input-container class="col s4">
-                <input mz-input label="agência" id="agency">
-              </mz-input-container>
-              <mz-input-container class="col s8">
-                <input mz-input label="conta" id="account">
-              </mz-input-container>
-              <mz-input-container class="col s12">
-                <input mz-input label="titular da conta" id="titular">
-              </mz-input-container>
-              <mz-input-container class="col s12">
-                <input mz-input label="CPF ou CNPF" id="cpfCnpj">
-              </mz-input-container>
-            </div>
-            <div class="switch">
-              <label>
-              <input type="checkbox"/>
-              <span class="lever"></span>
-              salvar conta
-            </label>
-            </div>
+            <ng-container *ngIf="clientForm && clientForm.value && clientForm.value.clientId">
+              <ng-container *ngIf="clientForm.value.clientId == 0">
+                <mz-input-container>
+                  <input mz-input formControlName="name" label="nome" name="Name" id='clientName' type='text'>
+                </mz-input-container>
+                <mz-input-container>
+                  <input mz-input formControlName="email" label="email" name='Email' id='clientEmail' type='email'>
+                </mz-input-container>
+                <mz-input-container>
+                  <input mz-input formControlName="cpfCnpj" label="CPF ou CNPJ" name='CpfCnpj' id='cpfCnpj' type='text'>
+                </mz-input-container>
+              </ng-container>
+            </ng-container>-->
+
+
+
+
+
+
+
+
           </div>
         </form>
       </section>

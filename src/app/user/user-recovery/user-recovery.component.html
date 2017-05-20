@@ -3,27 +3,20 @@
     <div class="card z-depth-5" style="padding-bottom: 1px;">
       <div class="card-content">
         <p *ngIf="errorMessage && errorMessage.length" class="red-text">{{errorMessage}}</p>
-        <form [formGroup]="loginForm" class="col s12">
+        <form [formGroup]="recoveryForm" class="col s12">
           <mz-input-container class="col s12">
             <!--<i mz-icon-mdi mz-input-prefix class="material-icons">email</i>-->
             <input mz-input label='email' formControlName="email" [validate]="true" name="Email" id="email" type="email">
           </mz-input-container>
-          <mz-input-container class="col s12">
-            <!--<i mz-icon-mdi mz-input-prefix class="material-icons">lock</i>-->
-            <input (keyup.enter)="login()" mz-input label='senha' formControlName="password" [validate]="true" name="Password" id="password" type="password">
-          </mz-input-container>
           <div class="right-align row">
-            <button (click)="login()" [disabled]="loginForm.invalid" mz-button style="width: 100%">Entrar</button>
+            <button (click)="recover()" [disabled]="recoveryForm.invalid" mz-button style="width: 100%">Enviar</button>
           </div>
         </form>
         <!--<div fxLayout="column" fxLayout.gt-sm="row" class="row">-->
         <div class="row">
           <!--<div fxFlex="50%">-->
           <div class="u-col s6">
-            <a routerLink="/recuperar">Recuperar senha</a>
-          </div>
-          <div class="u-col s6 right-align">
-            <a routerLink="/cadastro">Cadastre-se</a>
+            <a routerLink="/entrar">Voltar</a>
           </div>
         </div>
       </div>

@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 import { Router } from "@angular/router";
 import {
   MzInputDirective,
@@ -18,13 +23,6 @@ import { UserService } from '../../core/user.service';
 export class UserEntryComponent implements OnInit {
   loginForm: FormGroup;
   errorMessage: string;
-
-  createForm() {
-    this.loginForm = this.fb.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required]
-    });
-  }
 
   constructor(
     private auth: AuthService,
@@ -67,5 +65,12 @@ export class UserEntryComponent implements OnInit {
 
   searchUser(email: string) {
 
+  }
+
+  private createForm() {
+    this.loginForm = this.fb.group({
+      email: ['', Validators.required],
+      password: ['', Validators.required]
+    });
   }
 }

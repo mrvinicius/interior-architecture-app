@@ -1,12 +1,12 @@
-import { Ambience } from './../shared/ambience';
-import { Proposal } from './../shared/proposal';
-import { ProposalStatus } from './../shared/proposal-status.enum';
-
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MzModalService, MzBaseModal } from "ng2-materialize";
 import { Subscription } from 'rxjs/Subscription';
 
+import { Ambience } from './../shared/ambience';
+import { AmbienceDescription } from './../shared/ambience-description.enum';
+import { Proposal } from './../shared/proposal';
+import { ProposalStatus } from './../shared/proposal-status.enum';
 import { SpinnerService } from '../../core/spinner/spinner.service';
 import { UtilsService } from '../../shared/utils/utils.service';
 import { Client } from '../../client/shared/client';
@@ -39,18 +39,16 @@ export class ProjectListComponent implements OnInit {
     let p = new Project(prop);
     p.title = 'Projeto MOCK'
     let amb1 = new Ambience(), amb2 = new Ambience();
-    amb1.ambienceDescription = AmbienceDesc;
+    amb1.ambienceDescription = AmbienceDescription[AmbienceDescription[1]];
     amb1.area = 10;
-    amb1.services = ['0', '2']
-    amb2.description = "Quarto";
+    // amb1.services = ['0', '2']
     amb2.area = 22;
-    amb2.services = ['4', '7']
     p.client = new Client();
     p.ambiences = [amb1, amb2];
 
     this.projectsService.allProjects.push(p);
-      */
 
+    */
   }
 
   disableProject(id: string) {
@@ -98,7 +96,7 @@ export class ProjectListComponent implements OnInit {
       title += ' (' + sameNameProjects.length + ')';
     }
     console.log(title);
-    
+
     this.projectsService.add(title).subscribe((project: Project) => {
       this.spinnerService.toggleLoadingIndicator(false);
       this.redirectToProject(project.title);

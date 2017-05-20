@@ -1,4 +1,3 @@
-import { AmbienceService } from './ambience.service';
 import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
@@ -7,6 +6,7 @@ import { Subject } from "rxjs/Subject";
 import { AuthService } from '../../core/auth.service';
 import { Ambience } from './ambience';
 import { AmbienceDescription } from './ambience-description.enum';
+import { AmbienceService } from './ambience.service';
 import { Client } from '../../client/shared/client';
 import { ClientService } from '../../client/shared/client.service';
 import { Professional } from '../../core/professional';
@@ -294,7 +294,7 @@ export class ProjectsService {
     this.currentProfessional = this.auth.currentUser;
     this.getAllByProfessional(this.currentProfessional.id).subscribe((projects: Project[]) => {
       this.allProjects = projects.filter(project => { return project.isActive; });
-      console.log(this.allProjects);
+      // console.log(this.allProjects);
     });
   }
 
@@ -342,9 +342,6 @@ export class ProjectsService {
     p.isActive = false;
     return this.update(p);
   }
-
-
-
 
   getAllByProfessional(professionalId: string, take: number = 999, skip?: number): Observable<Project[]> {
     let options = new RequestOptions({ headers: this.getHeaders() });
@@ -425,7 +422,8 @@ export class ProjectsService {
             prop.cost = proposal.CustoTotal;
             prop.costToClient = proposal.ValorCobrado;
             prop.costToReceive = proposal.ValorRecebido;
-            
+            prop.costFinal = proposal.ValorFatura;
+
             prop.professionalsIds =
               proposal.PropostaProfissionaisParticipantes.map(professional => {
                 return professional.ProfissionalId;
@@ -515,11 +513,27 @@ export class ProjectsService {
           "TempoId": ProjectsService.timeUnityIds[project.activeProposal.deadlineTimeUnity],
           'Observação': project.activeProposal.comments,
           'NumeroComodos': 0,
-          "ValorFatura": project.activeProposal.costFinal,
+          'ValorFatura': project.activeProposal.costFinal,
+          'BancoId': undefined,
+          'ContaBancariaId': undefined,
+          // "Banco": null,
+          // "ContaBancaria": null,
           'PropostaProfissionaisParticipantes': []
         }
       ],
       'ProjetoComodo': []
+    }
+
+    if (project.activeProposal.bankAccount && project.activeProposal.bankAccount.bank) {
+      projectData.Proposta[0].BancoId = project.activeProposal.bankAccount.bank.id;
+    }
+
+    if (project.activeProposal.bankAccount) {
+      projectData.Proposta[0].ContaBancariaId = project.activeProposal.bankAccount.id;
+    }
+
+    if (project.activeProposal.cost) {
+      projectData.Proposta[0]['CustoTotal'] = project.activeProposal.cost;
     }
 
     if (project.ambiences.length) {

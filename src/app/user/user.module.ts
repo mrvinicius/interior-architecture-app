@@ -5,7 +5,7 @@ import {
   MdlButtonModule,
   MdlTextFieldModule,
 } from '@angular-mdl/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
+// import { FlexLayoutModule } from '@angular/flex-layout';
 import {
   MaterializeModule
 } from 'ng2-materialize';
@@ -19,11 +19,13 @@ import { UserEntryComponent } from './user-entry/user-entry.component';
 import { UserRegisterComponent } from './user-register/user-register.component';
 import { AlmostThereComponent } from './user-register/almost-there.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { UserRecoveryComponent } from './user-recovery/user-recovery.component';
+import { UserPasswordComponent } from './user-password/user-password.component';
 
 @NgModule({
   imports: [
     SharedModule,
-    FlexLayoutModule,
+    // FlexLayoutModule,
     MdlButtonModule,
     MdlTextFieldModule,
     MaterializeModule,
@@ -39,6 +41,8 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
     UserEntryComponent,
     UserRegisterComponent,
     UserProfileComponent,
+    UserRecoveryComponent,
+    UserPasswordComponent,
   ],
   providers: []
 })

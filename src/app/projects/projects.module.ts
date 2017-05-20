@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -8,6 +7,7 @@ import { MdlExpansionPanelModule } from '@angular-mdl/expansion-panel';
 import { MdlPopoverModule } from '@angular-mdl/popover';
 import { MdlSelectModule } from '@angular-mdl/select';
 
+import { SharedModule } from '../shared/shared.module';
 import { LayoutModule } from '../layout/layout.module';
 import { ProjectsService } from './shared/projects.service';
 import { AmbienceService } from './shared/ambience.service';
@@ -22,7 +22,7 @@ import { ProjectAmbienceComponent } from './project-ambience/project-ambience.co
 @NgModule({
   imports: [
     BrowserAnimationsModule,
-    CommonModule,
+    SharedModule,
     FormsModule,
     LayoutModule,
     MaterializeModule,
