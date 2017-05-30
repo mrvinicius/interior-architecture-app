@@ -37,11 +37,11 @@ export class NewProjectModalComponent extends MzBaseModal {
         super();        
     }
 
-    submit(name: string, formValid?: boolean) {
+    submit(projectTitle: string, formValid?: boolean) {
         if (formValid !== undefined)
             if (!formValid) return;
 
-        this.projectsService.defineNewProjectTitleName(name);
+        this.projectsService.defineNewProjectTitleName(projectTitle);
         this.modalComponent.close();
     }
 }

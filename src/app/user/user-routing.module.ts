@@ -5,6 +5,7 @@ import { AlmostThereComponent } from './user-register/almost-there.component';
 import { UserComponent } from './user.component';
 import { UserEntryComponent } from './user-entry/user-entry.component';
 import { UserPasswordComponent } from './user-password/user-password.component';
+import { UserProfessionComponent } from './user-profession/user-profession.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserRecoveryComponent } from './user-recovery/user-recovery.component';
 import { UserRegisterComponent } from './user-register/user-register.component';
@@ -19,7 +20,8 @@ const routes: Routes = [
             { path: 'quase-la', component: AlmostThereComponent },
             { path: 'perfil', component: UserProfileComponent },
             { path: 'recuperar', component: UserRecoveryComponent },
-            { path: 'senha', component: UserPasswordComponent }
+            { path: 'senha', component: UserPasswordComponent },
+            { path: 'profissao', component: UserProfessionComponent }
         ]
     }
 ];

@@ -1,30 +1,62 @@
 <mb-layout>
-  <main class="layout-content row">
-    <form [formGroup]="userProfileForm">
+  <main class="layout-content left-space" style="padding-top: .75rem;">
+    <form *ngIf="professional && profProfileForm" [formGroup]="profProfileForm" class="row">
       <div class="col s12 m6 l5">
         <mz-input-container>
-          <input mz-input formControlName="name" [value]="user.name" label="nome profissional" name='BusinessName' id='businessName'
-            type='text'>
+          <input mz-input formControlName="name" label="nome profissional" name='BusinessName' id='businessName' type='text'>
         </mz-input-container>
-        <!--<mz-input-container>
-          <input mz-input formControlName="cpf" [value]="user.cpf" label="CPF" name='Cpf' id='cpf' type='text'>
-        </mz-input-container>-->
+
+        <!--<mz-input-container class="u-col s12">
+          <input mz-input label='senha' formControlName="password" [attr.type]="profProfileForm.value.showPassword ? 'text' : 'password'"
+            id="password">
+        </mz-input-container>
+        <div class="u-col s12 row">
+          <div class="switch">
+            <label style="display: flex; align-items: center;">
+                <input type="checkbox" formControlName="showPassword">
+                <span class="lever" style="margin-left: 0;"></span>
+                <i class="material-icons" [ngClass]="{'mv-wine-text': profProfileForm.value.showPassword}">visibility</i>
+              </label>
+          </div>
+        </div>-->
         <div>
           <label>profissão</label>
           <mz-radio-button-container>
-            <input mz-radio-button label="Estudante" id='studentOp' value="1" name="profession-group" type="radio" />
+            <input mz-radio-button formControlName="professionOpt" label="Estudante" id='estOpt' value="0" type="radio" />
           </mz-radio-button-container>
           <mz-radio-button-container>
-            <input mz-radio-button label="Arquiteto" id='architectOp' value="2" name="profession-group" type="radio" />
+            <input mz-radio-button formControlName="professionOpt" label="Arquiteto" id='arqOpt' value="1" type="radio" />
           </mz-radio-button-container>
           <mz-radio-button-container>
-            <input mz-radio-button label="Designer de Interiores" id='designerOp' value="3" name="profession-group" type="radio" />
+            <input mz-radio-button formControlName="professionOpt" label="Designer de Interiores" id='desOpt' value="2" type="radio"
+            />
+          </mz-radio-button-container>
+        </div>
+        <mz-input-container>
+          <input mz-input formControlName="celular" label="celular" id='celular' type='text'>
+        </mz-input-container>
+        <mz-select-container>
+          <select mz-select formControlName="maritalStatus" id='maritalStatus' placeholder="Estado Civil">
+            <option [value]="'Solteiro(a)'">Solteiro(a)</option>
+            <option [value]="'Casado(a)'">Casado(a)</option>
+            <option [value]="'Separado(a)'">Separado(a)</option>
+            <option [value]="'Divorciado(a)'">Divorciado(a)</option>
+            <option [value]="'Viúvo(a)'">Viúvo(a)</option>
+          </select>
+        </mz-select-container>
+        <div>
+          <label>gênero</label>
+          <mz-radio-button-container>
+            <input mz-radio-button formControlName="genderOpt" label="Feminino" id='femaleOpt' value="'F'" type="radio" />
+          </mz-radio-button-container>
+          <mz-radio-button-container>
+            <input mz-radio-button formControlName="genderOpt" label="Masculino" id='maleOpt' value="'M'" type="radio" />
           </mz-radio-button-container>
         </div>
       </div>
 
       <div class="col s12 m6 l5">
-        <div class="file-field input-field">
+        <!--<div class="file-field input-field">
           <div class="btn disabled">
             <i class="material-icons white-text">file_upload</i>
             <input type="file">
@@ -32,12 +64,39 @@
           <div class="file-path-wrapper">
             <input [value]="" disabled class="file-path validate" placeholder="selecione sua logo" type="text">
           </div>
-        </div>
-        <!--<mz-textarea-container>
-          <textarea mz-textarea formControlName="description" [value]="user.description" label='descrição profissional' id='businessDescription'
+        </div>-->
+        <mz-textarea-container>
+          <textarea mz-textarea formControlName="description" [value]="professional.description" label='descrição profissional' id='businessDescription'
             length='400'></textarea>
-        </mz-textarea-container>-->
+        </mz-textarea-container>
+        <mz-input-container>
+          <input mz-input formControlName="address" label="endereço" id='address' type='text'>
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input formControlName="cpfCnpj" label="CPF ou CPNJ" name='Cpf' id='cpf' type='text'>
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input formControlName="rg" label="RG" id='rg' type='text'>
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input formControlName="cau" label="CAU" id='cau' type='text'>
+        </mz-input-container>
       </div>
     </form>
+    <div class="row">
+      <div class="col s12">
+        <div class="divider"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <div class="u-col s9 right-align right">
+          <button (click)="saveProfile()" type="button" [disabled]="!profProfileFormHasChange || profProfileForm.invalid" class="btn waves-effect">
+          Salvar
+        </button>
+        </div>
+      </div>
+
+    </div>
   </main>
 </mb-layout>

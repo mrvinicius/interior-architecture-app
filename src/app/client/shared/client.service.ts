@@ -18,14 +18,15 @@ export class ClientService {
   private readonly baseUrl: string = 'http://52.67.21.201/muuving/api/cliente';
 
   constructor(
-    private http: Http,
     private auth: AuthService,
+    private http: Http,
     private profService: ProfessionalService
   ) {
-    this.getAllByProfessional(this.auth.currentUser.id).subscribe((clients: Client[]) => {
-      this.allClients = clients;
-      this.allClientsChange$.next(this.allClients);
-    });
+    // this.getAllByProfessional(this.profService.professional.id).subscribe((clients: Client[]) => {
+    // this.getAllByProfessional(this.auth.getCurrentUser().id).subscribe((clients: Client[]) => {
+    //   this.allClients = clients;
+    //   this.allClientsChange$.next(this.allClients);
+    // });
 
   }
 
@@ -44,6 +45,7 @@ export class ClientService {
         let body = JSON.parse(response.text());
         let newClient: Client = new Client(body.Nome, body.Email, body.ID);
         newClient.cpfCnpj = body.CpfCnpj;
+        if (!this.allClients) this.allClients = [];
 
         this.allClients.push(newClient);
         this.allClientsChange$.next(this.allClients);
@@ -61,22 +63,48 @@ export class ClientService {
       ProfissionalId: profissionalId
     };
 
-    return this.http
-      .post(this.baseUrl + '/getall', data, options)
-      .map((response: Response) => {
-        let body = JSON.parse(response.text());
-        return body.map((client) => {
-          return new Client(client.Nome, client.Email, client.ID);
-        });
+    if (this.allClients === undefined || this.allClients.length < 1) {
+      return this.http
+        .post(this.baseUrl + '/getall', data, options)
+        .map((response: Response) => {
+          let body = JSON.parse(response.text());
+          let clients: Client[] = [];
 
-      })
-      .catch(this.handleError);
+          if (body.length) {
+            clients = body.map((client) => {
+              return new Client(client.Nome, client.Email, client.ID);
+            });
+          }
+
+          this.allClients = clients;
+          return this.allClients;
+        })
+        .catch(this.handleError);
+    } else {
+      return Observable.of(this.allClients);
+    }
+
+
   }
 
-  getOne(id: string): Observable<Client> {
-    return Observable.of(this.allClients.find((client: Client) => {
-      return client.id === id;
-    }));
+  getOne(id: string, getFromDatabase?: boolean): Observable<Client> {
+    if (getFromDatabase) {
+      let options = new RequestOptions({ headers: this.getHeaders() });
+
+      return this.http.get(this.baseUrl + '/getone?id=' + id, options)
+        .map((response: Response) => {
+          let body = JSON.parse(response.text());
+          let client = new Client(body.Nome, body.Email, body.ID);
+          client.cpfCnpj = body.CpfCnpj;
+
+          return client;
+        })
+        .catch(this.handleError);
+    } else {
+      return Observable.of(this.allClients.find((client: Client) => {
+        return client.id === id;
+      }));
+    }
   }
 
   private extractData(res: Response) {

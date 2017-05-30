@@ -18,9 +18,6 @@ import { UserService } from './core/user.service';
 export class AppComponent {
   loading = false;
 
-  /**
-   *
-   */
   constructor() {
   }
 }

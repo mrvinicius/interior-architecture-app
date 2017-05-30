@@ -13,14 +13,14 @@
             <input (keyup.enter)="login()" mz-input label='senha' formControlName="password" [validate]="true" name="Password" id="password" type="password">
           </mz-input-container>
           <div class="right-align row">
-            <button (click)="login()" [disabled]="loginForm.invalid" mz-button style="width: 100%">Entrar</button>
+            <button mz-button (click)="login()" [disabled]="loginForm.invalid" type="button" style="width: 100%">Entrar</button>
           </div>
         </form>
         <!--<div fxLayout="column" fxLayout.gt-sm="row" class="row">-->
         <div class="row">
           <!--<div fxFlex="50%">-->
           <div class="u-col s6">
-            <a routerLink="/recuperar">Recuperar senha</a>
+            <!--<a routerLink="/recuperar">Recuperar senha</a>-->
           </div>
           <div class="u-col s6 right-align">
             <a routerLink="/cadastro">Cadastre-se</a>

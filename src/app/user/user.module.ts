@@ -21,6 +21,7 @@ import { AlmostThereComponent } from './user-register/almost-there.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserRecoveryComponent } from './user-recovery/user-recovery.component';
 import { UserPasswordComponent } from './user-password/user-password.component';
+import { UserProfessionComponent } from './user-profession/user-profession.component';
 
 @NgModule({
   imports: [
@@ -43,6 +44,7 @@ import { UserPasswordComponent } from './user-password/user-password.component';
     UserProfileComponent,
     UserRecoveryComponent,
     UserPasswordComponent,
+    UserProfessionComponent,
   ],
   providers: []
 })

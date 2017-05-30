@@ -4,26 +4,27 @@
 
 <main class="layout-content left-space u-row">
     <div class="col s12">
-        <table *ngIf="getProjects().length && getClients().length" id="projectsList" class="highlight fixed-header">
-            <thead class="grey-text text-darken-1">
-                <tr>
-                    <th data-field="title">Projeto</th>
-                    <th data-field="client" class="hide-on-small-only">Cliente</th>
-                    <th data-field="wasPaid" class="hide-on-small-only">Pagamento</th>
-                    <!--<th data-field="status" hidden>Status</th>-->
-                    <th data-field="received" class="right-align">Valor<span class="hide-on-small-only"> (R$)</span></th>
+        <ng-container *ngIf="projects !== undefined && clients !== undefined">
+            <table *ngIf="projects.length" id="projectsList" class="highlight fixed-header">
+                <thead class="grey-text text-darken-1">
+                    <tr>
+                        <th data-field="title">Projeto</th>
+                        <th data-field="client" class="hide-on-small-only">Cliente</th>
+                        <th data-field="wasPaid" class="hide-on-small-only">Pagamento</th>
+                        <!--<th data-field="status" hidden>Status</th>-->
+                        <th data-field="received" class="right-align">Valor<span class="hide-on-small-only"> (R$)</span></th>
 
-                    <th class="right-align"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <ng-container *ngFor="let p of getProjects()">
-                    <!--(click)="redirectToProject(p.title)"-->
-                    <tr *ngIf="p.isActive">
-                        <td (click)="redirectToProject(p.title)" class="pointer">{{p.title}}</td>
-                        <td (click)="redirectToProject(p.title)" class="pointer hide-on-small-only"><span *ngIf="p.client && p.client.id">{{getClientName(p.client.id)}}</span></td>
-                        <td (click)="redirectToProject(p.title)" class="pointer hide-on-small-only"><span *ngIf="p.wasPaid !== null">{{p.wasPaid ? 'Pago' : 'Pendente'}}</span></td>
-                        <!--<td hidden>
+                        <th class="right-align"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let p of projects">
+                        <!--(click)="redirectToProject(p.title)"-->
+                        <tr *ngIf="p.isActive">
+                            <td (click)="redirectToProject(p.title)" class="pointer">{{p.title}}</td>
+                            <td (click)="redirectToProject(p.title)" class="pointer hide-on-small-only"><span *ngIf="p.client && p.client.id">{{getClientName(p.client.id)}}</span></td>
+                            <td (click)="redirectToProject(p.title)" class="pointer hide-on-small-only"><span *ngIf="p.wasPaid !== null">{{p.wasPaid ? 'Pago' : 'Pendente'}}</span></td>
+                            <!--<td hidden>
                             <div *ngIf="p.status !== null" [ngSwitch]="p.status">
                                 <span *ngSwitchCase="ProjectStatus.Waiting">Aguardando</span>
                                 <span *ngSwitchCase="ProjectStatus.Approved">Aprovado</span>
@@ -31,19 +32,20 @@
                                 <span *ngSwitchCase="ProjectStatus.NotSent">Proposta não enviada</span>
                             </div>
                         </td>-->
-                        <td (click)="redirectToProject(p.title)" class="pointer right-align"><span *ngIf="!p.received">-</span></td>
-                        <td (click)="redirectToProject(p.title)" class="pointer right-align"><span *ngIf="p.received">{{p.received}}</span></td>
-                        <td class="right-align">
-                            <a (click)="disableProject(p.id)" class="btn-floating btn-small waves-effect waves-dark transparent table-action-cell" style="box-shadow: none">
+                            <td (click)="redirectToProject(p.title)" class="pointer right-align"><span *ngIf="!p.received">-</span></td>
+                            <td (click)="redirectToProject(p.title)" class="pointer right-align"><span *ngIf="p.received">{{p.received}}</span></td>
+                            <td class="right-align">
+                                <a (click)="disableProject(p.id)" class="btn-floating btn-small waves-effect waves-dark transparent table-action-cell" style="box-shadow: none">
                                 <i class="material-icons mv-red-light-text">delete</i>
                             </a>
-                        </td>
-                    </tr>
-                </ng-container>
-            </tbody>
-        </table>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </ng-container>
     </div>
-    <div *ngIf="getProjects().length < 1" class="center-align">
+    <div *ngIf="projects && projects.length < 1" class="center-align">
         <h5>Você ainda não adicionou projetos</h5>
     </div>
 </main>

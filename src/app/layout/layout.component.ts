@@ -1,6 +1,8 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
+import { Router } from '@angular/router';
 
-import { AuthService } from '../core/auth.service';
+import { AuthService } from './../core/auth.service';
+import { ProfessionalService } from './../core/professional.service';
 
 @Component({
   selector: 'mb-layout',
@@ -11,14 +13,18 @@ export class LayoutComponent implements OnInit {
   userName;
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private profService: ProfessionalService,
+    private router: Router
   ) { }
 
   ngOnInit() {
-    this.userName = this.authService.currentUser.name;
+    this.userName = this.authService.getCurrentUser().name;
   }
 
   logout() {
     this.authService.logout();
+    this.router.navigate(['/entrar']);
+
   }
 }

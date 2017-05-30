@@ -11,9 +11,11 @@ import { Professional } from './professional';
 
 @Injectable()
 export class AuthService {
-  public token: string;
-  public currentUser: Professional;
-  isLoggedIn: boolean = false;
+  private currentUser: User;
+  // public token: string;
+  // public currentUser: Professional;
+
+  // isLoggedIn: boolean = false;
   // store the URL so we can redirect after logging in
   redirectUrl: string;
 
@@ -21,40 +23,65 @@ export class AuthService {
     private http: Http,
     private router: Router
   ) {
-    this.currentUser = {
-      id: 'c11752b0-0475-4d31-9c01-223d1a98aa9f',
-      name: 'Raphael',
-      email: 'raphael@muuving.com.br'
-    };
+    
+    // this.currentUser = {
+    //   id: 'c11752b0-0475-4d31-9c01-223d1a98aa9f',
+    //   name: 'Raphael',
+    //   email: 'raphael@muuving.com.br'
+    // };
+    console.log(localStorage.getItem('currentUser'));
+
   }
 
-  login(email: string, password: string): Observable<boolean> {
-    let isUser: boolean = email == 'raphael@muuving.com.br' && password == 'casacor';
+  getCurrentUser(): User {
+    if (this.currentUser === undefined) {
+      let userData: any = JSON.parse(localStorage.getItem('currentUser'));
+      let user: User = new User(userData.name, userData.email, userData.id);
+      return user;
+    } else {
+      return this.currentUser;
+    }
+  }
 
-    if (isUser) {
-      // Returned User if auth ok
-      this.currentUser = {
-        id: 'c11752b0-0475-4d31-9c01-223d1a98aa9f',
-        name: 'Raphael',
-        email: 'raphael@muuving.com.br'
-      };
-
-      // Two approaches
-      localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-      this.isLoggedIn = true;
+  setCurrentUser(user: User): void {
+    let userData: any = {
+      id: user.id,
+      name: user.name,
+      email: user.email
     }
 
-    return Observable.of(isUser).delay(1000).do(val => this.isLoggedIn = true);
+    this.currentUser = new User(userData.name, userData.email, userData.id);
+    localStorage.setItem('currentUser', JSON.stringify(userData));
+  }
+
+  login(user: User) {
+    console.log(user);
+
+    this.setCurrentUser(user);
   }
 
   logout(): void {
-    this.isLoggedIn = false;
-    localStorage.removeItem('id_token');
     localStorage.removeItem('currentUser');
-    this.router.navigate(['/entrar']);
   }
 
-  // getUser(): Observable<User> | User {
+  // login(email: string, password: string): Observable<boolean> {
+  //   let isUser: boolean = email == 'raphael@muuving.com.br' && password == 'casacor';
 
+  //   if (isUser) {
+  //     // Returned User if auth ok
+  //     this.currentUser = {
+  //       id: 'c11752b0-0475-4d31-9c01-223d1a98aa9f',
+  //       name: 'Raphael',
+  //       email: 'raphael@muuving.com.br'
+  //     };
+
+  //     // Two approaches
+  //     localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+  //     this.isLoggedIn = true;
+  //   }
+
+  //   return Observable.of(isUser).delay(1000).do(val => this.isLoggedIn = true);
   // }
+
+
 }

@@ -15,12 +15,12 @@ import { Profession } from '../shared/profession.enum';
 export class ProfessionalService {
   public allProfessionals: Professional[] = [];
   public static readonly professionIds: any = {
-    0: 'ARQ',
-    1: 'DES',
-    2: 'EST',
-    'ARQ': 0,
-    'DES': 1,
-    'EST': 2
+    0: 'EST',
+    1: 'ARQ',
+    2: 'DES',
+    'EST': 0,
+    'ARQ': 1,
+    'DES': 2,
   }
   professionalChange$: Subject<Professional> = new Subject<Professional>();
   professionalAdded$: Subject<Professional> = new Subject<Professional>();
@@ -32,20 +32,25 @@ export class ProfessionalService {
     private auth: AuthService,
     private http: Http
   ) {
-    this._professional = new Professional();
-    this._professional.id = this.auth.currentUser.id;
-    this._professional.email = this.auth.currentUser.email;
-    this._professional.profession = Profession.Arquiteto; // TODO: Remove mock
-    
-    this.getOne(this.auth.currentUser.id).subscribe((currentProf: Professional) => {
-      this._professional.name = currentProf.name;
-      this._professional.description = currentProf.description;
-      this._professional.cpfCnpj = currentProf.cpfCnpj;
-      this._professional.celular = currentProf.celular;
-      this._professional.profession = currentProf.profession;
+    // this._professional = new Professional();
+    // this._professional.id = 'c11752b0-0475-4d31-9c01-223d1a98aa9f';
+    // this._professional.name = 'Raphael Tristão';
+    // this._professional.email = 'raphael@muuving.com.br';
+    // this._professional.profession = ProfessionalService.professionIds[0];
+    // this._professional.description = 'Escritório de interiores criado por Raphael Tristão';
 
-      this.professionalChange$.next(this._professional);
-    });
+    // this._professional = new Professional();
+    // this._professional.id = this.auth.currentUser.id;
+    // this._professional.email = this.auth.currentUser.email;
+    // this._professional.profession = Profession.Arquiteto; // TODO: Remove mock
+
+    if (localStorage.getItem('currentUser')) {
+      this.getOne(this.auth.getCurrentUser().id).subscribe((currentProf: Professional) => {
+        this._professional = currentProf;
+
+        this.professionalChange$.next(this._professional);
+      });
+    }
 
     this.getAll().subscribe((professionals: Professional[]) => {
       this.allProfessionals = professionals;
@@ -54,30 +59,55 @@ export class ProfessionalService {
   }
 
   set professional(professional: Professional) {
-
+    this._professional = professional;
   }
 
   get professional(): Professional {
-    return Object.assign(this._professional);
+    return this._professional;
+  }
+
+  activate(email: string): Observable<Response> {
+    let options = new RequestOptions({ headers: this.getHeaders() });
+    let data = { Email: email }
+
+    return this.http.post(this.baseUrl + '/activate', data, options)
+      .map((response: Response) => {
+        return response;
+      }).catch(this.handleError)
   }
 
   // Adiciona um novo profissional à base e atualiza os dados locais
-  add(prof: Professional) {
+  add(prof: Professional, isSignUp?: boolean) {
     let options = new RequestOptions({ headers: this.getHeaders() });
+    let data = { Email: prof.email, Nome: prof.name };
 
-    return this.http.put(this.baseUrl + '/add', { Email: prof.email, Nome: prof.name }, options)
-      .map(this.extractData)
-      .catch(this.handleError).subscribe(professional => {
-        if (professional) {
-          let prof = new Professional();
-          prof.id = professional.Id;
-          prof.name = professional.Nome;
-          prof.email = professional.Email;
+    return this.http.put(this.baseUrl + '/add', data, options)
+      .map((response: Response) => {
+        let profResp: any = JSON.parse(response.text());
+        let prof: Professional = new Professional(profResp.Nome, profResp.Email, profResp.id);
+
+        prof.cpfCnpj = profResp.CpfCnpj;
+        prof.celular = profResp.Celular;
+        prof.profession = ProfessionalService.professionIds[profResp.ProfissaoId];
+
+        if (!isSignUp) {
+          if (!this.allProfessionals) this.allProfessionals = [];
           this.allProfessionals.push(prof);
-          this.professionalAdded$.next(prof);
           this.allProfessionalsChange$.next(this.allProfessionals);
+          this.professionalAdded$.next(prof);
         }
-      });
+
+        return prof;
+      }).catch(this.handleError)
+    // .subscribe(professional => {
+    //   if (professional) {
+    //     let prof = new Professional();
+    //     prof.id = professional.Id;
+    //     prof.name = professional.Nome;
+    //     prof.email = professional.Email;
+    //     this.professionalAdded$.next(prof);
+    //   }
+    // });
   }
 
   // Adiciona um novo cliente associado a este profissional à base e atualiza os dados locais
@@ -87,6 +117,21 @@ export class ProfessionalService {
     this._professional.clients.concat(clients);
   }
 
+  getCurrentProfessional(): Observable<Professional> {
+    if (this._professional === undefined) {
+      let obs = this.getOne(this.auth.getCurrentUser().id);
+      obs.subscribe((currentProf: Professional) => {
+        this._professional = currentProf;
+
+        this.professionalChange$.next(this._professional);
+      });
+      return obs;
+    } else {
+      return Observable.of(this._professional);
+    }
+
+  }
+
   getOne(id: string): Observable<Professional> {
     let options = new RequestOptions({ headers: this.getHeaders() });
 
@@ -94,11 +139,13 @@ export class ProfessionalService {
     return this.http.get(this.baseUrl + '/getone?id=' + id, options)
       .map((response: Response) => {
         let body = JSON.parse(response.text());
-        let professional = new Professional(body.Nome, body.Email, body.Id)
+        let professional = new Professional(body.Nome, body.Email, body.Id);
         professional.cpfCnpj = body.CpfCnpj;
         professional.celular = body.Celular;
         professional.profession = ProfessionalService.professionIds[body.ProfissaoId];
         professional.description = body.Descricao;
+        professional.paying = body.Assinante ? body.Assinante : false;
+        professional.iuguId = body.IdClienteIugu ? body.IdClienteIugu : undefined;
 
         return professional;
       })
@@ -122,8 +169,52 @@ export class ProfessionalService {
       .catch(this.handleError);
   }
 
+  login(email: string, password: string): Observable<any> {
+    let options = new RequestOptions({ headers: this.getHeaders() });
+    let data = {
+      Email: email,
+      Senha: password
+    };
+
+    return this.http.post(this.baseUrl + '/login', data, options)
+      .map((response: Response) => {
+        let profResp = JSON.parse(response.text());
+        let prof: Professional = new Professional();
+
+        // prof.id = 'c11752b0-0475-4d31-9c01-223d1a98aa9f';
+        // prof.name = 'Raphael Tristão';
+        // prof.email = 'raphael@muuving.com.br';
+        // prof.profession = ProfessionalService.professionIds[0];
+        // prof.description = 'Escritório de interiores criado por Raphael Tristão';
+
+
+        if (!profResp.HasError) {
+          prof = new Professional(
+            profResp.Nome,
+            profResp.Email,
+            profResp.Id
+          );
+          prof.cpfCnpj = profResp.CpfCnpj;
+          prof.celular = profResp.Celular;
+          prof.profession = ProfessionalService.professionIds[profResp.ProfissaoId];
+          prof.description = profResp.Descricao;
+          prof.password = profResp.Senha;
+          this._professional = prof;
+          this.auth.login(prof);
+        }
+
+
+
+        return {
+          HasError: profResp.HasError,
+          ErrorMessage: profResp.ErrorMessage,
+          professional: prof
+        };
+      }).catch(this.handleError);
+  }
+
   // Update data base and local Professional User
-  update(prof: Professional) {
+  update(prof: Professional): Observable<any> {
     let options = new RequestOptions({ headers: this.getHeaders() });
 
     if (prof.name) this._professional.name = prof.name;
@@ -131,8 +222,14 @@ export class ProfessionalService {
     if (prof.description !== undefined) this._professional.description = prof.description;
     if (prof.cpfCnpj) this._professional.cpfCnpj = prof.cpfCnpj;
     if (prof.celular) this._professional.celular = prof.celular;
-    if (prof.password) this._professional.password = prof.password; 
+    if (prof.password) this._professional.password = prof.password;
     if (prof.profession) this._professional.profession = prof.profession;
+    // if (prof.address) 
+    if (prof.CAU) this._professional.CAU = prof.CAU;
+    if (prof.gender) this._professional.gender = prof.gender;
+    if (prof.rg) this._professional.rg = prof.rg;
+    if (prof.maritalStatus) this._professional.maritalStatus = prof.maritalStatus;
+    if (prof.paying) this._professional.paying = prof.paying;
 
     let data: any = {
       id: this._professional.id,
@@ -141,20 +238,24 @@ export class ProfessionalService {
       Descricao: this._professional.description,
       CpfCnpj: this._professional.cpfCnpj,
       Celular: this._professional.celular,
-      Senha: this._professional.password,
-      ProfissaoId: ProfessionalService.professionIds[this._professional.profession]
+      ProfissaoId: ProfessionalService.professionIds[this._professional.profession],
+      CAU: this._professional.CAU,
+      Genero: this._professional.gender,
+      RG: this._professional.rg,
+      EstadoCivil: this._professional.maritalStatus,
+      Assinante: this._professional.paying
     };
 
-    // if (this._professional.description && this._professional.description.length > 0) data.Descricao = this._professional.description;
-    // if (this._professional.cpfCnpj) data.CpfCnpj = this._professional.cpfCnpj;
-    // if (this._professional.celular) data.Celular = this._professional.celular;
-    // if (this._professional.professionId) data.ProfissaoId = this._professional.professionId;
+    if (this._professional.password)
+      data.Senha = this._professional.password;
 
     // console.log(data);
 
     return this.http.post(this.baseUrl + '/update', data, options)
       .map(response => {
-        return response;
+        let profResp = JSON.parse(response.text());
+
+        return profResp;
       })
       .catch(this.handleError);
   }

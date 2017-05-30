@@ -1,0 +1,28 @@
+<mz-modal class="medium-modal">
+  <mz-modal-header>
+    Forma de pagamento
+  </mz-modal-header>
+  <mz-modal-content>
+    <form *ngIf="billingForm" [formGroup]="billingForm" class="row">
+      <mz-input-container class="col s12 m7" style="padding-left: 0;">
+        <input mz-input [textMask]="{mask: cardNumberMask, placeholderChar: '\u2000'}" label='número do cartão' placeholder="4242 4242 4242 4242" formControlName="cardNumber" id="cardNumber" type="text">
+      </mz-input-container>
+      <mz-input-container class="col s6 m3" style="padding: 0;">
+        <input mz-input [textMask]="{mask: expirationDateMask, placeholderChar: '\u2000', keepCharPositions: true, pipe: expirationDatePipe }" label='validade' placeholder="MM/AA" formControlName="expirationDate" id="expirationDate" type="text">
+      </mz-input-container>
+      <mz-input-container class="col s6 m2" style="padding-right: 0;">
+        <input mz-input [textMask]="{mask: cvcMask, placeholderChar: '\u2000' }" label='CVC' formControlName="CVC" id="cvc" type="text">
+      </mz-input-container>
+      <mz-input-container class="col s6" style="padding-left: 0;">
+        <input mz-input label='nome' formControlName="firstName" id="firstName" type="text">
+      </mz-input-container>
+      <mz-input-container class="col s6" style="padding: 0;">
+        <input mz-input label='sobrenome' formControlName="lastName" id="lastName" type="text">
+      </mz-input-container>
+    </form>
+  </mz-modal-content>
+  <mz-modal-footer>
+    <button mz-button (click)="saveBillingInfo(billingForm.value)" [disabled]="billingForm.invalid" [flat]="true" type="button">Salvar</button>
+    <button mz-button [flat]="true" type="button" mz-modal-close>Cancelar</button>
+  </mz-modal-footer>
+</mz-modal>

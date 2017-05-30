@@ -125,18 +125,18 @@
 ========================================================================== */
 
 .large-text-input {
-    $label-size: 1.3rem;
+    // $label-size: 1.3rem;
     &.input-field {
-        margin-top: $label-size;
+        // margin-top: $label-size;
     }
     .input-field {
-        margin-top: $label-size;
+        // margin-top: $label-size;
         input {
-            font-size: 2rem;
-            &+label:not(.label-icon).active {
-                font-size: $label-size;
-                line-height: 1.1;
-            }
+            font-size: 1.5rem;
+            // &+label:not(.label-icon).active {
+            //     font-size: $label-size;
+            //     line-height: 1.1;
+            // }
         }
     }
 }

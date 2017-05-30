@@ -6,6 +6,8 @@ import {
   MzInputContainerComponent
 } from 'ng2-materialize';
 
+import { Professional } from './../../core/professional';
+import { ProfessionalService } from './../../core/professional.service';
 import { SpinnerService } from '../../core/spinner/spinner.service';
 import { UserService } from './../../core/user.service';
 
@@ -29,7 +31,8 @@ export class UserRegisterComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private spinnerService: SpinnerService,
-    private userService: UserService,
+    private profService: ProfessionalService
+    // private userService: UserService,
   ) {
     this.createForm();
   }
@@ -41,11 +44,12 @@ export class UserRegisterComponent implements OnInit {
       return;
     } else {
       this.spinnerService.toggleLoadingIndicator(true);
-
       let values = this.registerForm.value;
+      let prof: Professional =
+        new Professional(values.name, values.email);
 
-      this.userService.add(values.email, values.name).subscribe(
-        response => {
+      this.profService.add(prof, true)
+        .subscribe(response => {
           this.spinnerService.toggleLoadingIndicator(false);
           console.log(response);
           if (response.HasError) {
@@ -53,12 +57,11 @@ export class UserRegisterComponent implements OnInit {
           } else {
             this.router.navigate(['quase-la']);
           }
-        },
-        error => {
+        }, (error) => {
           this.spinnerService.toggleLoadingIndicator(false);
           console.log(error)
         }
-      );
+        );
     }
   }
 }

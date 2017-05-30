@@ -1,5 +1,5 @@
 export enum Profession {
-    'Arquiteto' = 0,
-    'Designer de Interiores' = 1,
-    'Estudante' = 2
+    'Estudante' = 0,
+    'Arquiteto' = 1,
+    'Designer de Interiores' = 2
 }

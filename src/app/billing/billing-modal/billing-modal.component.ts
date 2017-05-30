@@ -1,0 +1,120 @@
+import { BillingInfo } from './../shared/billing-info';
+import { Component, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators
+} from '@angular/forms';
+import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
+import { MzModalService, MzBaseModal } from "ng2-materialize";
+
+import { BillingService } from '../shared/billing.service';
+import { ProfessionalService } from '../../core/professional.service';
+
+@Component({
+  selector: 'abx-billing-modal',
+  templateUrl: './billing-modal.component.html',
+  styleUrls: ['./billing-modal.component.scss']
+})
+export class BillingModalComponent extends MzBaseModal implements OnInit {
+  billingForm: FormGroup;
+  cardNumberMask = [
+    /\d/,
+    /\d/,
+    /\d/,
+    /\d/,
+    ' ',
+    /\d/,
+    /\d/,
+    /\d/,
+    /\d/,
+    ' ',
+    /\d/,
+    /\d/,
+    /\d/,
+    /\d/,
+    ' ',
+    /\d/,
+    /\d/,
+    /\d/,
+    /\d/
+  ];
+  expirationDatePipe = createAutoCorrectedDatePipe('mm/yy');
+  expirationDateMask = [/\d/, /\d/, '/', /\d/, /\d/];
+  cvcMask = [/\d/, /\d/, /\d/, /\d/];
+
+  constructor(
+    private billingService: BillingService,
+    private fb: FormBuilder,
+    private profService: ProfessionalService
+  ) {
+    super();
+    this.billingForm = this.createBillingForm();
+  }
+
+  ngOnInit() {
+
+  }
+
+  saveBillingInfo(formData) {
+    console.log(formData);
+
+    let cardNumber: string = formData.cardNumber.replace(/ /g, '');
+    let dateSlashIndex = formData.expirationDate.indexOf('/');
+    let month: number = Number(formData.expirationDate.substr(0, dateSlashIndex));
+    let year: number = Number("20" + formData.expirationDate.substr(dateSlashIndex + 1, ));
+    let CVC: number = Number(formData.CVC);
+
+    let billingInfo: BillingInfo = {
+      professionalId: this.profService.professional.id,
+      description: 'Assinatura',
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      creditCardInfo: {
+        number: cardNumber,
+        expirationMonth: month,
+        expirationYear: year,
+        cvc: CVC
+      }
+    }
+
+    console.log(billingInfo);
+
+    this.billingService.addBillingInfo(billingInfo).subscribe(resp => {
+      console.log(resp);
+
+      if (resp.HasError) {
+        return;
+      } else {
+        this.profService.professional.paying = true;
+        this.updateProfessional();
+      }
+    });
+  }
+
+  updateProfessional() {
+    this.profService.update(this.profService.professional).subscribe(resp => {
+      console.log(resp);
+
+      if (resp.HasError) {
+
+      } else {
+        this.billingService.billingInfoUpdated(true);
+        this.modalComponent.close();
+      }
+
+    })
+  }
+
+  private createBillingForm(): FormGroup {
+    return this.fb.group({
+      cardNumber: ['', Validators.required],
+      expirationDate: ['', Validators.required],
+      CVC: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+    })
+  }
+
+}

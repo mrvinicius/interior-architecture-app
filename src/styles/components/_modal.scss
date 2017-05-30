@@ -24,3 +24,15 @@ mz-modal.small-modal .modal {
 		// .btn, .btn-flat, .btn-large { float: initial; }
 	}
 }
+
+.modal.medium-modal,
+mz-modal.medium-modal .modal {
+	width: 40%;
+	max-height: 80%;
+	@media #{$medium-and-down} { width: 60%; }
+	@media #{$small-and-down} { width: 90%; }
+
+	.modal-footer {
+		// .btn, .btn-flat, .btn-large { float: initial; }
+	}
+}

@@ -1,6 +1,6 @@
 ul {
     &.striped {
-        li:nth-child(odd) {
+        li:nth-child(odd):not(.hide) {
             background-color: rgba(0, 0, 0, 0.04);
         }
     }

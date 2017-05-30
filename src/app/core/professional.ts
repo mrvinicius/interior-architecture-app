@@ -4,11 +4,20 @@ import { Profession } from '../shared/profession.enum';
 
 export class Professional extends User {
     description?: string;
-    logo?;
+
+    logoUrl?: string;
     cpfCnpj?: string;
     celular?: string;
     profession?: Profession;
     clients?: Client[];
+    rg?: string;
+    address?: string;
+    CAU?: string;
+    gender?: string;
+    maritalStatus?: string;
+
+    iuguId?: string;
+    paying?: boolean;
 
     constructor(name?: string, email?: string, id?: string) {
         super(name, email, id);

@@ -8,12 +8,12 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 
 /* Feature Modules */
+import { BillingModule } from './billing/billing.module';
 import { ClientModule } from './client/client.module';
 import { CoreModule } from './core/core.module';
 import { LayoutModule } from './layout/layout.module';
 import { ProjectsModule } from './projects/projects.module';
 import { UserModule } from './user/user.module';
-import { FinancialModule } from './financial/financial.module';
 
 /* Routing Module */
 import { AppRoutingModule } from './app-routing.module';
@@ -28,12 +28,13 @@ import { AppRoutingModule } from './app-routing.module';
     FormsModule,
     HttpModule,
     UserModule,
+    CoreModule.forRoot(),
+
     LayoutModule.forRoot(),
     ProjectsModule.forRoot(),
     ClientModule.forRoot(),
-    FinancialModule.forRoot(),
-    
-    CoreModule.forRoot(),
+    BillingModule.forRoot(),
+  
     AppRoutingModule
   ],
   providers: [],

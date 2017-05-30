@@ -124,4 +124,15 @@ export class UtilsService {
 
         return array;
     }
+
+    public static parseMonetaryString(value: string): number {
+        value = String(value)
+
+        value = value
+            .replace('R$', '')
+            .replace(/[.]/g, '')
+            .replace(/[,]/g, '.');
+
+        return parseFloat(value);
+    }
 }

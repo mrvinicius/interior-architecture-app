@@ -11,6 +11,10 @@
             @extend .tiny;
         }
     }
+
+    .md2-accordion-header-icon {
+        right: 20px;
+    }
 }
 
 .collapsible-header,

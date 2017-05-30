@@ -61,7 +61,7 @@ export class NewPartnerModalComponent extends MzBaseModal {
         partner.name = values.Name;
         partner.email = values.Email;
 
-        this.profService.add(partner);
+        this.profService.add(partner).subscribe();
         this.modalComponent.close();
     }
 }

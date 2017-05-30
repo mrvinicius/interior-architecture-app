@@ -52,6 +52,7 @@
 
 .reduced-padding {
     &.card-content,
+    &.modal-content,
     &.card-panel {
         padding: calc(20px - 0.75rem);
     }

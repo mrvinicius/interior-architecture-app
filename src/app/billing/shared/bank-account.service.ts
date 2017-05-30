@@ -28,7 +28,7 @@ export class BankAccountService {
       Agencia: bankAcc.agency,
       Conta: bankAcc.accountNumber,
       DigitoConta: bankAcc.accountDigit,
-      Profissional: { id: profissionalId },
+      ProfissionalId: profissionalId,
       Banco: { id: bankAcc.bank.id }
     }
 
@@ -36,7 +36,7 @@ export class BankAccountService {
       .put(this.baseUrl + '/add', data, options)
       .map((response: Response) => {
         let bankAccData = JSON.parse(response.text());
-
+        
         let bankAccResult: BankAccount =
           new BankAccount(bankAccData.Agencia, bankAccData.Conta, bankAccData.DigitoConta, bankAccData.Id);
 
@@ -63,7 +63,7 @@ export class BankAccountService {
       return this.http
         .post(this.baseUrl + '/getall', data, options)
         .map((response: Response) => {
-          let body = JSON.parse(response.text());          
+          let body = JSON.parse(response.text());
           // {
           //   "HasError": true,
           //     "ErrorMessage": "Nenhum registro encontrado"
@@ -73,7 +73,9 @@ export class BankAccountService {
             return body.map((bankAcc) => {
               let acc: BankAccount =
                 new BankAccount(bankAcc.Agencia, bankAcc.Conta, bankAcc.DigitoConta, bankAcc.Id);
-              acc.bank = new Bank(bankAcc.Banco.Id, bankAcc.Banco.Nome, bankAcc.Banco.NomeCompleto);
+
+              if (bankAcc)
+                acc.bank = new Bank(bankAcc.Banco.Id, bankAcc.Banco.Nome, bankAcc.Banco.NomeCompleto);
 
               return acc;
             });
@@ -91,9 +93,11 @@ export class BankAccountService {
   }
 
   getOne(id: string): Observable<BankAccount> {
-    return Observable.of(this.bankAccounts.find((bankAcc: BankAccount) => {
-      return bankAcc.id === id;
-    }));
+    if (this.bankAccounts === undefined || this.bankAccounts.length < 1) {
+      this.getAllByProfessional(this.auth.getCurrentUser().id);
+    }
+
+    return Observable.of(this.bankAccounts.find((bankAcc: BankAccount) => bankAcc.id === id));
   }
 
   private extractData(res: Response) {

@@ -1,6 +1,7 @@
-import { BankAccount } from './../../financial/shared/bank-account';
+import { BankAccount } from './../../billing/shared/bank-account';
 import { ProposalStatus } from './proposal-status.enum';
 import { TimeUnity } from '../../shared/time-unity.enum';
+import { Delivery } from './delivery';
 
 export class Proposal {
     id?: string;
@@ -16,6 +17,8 @@ export class Proposal {
     deadlineCount: number;
     deadlineTimeUnity: TimeUnity;
     bankAccount: BankAccount;
+    deliveries: Delivery[];
+    url?: string;
 
     constructor(wasPaid: boolean, status: ProposalStatus, id?: string) {
         this.id = id;
