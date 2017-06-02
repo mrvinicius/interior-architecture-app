@@ -489,6 +489,7 @@ export class ProjectsService {
                 prop.costToClient = proposal.ValorCobrado;
                 prop.costToReceive = proposal.ValorRecebido;
                 prop.costFinal = proposal.ValorFatura;
+                prop.followUp = proposal.AcompanhamentoObra;
 
                 if (proposal.PropostaEntrega.length) {
                   prop.deliveries = proposal.PropostaEntrega.map(delivery => {
@@ -519,7 +520,12 @@ export class ProjectsService {
               p.isActive = project.IsActive;
               p.ambiences = ambiences;
               p.proposals = proposals;
-              p.uf = UF[UF[ProjectsService.ufsIds[project.UF]]];
+              p.UF = project.UF;
+              p.CEP = project.CEP;
+              p.addressArea = project.Logradouro;
+              p.addressNumber = project.NumeroLogradouro;
+              p.neighborhood = project.Bairro;
+              p.city = project.Cidade;
 
               if (proposals.length > 0) {
                 p.activeProposal = proposals[proposals.length - 1]
@@ -594,8 +600,12 @@ export class ProjectsService {
       'Descricao': project.title,
       'Briefing': project.briefing,
       'IsActive': project.isActive,
-      'UF': UF[project.uf],
-      'CEP': project.cep,
+      'UF': project.UF,
+      'CEP': project.CEP,
+      'Logradouro': project.addressArea,
+      'NumeroLogradouro': project.addressNumber,
+      'Bairro': project.neighborhood,
+      "Cidade": project.city,
       'Proposta': [
         {
           'Id': project.activeProposal.id,
@@ -609,6 +619,7 @@ export class ProjectsService {
           'BancoId': undefined,
           'ContaBancariaId': undefined,
           'GeraPropostaQwilr': generateProposal,
+          'AcompanhamentoObra': project.activeProposal.followUp,
           // "Banco": null,
           // "ContaBancaria": null,
           'PropostaEntrega': [],
@@ -686,82 +697,64 @@ export class ProjectsService {
 
         let activeProposal: Proposal,
           p: Project,
-          c: Client;
+          c: Client,
+          proposals: Proposal[];
 
-        // TODO: Get last and active proposal
-        let ambiences: Ambience[] = project.ProjetoComodo.map(ambience => {
-          let amb: Ambience = new Ambience(ambience.ComodoId);
+        if (project.Proposta.length) {
+          proposals = project.Proposta.map(proposal => {
+            let propStatus: ProposalStatus;
+            let prop: Proposal;
 
-          if (ambience.Descricao in AmbienceDescription) {
-            amb.ambienceDescription = AmbienceDescription[AmbienceDescription[ProjectsService.ambienceDescriptionIds[ambience.ComodoId]]]
-          }
+            switch (proposal.StatusId.toUpperCase()) {
+              case ProjectsService.proposalStatusIds.Approved.toUpperCase():
+                propStatus = ProposalStatus.Approved;
+                break;
+              case ProjectsService.proposalStatusIds.Deprecated.toUpperCase():
+                propStatus = ProposalStatus.Deprecated;
+                break;
+              case ProjectsService.proposalStatusIds.Disabled.toUpperCase():
+                propStatus = ProposalStatus.Disabled;
+                break;
+              case ProjectsService.proposalStatusIds.Waiting.toUpperCase():
+                propStatus = ProposalStatus.Waiting;
+                break;
+              case ProjectsService.proposalStatusIds.NotSent.toUpperCase():
+                propStatus = ProposalStatus.NotSent;
+                break;
+              default:
+                console.error('Status de proposta inválido: ', proposal.StatusId);
+                propStatus = ProposalStatus.NotSent;
+                break;
+            }
 
-          let services: Service[] = ambience.ProjetoComodoServicos.map(service => {
-            return Service[Service[ProjectsService.servicesIds[service.TipoServicoId]]]
+            prop = new Proposal(
+              proposal.ValorRecebido === 0 ? false : true,
+              propStatus,
+              proposal.Id
+            );
+
+            prop.url = proposal.UrlPreview;
+            prop.intro = proposal.Descricao;
+            prop.cost = proposal.CustoTotal;
+            prop.costToClient = proposal.ValorCobrado;
+            prop.costToReceive = proposal.ValorRecebido;
+            prop.professionalsIds =
+              proposal.PropostaProfissionaisParticipantes.map(professional => {
+                return professional.ProfissionalId;
+              });
+
+            return prop;
           });
+        }
 
-          amb.services = services;
-
-          amb.comments = ambience.Observacao;
-          amb.area = ambience.MetragemArea;
-          amb.cost = ambience.Valor;
-          amb.isActive = ambience.IsActive;
-
-          return amb;
-        });
-
-        let proposals: Proposal[] = project.Proposta.map(proposal => {
-          let propStatus: ProposalStatus;
-          let prop: Proposal;
-
-          switch (proposal.StatusId.toUpperCase()) {
-            case ProjectsService.proposalStatusIds.Approved.toUpperCase():
-              propStatus = ProposalStatus.Approved;
-              break;
-            case ProjectsService.proposalStatusIds.Deprecated.toUpperCase():
-              propStatus = ProposalStatus.Deprecated;
-              break;
-            case ProjectsService.proposalStatusIds.Disabled.toUpperCase():
-              propStatus = ProposalStatus.Disabled;
-              break;
-            case ProjectsService.proposalStatusIds.Waiting.toUpperCase():
-              propStatus = ProposalStatus.Waiting;
-              break;
-            case ProjectsService.proposalStatusIds.NotSent.toUpperCase():
-              propStatus = ProposalStatus.NotSent;
-              break;
-            default:
-              console.error('Status de proposta inválido: ', proposal.StatusId);
-              propStatus = ProposalStatus.NotSent;
-              break;
-          }
-
-          prop = new Proposal(
-            proposal.ValorRecebido === 0 ? false : true,
-            propStatus,
-            proposal.Id
-          );
-
-          prop.url = proposal.UrlPreview;
-          prop.intro = proposal.Descricao;
-          prop.cost = proposal.CustoTotal;
-          prop.costToClient = proposal.ValorCobrado;
-          prop.costToReceive = proposal.ValorRecebido;
-          prop.professionalsIds =
-            proposal.PropostaProfissionaisParticipantes.map(professional => {
-              return professional.ProfissionalId;
-            });
-
-          return prop;
-        });
         let currentProf =
           new Professional(this.auth.getCurrentUser().name, this.auth.getCurrentUser().email, this.auth.getCurrentUser().id);
         c = new Client();
         p = new Project(activeProposal, project.Id, project.Descricao, currentProf);
         p.isActive = project.IsActive;
-        p.ambiences = ambiences;
         p.proposals = proposals;
-        p.uf = UF[UF[ProjectsService.ufsIds[project.UF]]];
+        // p.UF = UF[UF[ProjectsService.ufsIds[project.UF]]];
+        p.UF = project.UF;
 
 
         if (proposals.length > 0) {

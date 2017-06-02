@@ -32,15 +32,17 @@ export class ClientService {
 
   addByProfessional(client: Client, profissionalId: string): Observable<Client> {
     let options = new RequestOptions({ headers: this.getHeaders() });
+    let data = {
+      Nome: client.name,
+      Email: client.email,
+      Genero: client.gender,
+      CpfCnpj: client.cpfCnpj,
+      Ativo: true,
+      Profissional: { Id: profissionalId }
+    };
 
     return this.http
-      .put(this.baseUrl + '/add', {
-        Nome: client.name,
-        Email: client.email,
-        CpfCnpj: client.cpfCnpj,
-        Ativo: true,
-        Profissional: { Id: profissionalId }
-      }, options)
+      .put(this.baseUrl + '/add', data, options)
       .map((response: Response) => {
         let body = JSON.parse(response.text());
         let newClient: Client = new Client(body.Nome, body.Email, body.ID);

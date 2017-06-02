@@ -27,12 +27,6 @@ export class ProposalService {
 
     return this.http.post(this.baseUrl + '/sendmail', data, options)
       .map((response: Response) => {
-        console.log(response);
-        
-        // let proposalResp = JSON.parse(response.text());
-        // console.log(proposalResp);
-        console.log(response.text());
-
         if (response.text() === "Email enviado com sucesso") {
           return true;
         } 

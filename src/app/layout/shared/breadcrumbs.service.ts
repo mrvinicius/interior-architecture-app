@@ -25,7 +25,7 @@ export class BreadcrumbsService {
         bcUrl += '/' + pathsArray[i+1];
       
       this.breadcrumbTrail.push({
-        label: path,
+        label: path.replace(/-/g, ' '),
         url: bcUrl
       });
     });

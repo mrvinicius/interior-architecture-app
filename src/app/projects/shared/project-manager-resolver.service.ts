@@ -30,6 +30,7 @@ export class ProjectManagerResolver implements Resolve<Project> {
             //         return project
             //     } else {
             //         this.router.navigate(['/projetos']);
+            
             //         return null
             //     }
             // });

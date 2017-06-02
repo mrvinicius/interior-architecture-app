@@ -2,13 +2,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MdlExpansionPanelComponent } from '@angular-mdl/expansion-panel';
+import { default as cep, CEP } from 'cep-promise';
 import { MzSelectDirective, MzModalService, MzToastService } from 'ng2-materialize';
-import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/distinctUntilChanged';
-
+import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+import { conformToMask } from 'angular2-text-mask';
 
 import { Ambience } from '../shared/ambience';
 import { AmbienceDescription } from '../shared/ambience-description.enum';
@@ -25,6 +26,7 @@ import { Client } from '../../client/shared/client';
 import { ClientService } from '../../client/shared/client.service';
 import { Delivery } from '../shared/delivery';
 import { DeliveryDescription } from '../shared/delivery-description.enum';
+import { IncompleteProfileModalComponent } from '../../user/incomplete-profile-modal/incomplete-profile-modal.component';
 import { NewPartnerModalComponent } from './new-partner-modal.component';
 import { Professional } from '../../core/professional';
 import { ProfessionalService } from '../../core/professional.service';
@@ -47,13 +49,17 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
   // Refers to component global variables
   ambienceDescriptions: string[];
   ambienceSlug: string;
+  addressNumberMask = UtilsService.addressNumberMask;
+  cepMask = UtilsService.cepMask;
+  agencyMask = UtilsService.bankAccountAgencyMask;
+  bankAccountMask = UtilsService.bankAccountNumberMask;
   deliveryDescriptions: string[];
   professional: Professional;
   professionalAddedSubscription: Subscription;
   project: Project;
   projectSlugTitle: string;
   services: string[];
-  ufs: string[];
+  // ufs: string[];
   mascaraReal = createNumberMask({
     prefix: 'R$',
     thousandsSeparatorSymbol: '.',
@@ -71,6 +77,13 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
   clientSaved: boolean = true;
   clientForm: FormGroup;
   clientFormChangesSubscription: Subscription;
+
+  addressFieldsDisabled: boolean = false;
+  locationDataHasChanged: boolean;
+  locationDataBeingSaved: boolean;
+  locationSaved: boolean = true;
+  locationForm: FormGroup;
+  locationFormChangesSubscription: Subscription;
 
   // Refers to Professional section variables
   profDataHasChanges: boolean;
@@ -126,7 +139,7 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     private router: Router,
     private spinnerService: SpinnerService,
   ) {
-    this.ufs = UtilsService.getEnumArray(UF);
+    // this.ufs = UtilsService.getEnumArray(UF);
     this.ambienceDescriptions = UtilsService.getEnumArray(AmbienceDescription);
     this.deliveryDescriptions = UtilsService.getEnumArray(DeliveryDescription);
     this.services = UtilsService.getEnumArray(Service);
@@ -142,23 +155,11 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     return this.profService.allProfessionals;
   }
 
-  canDeactivate(): boolean {
-    return !this.clientDataBeingSaved
-      && !this.profDataBeingSaved
-      && !this.proposalDataBeingSaved
-      && !this.ambiencesDataBeingSaved
-      && !this.paymentDataBeingSaved;
-  }
-
-  // deliveryAlreadySelected(deliveryDescIndex: number): boolean {
-  //   return this.selectedDeliveries.includes(deliveryDescIndex);
-  // }
-
   beginAmbience() {
     if (this.project.ambiences === undefined)
       this.project.ambiences = []
 
-    let newLength = this.project.ambiences.push(new Ambience());
+    this.project.ambiences.push(new Ambience());
   }
 
   beginDelivery() {
@@ -168,51 +169,50 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     let newLength = this.project.activeProposal.deliveries.push(new Delivery());
   }
 
+  canDeactivate(): boolean {
+    return !this.clientDataBeingSaved
+      && !this.profDataBeingSaved
+      && !this.proposalDataBeingSaved
+      && !this.ambiencesDataBeingSaved
+      && !this.paymentDataBeingSaved;
+  }
+
+  disableDelivery(deliveryIndex: number, selectedIndexes: number[]) {
+
+    if (this.deliveryFormsChangesSubscription
+      && this.deliveryFormsChangesSubscription[deliveryIndex]
+      && !this.deliveryFormsChangesSubscription[deliveryIndex].closed) {
+      this.deliveryFormsChangesSubscription[deliveryIndex].unsubscribe();
+    }
+
+    if (this.project.activeProposal.deliveries
+      && this.project.activeProposal.deliveries[deliveryIndex]) {
+      this.project.activeProposal.deliveries.splice(deliveryIndex, 1);
+    }
+  }
+
   generateProposal() {
     this.spinnerService.toggleLoadingIndicator(true);
-    this.saveProjectInfo((success) => {
-      if (success) {
-        window.open(this.project.activeProposal.url, '_blank');
-        this.spinnerService.toggleLoadingIndicator(false);
-      }
-    }, true)
-  }
 
-  openBillingModal() {
-    let modalRef = this.modalService.open(BillingModalComponent, {});
-  }
+    let profileIncomplete: boolean =
+      !Boolean(this.profService.professional.name)
+      || !Boolean(this.profService.professional.addressArea)
+      || !Boolean(this.profService.professional.addressNumber)
+      || !Boolean(this.profService.professional.celular)
+      || !Boolean(this.profService.professional.CEP)
+      || !Boolean(this.profService.professional.cpfCnpj)
+      || !Boolean(this.profService.professional.maritalStatus);
 
-  sendProposal() {
-    this.spinnerService.toggleLoadingIndicator(true);
-    console.log(this.profService.professional);
-    
-    if (!this.profService.professional.paying) {
-      this.billingInfoUpdatedSubscription =
-        this.billingService.billingInfoUpdated$
-          .subscribe((success: boolean) => this.sendProposal());
-
+    if (profileIncomplete) {
       this.spinnerService.toggleLoadingIndicator(false);
-      this.openBillingModal();
-
+      this.modalService.open(IncompleteProfileModalComponent);
     } else {
-      if (this.project.client && this.project.client.id) {
-        this.saveProjectInfo((success) => {
-          if (success) {
-            this.propService.send(this.project).subscribe((success: boolean) => {
-              if (success) {
-                console.log(success);
-
-                this.spinnerService.toggleLoadingIndicator(false);
-                this.toastService.show('Projeto enviado!', 2500, 'green');
-              }
-            })
-          }
-        }, true)
-      } else {
-        this.spinnerService.toggleLoadingIndicator(false);
-        this.toastService.show('Selecione um cliente', 2500, 'red');
-
-      }
+      this.saveProjectInfo((success) => {
+        if (success) {
+          window.open(this.project.activeProposal.url, '_blank');
+          this.spinnerService.toggleLoadingIndicator(false);
+        }
+      }, true);
     }
   }
 
@@ -227,8 +227,7 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
         console.log(this.project);
 
         // this.project.activeProposal = 
-        this.clientForm =
-          this.createClientForm(data.project.briefing, data.project.client, this.project.uf);
+        this.clientForm = this.createClientForm(this.project);
         this.clientFormChangesSubscription = this.subscribeToFormChanges(this.clientForm, () => {
           this.clientDataHasChanged = true;
         }, (formData) => {
@@ -250,6 +249,55 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
               }
             });
           }
+        });
+        const cpfCnpjChange$ = this.clientForm.get('cpfCnpj').valueChanges;
+        cpfCnpjChange$.debounceTime(500).subscribe((cpfCnpj: string) => {
+          // console.log('cpfCnpj', cpfCnpj);
+          let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
+
+          let mask;
+
+          if (cleanCpfCnpj.length < 12) {
+            mask = UtilsService.cpfMask;
+          } else {
+            mask = UtilsService.cnpjMask;
+          }
+
+          let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
+            guide: false,
+            placeholderChar: '\u2000'
+          });
+
+          this.clientForm.get('cpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
+            onlySelf: false,
+            emitEvent: false,
+
+          })
+        });
+
+        this.locationForm = this.createLocationForm(this.project);
+        this.locationFormChangesSubscription = this.subscribeToFormChanges(this.locationForm, () => {
+          this.locationDataHasChanged = true;
+        }, (formData) => {
+          console.log(formData);
+          let cleanCep = formData.CEP.replace(/\D/g, '');
+
+          if (!this.locationDataBeingSaved && !this.addressFieldsDisabled && String(cleanCep).length > 7) {
+            console.log('Will save location');
+
+            this.locationDataHasChanged = false;
+            this.locationDataBeingSaved = true;
+            this.saveLocationInfo(formData);
+            this.saveProjectInfo((success: boolean) => {
+              this.locationDataBeingSaved = success ? false : false;
+            })
+          }
+        });
+
+        const cepChange$ = this.locationForm.get('CEP').valueChanges;
+        cepChange$.debounceTime(200).subscribe((cep: string) => {
+          let cleanCep = cep.replace(/\D/g, '');
+          this.findLocationByCEP(cleanCep);
         });
 
         this.profForm =
@@ -383,6 +431,31 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
             });
           }
         });
+        const bankAccountCpfCnpjChange$ = this.bankAccountForm.get('accountCpfCnpj').valueChanges;
+        bankAccountCpfCnpjChange$.debounceTime(500).subscribe((cpfCnpj: string) => {
+          // console.log('cpfCnpj', cpfCnpj);
+          if (cpfCnpj) {
+            let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
+
+            let mask;
+
+            if (cleanCpfCnpj.length < 12) {
+              mask = UtilsService.cpfMask;
+            } else {
+              mask = UtilsService.cnpjMask;
+            }
+
+            let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
+              guide: false,
+              placeholderChar: '\u2000'
+            });
+
+            this.bankAccountForm.get('accountCpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
+              onlySelf: false,
+              emitEvent: false,
+            })
+          }
+        });
       });
 
     this.professionalAddedSubscription = this.profService.professionalAdded$
@@ -429,6 +502,10 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     }
   }
 
+  openBillingModal() {
+    let modalRef = this.modalService.open(BillingModalComponent, {});
+  }
+
   openNewPartnerModal() {
     let modalRef = this.modalService.open(NewPartnerModalComponent, {});
   }
@@ -446,8 +523,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     this.ambiencesDataHasChanges[ambienceIndex] = true;
     this.saveAmbiencesInfo().subscribe(result => {
       if (result !== undefined) {
-        console.log(result);
-
         if (result === true) {
           this.saveProjectInfo((success) => {
             if (success) {
@@ -458,21 +533,38 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
           });
         }
       }
-    });;
+    })
   }
 
+  sendProposal() {
+    this.spinnerService.toggleLoadingIndicator(true);
 
-  disableDelivery(deliveryIndex: number, selectedIndexes: number[]) {
+    if (!this.profService.professional.paying) {
+      this.billingInfoUpdatedSubscription =
+        this.billingService.billingInfoUpdated$
+          .subscribe((success: boolean) => this.sendProposal());
 
-    if (this.deliveryFormsChangesSubscription
-      && this.deliveryFormsChangesSubscription[deliveryIndex]
-      && !this.deliveryFormsChangesSubscription[deliveryIndex].closed) {
-      this.deliveryFormsChangesSubscription[deliveryIndex].unsubscribe();
-    }
+      this.spinnerService.toggleLoadingIndicator(false);
+      this.openBillingModal();
 
-    if (this.project.activeProposal.deliveries
-      && this.project.activeProposal.deliveries[deliveryIndex]) {
-      this.project.activeProposal.deliveries.splice(deliveryIndex, 1);
+    } else {
+      if (this.project.client && this.project.client.id) {
+        this.saveProjectInfo((success) => {
+          if (success) {
+            this.propService.send(this.project).subscribe((success: boolean) => {
+              if (success) {
+
+                this.spinnerService.toggleLoadingIndicator(false);
+                this.toastService.show('Projeto enviado!', 2500, 'green');
+              }
+            })
+          }
+        }, true)
+      } else {
+        this.spinnerService.toggleLoadingIndicator(false);
+        this.toastService.show('Selecione um cliente', 2500, 'red');
+
+      }
     }
   }
 
@@ -600,26 +692,54 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     });
   }
 
-  private createClientForm(briefing: string, client: Client, uf: UF): FormGroup {
+  private createBankAccountForm(prof: Professional, bankAccount: BankAccount): FormGroup {
+    let bankAccountId: string = 'new';
+    let cpfCnpj: string = '';
+
+    if (bankAccount && bankAccount.id !== undefined) {
+      bankAccountId = String(bankAccount.id);
+      // console.log();
+
+    }
+
+    if (prof.cpfCnpj && prof.cpfCnpj.length) {
+      cpfCnpj = prof.cpfCnpj;
+    }
+
+    return this.fb.group({
+      bankAccountId: [bankAccountId],
+      bankId: [''],
+      agencyNumber: [''],
+      accountNumber: [''],
+      accountDigit: [''],
+      titular: [prof.name],
+      accountCpfCnpj: [cpfCnpj],
+      saveAccount: [true]
+    });
+  }
+
+  private createClientForm(project: Project): FormGroup {
+    let client = project.client;
     let clientId = '0';
     if (client && client.id && client.id.length) {
       clientId = client.id;
     }
 
     return this.clientForm = this.fb.group({
-      briefing: [briefing],
-      ufId: [uf],
+      briefing: [project.briefing],
       clientId: [clientId, Validators.required],
       email: [''],
       cpfCnpj: [''],
-      name: ['']
-    });
-  }
+      name: [''],
+      clientGenderOpt: [],
 
-  private createSelectedDeliveriesForm(deliveriesIndexes: number[]): FormGroup {
-
-    return this.fb.group({
-      selectedDeliveries: [deliveriesIndexes]
+      // // ufId: [project.UF],
+      // CEP: [project.CEP],
+      // addressArea: [project.addressArea],
+      // addressNumber: [project.addressNumber],
+      // city: [project.city],
+      // neighborhood: [project.neighborhood],
+      // UF: [project.UF]
     });
   }
 
@@ -635,6 +755,19 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
       // description: [description],
       deadlineCount: [deadlineCount],
       deadlineTimeUnity: [deadlineTimeUnity]
+    });
+
+  }
+
+  private createLocationForm(project: Project): FormGroup {
+    return this.fb.group({
+      // ufId: [project.UF],
+      CEP: [project.CEP],
+      addressArea: [project.addressArea],
+      addressNumber: [project.addressNumber],
+      city: [project.city],
+      neighborhood: [project.neighborhood],
+      UF: [project.UF]
     });
 
   }
@@ -671,34 +804,38 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
     return this.fb.group({
       proposalIntro: [introValue],
+      followUp: [project.activeProposal.followUp],
       duration: [duration],
       durationTimeUnity: [durationTimeUnity]
     });
   }
 
-  private createBankAccountForm(prof: Professional, bankAccount: BankAccount): FormGroup {
-    let bankAccountId: string = 'new';
-    let cpfCnpj: string = '';
-
-    if (bankAccount && bankAccount.id !== undefined) {
-      bankAccountId = String(bankAccount.id);
-      // console.log();
-
-    }
-
-    if (prof.cpfCnpj && prof.cpfCnpj.length) {
-      cpfCnpj = prof.cpfCnpj;
-    }
+  private createSelectedDeliveriesForm(deliveriesIndexes: number[]): FormGroup {
 
     return this.fb.group({
-      bankAccountId: [bankAccountId],
-      bankId: [''],
-      agencyNumber: [''],
-      accountNumber: [''],
-      accountDigit: [''],
-      titular: [prof.name],
-      accountCpfCnpj: [cpfCnpj],
-      saveAccount: [true]
+      selectedDeliveries: [deliveriesIndexes]
+    });
+  }
+
+  private findLocationByCEP(cepCode: string | number) {
+    if (String(cepCode).length < 8) {
+      return;
+    }
+
+    this.addressFieldsDisabled = true;
+
+    cep(cepCode).then(CEP => {
+      this.addressFieldsDisabled = false;
+      this.locationForm.get('addressArea').setValue(CEP.street, { onlySelf: false, emitEvent: false });
+      this.locationForm.get('city').setValue(CEP.city, { onlySelf: false, emitEvent: false });
+      this.locationForm.get('neighborhood').setValue(CEP.neighborhood, { onlySelf: false, emitEvent: false });
+      this.locationForm.get('UF').setValue(CEP.state, { onlySelf: false, emitEvent: false });
+
+
+      Materialize.updateTextFields();
+
+    }).catch(e => {
+      console.log(e);
     });
   }
 
@@ -740,17 +877,27 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
   private saveBankAccountInfo(formData: any): Observable<BankAccount> {
     if (formData.bankAccountId === 'new' || formData.bankAccountId === 'undefined') {
+      console.log(formData);
+
       let bankAccount: BankAccount;
       let bankAccountDataValid =
-        // formData.bankId &&
-        String(formData.agencyNumber).length > 2 &&
-        formData.accountNumber.length > 3 &&
-        formData.titular.length > 1 &&
-        formData.accountCpfCnpj.length > 12 &&
-        UtilsService.isCpfCnpj(formData.accountCpfCnpj);
+        Number(formData.bankId) !== NaN &&
+        Number(formData.bankId) !== 0 &&
+        formData.agencyNumber && String(formData.agencyNumber).replace(/\D/g, '').length > 3 &&
+        formData.accountNumber && formData.accountNumber.replace(/\D/g, '').length > 4 &&
+        formData.titular && formData.titular.length > 1 &&
+        formData.accountDigit && formData.accountDigit.length > 0;
 
+      // console.log('valid', bankAccountDataValid);
 
       if (bankAccountDataValid) {
+        if (formData.accountCpfCnpj.replace(/\D/g, '').length !== 11 && formData.accountCpfCnpj.replace(/\D/g, '').length !== 14) {
+          console.log('Cpf Cnpj inválid format', formData.accountCpfCnpj.replace(/\D/g, ''));
+
+          return Observable.of(undefined);
+        }
+        console.log('valid data');
+
         bankAccount = new BankAccount(formData.agencyNumber, formData.accountNumber, formData.accountDigit);
         bankAccount.bank = this.allBanks.find(bank => bank.id === Number(formData.bankId))
 
@@ -761,6 +908,7 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
         return Observable.of(bankAccount);
 
       } else {
+        console.log('invalid data');
         return Observable.of(undefined);
       }
     } else {
@@ -772,28 +920,34 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
   private saveClientInfo(): Observable<Client> {
     let briefing = this.clientForm.value.briefing;
-    let ufId = this.clientForm.value.ufId;
+    // let ufId = this.clientForm.value.ufId;
     let selectedClientId = this.clientForm.value.clientId;
     let newClientName = this.clientForm.value.name;
     let newClientEmail = this.clientForm.value.email;
     let newClientCpfCnpj = this.clientForm.value.cpfCnpj;
+    let newClientGender = this.clientForm.value.clientGenderOpt;
     let newClient: Client;
 
     this.project.briefing = briefing;
 
-    this.project.uf = ufId;
+    // this.project.UF = ufId;
     // check newclient option selected
     if (String(selectedClientId) === '0') {
       newClient = new Client();
       newClient = {
         name: newClientName,
         email: newClientEmail,
-        cpfCnpj: newClientCpfCnpj
+        cpfCnpj: newClientCpfCnpj,
+        gender: newClientGender
       };
+
+      console.log(newClientGender);
 
       let newClientValid = newClient.name && newClient.name.length > 0 &&
         newClient.email && UtilsService.isEmail(newClient.email) &&
-        newClient.cpfCnpj && UtilsService.isCpfCnpj(newClient.cpfCnpj);
+        newClient.cpfCnpj && newClient.cpfCnpj.length === 14 ||
+        newClient.cpfCnpj.length === 18 && UtilsService.isCpfCnpj(newClient.cpfCnpj) &&
+        newClientGender === 'M' || newClientGender === 'F';
 
       if (newClientValid) {
         this.clientForm.reset();
@@ -874,6 +1028,15 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
   }
 
+  private saveLocationInfo(formData) {
+    this.project.CEP = formData.CEP;
+    this.project.addressArea = formData.addressArea;
+    this.project.addressNumber = formData.addressNumber;
+    this.project.city = formData.city;
+    this.project.neighborhood = formData.neighborhood;
+    this.project.UF = formData.UF;
+  }
+
   private saveProfessionalInfo(): Observable<any> {
     let name;
     let description;
@@ -907,14 +1070,9 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
   }
 
-  showAccountState() {
-    console.log('active proposal:', this.project.activeProposal);
-    console.log(this.bankAccountForm.value);
-    // this.paymentForm.value.cost = '30';
-  }
-
   private saveProposalInfo(): Observable<any> {
     this.project.activeProposal.intro = this.proposalForm.value.proposalIntro;
+    this.project.activeProposal.followUp = this.proposalForm.value.followUp;
     this.project.activeProposal.deadlineCount = this.proposalForm.value.duration;
     this.project.activeProposal.deadlineTimeUnity = this.proposalForm.value.durationTimeUnity;
     return Observable.of(true);

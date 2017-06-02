@@ -19,6 +19,7 @@ export class Proposal {
     bankAccount: BankAccount;
     deliveries: Delivery[];
     url?: string;
+    followUp?: boolean;
 
     constructor(wasPaid: boolean, status: ProposalStatus, id?: string) {
         this.id = id;

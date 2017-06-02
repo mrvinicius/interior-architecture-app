@@ -32,6 +32,17 @@ export class UtilsService {
         'TO'
     ]
 
+    public static readonly addressNumberMask = [/\d/, /\d/, /\d/, /\d/, /\d/, /\d/];
+    public static readonly bankAccountAgencyMask = [/\d/, /\d/, /\d/, /\d/];
+    public static readonly bankAccountNumberMask = [/\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/];
+    public static readonly cardVerificationCode = [/\d/, /\d/, /\d/, /\d/];
+    public static readonly cauMask = [/\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/];
+    public static readonly celularMask = ['(', /[1-9]/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+    public static readonly cepMask = [/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/];
+    public static readonly cnpjMask = [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/];
+    public static readonly cpfMask = [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/];
+    public static readonly creditCardNumberMask = [/\d/, /\d/, /\d/, /\d/, ' ', /\d/, /\d/, /\d/, /\d/, ' ', /\d/, /\d/, /\d/, /\d/, ' ', /\d/, /\d/, /\d/, /\d/]
+
     constructor() { }
 
     public static getHash(hashLength?: number) {

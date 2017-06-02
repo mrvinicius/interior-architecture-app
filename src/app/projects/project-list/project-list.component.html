@@ -12,7 +12,7 @@
                         <th data-field="client" class="hide-on-small-only">Cliente</th>
                         <th data-field="wasPaid" class="hide-on-small-only">Pagamento</th>
                         <!--<th data-field="status" hidden>Status</th>-->
-                        <th data-field="received" class="right-align">Valor<span class="hide-on-small-only"> (R$)</span></th>
+                        <th data-field="received" class="right-align">Valor</th>
 
                         <th class="right-align"></th>
                     </tr>
@@ -32,8 +32,8 @@
                                 <span *ngSwitchCase="ProjectStatus.NotSent">Proposta não enviada</span>
                             </div>
                         </td>-->
-                            <td (click)="redirectToProject(p.title)" class="pointer right-align"><span *ngIf="!p.received">-</span></td>
-                            <td (click)="redirectToProject(p.title)" class="pointer right-align"><span *ngIf="p.received">{{p.received}}</span></td>
+                            <td (click)="redirectToProject(p.title)" class="pointer right-align"><span>{{p.activeProposal.costFinal | currency:'BRL':true}}</span></td>
+                            <!--<td (click)="redirectToProject(p.title)" class="pointer right-align"><span *ngIf="p.received">{{p.received}}</span></td>-->
                             <td class="right-align">
                                 <a (click)="disableProject(p.id)" class="btn-floating btn-small waves-effect waves-dark transparent table-action-cell" style="box-shadow: none">
                                 <i class="material-icons mv-red-light-text">delete</i>

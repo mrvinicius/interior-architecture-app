@@ -1,26 +1,26 @@
-<div id="entry-container">
-  <main id="entry-card-wrapper">
-    <div class="card z-depth-5" style="padding-bottom: 1px;">
-      <div class="card-content">
-        <h5>Qual sua profissão?</h5>
-        <form *ngIf="professional" [formGroup]="professionForm" class="row">
-          <mz-radio-button-container style="margin: 12px 0; display: block;">
-            <input mz-radio-button formControlName="professionOpt" label="Estudante"
-              id='estOpt' value="0" type="radio" />
-          </mz-radio-button-container>
-          <mz-radio-button-container style="margin: 12px 0; display: block;">
-            <input mz-radio-button formControlName="professionOpt" label="Arquiteto"
-              id='arqOpt' value="1" type="radio" />
-          </mz-radio-button-container>
-          <mz-radio-button-container style="margin: 12px 0; display: block;">
-            <input mz-radio-button formControlName="professionOpt" label="Designer de Interiores"
-              id='desOpt' value="2" type="radio" />
-          </mz-radio-button-container>
-          <div class="u-col s12 right-align">
-            <button (click)="difineProfession()" [disabled]="professionForm.invalid" mz-button style="width: 100%">Próximo</button>
-          </div>
-        </form>
+<div class="background-image">
+  <div id="entry-container">
+    <main id="entry-card-wrapper">
+      <div class="card z-depth-5" style="padding-bottom: 1px;">
+        <div class="card-content">
+          <h5>Qual sua profissão?</h5>
+          <form *ngIf="professional" [formGroup]="professionForm" class="row">
+            <mz-radio-button-container style="margin: 12px 0; display: block;">
+              <input mz-radio-button formControlName="professionOpt" label="Estudante" id='estOpt' value="0" type="radio" />
+            </mz-radio-button-container>
+            <mz-radio-button-container style="margin: 12px 0; display: block;">
+              <input mz-radio-button formControlName="professionOpt" label="Arquiteto" id='arqOpt' value="1" type="radio" />
+            </mz-radio-button-container>
+            <mz-radio-button-container style="margin: 12px 0; display: block;">
+              <input mz-radio-button formControlName="professionOpt" label="Designer de Interiores" id='desOpt' value="2" type="radio"
+              />
+            </mz-radio-button-container>
+            <div class="u-col s12 right-align">
+              <button (click)="difineProfession()" [disabled]="professionForm.invalid" mz-button style="width: 100%">Próximo</button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
-  </main>
+    </main>
+  </div>
 </div>

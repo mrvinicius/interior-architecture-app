@@ -132,26 +132,6 @@ export class ProfessionalService {
 
   }
 
-  getOne(id: string): Observable<Professional> {
-    let options = new RequestOptions({ headers: this.getHeaders() });
-
-    //http://52.67.21.201/muuving/api/profissional/getone?id=c11752b0-0475-4d31-9c01-223d1a98aa9f
-    return this.http.get(this.baseUrl + '/getone?id=' + id, options)
-      .map((response: Response) => {
-        let body = JSON.parse(response.text());
-        let professional = new Professional(body.Nome, body.Email, body.Id);
-        professional.cpfCnpj = body.CpfCnpj;
-        professional.celular = body.Celular;
-        professional.profession = ProfessionalService.professionIds[body.ProfissaoId];
-        professional.description = body.Descricao;
-        professional.paying = body.Assinante ? body.Assinante : false;
-        professional.iuguId = body.IdClienteIugu ? body.IdClienteIugu : undefined;
-
-        return professional;
-      })
-      .catch(this.handleError);
-  }
-
   getAll(take: number = 999, skip?: number): Observable<Professional[]> {
     let options = new RequestOptions({ headers: this.getHeaders() });
 
@@ -165,6 +145,36 @@ export class ProfessionalService {
         return body.map((professional) => {
           return new Professional(professional.Nome, professional.Email, professional.Id);
         });
+      })
+      .catch(this.handleError);
+  }
+
+  getOne(id: string): Observable<Professional> {
+    let options = new RequestOptions({ headers: this.getHeaders() });
+
+    //http://52.67.21.201/muuving/api/profissional/getone?id=c11752b0-0475-4d31-9c01-223d1a98aa9f
+    return this.http.get(this.baseUrl + '/getone?id=' + id, options)
+      .map((response: Response) => {
+        let body = JSON.parse(response.text());
+        let professional = new Professional(body.Nome, body.Email, body.Id);
+        professional.cpfCnpj = body.CpfCnpj;
+        professional.celular = body.Celular;
+        professional.profession = ProfessionalService.professionIds[body.ProfissaoId];
+        professional.description = body.Descricao;
+        professional.CEP = body.CEP;
+        professional.paying = body.Assinante ? body.Assinante : false;
+        professional.iuguId = body.IdClienteIugu ? body.IdClienteIugu : undefined;
+
+        professional.nacionality = body.Nacionalidade;
+        professional.gender = body.Genero;
+        professional.maritalStatus = body.EstadoCivil;
+        professional.CAU = body.Cau;
+        professional.addressArea = body.Logradouro;
+        professional.addressNumber = body.NumeroLogradouro;
+
+        console.log(professional);
+
+        return professional;
       })
       .catch(this.handleError);
   }
@@ -224,12 +234,14 @@ export class ProfessionalService {
     if (prof.celular) this._professional.celular = prof.celular;
     if (prof.password) this._professional.password = prof.password;
     if (prof.profession) this._professional.profession = prof.profession;
-    // if (prof.address) 
     if (prof.CAU) this._professional.CAU = prof.CAU;
     if (prof.gender) this._professional.gender = prof.gender;
-    if (prof.rg) this._professional.rg = prof.rg;
-    if (prof.maritalStatus) this._professional.maritalStatus = prof.maritalStatus;
     if (prof.paying) this._professional.paying = prof.paying;
+    if (prof.CEP) this._professional.CEP = prof.CEP;
+    if (prof.nacionality) this._professional.nacionality = prof.nacionality;
+    if (prof.maritalStatus) this._professional.maritalStatus = prof.maritalStatus;
+    if (prof.addressArea) this._professional.addressArea = prof.addressArea;
+    if (prof.addressNumber) this._professional.addressNumber = prof.addressNumber;
 
     let data: any = {
       id: this._professional.id,
@@ -240,10 +252,14 @@ export class ProfessionalService {
       Celular: this._professional.celular,
       ProfissaoId: ProfessionalService.professionIds[this._professional.profession],
       CAU: this._professional.CAU,
+      Assinante: this._professional.paying,
+      CEP: this._professional.CEP,
+      Nacionalidade: this._professional.nacionality,
       Genero: this._professional.gender,
-      RG: this._professional.rg,
       EstadoCivil: this._professional.maritalStatus,
-      Assinante: this._professional.paying
+      Cau: this._professional.CAU,
+      Logradouro: this._professional.addressArea,
+      NumeroLogradouro: this._professional.addressNumber
     };
 
     if (this._professional.password)

@@ -3,7 +3,7 @@
     <form *ngIf="professional && profProfileForm" [formGroup]="profProfileForm" class="row">
       <div class="col s12 m6 l5">
         <mz-input-container>
-          <input mz-input formControlName="name" label="nome profissional" name='BusinessName' id='businessName' type='text'>
+          <input mz-input formControlName="name" label="nome profissional *" name='BusinessName' id='businessName' type='text'>
         </mz-input-container>
 
         <!--<mz-input-container class="u-col s12">
@@ -22,21 +22,24 @@
         <div>
           <label>profissão</label>
           <mz-radio-button-container>
-            <input mz-radio-button formControlName="professionOpt" label="Estudante" id='estOpt' value="0" type="radio" />
+            <input mz-radio-button formControlName="professionOpt" name="professionOpt" label="Estudante" id='estOpt' value="0" type="radio"
+              [checked]="profProfileForm.value.professionOpt == 0 ? true : null">
           </mz-radio-button-container>
           <mz-radio-button-container>
-            <input mz-radio-button formControlName="professionOpt" label="Arquiteto" id='arqOpt' value="1" type="radio" />
+            <input mz-radio-button formControlName="professionOpt" name="professionOpt" label="Arquiteto" id='arqOpt' value="1" type="radio"
+              [checked]="profProfileForm.value.professionOpt == 1 ? true : null">
           </mz-radio-button-container>
           <mz-radio-button-container>
-            <input mz-radio-button formControlName="professionOpt" label="Designer de Interiores" id='desOpt' value="2" type="radio"
-            />
+            <input mz-radio-button formControlName="professionOpt" name="professionOpt" label="Designer de Interiores" id='desOpt' value="2"
+              type="radio" [checked]="profProfileForm.value.professionOpt == 2 ? true : null">
           </mz-radio-button-container>
         </div>
         <mz-input-container>
-          <input mz-input formControlName="celular" label="celular" id='celular' type='text'>
+          <input mz-input formControlName="celular" [textMask]="{mask: celularMask, placeholderChar: '\u2000', keepCharPositions: true}"
+            label="celular *" id='celular' type='text'>
         </mz-input-container>
         <mz-select-container>
-          <select mz-select formControlName="maritalStatus" id='maritalStatus' placeholder="Estado Civil">
+          <select mz-select formControlName="maritalStatus" id='maritalStatus' placeholder="estado cívil *">
             <option [value]="'Solteiro(a)'">Solteiro(a)</option>
             <option [value]="'Casado(a)'">Casado(a)</option>
             <option [value]="'Separado(a)'">Separado(a)</option>
@@ -45,12 +48,14 @@
           </select>
         </mz-select-container>
         <div>
-          <label>gênero</label>
+          <label>gênero (opcional)</label>
           <mz-radio-button-container>
-            <input mz-radio-button formControlName="genderOpt" label="Feminino" id='femaleOpt' value="'F'" type="radio" />
+            <input mz-radio-button [checked]="profProfileForm.value.genderOpt === 'F' ? true : null"
+            formControlName="genderOpt" label="Feminino" id='femaleOpt' value="F" type="radio" />
           </mz-radio-button-container>
           <mz-radio-button-container>
-            <input mz-radio-button formControlName="genderOpt" label="Masculino" id='maleOpt' value="'M'" type="radio" />
+            <input mz-radio-button [checked]="profProfileForm.value.genderOpt === 'M' ? true : null"
+            formControlName="genderOpt" label="Masculino" id='maleOpt' value="M" type="radio" />
           </mz-radio-button-container>
         </div>
       </div>
@@ -66,24 +71,41 @@
           </div>
         </div>-->
         <mz-textarea-container>
-          <textarea mz-textarea formControlName="description" [value]="professional.description" label='descrição profissional' id='businessDescription'
-            length='400'></textarea>
+          <textarea mz-textarea formControlName="description" [value]="professional.description"
+          label='descrição profissional (opcional)' id='businessDescription' length='400'></textarea>
         </mz-textarea-container>
         <mz-input-container>
-          <input mz-input formControlName="address" label="endereço" id='address' type='text'>
+          <input mz-input formControlName="CEP" [textMask]="{mask: cepMask, placeholderChar: '\u2000'}"
+            label="CEP *" id='cep' type='text'>
         </mz-input-container>
+        <div class="u-row">
+          <mz-input-container class="u-col s10">
+            <input mz-input formControlName="addressArea" [attr.disabled]="addressFieldsDisabled ? addressFieldsDisabled : null"
+              label="logradouro *" id='addressArea' type='text'>
+          </mz-input-container>
+          <mz-input-container class="u-col s2">
+            <input mz-input formControlName="addressNumber" label="número *"
+              id='addressNumber' type='text'>
+          </mz-input-container>
+        </div>
+
+
         <mz-input-container>
-          <input mz-input formControlName="cpfCnpj" label="CPF ou CPNJ" name='Cpf' id='cpf' type='text'>
+          <input mz-input formControlName="cpfCnpj" label="CPF/CPNJ *" name='Cpf' id='cpf' type='text'>
         </mz-input-container>
-        <mz-input-container>
+        <!--<mz-input-container>
           <input mz-input formControlName="rg" label="RG" id='rg' type='text'>
-        </mz-input-container>
+        </mz-input-container>-->
         <mz-input-container>
-          <input mz-input formControlName="cau" label="CAU" id='cau' type='text'>
+          <input mz-input formControlName="CAU" [textMask]="{mask: cauMask, placeholderChar: '\u2000', keepCharPositions: true}"
+            label="CAU (opcional)" id='cau' type='text'>
         </mz-input-container>
       </div>
     </form>
     <div class="row">
+      <div class="col s12">
+        <p class="dim-text">* Campos obrigatórios para geração de propostas</p>    
+      </div>
       <div class="col s12">
         <div class="divider"></div>
       </div>

@@ -1,11 +1,11 @@
 import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterializeModule } from 'ng2-materialize';
 import { Md2Module, Md2AccordionModule } from 'md2';
 import { MdlExpansionPanelModule } from '@angular-mdl/expansion-panel';
 import { MdlPopoverModule } from '@angular-mdl/popover';
 import { MdlSelectModule } from '@angular-mdl/select';
+import { MaterializeModule } from 'ng2-materialize';
 
 import { AmbienceService } from './shared/ambience.service';
 import { LayoutModule } from '../layout/layout.module';

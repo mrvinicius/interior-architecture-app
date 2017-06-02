@@ -25,6 +25,6 @@ export class LayoutComponent implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/entrar']);
-
+    window.location.reload();
   }
 }

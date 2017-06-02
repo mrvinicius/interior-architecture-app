@@ -2,12 +2,16 @@
   <md2-accordion class="mv-collapsible">
     <md2-accordion-tab>
       <md2-accordion-header class="collapsible-header">
-        <i *ngIf="!clientDataBeingSaved" class="material-icons">face</i>
-        <mz-spinner *ngIf="clientDataBeingSaved" [color]="'black'" class="tiny spinner"></mz-spinner>
+        <i *ngIf="!clientDataBeingSaved && !locationDataBeingSaved" class="material-icons">face</i>
+        <mz-spinner *ngIf="clientDataBeingSaved || locationDataBeingSaved" [color]="'black'" class="tiny spinner"></mz-spinner>
         Cliente
       </md2-accordion-header>
-      <section *ngIf="professional && project && clientForm" class="row">
+      <section *ngIf="professional && project && clientForm && locationForm" class="row">
         <form [formGroup]="clientForm">
+          <mz-textarea-container class="col s12">
+            <i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>
+            <textarea mz-textarea formControlName="briefing" label='briefing' id="briefing" length="150"></textarea>
+          </mz-textarea-container>
           <div class="col s12 m6">
             <mz-select-container class="has-add-option">
               <select mz-select #clientSelectInput formControlName="clientId" id='clientSelect' label="cliente">
@@ -25,24 +29,60 @@
                 <mz-input-container>
                   <input mz-input formControlName="email" label="email" name='Email' id='clientEmail' type='email'>
                 </mz-input-container>
+                <div>
+                  <label>gênero</label>
+                  <mz-radio-button-container>
+                    <input mz-radio-button formControlName="clientGenderOpt" label="Feminino" id='femaleOpt' value="F" type="radio" />
+                  </mz-radio-button-container>
+                  <mz-radio-button-container>
+                    <input mz-radio-button formControlName="clientGenderOpt" label="Masculino" id='maleOpt' value="M" type="radio" />
+                  </mz-radio-button-container>
+                </div>
                 <mz-input-container>
                   <input mz-input formControlName="cpfCnpj" label="CPF ou CNPJ" name='CpfCnpj' id='cpfCnpj' type='text'>
                 </mz-input-container>
+
               </ng-container>
             </ng-container>
           </div>
+        </form>
+        <form [formGroup]="locationForm">
           <div class="col s12 m6">
-            <mz-textarea-container>
-              <i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>
-              <textarea mz-textarea formControlName="briefing" label='briefing' id="briefing" length="150"></textarea>
-            </mz-textarea-container>
-            <mz-select-container>
+            <mz-input-container>
+              <input mz-input formControlName="CEP" [textMask]="{mask: cepMask, placeholderChar: '\u2000'}" label="CEP" id='cep' type='text'>
+            </mz-input-container>
+            <div class="u-row">
+              <mz-input-container class="u-col s10">
+                <input mz-input formControlName="addressArea" [attr.disabled]="addressFieldsDisabled ? addressFieldsDisabled : null" label="logradouro"
+                  id='addressArea' type='text'>
+              </mz-input-container>
+              <mz-input-container class="u-col s2">
+                <input mz-input formControlName="addressNumber" [textMask]="{mask: addressNumberMask, placeholderChar: '\u2000'}" label="número"
+                  id='addressNumber' type='text'>
+              </mz-input-container>
+            </div>
+            <div class="u-row">
+              <mz-input-container class="col s5" style="padding-left: 0;">
+                <input mz-input formControlName="neighborhood" [attr.disabled]="addressFieldsDisabled ? addressFieldsDisabled : null" label="bairro"
+                  id='city' type='text'>
+              </mz-input-container>
+              <mz-input-container class="col s5" style="padding-left: 0;">
+                <input mz-input formControlName="city" [attr.disabled]="addressFieldsDisabled ? addressFieldsDisabled : null" label="cidade"
+                  id='city' type='text'>
+              </mz-input-container>
+
+              <mz-input-container class="col s2" style="padding-right: 0;">
+                <input mz-input formControlName="UF" [attr.disabled]="addressFieldsDisabled ? addressFieldsDisabled : null" label="UF" id='ufSelect'
+                  type='text'>
+              </mz-input-container>
+            </div>
+            <!--<mz-select-container>
               <select mz-select formControlName="ufId" id='stateSelect' placeholder="localização da obra">
-              <option *ngFor="let uf of ufs; let i = index"
-                [value]="i"
-                [selected]="i === project.uf">{{uf}}</option>
-            </select>
-            </mz-select-container>
+                <option *ngFor="let uf of ufs; let i = index"
+                  [value]="i"
+                  [selected]="i === project.uf">{{uf}}</option>
+              </select>
+            </mz-select-container>-->
           </div>
         </form>
       </section>
@@ -95,11 +135,56 @@
         Detalhes da proposta
       </md2-accordion-header>
       <section *ngIf="project">
-
+        <div class="u-row">
+          <div class="u-col s12">
+            <form [formGroup]="proposalForm">
+              <div class="col s12">
+                <mz-textarea-container>
+                  <!--<i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>-->
+                  <textarea mz-textarea formControlName="proposalIntro" label='introdução da proposta' id='propIntro' length='200'></textarea>
+                </mz-textarea-container>
+                <mz-checkbox-container>
+                  <input mz-checkbox formControlName="followUp" [filledIn]="true" [label]="'Oferecer acompanhamento das entregas e execução do projeto'"
+                    id="followUp" type="checkbox">
+                </mz-checkbox-container>
+                <span class="small-font dim-text" style="font-size: .8rem;">* o aceite desta opção pelo cliente acrescentará 40% sobre o valor cobrado.</span>
+                <ul class="browser-default" style="list-style-type: circle;">
+                  <li>Organização planilha orçamentária</li>
+                  <li>Elaboração de cronograma do projeto</li>
+                  <li>Acompanhamento da obra</li>
+                  <li>Acompanhamento e sugestão de visitas à lojas</li>
+                  <li>Produção dos ambientes</li>
+                </ul>
+              </div>
+              <div class="col s12">
+                <p class="dim-text" style="font-size: 1.1em; text-transform: uppercase;">Duração estimada</p>
+              </div>
+              <div class="col s4">
+                <mz-input-container>
+                  <input mz-input formControlName="duration" id="deliveryDeadlineCount" placeholder="duração" type='number'>
+                </mz-input-container>
+              </div>
+              <div class="col s8">
+                <mz-select-container>
+                  <select mz-select formControlName="durationTimeUnity" id='deliveryTmeUnitySelect' placeholder="tempo">
+                    <option [value]="0">Dia(s)</option>
+                    <option [value]="1">Semana(s)</option>
+                    <option [value]="2">Mês(es)</option>
+                  </select>
+                </mz-select-container>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12">
+            <div class="divider"></div>
+          </div>
+        </div>
         <!--<a (click)="showDeliveryState()" class="pointer">SHOW DELIVERY STATE</a>-->
         <div class="u-row">
           <div class="col s12">
-            <p style="font-size: 1.1em; margin: 0; text-transform: uppercase;">Entregas</p>
+            <p class="dim-text" style="font-size: 1.1em; margin: 0; text-transform: uppercase;">Entregas</p>
           </div>
         </div>
         <div class="u-row">
@@ -148,7 +233,7 @@
         </div>
         <div class="u-row">
           <div class="col s12">
-            <p style="font-size: 1.1em; margin-top: 0; text-transform: uppercase;">Ambientes</p>
+            <p class="dim-text" style="font-size: 1.1em; margin-top: 0; text-transform: uppercase;">Ambientes</p>
           </div>
         </div>
         <ul class="striped" style="-webkit-margin-before: 0; padding: 0 0.75rem">
@@ -206,38 +291,6 @@
             </span>
           </div>
         </div>
-        <div class="row">
-          <div class="col s12">
-            <div class="divider"></div>
-          </div>
-        </div>
-        <div class="u-row">
-          <div class="u-col s12">
-            <form [formGroup]="proposalForm">
-              <div class="col s12">
-                <mz-textarea-container>
-                  <!--<i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>-->
-                  <textarea mz-textarea formControlName="proposalIntro" label='introdução da proposta' id='propIntro' length='200'></textarea>
-                </mz-textarea-container>
-              </div>
-              <div class="col s4">
-                <mz-input-container>
-                  <input mz-input formControlName="duration" id="deliveryDeadlineCount" placeholder="duração" type='number'>
-                </mz-input-container>
-              </div>
-              <div class="col s8">
-                <mz-select-container>
-                  <select mz-select formControlName="durationTimeUnity" id='deliveryTmeUnitySelect' placeholder="tempo">
-                    <option [value]="0">Dia(s)</option>
-                    <option [value]="1">Semana(s)</option>
-                    <option [value]="2">Mês(es)</option>
-                  </select>
-                </mz-select-container>
-              </div>
-            </form>
-          </div>
-        </div>
-
       </section>
     </md2-accordion-tab>
 
@@ -261,7 +314,7 @@
               <input mz-input [textMask]="{mask: mascaraReal, placeholderChar: '\u2000'}" formControlName="cost" #costInput label="Valor cobrado"
                 id="finalCost" style="margin-bottom:0; text-align: right;" type="text">
             </mz-input-container>
-            <span class="italic small-font" style="font-size: .8rem">Cobramos 3% para compensar nosso serviço</span>
+            <span class="small-font dim-text" style="font-size: .8rem">Cobramos 3% para compensar nosso serviço</span>
             <p *ngIf="!paymentDataBeingSaved && paymentForm.value.cost != undefined && paymentForm.value.cost != 0">
               Você receberá <b>{{(parseMonetaryString(paymentForm.value.cost) - parseMonetaryString(paymentForm.value.cost) * 0.03) | currency:'BRL':true}}</b>
             </p>
@@ -322,10 +375,12 @@
               </mz-select-container>
               <div class="u-row">
                 <mz-input-container class="col s4">
-                  <input mz-input formControlName="agencyNumber" label="agência" id="agency" maxlength="4" type="text">
+                  <input mz-input formControlName="agencyNumber" [textMask]="{mask: agencyMask, placeholderChar: '\u2000'}" label="agência"
+                    id="agency" type="text">
                 </mz-input-container>
                 <mz-input-container class="col s6" style="padding-right: 0;">
-                  <input mz-input formControlName="accountNumber" label="conta" id="account" maxlength="9" type="text">
+                  <input mz-input formControlName="accountNumber" [textMask]="{mask: bankAccountMask, placeholderChar: '\u2000'}" label="conta"
+                    id="account" type="text">
                 </mz-input-container>
                 <mz-input-container class="col s2" style="padding-left: 0;">
                   <input mz-input formControlName="accountDigit" label="dígito" id="digit" maxlength="2" type="text">

@@ -6,18 +6,20 @@ export class Professional extends User {
     description?: string;
 
     logoUrl?: string;
-    cpfCnpj?: string;
+    // cpfCnpj?: string;
     celular?: string;
     profession?: Profession;
     clients?: Client[];
-    rg?: string;
-    address?: string;
     CAU?: string;
     gender?: string;
     maritalStatus?: string;
-
     iuguId?: string;
     paying?: boolean;
+    CEP?: string;
+
+    addressArea?: string;
+    addressNumber?: number;
+    nacionality?: string;
 
     constructor(name?: string, email?: string, id?: string) {
         super(name, email, id);

@@ -16,8 +16,13 @@ export class Project {
     proposals?: Proposal[];
     activeProposal: Proposal;
     isActive: boolean;
-    cep: string;
-    uf: UF;
+    
+    CEP?: string;
+    UF?: string;
+    addressArea?: string;
+    addressNumber?: number;
+    neighborhood?: string;
+    city?: string;
 
     constructor(activeProposal: Proposal, id?: string, title?: string, professional?: Professional) {
         this.activeProposal = activeProposal;
@@ -72,17 +77,3 @@ export class Project {
 
 
 }
-
-
-/**
- 
- Titulo
- Briefing = Descricao?
- Introdução da proposta
- Profissionais envolvidos (exceto o atual)
-
- Foi pago? (boolean)
- Status (Não enviado, Aguardando aprovação, Aprovado, Desativado)
- Custo total
-
- */

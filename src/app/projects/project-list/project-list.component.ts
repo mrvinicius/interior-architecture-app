@@ -76,6 +76,7 @@ export class ProjectListComponent implements OnInit {
   }
 
   ngOnInit() {
+    
     this.newProjectTitleDefinedSubinscription =
       this.projectsService.newProjectTitleDefined$
         .subscribe(projectTitle => this.beginProject(projectTitle));

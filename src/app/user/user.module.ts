@@ -22,6 +22,7 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserRecoveryComponent } from './user-recovery/user-recovery.component';
 import { UserPasswordComponent } from './user-password/user-password.component';
 import { UserProfessionComponent } from './user-profession/user-profession.component';
+import { IncompleteProfileModalComponent } from './incomplete-profile-modal/incomplete-profile-modal.component';
 
 @NgModule({
   imports: [
@@ -45,7 +46,9 @@ import { UserProfessionComponent } from './user-profession/user-profession.compo
     UserRecoveryComponent,
     UserPasswordComponent,
     UserProfessionComponent,
+    IncompleteProfileModalComponent,
   ],
-  providers: []
+  providers: [],
+  entryComponents: [IncompleteProfileModalComponent]
 })
 export class UserModule { }

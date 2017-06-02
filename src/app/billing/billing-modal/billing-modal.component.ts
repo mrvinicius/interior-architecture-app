@@ -1,4 +1,3 @@
-import { BillingInfo } from './../shared/billing-info';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -6,11 +5,13 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
 import { MzModalService, MzBaseModal } from "ng2-materialize";
+import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
 
+import { BillingInfo } from '../shared/billing-info';
 import { BillingService } from '../shared/billing.service';
 import { ProfessionalService } from '../../core/professional.service';
+import { UtilsService } from '../../shared/utils/utils.service';
 
 @Component({
   selector: 'abx-billing-modal',
@@ -19,30 +20,10 @@ import { ProfessionalService } from '../../core/professional.service';
 })
 export class BillingModalComponent extends MzBaseModal implements OnInit {
   billingForm: FormGroup;
-  cardNumberMask = [
-    /\d/,
-    /\d/,
-    /\d/,
-    /\d/,
-    ' ',
-    /\d/,
-    /\d/,
-    /\d/,
-    /\d/,
-    ' ',
-    /\d/,
-    /\d/,
-    /\d/,
-    /\d/,
-    ' ',
-    /\d/,
-    /\d/,
-    /\d/,
-    /\d/
-  ];
+  cardNumberMask = UtilsService.creditCardNumberMask;
   expirationDatePipe = createAutoCorrectedDatePipe('mm/yy');
   expirationDateMask = [/\d/, /\d/, '/', /\d/, /\d/];
-  cvcMask = [/\d/, /\d/, /\d/, /\d/];
+  cvcMask = UtilsService.cardVerificationCode;
 
   constructor(
     private billingService: BillingService,

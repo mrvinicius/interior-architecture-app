@@ -4,6 +4,8 @@ export class User {
     lastName?: string;
     email: string;
     password?: string;
+    cpfCnpj?: string;
+    gender?: string;
     
     constructor(name?: string, email?: string, id?: string) {
         this.name = name;
