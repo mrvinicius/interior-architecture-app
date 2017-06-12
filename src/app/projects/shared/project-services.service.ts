@@ -13,7 +13,6 @@ import { UtilsService } from './../../shared/utils/utils.service';
 export class ProjectServicesService {
   // public readonly serviceTypes: ServiceType[] = [];
   private readonly typeBaseUrl = 'http://52.67.21.201/muuving/api/tipoServico';
-  // private readonly servicesBaseUrl = 'http://52.67.21.201/muuving/api/tipo+de+serviço'
 
   constructor(
     private http: Http

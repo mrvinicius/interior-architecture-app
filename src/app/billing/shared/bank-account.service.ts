@@ -60,6 +60,8 @@ export class BankAccountService {
     };
 
     if (this.bankAccounts === undefined || this.bankAccounts.length < 1) {
+      console.log('no bank accounts');
+      
       return this.http
         .post(this.baseUrl + '/getall', data, options)
         .map((response: Response) => {
@@ -70,7 +72,7 @@ export class BankAccountService {
           // }
 
           if (!body.HasError) {
-            return body.map((bankAcc) => {
+            let accs: BankAccount[] = body.map((bankAcc) => {
               let acc: BankAccount =
                 new BankAccount(bankAcc.Agencia, bankAcc.Conta, bankAcc.DigitoConta, bankAcc.Id);
 
@@ -79,6 +81,9 @@ export class BankAccountService {
 
               return acc;
             });
+            
+            this.bankAccounts = accs;
+            return accs;
           } else {
             return null;
           }

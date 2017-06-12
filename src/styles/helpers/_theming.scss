@@ -1,7 +1,53 @@
-ul {
-    &.striped {
-        li:nth-child(odd):not(.hide) {
-            background-color: rgba(0, 0, 0, 0.04);
-        }
+ul.striped {
+    li:nth-child(odd):not(.hide) {
+        background-color: rgba(0, 0, 0, 0.04);
     }
 }
+
+.background-center-container {
+    @extend .absolute-centralized;
+    $size: 90vmin;
+    width: $size;
+    height: $size;
+}
+
+.background-circle {
+    @extend .absolute-centralized;
+    $size: 80%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: $size;
+    height: $size;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.empty-page-content {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    bottom: 50%;
+    transform: translateY(50%);
+    -webkit-user-select: none;
+}
+
+.absolute-centralized {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+}
+
+// .bottom-text {
+//     margin-bottom: auto;
+//     margin-top: auto;
+//     position: absolute;
+//     bottom: 80px;
+//     text-align: center;
+//     width: 100%;
+// }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MdlExpansionPanelComponent } from '@angular-mdl/expansion-panel';
@@ -10,17 +10,18 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/distinctUntilChanged';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { conformToMask } from 'angular2-text-mask';
+import { TagInputComponent } from 'ng2-tag-input';
 
 import { Ambience } from '../shared/ambience';
 import { AmbienceDescription } from '../shared/ambience-description.enum';
 import { AmbienceService } from '../shared/ambience.service';
-import { AuthService } from './../../core/auth.service';
+import { AuthService } from '../../core/auth.service';
 import { Bank } from '../../billing/shared/bank';
 import { BankService } from '../../billing/shared/bank.service';
-import { BankAccountService } from './../../billing/shared/bank-account.service';
+import { BankAccountService } from '../../billing/shared/bank-account.service';
 import { BankAccount } from '../../billing/shared/bank-account';
 import { BillingModalComponent } from '../../billing/billing-modal/billing-modal.component';
-import { BillingService } from './../../billing/shared/billing.service';
+import { BillingService } from '../../billing/shared/billing.service';
 import { CanComponentDeactivate } from '../../core/can-deactivate-guard.service';
 import { Client } from '../../client/shared/client';
 import { ClientService } from '../../client/shared/client.service';
@@ -32,8 +33,8 @@ import { Professional } from '../../core/professional';
 import { ProfessionalService } from '../../core/professional.service';
 import { Project } from '../shared/project';
 import { ProjectsService } from '../shared/projects.service';
-import { Proposal } from './../shared/proposal';
-import { ProposalService } from './../shared/proposal.service';
+import { Proposal } from '../shared/proposal';
+import { ProposalService } from '../shared/proposal.service';
 import { Service } from '../shared/service.enum';
 import { SpinnerService } from '../../core/spinner/spinner.service';
 import { TimeUnity } from '../../shared/time-unity.enum';
@@ -55,6 +56,7 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
   bankAccountMask = UtilsService.bankAccountNumberMask;
   deliveryDescriptions: string[];
   professional: Professional;
+  professionals: Professional[];
   professionalAddedSubscription: Subscription;
   project: Project;
   projectSlugTitle: string;
@@ -90,6 +92,12 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
   profDataBeingSaved: boolean;
   profForm: FormGroup;
   profFormChangesSubscription: Subscription;
+
+  partnersDataHasChanges: boolean;
+  partnersDataBeingSaved: boolean;
+  partnersForm: FormGroup;
+  partnersFormChangesSubscription: Subscription;
+  @ViewChild('partnersInput') partnersInput: TagInputComponent;
 
   // Refers to Proposal section variables
   proposalDataHasChanges: boolean;
@@ -138,6 +146,7 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     private propService: ProposalService,
     private router: Router,
     private spinnerService: SpinnerService,
+
   ) {
     // this.ufs = UtilsService.getEnumArray(UF);
     this.ambienceDescriptions = UtilsService.getEnumArray(AmbienceDescription);
@@ -149,10 +158,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
   allClients(): Client[] {
     return this.clientService.allClients;
-  }
-
-  allProfessionals(): Professional[] {
-    return this.profService.allProfessionals;
   }
 
   beginAmbience() {
@@ -216,6 +221,10 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     }
   }
 
+  getPartnersByIds(ids: any[]): Professional[] {
+    return this.professionals.filter(prof => ids.includes(prof.id));
+  }
+
   getProjects(): Project[] {
     return this.projectsService.allProjects;
   }
@@ -251,7 +260,7 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
           }
         });
         const cpfCnpjChange$ = this.clientForm.get('cpfCnpj').valueChanges;
-        cpfCnpjChange$.debounceTime(500).subscribe((cpfCnpj: string) => {
+        cpfCnpjChange$.debounceTime(250).subscribe((cpfCnpj: string) => {
           // console.log('cpfCnpj', cpfCnpj);
           let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
 
@@ -301,7 +310,8 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
         });
 
         this.profForm =
-          this.createProfessionalForm(this.professional, data.project.activeProposal.professionalsIds);
+          this.createProfessionalForm(this.professional);
+
         this.profFormChangesSubscription = this.subscribeToFormChanges(this.profForm, () => {
           this.profDataHasChanges = true;
         }, (formData) => {
@@ -321,6 +331,54 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
             });
           }
         });
+
+        this.profService.getAll()
+          .subscribe(profs => {
+            this.professionals = profs && profs.length ? profs : []
+          });
+
+
+        this.partnersForm =
+          this.createPartnersForm(this.project.activeProposal.professionalsIds);
+        const partnersChange$ = this.partnersForm.get('partners').valueChanges;
+        partnersChange$.do((profs: any[]) => {
+          console.log(profs);
+          let addOptionIndex = profs.findIndex(obj => obj.value === 'new');
+
+          if (addOptionIndex !== -1) {
+            profs.splice(addOptionIndex, 1);
+
+            this.partnersForm.get('partners').setValue(profs, {
+              onlySelf: false,
+              emitEvent: false
+            })
+            this.openNewPartnerModal()
+          } else {
+            this.project.activeProposal.professionalsIds = profs.map(p => { return p.value })
+            console.log(this.project.activeProposal.professionalsIds);
+            
+            this.partnersDataHasChanges = true;
+          }
+
+
+
+        }).debounceTime(3000).subscribe(profs => {
+          if (!this.partnersDataBeingSaved) {
+            this.partnersDataHasChanges = false;
+            this.partnersDataBeingSaved = true;
+            this.saveProjectInfo((success) => {
+              console.log(success);
+              
+              if (success) {
+                this.partnersDataBeingSaved = false;
+              } else {
+                this.partnersDataBeingSaved = false;
+              }
+            })
+          }
+
+        });
+
 
         let deliveriesIndexes: number[] = [];
 
@@ -460,9 +518,17 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
     this.professionalAddedSubscription = this.profService.professionalAdded$
       .subscribe((newProfessional: Professional) => {
-        // if  !this.project.partnersIds.length) this.project.partnersIds = []
-        // this.project.partnersIds.push(newProfessional.id);
-        this.profForm.value.partnersIds.push(newProfessional.id);
+        this.partnersInput.appendTag({
+          id: newProfessional.id,
+          value: newProfessional.id,
+          name: newProfessional.name,
+          display: newProfessional.name
+        });
+
+        // this.partnersForm.get('partners').setValue(this.partnersForm.value.partners, {
+        //   onlySelf: false,
+        //   emitEvent: false
+        // })
       });
 
     // let amb = new Ambience();
@@ -491,7 +557,7 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     // if (!this.paymentFormChangesSubscription.closed)
     //   this.paymentFormChangesSubscription.unsubscribe();
 
-    if (!this.professionalAddedSubscription.closed)
+    if (this.professionalAddedSubscription && !this.professionalAddedSubscription.closed)
       this.professionalAddedSubscription.unsubscribe();
     // this.newAmbienceFormChangesSubscription.unsubscribe();
 
@@ -772,13 +838,25 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
   }
 
+  private createPartnersForm(ids: any[]): FormGroup {
+    let chipsData: any[] = this.getPartnersByIds(ids).map((prof: any) => {
+      prof.display = prof.name;
+      prof.value = prof.id;
+      return prof;
+    })
+
+    return this.fb.group({
+      partners: [chipsData]
+    });
+  }
+
   private createPaymentForm(costFinal: number): FormGroup {
     return this.fb.group({
       cost: [costFinal],
     });
   }
 
-  private createProfessionalForm(professional: Professional, partnersIds: string[]): FormGroup {
+  private createProfessionalForm(professional: Professional): FormGroup {
     let descriptionValue: string = '';
 
     if (professional.description != undefined && professional.description.length > 0)
@@ -786,7 +864,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
     return this.fb.group({
       name: [professional.name, Validators.required],
-      partnersIds: [partnersIds],
       description: [descriptionValue],
     });
   }
@@ -898,7 +975,7 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
         }
         console.log('valid data');
 
-        bankAccount = new BankAccount(formData.agencyNumber, formData.accountNumber, formData.accountDigit);
+        bankAccount = new BankAccount(formData.agencyNumber, formData.accountNumber.trim(), formData.accountDigit);
         bankAccount.bank = this.allBanks.find(bank => bank.id === Number(formData.bankId))
 
         if (formData.saveAccount) {
@@ -1038,18 +1115,13 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
   }
 
   private saveProfessionalInfo(): Observable<any> {
-    let name;
-    let description;
-    let partnersIds;
-    let currentProf;
-
-    name = this.profForm.value.name;
-    description = this.profForm.value.description;
-    partnersIds = this.profForm.value.partnersIds;
-    currentProf = this.professional;
+    let name = this.profForm.value.name;
+    let description = this.profForm.value.description;
+    // let partners = this.profForm.value.partners;
+    let currentProf = this.professional;
     currentProf.name = name;
     currentProf.description = description;
-    this.project.activeProposal.professionalsIds = partnersIds;
+    // this.project.activeProposal.professionalsIds = partners;
     this.project.professional = currentProf;
 
     return this.profService.update(currentProf);

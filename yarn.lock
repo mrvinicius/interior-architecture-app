@@ -3240,12 +3240,22 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
+ng2-material-dropdown@0.7.7:
+  version "0.7.7"
+  resolved "https://registry.yarnpkg.com/ng2-material-dropdown/-/ng2-material-dropdown-0.7.7.tgz#5f107cbd99c8c6362d869e0ac99e85b8c59aceab"
+
 ng2-materialize@^1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/ng2-materialize/-/ng2-materialize-1.3.2.tgz#e91d34bb1dda1ce86f81bbde6932cb09313d6723"
   dependencies:
     "@types/materialize-css" "0.98.0"
     materialize-css "0.98.1"
+
+ng2-tag-input@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/ng2-tag-input/-/ng2-tag-input-1.3.3.tgz#612b12b244dfd1efdb9659fd99caafa16762ff56"
+  dependencies:
+    ng2-material-dropdown "0.7.7"
 
 no-case@^2.2.0:
   version "2.3.1"

@@ -56,7 +56,7 @@ export class UserProfileComponent implements OnInit {
       });
 
       const cpfCnpjChange$ = this.profProfileForm.get('cpfCnpj').valueChanges;
-      cpfCnpjChange$.debounceTime(500).subscribe((cpfCnpj: string) => {
+      cpfCnpjChange$.debounceTime(250).subscribe((cpfCnpj: string) => {
         // console.log('cpfCnpj', cpfCnpj);
         let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
 

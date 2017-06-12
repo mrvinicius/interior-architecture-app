@@ -76,16 +76,15 @@ export class ProjectListComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+
     this.newProjectTitleDefinedSubinscription =
       this.projectsService.newProjectTitleDefined$
         .subscribe(projectTitle => this.beginProject(projectTitle));
 
     this.projectsService.getAllByProfessional(this.auth.getCurrentUser().id, 999)
-      .subscribe(projects => {        
-        
-        this.projects = projects ? projects.filter(project => project.isActive) : []
-        console.log(this.projects);
+      .subscribe(projects => {
+        projects = projects.filter(p => p.isActive);
+        this.projects = projects && projects.length ? projects : [];
       });
 
     this.clientService.getAllByProfessional(this.auth.getCurrentUser().id, 999)
@@ -99,7 +98,6 @@ export class ProjectListComponent implements OnInit {
   openNewProjectModal() {
     let modalRef = this.modalService.open(NewProjectModalComponent, {});
   }
-
 
   private beginProject(title: string) {
     this.spinnerService.toggleLoadingIndicator(true);
@@ -122,7 +120,7 @@ export class ProjectListComponent implements OnInit {
     this.projectsService.add(title).subscribe((project: Project) => {
       console.log('RespProject: ', project);
       this.projects.push(project);
-      
+
       this.spinnerService.toggleLoadingIndicator(false);
       this.redirectToProject(project.title);
     });

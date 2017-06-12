@@ -15,30 +15,29 @@ import { ProfessionalService } from '../../core/professional.service';
 export class ClientService {
   public allClients: Client[] = [];
   allClientsChange$: Subject<Client[]> = new Subject<Client[]>();
+
+  // Observable string sources
+  // private clientAddedSource = new Subject<Client>();
+  // clientAdded$ = this.clientAddedSource.asObservable();
+  // public modalDismissedSource = new Subject<any>();
+  // modalDismissed$ = this.modalDismissedSource.asObservable();
   private readonly baseUrl: string = 'http://52.67.21.201/muuving/api/cliente';
 
   constructor(
     private auth: AuthService,
     private http: Http,
     private profService: ProfessionalService
-  ) {
-    // this.getAllByProfessional(this.profService.professional.id).subscribe((clients: Client[]) => {
-    // this.getAllByProfessional(this.auth.getCurrentUser().id).subscribe((clients: Client[]) => {
-    //   this.allClients = clients;
-    //   this.allClientsChange$.next(this.allClients);
-    // });
+  ) {}
 
-  }
-
-  addByProfessional(client: Client, profissionalId: string): Observable<Client> {
+  addByProfessional(client: Client, profId: string): Observable<Client> {
     let options = new RequestOptions({ headers: this.getHeaders() });
     let data = {
       Nome: client.name,
       Email: client.email,
       Genero: client.gender,
       CpfCnpj: client.cpfCnpj,
-      Ativo: true,
-      Profissional: { Id: profissionalId }
+      IsActive: true,
+      Profissional: { Id: profId }
     };
 
     return this.http
@@ -46,15 +45,26 @@ export class ClientService {
       .map((response: Response) => {
         let body = JSON.parse(response.text());
         let newClient: Client = new Client(body.Nome, body.Email, body.ID);
+        newClient.isActive = body.IsActive;
+        newClient.gender = body.Genero;
         newClient.cpfCnpj = body.CpfCnpj;
+
         if (!this.allClients) this.allClients = [];
 
         this.allClients.push(newClient);
         this.allClientsChange$.next(this.allClients);
+        // this.clientAddedSource.next(newClient);
         this.profService.addClients(newClient);
         return newClient;
       })
       .catch(this.handleError);
+  }
+
+  disableClient(id: string, profId: string): Observable<any> {
+    let c = this.allClients.find(client => client.id === id);
+
+    c.isActive = false;
+    return this.update(c, profId);
   }
 
   getAllByProfessional(profissionalId: string, take: number = 999, skip?: number): Observable<Client[]> {
@@ -74,7 +84,11 @@ export class ClientService {
 
           if (body.length) {
             clients = body.map((client) => {
-              return new Client(client.Nome, client.Email, client.ID);
+              let c = new Client(client.Nome, client.Email, client.ID);
+              c.isActive = client.IsActive;
+              c.gender = client.Genero;
+              c.cpfCnpj = client.CpfCnpj;
+              return c;
             });
           }
 
@@ -107,6 +121,32 @@ export class ClientService {
         return client.id === id;
       }));
     }
+  }
+
+  update(client: Client, profId: string): Observable<any> {
+    let options = new RequestOptions({ headers: this.getHeaders() });
+    let clientIndex = this.allClients.findIndex(c => c.id === client.id);
+    let data = {
+      "id": client.id,
+      "Nome": client.name,
+      "Email": client.email,
+      "CpfCnpj": client.cpfCnpj,
+      "IsActive": client.isActive,
+      "Genero": client.gender,
+      "Profissional": {
+        "id": profId
+      }
+    }
+
+    this.allClients[clientIndex] = client;
+
+    return this.http.post(this.baseUrl + '/update', data, options)
+      .map((response: Response) => {
+        let clientResp = JSON.parse(response.text());
+
+        return clientResp;
+      })
+      .catch(this.handleError);
   }
 
   private extractData(res: Response) {

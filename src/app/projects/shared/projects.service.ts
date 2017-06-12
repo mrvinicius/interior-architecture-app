@@ -14,7 +14,7 @@ import { Client } from '../../client/shared/client';
 import { ClientService } from '../../client/shared/client.service';
 import { Delivery } from './delivery';
 import { Professional } from '../../core/professional';
-import { ProfessionalService } from './../../core/professional.service';
+import { ProfessionalService } from '../../core/professional.service';
 import { Project } from './project';
 import { ProjectStatus } from './project-status.enum';
 import { Proposal } from './proposal';
@@ -588,7 +588,6 @@ export class ProjectsService {
     return Promise.resolve(this.allProjects);
   }
 
-  // TODO: Update Feature
   update(project: Project, generateProposal?: boolean): Observable<Project> {
 
 
@@ -700,7 +699,7 @@ export class ProjectsService {
           c: Client,
           proposals: Proposal[];
 
-        if (project.Proposta.length) {
+        if (project.Proposta && project.Proposta.length) {
           proposals = project.Proposta.map(proposal => {
             let propStatus: ProposalStatus;
             let prop: Proposal;

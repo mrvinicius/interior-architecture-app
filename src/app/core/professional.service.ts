@@ -1,4 +1,3 @@
-import { AuthService } from './auth.service';
 import { Injectable } from '@angular/core';
 import { RequestOptions, Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
@@ -7,7 +6,8 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch'
 import 'rxjs/add/operator/toPromise';
 
-import { Client } from './../client/shared/client';
+import { AuthService } from './auth.service';
+import { Client } from '../client/shared/client';
 import { Professional } from './professional';
 import { Profession } from '../shared/profession.enum';
 
@@ -24,6 +24,7 @@ export class ProfessionalService {
   }
   professionalChange$: Subject<Professional> = new Subject<Professional>();
   professionalAdded$: Subject<Professional> = new Subject<Professional>();
+  modalDismissed$: Subject<Professional> = new Subject<Professional>();
   allProfessionalsChange$: Subject<Professional[]> = new Subject<Professional[]>();
   private readonly baseUrl: string = 'http://52.67.21.201/muuving/api/profissional';
   private _professional: Professional;
@@ -84,7 +85,7 @@ export class ProfessionalService {
     return this.http.put(this.baseUrl + '/add', data, options)
       .map((response: Response) => {
         let profResp: any = JSON.parse(response.text());
-        let prof: Professional = new Professional(profResp.Nome, profResp.Email, profResp.id);
+        let prof: Professional = new Professional(profResp.Nome, profResp.Email, profResp.Id);
 
         prof.cpfCnpj = profResp.CpfCnpj;
         prof.celular = profResp.Celular;
@@ -134,19 +135,32 @@ export class ProfessionalService {
 
   getAll(take: number = 999, skip?: number): Observable<Professional[]> {
     let options = new RequestOptions({ headers: this.getHeaders() });
-
-    return this.http.post(this.baseUrl + '/getall', {
+    let data = {
       Skip: skip,
       Take: take
-    }, options)
-      .map((response: Response) => {
-        let body = JSON.parse(response.text());
+    };
 
-        return body.map((professional) => {
-          return new Professional(professional.Nome, professional.Email, professional.Id);
-        });
-      })
-      .catch(this.handleError);
+    if (this.allProfessionals === undefined || this.allProfessionals.length < 1) {
+      return this.http.post(this.baseUrl + '/getall', data, options)
+        .map((response: Response) => {
+          let body = JSON.parse(response.text());
+          let professionals: Professional[] = [];
+
+          if (body.length) {
+            professionals = body.map((professional) => {
+              return new Professional(professional.Nome, professional.Email, professional.Id);
+            });
+          }
+
+          this.allProfessionals = professionals;
+          return this.allProfessionals;
+        })
+        .catch(this.handleError);
+    } else {
+      return Observable.of(this.allProfessionals);
+    }
+
+
   }
 
   getOne(id: string): Observable<Professional> {
@@ -171,8 +185,6 @@ export class ProfessionalService {
         professional.CAU = body.Cau;
         professional.addressArea = body.Logradouro;
         professional.addressNumber = body.NumeroLogradouro;
-
-        console.log(professional);
 
         return professional;
       })

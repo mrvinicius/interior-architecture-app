@@ -6,6 +6,7 @@ import { MdlExpansionPanelModule } from '@angular-mdl/expansion-panel';
 import { MdlPopoverModule } from '@angular-mdl/popover';
 import { MdlSelectModule } from '@angular-mdl/select';
 import { MaterializeModule } from 'ng2-materialize';
+import { TagInputModule } from 'ng2-tag-input';
 
 import { AmbienceService } from './shared/ambience.service';
 import { LayoutModule } from '../layout/layout.module';
@@ -21,7 +22,6 @@ import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
-    BrowserAnimationsModule,
     SharedModule,
     FormsModule,
     LayoutModule,
@@ -31,7 +31,10 @@ import { SharedModule } from '../shared/shared.module';
     MdlExpansionPanelModule,
     MdlPopoverModule,
     MdlSelectModule,
+    TagInputModule,
     ReactiveFormsModule,
+    
+    BrowserAnimationsModule,
     ProjectsRoutingModule
   ],
   declarations: [

@@ -40,15 +40,13 @@ $medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width 
 }
 
 .layout-content-container /deep/ .layout-content {
+    height: calc(100vh - 64px);
+    @media only screen and (min-width: #{$small-screen-up}) and (max-width: 1024px) {
+        height: calc(100vh - 56px);
+    }
     &.left-space {
         @media #{$large-and-up} {
             padding-left: 28px;
         }
     }
 }
-
-// img.detailed-icons.medium {
-//     padding: 5px;
-//     height: 4rem;
-//     width: 4rem;
-// }

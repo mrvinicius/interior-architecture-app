@@ -35,9 +35,9 @@
                             <td (click)="redirectToProject(p.title)" class="pointer right-align"><span>{{p.activeProposal.costFinal | currency:'BRL':true}}</span></td>
                             <!--<td (click)="redirectToProject(p.title)" class="pointer right-align"><span *ngIf="p.received">{{p.received}}</span></td>-->
                             <td class="right-align">
-                                <a (click)="disableProject(p.id)" class="btn-floating btn-small waves-effect waves-dark transparent table-action-cell" style="box-shadow: none">
-                                <i class="material-icons mv-red-light-text">delete</i>
-                            </a>
+                                <a (click)="disableProject(p.id)" class="btn-floating btn-small waves-effect waves-dark transparent table-action-cell" style="box-shadow: none; line-height: 1; height: inherit;">
+                                    <i class="material-icons mv-red-light-text" style="line-height: 1;">delete</i>
+                                </a>
                             </td>
                         </tr>
                     </ng-container>
@@ -45,7 +45,14 @@
             </table>
         </ng-container>
     </div>
-    <div *ngIf="projects && projects.length < 1" class="center-align">
-        <h5>Você ainda não adicionou projetos</h5>
+    <div *ngIf="projects && projects.length < 1" class="background-center-container">
+        <div class="background-circle white"></div>
+        <div class="empty-page-content">
+            <i class="material-icons large grey-text text-lighten-1">library_books</i>
+            <div class="bottom-text">
+                <div class="dim-text" style="font-size: 1.2rem;">Clique no "+"</div>
+                <div class="dim-text">para adicionar projetos</div>
+            </div>
+        </div>
     </div>
 </main>

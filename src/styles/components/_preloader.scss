@@ -8,3 +8,18 @@ mz-spinner.tiny {
         @extend .tiny;
     }
 }
+
+mz-spinner {
+    &.mv-red-light {
+        background-color: transparent !important;
+        .spinner-layer {
+            border-color: $mv-red-light;
+        }
+    }
+    &.mv-wine {
+        background-color: transparent !important;
+        .spinner-layer {
+            border-color: $mv-wine;
+        }
+    }
+}

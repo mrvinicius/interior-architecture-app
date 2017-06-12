@@ -1,0 +1,38 @@
+<div class="asude-layout__header right-align">
+  <a (click)="closeEditor()" id="btn-dropdown" class="mdl-layout__drawer-button left btn-floating btn-small waves-effect waves-dark transparent table-action-cell"
+    style="box-shadow: none">
+      <i class="material-icons" style="color: rgba(0, 0, 0, 0.5); font-size: 26px;">navigate_before</i>
+    </a>
+  <a (click)="disableClient(client.id)" id="btn-dropdown" class="mdl-layout__drawer-button btn-floating btn-small waves-effect waves-dark transparent table-action-cell"
+    style="box-shadow: none">
+      <i class="material-icons" style="color: rgba(0, 0, 0, 0.5)">delete</i>
+    </a>
+</div>
+<div class="aside-layout__content">
+  <form *ngIf="clientForm" [formGroup]="clientForm">
+    <mz-input-container>
+      <input mz-input formControlName="name" label="nome" id='clientName' type='text'>
+    </mz-input-container>
+    <mz-input-container>
+      <input mz-input formControlName="email" label="email" id='clientEmail' type='text'>
+    </mz-input-container>
+    <div class="u-radio-group">
+      <label>gênero</label>
+      <mz-radio-button-container>
+        <input mz-radio-button formControlName="clientGenderOpt" [checked]="clientForm.value.clientGenderOpt === 'F' ? true : null"
+          label="Feminino" id='femaleOpt' value="F" type="radio" />
+      </mz-radio-button-container>
+      <mz-radio-button-container>
+        <input mz-radio-button formControlName="clientGenderOpt" [checked]="clientForm.value.clientGenderOpt === 'M' ? true : null"
+          label="Masculino" id='maleOpt' value="M" type="radio" />
+      </mz-radio-button-container>
+    </div>
+    <mz-input-container>
+      <input mz-input formControlName="cpfCnpj" label="CPF ou CNPJ" name='CpfCnpj' id='cpfCnpj' type='text'>
+    </mz-input-container>
+  </form>
+  <div class="divider" style="margin-bottom: 0.75rem;"></div>
+  <div class="right-align">
+    <button (click)="updateClient()" [disabled]="clientForm.invalid" class="btn-flat waves-effect waves-light" type="button">Salvar</button>
+  </div>
+</div>

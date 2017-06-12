@@ -11,6 +11,7 @@ import { ProjectsService } from '../shared/projects.service';
         <mz-modal class="small-modal">
             <mz-modal-header>
                 Adicionar profissional
+                
             </mz-modal-header>
             <mz-modal-content>
                 <form #newPartnerForm="ngForm">
@@ -25,7 +26,8 @@ import { ProjectsService } from '../shared/projects.service';
                     <mz-input-container>
                         <input mz-input (keyup.enter)="submit(newPartnerForm.value, newPartnerForm.valid)"
                             [(ngModel)]="partnerEmail"
-                            [validate]="true" id="email"
+                            [validate]="true"
+                            id="partnerEmail"
                             name='Email' label='email'
                             type="email"
                             required>

@@ -1,11 +1,11 @@
-import { Project } from './project';
 import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
-import { ClientService } from './../../client/shared/client.service';
-import { ProfessionalService } from './../../core/professional.service';
-import { AuthService } from './../../core/auth.service';
+import { AuthService } from '../../core/auth.service';
+import { ClientService } from '../../client/shared/client.service';
+import { ProfessionalService } from '../../core/professional.service';
+import { Project } from './project';
 
 @Injectable()
 export class ProposalService {
