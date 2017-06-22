@@ -3,7 +3,7 @@ import { RequestOptions, Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch'
+import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/toPromise';
 
 import { AuthService } from './auth.service';
@@ -220,7 +220,14 @@ export class ProfessionalService {
           prof.celular = profResp.Celular;
           prof.profession = ProfessionalService.professionIds[profResp.ProfissaoId];
           prof.description = profResp.Descricao;
-          prof.password = profResp.Senha;
+          prof.gender = profResp.Genero;
+          prof.maritalStatus = profResp.EstadoCivil;
+          prof.nacionality = profResp.Nacionalidade;
+          prof.CAU = profResp.Cau;
+          prof.CEP = profResp.CEP;
+          prof.paying = profResp.Assinante;
+          prof.addressArea = profResp.Logradouro;
+          prof.addressNumber = profResp.NumeroLogradouro;
           this._professional = prof;
           this.auth.login(prof);
         }
@@ -274,8 +281,15 @@ export class ProfessionalService {
       NumeroLogradouro: this._professional.addressNumber
     };
 
-    if (this._professional.password)
+
+    if (prof.password) {
       data.Senha = this._professional.password;
+    }
+
+    if (data.Senha) {
+      console.log(data.Senha);
+      alert('Senha alterada')
+    }
 
     // console.log(data);
 

@@ -19,6 +19,7 @@ import { ProjectsComponent } from './projects.component';
 import { ProjectsRoutingModule } from './projects-routing.module';
 import { ProposalService } from './shared/proposal.service';
 import { SharedModule } from '../shared/shared.module';
+import { ProjectProposalPreviewComponent } from './project-proposal-preview/project-proposal-preview.component';
 
 @NgModule({
   imports: [
@@ -43,6 +44,7 @@ import { SharedModule } from '../shared/shared.module';
     ProjectsComponent,
     ProjectListComponent,
     ProjectManagerComponent,
+    ProjectProposalPreviewComponent,
   ],
   providers: [],
   entryComponents: [

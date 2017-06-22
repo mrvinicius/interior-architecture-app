@@ -12,13 +12,13 @@ import { MzModalService, MzBaseModal } from "ng2-materialize";
     template: `
         <mz-modal class="small-modal">
             <mz-modal-header>
-              Preencher perfil?
+              Perfil incompleto
             </mz-modal-header>
             <mz-modal-content>
                 <h6 class="black-secondary-text" style="margin-top: 0">A proposta depende de alguns dados do seu perfil para ser gerada. Tente novamente após completa-lo.</h6>
             </mz-modal-content>
             <mz-modal-footer>
-                <a mz-button routerLink="/perfil" [flat]="true" type="button" mz-modal-close>Preencher</a>
+                <a mz-button routerLink="/perfil" [flat]="true" type="button" mz-modal-close>Completar</a>
                 <button mz-button [flat]="true" type="button" mz-modal-close>Cancelar</button>
             </mz-modal-footer>
         </mz-modal>

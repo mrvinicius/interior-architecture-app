@@ -3,6 +3,9 @@
     Novo cliente
   </mz-modal-header>
   <mz-modal-content>
+    <ng-container *ngIf="errorMessages && errorMessages.length">
+      <p *ngFor="let msg of errorMessages" class="red-text" style="margin: 0;">{{msg}}</p>
+    </ng-container>
     <form *ngIf="clientForm" [formGroup]="clientForm">
       <mz-input-container class="u-no-margin-top">
         <input mz-input formControlName="name" label="nome" id='newClientName' type='text'>

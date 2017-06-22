@@ -1,4 +1,4 @@
-import { Professional } from './../../core/professional';
+import { Professional } from '../../core/professional';
 import { CreditCardInfo } from './credit-card-info';
 
 
@@ -11,7 +11,6 @@ export interface BillingInfo {
     value?: number;
     quantity?: number;
     recurringBilling?: boolean;
-    planIdentifier?: string;
+    planIdentifier: string;
     expirationDate?: Date;
-
 }

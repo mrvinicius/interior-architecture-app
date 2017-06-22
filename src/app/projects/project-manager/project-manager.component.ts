@@ -40,6 +40,7 @@ import { SpinnerService } from '../../core/spinner/spinner.service';
 import { TimeUnity } from '../../shared/time-unity.enum';
 import { UF } from '../../shared/uf.enum';
 import { UtilsService } from '../../shared/utils/utils.service';
+import { WindowRef } from '../../core/window-ref.service';
 
 @Component({
   selector: 'mbp-project-manager',
@@ -61,19 +62,18 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
   project: Project;
   projectSlugTitle: string;
   services: string[];
-  // ufs: string[];
+  nativeWindow: any;
   mascaraReal = createNumberMask({
     prefix: 'R$',
     thousandsSeparatorSymbol: '.',
-    decimalSymbol: ',',
-    // allowLeadingZeroes: true,
-    allowDecimal: true,
-    // requireDecimal: true
+    decimalSymbol: ',', // allowLeadingZeroes: true,
+    allowDecimal: true, // requireDecimal: true
   });
   allBanks: Bank[];
   bankAccounts: BankAccount[];
 
   // Refers to Client section variables
+  clientErrorMessages: string[];
   clientDataHasChanged: boolean;
   clientDataBeingSaved: boolean;
   clientSaved: boolean = true;
@@ -146,13 +146,15 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     private propService: ProposalService,
     private router: Router,
     private spinnerService: SpinnerService,
-
+    private winRef: WindowRef
   ) {
     // this.ufs = UtilsService.getEnumArray(UF);
     this.ambienceDescriptions = UtilsService.getEnumArray(AmbienceDescription);
     this.deliveryDescriptions = UtilsService.getEnumArray(DeliveryDescription);
     this.services = UtilsService.getEnumArray(Service);
     this.profService.getCurrentProfessional().subscribe(prof => this.professional = prof);
+    this.nativeWindow = winRef.getNativeWindow();
+    console.log(this.router.url);
 
   }
 
@@ -212,12 +214,24 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
       this.spinnerService.toggleLoadingIndicator(false);
       this.modalService.open(IncompleteProfileModalComponent);
     } else {
-      this.saveProjectInfo((success) => {
-        if (success) {
-          window.open(this.project.activeProposal.url, '_blank');
-          this.spinnerService.toggleLoadingIndicator(false);
-        }
-      }, true);
+      if (this.project.client && this.project.client.id) {
+        this.openProposal(this.router.url + '/proposta/'
+          + this.project.id);
+        this.spinnerService.toggleLoadingIndicator(false);
+      } else {
+        this.spinnerService.toggleLoadingIndicator(false);
+        this.toastService.show('Selecione um cliente', 2500);
+
+      }
+      // this.saveProjectInfo((success) => {
+      //   if (success) {
+      //     // this.router.navigate
+      //     this.openProposal(this.router.url + '/proposta/'
+      //       + this.project.id);
+      //     // window.open(this.project.activeProposal.url, '_blank');
+      //     this.spinnerService.toggleLoadingIndicator(false);
+      //   }
+      // }, true);
     }
   }
 
@@ -229,13 +243,19 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     return this.projectsService.allProjects;
   }
 
+  showclientstate() {
+    console.log(this.clientDataBeingSaved);
+    console.log(this.clientForm.value);
+    console.log(this.project);
+
+  }
+
   ngOnInit() {
     this.activateRoute.data
       .subscribe((data: { project: Project }) => {
         this.project = data.project;
         console.log(this.project);
 
-        // this.project.activeProposal = 
         this.clientForm = this.createClientForm(this.project);
         this.clientFormChangesSubscription = this.subscribeToFormChanges(this.clientForm, () => {
           this.clientDataHasChanged = true;
@@ -243,17 +263,32 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
           if (!this.clientDataBeingSaved) {
             this.clientDataHasChanged = false;
             this.clientDataBeingSaved = true;
-            this.saveClientInfo().subscribe(client => {
-              if (client !== undefined) {
-                this.project.client = client;
-                this.clientForm.value.clientId = client.id;
+            this.saveClientInfo().subscribe((resp) => {
+              this.clientErrorMessages = [];
 
-                this.saveProjectInfo((success) => {
-                  if (success) {
-                    this.clientDataBeingSaved = false;
+              if (resp !== undefined) {
+                if (resp.HasError) {
+                  this.clientErrorMessages = resp.errorMessages;
+                  this.clientDataBeingSaved = false;
+                } else {
+                  if (resp.client !== undefined) {
+                    this.project.client = resp.client;
+                    this.clientForm.value.clientId = resp.client.id;
+                  } else if (resp instanceof Client) {
+                    this.project.client = resp;
+                    this.clientForm.value.clientId = resp.id;
                   }
-                });
+
+                  this.clientForm.reset();
+                  this.saveProjectInfo((success) => {
+                    if (success) {
+                      this.clientDataBeingSaved = false;
+                    }
+                  });
+                }
+
               } else {
+                // this.project.client = undefined;
                 this.clientDataBeingSaved = false;
               }
             });
@@ -262,26 +297,27 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
         const cpfCnpjChange$ = this.clientForm.get('cpfCnpj').valueChanges;
         cpfCnpjChange$.debounceTime(250).subscribe((cpfCnpj: string) => {
           // console.log('cpfCnpj', cpfCnpj);
-          let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
+          if (cpfCnpj) {
+            let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
 
-          let mask;
+            let mask;
 
-          if (cleanCpfCnpj.length < 12) {
-            mask = UtilsService.cpfMask;
-          } else {
-            mask = UtilsService.cnpjMask;
+            if (cleanCpfCnpj.length < 12) {
+              mask = UtilsService.cpfMask;
+            } else {
+              mask = UtilsService.cnpjMask;
+            }
+
+            let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
+              guide: false,
+              placeholderChar: '\u2000'
+            });
+
+            this.clientForm.get('cpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
+              onlySelf: false,
+              emitEvent: false
+            })
           }
-
-          let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
-            guide: false,
-            placeholderChar: '\u2000'
-          });
-
-          this.clientForm.get('cpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
-            onlySelf: false,
-            emitEvent: false,
-
-          })
         });
 
         this.locationForm = this.createLocationForm(this.project);
@@ -305,8 +341,10 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
         const cepChange$ = this.locationForm.get('CEP').valueChanges;
         cepChange$.debounceTime(200).subscribe((cep: string) => {
-          let cleanCep = cep.replace(/\D/g, '');
-          this.findLocationByCEP(cleanCep);
+          if (cep) {
+            let cleanCep = cep.replace(/\D/g, '');
+            this.findLocationByCEP(cleanCep);
+          }
         });
 
         this.profForm =
@@ -338,46 +376,8 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
           });
 
 
-        this.partnersForm =
-          this.createPartnersForm(this.project.activeProposal.professionalsIds);
-        const partnersChange$ = this.partnersForm.get('partners').valueChanges;
-        partnersChange$.do((profs: any[]) => {
-          console.log(profs);
-          let addOptionIndex = profs.findIndex(obj => obj.value === 'new');
-
-          if (addOptionIndex !== -1) {
-            profs.splice(addOptionIndex, 1);
-
-            this.partnersForm.get('partners').setValue(profs, {
-              onlySelf: false,
-              emitEvent: false
-            })
-            this.openNewPartnerModal()
-          } else {
-            this.project.activeProposal.professionalsIds = profs.map(p => { return p.value })
-            console.log(this.project.activeProposal.professionalsIds);
-            
-            this.partnersDataHasChanges = true;
-          }
 
 
-
-        }).debounceTime(3000).subscribe(profs => {
-          if (!this.partnersDataBeingSaved) {
-            this.partnersDataHasChanges = false;
-            this.partnersDataBeingSaved = true;
-            this.saveProjectInfo((success) => {
-              console.log(success);
-              
-              if (success) {
-                this.partnersDataBeingSaved = false;
-              } else {
-                this.partnersDataBeingSaved = false;
-              }
-            })
-          }
-
-        });
 
 
         let deliveriesIndexes: number[] = [];
@@ -441,6 +441,9 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
         finalCostChanges$.debounceTime(3000).subscribe(value => {
           this.spinnerService.toggleLoadingIndicator(true);
           this.project.activeProposal.costFinal = UtilsService.parseMonetaryString(value)
+
+          if (!this.project.activeProposal.costFinal)
+            this.project.activeProposal.costFinal = 0;
 
           this.saveProjectInfo((success) => {
             this.spinnerService.toggleLoadingIndicator(false);
@@ -743,6 +746,16 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
   }
 
+  protected openProposal(path: string): void {
+    var newWindow = this.nativeWindow.open(path);
+    // this.Service.assignActivity(type).subscribe(res => {
+
+    //   newWindow.location = '/#/link/' + res;
+    //   console.log(res);
+    // })
+  }
+
+
   private createAmbienceForm(ambience: Ambience): FormGroup {
     // let description = ambience.description ? ambience.description : '';
     let description =
@@ -838,12 +851,62 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
   }
 
+  setPartnersForm(): boolean {
+    if (this.partnersForm === undefined && this.professionals) {
+      console.log('form undefined');
+
+      this.partnersForm =
+        this.createPartnersForm(this.project.activeProposal.professionalsIds);
+      const partnersChange$ = this.partnersForm.get('partners').valueChanges;
+      partnersChange$.do((profs: any[]) => {
+        console.log(profs);
+        let addOptionIndex = profs.findIndex(obj => obj.value === 'new');
+
+        if (addOptionIndex !== -1) {
+          profs.splice(addOptionIndex, 1);
+
+          this.partnersForm.get('partners').setValue(profs, {
+            onlySelf: false,
+            emitEvent: false
+          })
+          this.openNewPartnerModal()
+        } else {
+          this.project.activeProposal.professionalsIds = profs.map(p => { return p.value })
+          console.log(this.project.activeProposal.professionalsIds);
+
+          this.partnersDataHasChanges = true;
+        }
+
+
+
+      }).debounceTime(3000).subscribe(profs => {
+        if (!this.partnersDataBeingSaved) {
+          this.partnersDataHasChanges = false;
+          this.partnersDataBeingSaved = true;
+          this.saveProjectInfo((success) => {
+            if (success) {
+              this.partnersDataBeingSaved = false;
+            } else {
+              this.partnersDataBeingSaved = false;
+            }
+          })
+        }
+
+      });
+
+    }
+    return true;
+  }
+
   private createPartnersForm(ids: any[]): FormGroup {
-    let chipsData: any[] = this.getPartnersByIds(ids).map((prof: any) => {
-      prof.display = prof.name;
-      prof.value = prof.id;
-      return prof;
-    })
+    let chipsData: any[] = [];
+    if (ids && ids.length) {
+      chipsData = this.getPartnersByIds(ids).map((prof: any) => {
+        prof.value = prof.id;
+        prof.display = prof.name;
+        return prof;
+      });
+    }
 
     return this.fb.group({
       partners: [chipsData]
@@ -851,6 +914,8 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
   }
 
   private createPaymentForm(costFinal: number): FormGroup {
+    if (!costFinal) costFinal = 0
+
     return this.fb.group({
       cost: [costFinal],
     });
@@ -995,7 +1060,7 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     }
   }
 
-  private saveClientInfo(): Observable<Client> {
+  private saveClientInfo(): Observable<any> {
     let briefing = this.clientForm.value.briefing;
     // let ufId = this.clientForm.value.ufId;
     let selectedClientId = this.clientForm.value.clientId;
@@ -1018,16 +1083,33 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
         gender: newClientGender
       };
 
-      console.log(newClientGender);
+      let newClientValid = Boolean(newClient.name)
+        && newClient.name.length > 0
+        && Boolean(newClient.email)
+        && UtilsService.isEmail(newClient.email)
+        && UtilsService.isCpfCnpj(newClient.cpfCnpj)
+        && (newClientGender === 'M'
+          || newClientGender === 'F');
 
-      let newClientValid = newClient.name && newClient.name.length > 0 &&
-        newClient.email && UtilsService.isEmail(newClient.email) &&
-        newClient.cpfCnpj && newClient.cpfCnpj.length === 14 ||
-        newClient.cpfCnpj.length === 18 && UtilsService.isCpfCnpj(newClient.cpfCnpj) &&
-        newClientGender === 'M' || newClientGender === 'F';
+      // console.log(newClientValid);
 
-      if (newClientValid) {
-        this.clientForm.reset();
+      // console.log(
+      //   Boolean(newClient.name),
+      //   newClient.name.length > 0,
+      //   Boolean(newClient.email),
+      //   UtilsService.isEmail(newClient.email),
+      //   Boolean(newClient.cpfCnpj),
+      //   newClient.cpfCnpj.length === 14,
+      //   newClient.cpfCnpj.length === 18,
+      //   UtilsService.isCpfCnpj(newClient.cpfCnpj),
+      //   newClientGender === 'M',
+      //   newClientGender === 'F');
+
+
+      if (newClientValid
+        && Boolean(newClient.cpfCnpj)
+        && (newClient.cpfCnpj.length === 14
+          || newClient.cpfCnpj.length === 18)) {
         return this.clientService
           .addByProfessional(newClient, this.professional.id);
       } else {

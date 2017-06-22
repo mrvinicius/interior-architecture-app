@@ -19,8 +19,8 @@ export class ProjectManagerResolver implements Resolve<Project> {
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<Project> {
         let title = route.params['title'];
-        
         let project = this.projectService.getOneBySlugTitle(title);
+        
         if (!project) this.router.navigate(['/projetos']);
         return Promise.resolve(project ? project : null);
 

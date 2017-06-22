@@ -1,3 +1,4 @@
+import { SpinnerService } from './../../core/spinner/spinner.service';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -21,6 +22,7 @@ import { UtilsService } from '../../shared/utils/utils.service';
 export class BillingModalComponent extends MzBaseModal implements OnInit {
   billingForm: FormGroup;
   cardNumberMask = UtilsService.creditCardNumberMask;
+  errorMessages: string[];
   expirationDatePipe = createAutoCorrectedDatePipe('mm/yy');
   expirationDateMask = [/\d/, /\d/, '/', /\d/, /\d/];
   cvcMask = UtilsService.cardVerificationCode;
@@ -28,7 +30,8 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
   constructor(
     private billingService: BillingService,
     private fb: FormBuilder,
-    private profService: ProfessionalService
+    private profService: ProfessionalService,
+    private spinnerService: SpinnerService
   ) {
     super();
     this.billingForm = this.createBillingForm();
@@ -39,6 +42,8 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
   }
 
   saveBillingInfo(formData) {
+    this.spinnerService.toggleLoadingIndicator(true);
+    this.errorMessages = [];
     console.log(formData);
 
     let cardNumber: string = formData.cardNumber.replace(/ /g, '');
@@ -50,6 +55,7 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
     let billingInfo: BillingInfo = {
       professionalId: this.profService.professional.id,
       description: 'Assinatura',
+      planIdentifier: formData.planIdentifier,
       firstName: formData.firstName,
       lastName: formData.lastName,
       creditCardInfo: {
@@ -63,9 +69,10 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
     console.log(billingInfo);
 
     this.billingService.addBillingInfo(billingInfo).subscribe(resp => {
-      console.log(resp);
+      this.spinnerService.toggleLoadingIndicator(false);
 
       if (resp.HasError) {
+        this.errorMessages = resp.errorMessages;
         return;
       } else {
         this.profService.professional.paying = true;
@@ -75,6 +82,8 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
   }
 
   updateProfessional() {
+    console.log(this.profService.professional);
+    
     this.profService.update(this.profService.professional).subscribe(resp => {
       console.log(resp);
 
@@ -95,6 +104,7 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
       CVC: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
+      planIdentifier: ['plano_avulso', Validators.required]
     })
   }
 

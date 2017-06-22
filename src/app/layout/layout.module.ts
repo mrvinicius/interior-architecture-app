@@ -4,10 +4,12 @@ import { RouterModule } from '@angular/router';
 import { MdlModule, MdlLayoutModule } from '@angular-mdl/core';
 import { MdlPopoverModule } from '@angular-mdl/popover';
 
-import { LayoutComponent } from './layout.component';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import { BreadcrumbsService } from './shared/breadcrumbs.service';
+import { LayoutComponent } from './layout.component';
+import { LayoutContentService } from './shared/layout-content.service';
 import { LayoutHeaderService } from './shared/layout-header.service';
+import { LayoutSidebarService } from './shared/layout-sidebar.service';
 
 @NgModule({
   imports: [
@@ -34,7 +36,9 @@ export class LayoutModule {
       // Add Services that should have only one instance - Singletons - App-wide
       providers: [
         BreadcrumbsService,
-        LayoutHeaderService
+        LayoutContentService,
+        LayoutHeaderService,
+        LayoutSidebarService
       ]
     };
   }

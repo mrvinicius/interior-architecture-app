@@ -1,4 +1,3 @@
-import { UserService } from './user.service';
 import {
   ModuleWithProviders, NgModule,
   Optional, SkipSelf
@@ -8,10 +7,12 @@ import { MaterializeModule } from 'ng2-materialize';
 
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
+import { CanDeactivateGuard } from './can-deactivate-guard.service';
 import { ProfessionalService } from './professional.service';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { SpinnerService } from './spinner/spinner.service';
-import { CanDeactivateGuard } from './can-deactivate-guard.service';
+import { UserService } from './user.service';
+import { WindowRef } from './window-ref.service';
 
 @NgModule({
   imports: [
@@ -44,6 +45,7 @@ export class CoreModule {
         ProfessionalService,
         SpinnerService,
         UserService,
+        WindowRef
       ]
     };
   }

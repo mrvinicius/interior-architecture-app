@@ -1,5 +1,16 @@
 <div class="fixed-action-btn">
-    <a (click)="openNewProjectModal()" class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">add</i></a>
+    <a (click)="openNewProjectModal()" [ngClass]="{pulse: projects && projects.length < 1}" class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">add</i></a>
+</div>
+
+<div *ngIf="projects && projects.length < 1" class="background-center-container">
+    <div class="background-circle white"></div>
+    <div class="empty-page-content">
+        <i class="material-icons large grey-text text-lighten-1">library_books</i>
+        <div class="bottom-text">
+            <div class="dim-text" style="font-size: 1.2rem; font-weight: bold;">Clique no "+"</div>
+            <div class="dim-text">para adicionar projetos</div>
+        </div>
+    </div>
 </div>
 
 <main class="layout-content left-space u-row">
@@ -10,7 +21,7 @@
                     <tr>
                         <th data-field="title">Projeto</th>
                         <th data-field="client" class="hide-on-small-only">Cliente</th>
-                        <th data-field="wasPaid" class="hide-on-small-only">Pagamento</th>
+                        <!--<th data-field="wasPaid" class="hide-on-small-only">Pagamento</th>-->
                         <!--<th data-field="status" hidden>Status</th>-->
                         <th data-field="received" class="right-align">Valor</th>
 
@@ -23,7 +34,7 @@
                         <tr *ngIf="p.isActive">
                             <td (click)="redirectToProject(p.title)" class="pointer">{{p.title}}</td>
                             <td (click)="redirectToProject(p.title)" class="pointer hide-on-small-only"><span *ngIf="p.client && p.client.id">{{getClientName(p.client.id)}}</span></td>
-                            <td (click)="redirectToProject(p.title)" class="pointer hide-on-small-only"><span *ngIf="p.wasPaid !== null">{{p.wasPaid ? 'Pago' : 'Pendente'}}</span></td>
+                            <!--<td (click)="redirectToProject(p.title)" class="pointer hide-on-small-only"><span *ngIf="p.wasPaid !== null">{{p.wasPaid ? 'Pago' : 'Pendente'}}</span></td>-->
                             <!--<td hidden>
                             <div *ngIf="p.status !== null" [ngSwitch]="p.status">
                                 <span *ngSwitchCase="ProjectStatus.Waiting">Aguardando</span>
@@ -45,14 +56,5 @@
             </table>
         </ng-container>
     </div>
-    <div *ngIf="projects && projects.length < 1" class="background-center-container">
-        <div class="background-circle white"></div>
-        <div class="empty-page-content">
-            <i class="material-icons large grey-text text-lighten-1">library_books</i>
-            <div class="bottom-text">
-                <div class="dim-text" style="font-size: 1.2rem;">Clique no "+"</div>
-                <div class="dim-text">para adicionar projetos</div>
-            </div>
-        </div>
-    </div>
+
 </main>

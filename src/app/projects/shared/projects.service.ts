@@ -344,7 +344,7 @@ export class ProjectsService {
       "IsActive": true,
       "Proposta": [
         {
-          "Descricao": " ",
+          "Descricao": "",
           "ValorCobrado": 0,
           "ValorRecebido": 0,
           "NumeroComodos": 0,
@@ -555,10 +555,168 @@ export class ProjectsService {
 
   }
 
-  getOne(id: string): Project {
-    return this.allProjects.find((project: Project) => {
-      return project.id === id;
-    });
+  private getFromBackEnd(id: string): Observable<Project> {
+    let options = new RequestOptions({ headers: this.getHeaders() });
+
+    return this.http.get(this.baseUrl + '/getone?id=' + id, options)
+      .map((response: Response) => {
+        let project = JSON.parse(response.text());
+        // let client = new Client(body.Nome, body.Email, body.ID);
+        // client.cpfCnpj = body.CpfCnpj;
+        let activeProposal: Proposal,
+          p: Project,
+          c: Client;
+
+        // TODO: Get last and active proposal
+        let ambiences: Ambience[] = project.ProjetoComodo.map(ambience => {
+          let amb: Ambience = new Ambience(ambience.ComodoId);
+
+          if (ambience.Descricao in AmbienceDescription) {
+            amb.ambienceDescription = AmbienceDescription[AmbienceDescription[ProjectsService.ambienceDescriptionIds[ambience.ComodoId]]]
+          }
+
+          let services: Service[] = ambience.ProjetoComodoServicos.map(service => {
+            return Service[Service[ProjectsService.servicesIds[service.TipoServicoId]]]
+          });
+
+          amb.services = services;
+
+          amb.comments = ambience.Observacao;
+          amb.area = ambience.MetragemArea;
+          amb.cost = ambience.Valor;
+          amb.isActive = ambience.IsActive;
+
+          return amb;
+        });
+
+        let proposals: Proposal[] = project.Proposta.map(proposal => {
+          let propStatus: ProposalStatus;
+          let prop: Proposal;
+
+          switch (proposal.StatusId.toUpperCase()) {
+            case ProjectsService.proposalStatusIds.Approved.toUpperCase():
+              propStatus = ProposalStatus.Approved;
+              break;
+            case ProjectsService.proposalStatusIds.Deprecated.toUpperCase():
+              propStatus = ProposalStatus.Deprecated;
+              break;
+            case ProjectsService.proposalStatusIds.Disabled.toUpperCase():
+              propStatus = ProposalStatus.Disabled;
+              break;
+            case ProjectsService.proposalStatusIds.Waiting.toUpperCase():
+              propStatus = ProposalStatus.Waiting;
+              break;
+            case ProjectsService.proposalStatusIds.NotSent.toUpperCase():
+              propStatus = ProposalStatus.NotSent;
+              break;
+            default:
+              console.error('Status de proposta inválido: ', proposal.StatusId);
+              propStatus = ProposalStatus.NotSent;
+              break;
+          }
+
+          prop = new Proposal(
+            proposal.ValorRecebido === 0 ? false : true,
+            propStatus,
+            proposal.Id
+          );
+
+          if (proposal.ContaBancariaId) {
+            prop.bankAccount = new BankAccount(
+              // proposal.ContaBancaria.Agencia,
+              // proposal.ContaBancaria.Conta,
+              // proposal.ContaBancaria.DigitoConta,
+              // proposal.ContaBancaria.Id,
+            );
+            prop.bankAccount.id = proposal.ContaBancariaId;
+
+            if (proposal.BancoId) {
+              prop.bankAccount.bank = new Bank(
+                proposal.BancoId
+                // proposal.ContaBancaria.Banco.Id,
+                // proposal.ContaBancaria.Banco.Nome,
+                // proposal.ContaBancaria.Banco.NomeCompleto,
+              );
+            }
+          }
+
+          prop.deadlineCount = proposal.Prazo;
+          prop.deadlineTimeUnity = ProjectsService.timeUnityIds[proposal.TempoId];
+          prop.url = proposal.UrlPreview;
+          prop.intro = proposal.Descricao;
+          prop.cost = proposal.CustoTotal;
+          prop.costToClient = proposal.ValorCobrado;
+          prop.costToReceive = proposal.ValorRecebido;
+          prop.costFinal = proposal.ValorFatura;
+          prop.followUp = proposal.AcompanhamentoObra;
+
+          if (proposal.PropostaEntrega.length) {
+            prop.deliveries = proposal.PropostaEntrega.map(delivery => {
+
+              let d: Delivery = new Delivery();
+              d.deliveryDescription = ProjectsService.deliveryIds[delivery.TipoEntregaId];
+              d.duration = delivery.Prazo;
+              d.durationTimeUnity = ProjectsService.timeUnityIds[delivery.TempoId];
+
+
+              return d;
+            });
+          }
+
+          prop.professionalsIds =
+            proposal.PropostaProfissionaisParticipantes.map(professional => {
+              return professional.ProfissionalId;
+            });
+
+          return prop;
+        });
+
+        let currentProf =
+          new Professional(this.auth.getCurrentUser().name, this.auth.getCurrentUser().email, this.auth.getCurrentUser().id);
+
+        c = new Client();
+        p = new Project(activeProposal, project.Id, project.Descricao, currentProf);
+        p.isActive = project.IsActive;
+        p.ambiences = ambiences;
+        p.proposals = proposals;
+        p.UF = project.UF;
+        p.CEP = project.CEP;
+        p.addressArea = project.Logradouro;
+        p.addressNumber = project.NumeroLogradouro;
+        p.neighborhood = project.Bairro;
+        p.city = project.Cidade;
+
+        if (proposals.length > 0) {
+          p.activeProposal = proposals[proposals.length - 1]
+        } else {
+          p.isActive = false;
+          new Proposal(false, ProposalStatus.NotSent);
+        }
+
+        c.id = project.ClienteId;
+        p.client = c;
+        p.briefing = project.Briefing;
+
+        return p;
+        // return client;
+      })
+      .catch(this.handleError);
+  }
+
+  getOneById(id: string, fromBackEnd?: boolean): Observable<Project> {
+    if (fromBackEnd) {
+      return this.getFromBackEnd(id);
+    } else {
+      if (this.allProjects !== undefined && this.allProjects.length) {
+        let project = this.allProjects.find((project: Project) => {
+          return project.id === id;
+        });
+
+        return Observable.of(project);
+      } else {
+        return this.getFromBackEnd(id);
+      }
+    }
   }
 
   getProjectsByTitle(title: string): Observable<Project> {
@@ -639,29 +797,30 @@ export class ProjectsService {
     if (project.ambiences.length) {
       projectData.Proposta[0].NumeroComodos = project.ambiences.length;
       project.ambiences.forEach(ambience => {
-        let ambienceData: any = {
-          "ProjetoId": project.id,
-          "ComodoId": ambience.id,
-          "GrupoServicoId": ProjectsService.servicesGroupIds[ambience.servicesGroup],
-          "Descricao": AmbienceDescription[ambience.ambienceDescription],
-          "MetragemArea": ambience.area,
-          "IsActive": ambience.isActive,
-          "Observacao": ambience.comments,
-          "ProjetoComodoServicos": [],
-          // "MemorialDescritivo": "descrição detalhada",
-          // "Valor": ambience.cost,
-        };
+        if (ambience.area && ambience.services && ambience.services.length) {
+          let ambienceData: any = {
+            "ProjetoId": project.id,
+            "ComodoId": ambience.id,
+            "GrupoServicoId": ProjectsService.servicesGroupIds[ambience.servicesGroup],
+            "Descricao": AmbienceDescription[ambience.ambienceDescription],
+            "MetragemArea": ambience.area,
+            "IsActive": ambience.isActive,
+            "Observacao": ambience.comments,
+            "ProjetoComodoServicos": []
+            // "MemorialDescritivo": "descrição detalhada",
+            // "Valor": ambience.cost,
+          };
 
-        if (ambience.services !== undefined) {
           ambience.services.forEach(service => {
             ambienceData.ProjetoComodoServicos.push({
               'TipoServicoId': ProjectsService.servicesIds[service]
             });
           })
 
+          projectData.ProjetoComodo.push(ambienceData);
+        } else {
+          return;
         }
-
-        projectData.ProjetoComodo.push(ambienceData);
       });
     }
 

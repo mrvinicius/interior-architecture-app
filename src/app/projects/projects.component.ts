@@ -17,7 +17,6 @@ import { AmbienceService } from './shared/ambience.service';
 export class ProjectsComponent implements OnInit {
 
   constructor(
-    // private clientsService: ClientService
     private profService: ProfessionalService,
     private projectsService: ProjectsService,
     private projectServService: ProjectServicesService,

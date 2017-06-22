@@ -67,11 +67,7 @@ export class ClientEditorComponent implements OnInit, OnDestroy {
     private spinnerService: SpinnerService
   ) { }
 
-  ngOnInit() {
-    console.log('init');
-
-
-  }
+  ngOnInit() { }
 
   ngOnDestroy() {
     this.cpfCnpjChangesSubscription$.unsubscribe();
@@ -104,8 +100,7 @@ export class ClientEditorComponent implements OnInit, OnDestroy {
       cpfCnpj: this.clientForm.value.cpfCnpj,
       isActive: true
     }
-
-
+    
     if (Boolean(c.cpfCnpj) && Boolean(c.email) && Boolean(c.name) && Boolean(c.gender)) {
       this.update.emit(c);
       console.log('valid data');

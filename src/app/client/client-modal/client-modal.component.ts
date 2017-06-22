@@ -21,6 +21,7 @@ import { UtilsService } from '../../shared/utils/utils.service';
 })
 export class ClientModalComponent extends MzBaseModal implements OnInit {
   clientForm: FormGroup;
+  errorMessages: string[];
 
   constructor(
     private auth: AuthService,
@@ -49,9 +50,14 @@ export class ClientModalComponent extends MzBaseModal implements OnInit {
       console.log('valid data');
 
       this.clientService.addByProfessional(c, this.auth.getCurrentUser().id)
-        .subscribe(client => {
-          this.spinnerService.toggleLoadingIndicator(false);
-          this.modalComponent.close();
+        .subscribe(resp => {
+          if (resp.HasError) {
+            this.errorMessages = resp.errorMessages;
+            return;
+          } else {
+            this.spinnerService.toggleLoadingIndicator(false);
+            this.modalComponent.close();
+          }
         });
     }
 

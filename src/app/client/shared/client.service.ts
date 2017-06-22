@@ -27,9 +27,9 @@ export class ClientService {
     private auth: AuthService,
     private http: Http,
     private profService: ProfessionalService
-  ) {}
+  ) { }
 
-  addByProfessional(client: Client, profId: string): Observable<Client> {
+  addByProfessional(client: Client, profId: string): Observable<any> {
     let options = new RequestOptions({ headers: this.getHeaders() });
     let data = {
       Nome: client.name,
@@ -43,19 +43,30 @@ export class ClientService {
     return this.http
       .put(this.baseUrl + '/add', data, options)
       .map((response: Response) => {
-        let body = JSON.parse(response.text());
-        let newClient: Client = new Client(body.Nome, body.Email, body.ID);
-        newClient.isActive = body.IsActive;
-        newClient.gender = body.Genero;
-        newClient.cpfCnpj = body.CpfCnpj;
+        let clientResp = JSON.parse(response.text());
 
-        if (!this.allClients) this.allClients = [];
+        if (clientResp.HasError) {
+          let errorMessages = [];
+          errorMessages.push(this.handleErrMsg(clientResp.ErrorMessage))
+          clientResp.errorMessages = errorMessages;
+        } else {
+          let newClient: Client = new Client(clientResp.Nome, clientResp.Email, clientResp.ID);
+          newClient.isActive = clientResp.IsActive;
+          newClient.gender = clientResp.Genero;
+          newClient.cpfCnpj = clientResp.CpfCnpj;
 
-        this.allClients.push(newClient);
-        this.allClientsChange$.next(this.allClients);
-        // this.clientAddedSource.next(newClient);
-        this.profService.addClients(newClient);
-        return newClient;
+
+          if (!this.allClients) this.allClients = [];
+          clientResp.client = newClient;
+          this.allClients.push(newClient);
+          this.allClientsChange$.next(this.allClients);
+          // this.clientAddedSource.next(newClient);
+          this.profService.addClients(newClient);
+        }
+
+
+
+        return clientResp;
       })
       .catch(this.handleError);
   }
@@ -103,8 +114,8 @@ export class ClientService {
 
   }
 
-  getOne(id: string, getFromDatabase?: boolean): Observable<Client> {
-    if (getFromDatabase) {
+  getOne(id: string, fromBackEnd?: boolean): Observable<Client> {
+    if (fromBackEnd) {
       let options = new RequestOptions({ headers: this.getHeaders() });
 
       return this.http.get(this.baseUrl + '/getone?id=' + id, options)
@@ -162,6 +173,24 @@ export class ClientService {
     headers.append('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
 
     return headers;
+  }
+
+  private handleErrMsg(errMsg): string {
+    let userMsg: string = '';
+
+    switch (errMsg) {
+      case "CPF já cadastrado":
+        userMsg = 'CPF/CNPJ já cadastrado';
+        break;
+      case "Nome do cliente não informado":
+        userMsg = 'Nome do cliente não informado';
+        break;
+      default:
+        userMsg = 'Erro desconhecido'
+        break;
+    }
+
+    return userMsg;
   }
 
   private handleError(error: Response | any) {

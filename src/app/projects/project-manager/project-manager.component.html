@@ -13,6 +13,9 @@
             <textarea mz-textarea formControlName="briefing" label='briefing' id="briefing" length="150"></textarea>
           </mz-textarea-container>
           <div class="col s12 m6">
+            <ng-container *ngIf="clientErrorMessages && clientErrorMessages.length">
+              <p *ngFor="let msg of clientErrorMessages" class="red-text" style="margin: 0;">{{msg}}</p>
+            </ng-container>
             <mz-select-container class="has-add-option">
               <select mz-select #clientSelectInput formControlName="clientId" id='clientSelect' label="cliente">
                 <option [value]="0">- novo cliente -</option>
@@ -22,7 +25,7 @@
              </select>
             </mz-select-container>
             <ng-container *ngIf="clientForm && clientForm.value && clientForm.value.clientId">
-              <ng-container *ngIf="clientForm.value.clientId == 0">
+              <ng-container *ngIf="clientForm.value.clientId == 0 || clientForm.value.clientId == undefined">
                 <mz-input-container>
                   <input mz-input formControlName="name" label="nome" name="Name" id='clientName' type='text'>
                 </mz-input-container>
@@ -104,54 +107,37 @@
               <textarea mz-textarea formControlName="description" [value]="professional.description" label='descrição profissional' id='businessDescription'
                 length='400'></textarea>
             </mz-textarea-container>
-            <!--<div class="file-field input-field" hidden>
-              <div class="btn">
-                <i class="material-icons white-text">file_upload</i>
-                <input type="file">
-              </div>
-              <div class="file-path-wrapper">
-                <input [value]="" class="file-path validate" placeholder="selecione sua logo" type="text">
-              </div>
-            </div>-->
-
           </form>
         </div>
 
         <div *ngIf="professionals" class="col s12 m6">
-          <form [formGroup]="partnersForm">
-            <!--<mdl-select formControlName="partnersIds2" multiple="true" placeholder="profissionais envolvidos">
-              <option (click)="openNewPartnerModal()" class="new-option" style="display: block;">
-                - adicionar profissional -
-                <mdl-option [value] class="not-is-option"><em>- adicionar profissional -</em></mdl-option>
-              </option>
-              <mdl-option mdl-ripple *ngFor="let p of allProfessionals()" [value]="p.id">{{ p.name }}</mdl-option>
-            </mdl-select>-->
-            <!--<mz-select-container>
-              <select mz-select id='pds' formControlName="partnersIds" label="profissionais participantes" placeholder="- adicionar participante -" class="has-add-option" multiple>
-                <option disabled>- adicionar participante -</option>
-                <ng-container *ngFor="let p of allProfessionals()">
-                  <option [value]="p.id">{{p.name}}</option>
-                </ng-container>
-              </select>
-            </mz-select-container>-->
-            <tag-input
-              id="tagInputContainer"
-              #partnersInput
-              formControlName="partners"
-              [ngModel]="partnersForm.value.partners"
-              [placeholder]="'profissionais participantes'"
-              [onlyFromAutocomplete]="true">
-              <tag-input-dropdown
-                id="tagInputDropdown"
-                [displayBy]="'name'"
-                [limitItemsTo]="4"
-                [identifyBy]="'id'"
-                [showDropdownIfEmpty]="true"
-                [focusFirstElement]="true"
-                [autocompleteItems]="[{id: 'new', name: '- novo profissional -'}].concat(professionals)">
-              </tag-input-dropdown>
-            </tag-input>
-          </form>
+          <section *ngIf="setPartnersForm()">
+            <form *ngIf="partnersForm" [formGroup]="partnersForm">
+              <!--<mdl-select formControlName="partnersIds2" multiple="true" placeholder="profissionais envolvidos">
+                <option (click)="openNewPartnerModal()" class="new-option" style="display: block;">
+                  - adicionar profissional -
+                  <mdl-option [value] class="not-is-option"><em>- adicionar profissional -</em></mdl-option>
+                </option>
+                <mdl-option mdl-ripple *ngFor="let p of allProfessionals()" [value]="p.id">{{ p.name }}</mdl-option>
+              </mdl-select>-->
+              <!--<mz-select-container>
+                <select mz-select id='pds' formControlName="partnersIds" label="profissionais participantes" placeholder="- adicionar participante -" class="has-add-option" multiple>
+                  <option disabled>- adicionar participante -</option>
+                  <ng-container *ngFor="let p of allProfessionals()">
+                    <option [value]="p.id">{{p.name}}</option>
+                  </ng-container>
+                </select>
+              </mz-select-container>-->
+              <tag-input id="tagInputContainer" #partnersInput formControlName="partners" [ngModel]="partnersForm.value.partners" [secondaryPlaceholder]="'profissionais participantes'"
+                [placeholder]="'insira outro profissional'" [onlyFromAutocomplete]="true">
+
+                <tag-input-dropdown id="tagInputDropdown" [displayBy]="'name'" [limitItemsTo]="6" [identifyBy]="'id'" [showDropdownIfEmpty]="true"
+                  [focusFirstElement]="true" [autocompleteItems]="[{id: 'new', name: '- novo profissional -'}].concat(professionals)">
+                </tag-input-dropdown>
+              </tag-input>
+            </form>
+          </section>
+
         </div>
 
       </section>
@@ -450,15 +436,13 @@
   <div class="col s12" style="margin-top: 0.75rem">
 
     <div class="u-col s12 m9 right-align right">
-      <ng-container>
-        <a (click)="generateProposal()" class="btn-flat waves-effect">ver proposta</a>
-      </ng-container>
-      <button (click)="sendProposal()" type="button" class="btn waves-effect">enviar<span class="hide-on-small-only"> ao cliente</span></button>
+      <a (click)="generateProposal()" class="btn waves-effect waves-light">criar proposta</a>
+      <!--<button (click)="sendProposal()" type="button" class="btn waves-effect">enviar<span class="hide-on-small-only"> ao cliente</span></button>-->
       <!--<button (click)="generateProposal()" class="btn waves-effect">Gerar proposta</button>-->
     </div>
-    <div class="u-col s12 m3 right-left left" style="line-height: 36px; letter-spacing: 0.15em; font-size: .8rem; font-weight: 600;">
+    <!--<div class="u-col s12 m3 right-left left" style="line-height: 36px; letter-spacing: 0.15em; font-size: .8rem; font-weight: 600;">
       <span *ngIf="clientDataBeingSaved || profDataBeingSaved || proposalDataBeingSaved || ambiencesDataBeingSaved || paymentDataBeingSaved">Salvando...</span>
       <span *ngIf="!clientDataBeingSaved && !profDataBeingSaved && !proposalDataBeingSaved && !ambiencesDataBeingSaved && !paymentDataBeingSaved">Dados salvos</span>
-    </div>
+    </div>-->
   </div>
 </main>

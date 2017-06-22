@@ -1,0 +1,16 @@
+:host {
+    display: flex;
+}
+
+#embedProposal {
+    width: 100vw;
+    height: 100vh;
+}
+
+.toolbar {
+    width: 100%;
+    transition: transform 0.2s cubic-bezier(0.55, 0.085, 0.68, 0.53), background-color 0s linear 0.2s;
+    bottom: 0px;
+    left: 0px;
+    box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.26), 0 8px 10px -5px rgba(0, 0, 0, 0.3);
+}

@@ -40,6 +40,8 @@ export class UserProfileComponent implements OnInit {
   ngOnInit() {
     this.profService.getCurrentProfessional().subscribe(prof => {
       this.professional = prof;
+      console.log(this.professional);
+      
       this.profProfileForm = this.createUserProfileForm(this.professional);
       console.log(this.profProfileForm.value.professionOpt);
 
@@ -119,9 +121,11 @@ export class UserProfileComponent implements OnInit {
   }
 
   private createUserProfileForm(prof: Professional): FormGroup {
+    let description = prof.description ? prof.description : '';
+
     return this.fb.group({
       name: [prof.name],
-      description: [prof.description],
+      description: [description],
       cpfCnpj: [prof.cpfCnpj],
       // rg: [prof.rg],
       CAU: [prof.CAU],

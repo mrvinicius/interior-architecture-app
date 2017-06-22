@@ -122,5 +122,4 @@ export class BreadcrumbsComponent implements OnInit {
   //   //we should never get here, but just in case
   //   return breadcrumbs;
   // }
-
 }

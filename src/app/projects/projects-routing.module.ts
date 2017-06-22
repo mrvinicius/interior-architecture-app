@@ -7,6 +7,8 @@ import { ProjectsComponent } from './projects.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectManagerComponent } from './project-manager/project-manager.component';
 import { ProjectManagerResolver } from './shared/project-manager-resolver.service';
+import { ProjectProposalPreviewComponent } from './project-proposal-preview/project-proposal-preview.component';
+import { ProjectProposalPreviewResolver } from './shared/project-proposal-preview-resolver.service';
 
 const routes: Routes = [
   {
@@ -24,6 +26,10 @@ const routes: Routes = [
             path: ':title', component: ProjectManagerComponent,
             resolve: { project: ProjectManagerResolver },
             canDeactivate: [CanDeactivateGuard]
+          },
+          {
+            path: ':title/proposta/:id', component: ProjectProposalPreviewComponent,
+            resolve: { project: ProjectProposalPreviewResolver }
           }
         ]
       }
@@ -35,7 +41,8 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
   providers: [
-    ProjectManagerResolver
+    ProjectManagerResolver,
+    ProjectProposalPreviewResolver
   ]
 })
 export class ProjectsRoutingModule { }

@@ -1,6 +1,6 @@
 <!--mdl-layout-fixed-drawer-->
 <mdl-layout mdl-layout-fixed-header mdl-layout-fixed-drawer #mdlLayout1="mdlLayout">
-    <mdl-layout-drawer class="side-bar">
+    <mdl-layout-drawer *ngIf="showSidebar" class="side-bar">
         <mdl-layout-title class="title truncate">{{userName}}</mdl-layout-title>
         <nav class="mdl-navigation">
             <a class="mdl-navigation__link side-bar__link has-icon black-text" routerLink="/projetos" (click)="mdlLayout1.closeDrawer()">
@@ -24,7 +24,7 @@
         </nav>
     </mdl-layout-drawer>
 
-    <mdl-layout-header class="top-bar">
+    <mdl-layout-header *ngIf="showHeader" class="top-bar">
 
         <mdl-layout-header-row>
             <mdl-layout-title>
@@ -40,7 +40,9 @@
         </mdl-layout-header-row>-->
     </mdl-layout-header>
 
-    <mdl-layout-content class="layout-content-container">
+    <mdl-layout-content 
+        [style.margin]="!showHeader ? 0 : null"
+        [style.overflow-y]="overflowY" class="layout-content-container">
         <!--<div class="z-depth-2" *ngIf="userMenuVisible">
             <a class="black-text" routerLink="/perfil">
             <i class="material-icons right">person_outline</i>

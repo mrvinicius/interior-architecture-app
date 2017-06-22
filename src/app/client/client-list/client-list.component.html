@@ -1,3 +1,18 @@
+<div class="fixed-action-btn">
+  <a (click)="openClientModal()" [ngClass]="{pulse: clients && clients.length < 1}" class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">add</i></a>
+</div>
+
+<div class="background-center-container" *ngIf="clients && clients.length < 1">
+  <div class="background-circle white"></div>
+  <div class="empty-page-content">
+    <i class="material-icons large grey-text text-lighten-1">people</i>
+    <div class="bottom-text">
+      <div class="dim-text" style="font-size: 1.2rem; font-weight: bold;">Clique no "+"</div>
+      <div class="dim-text">para adicionar clientes</div>
+    </div>
+  </div>
+</div>
+
 <main class="layout-content left-space u-row" [ngClass]="{'compressed-content': selectedClient !== undefined}">
   <div class="col s12 layout-content__wrapper">
     <table *ngIf="clients !== undefined && clients.length" class="highlight fixed-header">
@@ -33,21 +48,7 @@
     </table>
 
   </div>
-  <div class="fixed-action-btn">
-    <a (click)="openClientModal()" class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">add</i></a>
-  </div>
 </main>
 <aside *ngIf="selectedClient" class="aside-layout grey lighten-4">
   <abx-client-editor (update)="updateClientList($event)" (close)="onEditorClosed()" [client]="selectedClient"></abx-client-editor>
 </aside>
-
-<div class="background-center-container" *ngIf="clients && clients.length < 1">
-  <div class="background-circle white"></div>
-  <div class="empty-page-content">
-    <i class="material-icons large grey-text text-lighten-1">people</i>
-    <div class="bottom-text">
-      <div class="dim-text" style="font-size: 1.2rem;">Clique no "+"</div>
-      <div class="dim-text">para adicionar clientes</div>
-    </div>
-  </div>
-</div>
