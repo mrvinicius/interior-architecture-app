@@ -154,8 +154,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     this.services = UtilsService.getEnumArray(Service);
     this.profService.getCurrentProfessional().subscribe(prof => this.professional = prof);
     this.nativeWindow = winRef.getNativeWindow();
-    console.log(this.router.url);
-
   }
 
   allClients(): Client[] {
@@ -254,7 +252,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     this.activateRoute.data
       .subscribe((data: { project: Project }) => {
         this.project = data.project;
-        console.log(this.project);
 
         this.clientForm = this.createClientForm(this.project);
         this.clientFormChangesSubscription = this.subscribeToFormChanges(this.clientForm, () => {
@@ -853,13 +850,10 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
   setPartnersForm(): boolean {
     if (this.partnersForm === undefined && this.professionals) {
-      console.log('form undefined');
-
       this.partnersForm =
         this.createPartnersForm(this.project.activeProposal.professionalsIds);
       const partnersChange$ = this.partnersForm.get('partners').valueChanges;
       partnersChange$.do((profs: any[]) => {
-        console.log(profs);
         let addOptionIndex = profs.findIndex(obj => obj.value === 'new');
 
         if (addOptionIndex !== -1) {
@@ -872,7 +866,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
           this.openNewPartnerModal()
         } else {
           this.project.activeProposal.professionalsIds = profs.map(p => { return p.value })
-          console.log(this.project.activeProposal.professionalsIds);
 
           this.partnersDataHasChanges = true;
         }

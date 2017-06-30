@@ -13,7 +13,7 @@ import { ProfessionalService } from '../../core/professional.service';
 @Injectable()
 export class BankAccountService {
   private bankAccounts: BankAccount[] = [];
-  private readonly baseUrl: string = 'http://52.67.21.201/muuving/api/conta';
+  private readonly baseUrl: string = 'https://www.archabox.com.br/api/conta';
 
   constructor(
     private auth: AuthService,
@@ -60,7 +60,6 @@ export class BankAccountService {
     };
 
     if (this.bankAccounts === undefined || this.bankAccounts.length < 1) {
-      console.log('no bank accounts');
       
       return this.http
         .post(this.baseUrl + '/getall', data, options)

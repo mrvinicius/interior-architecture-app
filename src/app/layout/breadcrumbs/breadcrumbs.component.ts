@@ -1,11 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router, NavigationEnd, ActivatedRouteSnapshot } from '@angular/router';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 
 import { IBreadcrumb } from '../shared/breadcrumb';
 import { BreadcrumbsService } from '../shared/breadcrumbs.service';
 
 @Component({
-  selector: 'mb-breadcrumb',
+  selector: 'abx-breadcrumb',
   styleUrls: ['./breadcrumbs.component.scss'],
   template: `
     <div class="mb-breadcrumbs">
@@ -36,12 +38,13 @@ import { BreadcrumbsService } from '../shared/breadcrumbs.service';
     </ul>
   `
 })
-export class BreadcrumbsComponent implements OnInit {
+export class BreadcrumbsComponent implements OnInit, OnDestroy {
   @Input() prefix: string = ''; // Static initial Breadcrumb
 
   public breadcrumbs: IBreadcrumb[];
   public _urls: string[];
   public _routerSubscription: any;
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
     private router: Router,
@@ -52,74 +55,17 @@ export class BreadcrumbsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._urls = new Array();   
-
-    this._routerSubscription = this.router.events.subscribe((navigationEnd: NavigationEnd) => {
-
-      if (navigationEnd instanceof NavigationEnd) {
-        this._urls.length = 0; //Fastest way to clear out array
-
-        this.breadcrumbs = this.bcService.buildBreadcrumbTrail(navigationEnd.urlAfterRedirects ? navigationEnd.urlAfterRedirects : navigationEnd.url);
-      }
-    });
-
-    // const ROUTE_DATA_BREADCRUMB: string = "breadcrumb";
-
-    // //subscribe to the NavigationEnd event
-    // this.router.events.filter(event => event instanceof NavigationEnd).subscribe(event => {
-
-    //   //set breadcrumbs
-    //   let root: ActivatedRoute = this.activatedRoute.root;
-    //   this.breadcrumbs = this.getBreadcrumbs(root);
-    // });
+    this.router.events
+      .filter(event => event instanceof NavigationEnd)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(event => {
+        this.breadcrumbs = this.bcService.getBreadcrumbs(this.activeRoute.root);
+      })
   }
 
-  // getBreadcrumbs(): IBreadcrumb[] {
-  //   return this.bcService.buildBreadcrumbTrail();
-  // }
 
-  // private getBreadcrumbs(route: ActivatedRoute, url: string = "", breadcrumbs: IBreadcrumb[] = []): IBreadcrumb[] {
-  //   const ROUTE_DATA_BREADCRUMB: string = "breadcrumb";
-
-  //   //get the child routes
-  //   let children: ActivatedRoute[] = route.children;
-
-  //   //return if there are no more children
-  //   if (children.length === 0) {
-  //     return breadcrumbs;
-  //   }
-
-  //   //iterate over each children
-  //   for (let child of children) {
-  //     // //verify primary route
-  //     // if (child.outlet !== PRIMARY_OUTLET) {
-  //     //   continue;
-  //     // }
-
-  //     //verify the custom data property "breadcrumb" is specified on the route
-  //     if (!child.snapshot.data.hasOwnProperty(ROUTE_DATA_BREADCRUMB)) {
-  //       return this.getBreadcrumbs(child, url, breadcrumbs);
-  //     }
-
-  //     //get the route's URL segment
-  //     let routeURL: string = child.snapshot.url.map(segment => segment.path).join("/");
-
-  //     //append route URL to URL
-  //     url += `/${routeURL}`;
-
-  //     //add breadcrumb
-  //     let breadcrumb: IBreadcrumb = {
-  //       label: child.snapshot.data[ROUTE_DATA_BREADCRUMB],
-  //       params: child.snapshot.params,
-  //       url: url
-  //     };
-  //     breadcrumbs.push(breadcrumb);
-
-  //     //recursive
-  //     return this.getBreadcrumbs(child, url, breadcrumbs);
-  //   }
-
-  //   //we should never get here, but just in case
-  //   return breadcrumbs;
-  // }
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
 }

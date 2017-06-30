@@ -3,9 +3,9 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'mbp-client',
   template: `
-    <mb-layout>
+    <abx-layout>
       <router-outlet id="clientsRouter"></router-outlet>
-    </mb-layout>
+    </abx-layout>
   `
 })
 export class ClientComponent implements OnInit {

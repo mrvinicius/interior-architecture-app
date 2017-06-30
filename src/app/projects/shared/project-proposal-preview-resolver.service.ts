@@ -26,10 +26,5 @@ export class ProjectProposalPreviewResolver implements Resolve<Project> {
         return this.projectsService.getOneById(id, true).map(project => {
             return project;
         }).first();
-        // console.log(project);
-
-        // if (!activeProposal) this.router.navigate(['/projetos']);
-        // return projectObs ? project : null);
-
     }
 }

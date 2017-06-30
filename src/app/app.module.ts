@@ -17,11 +17,13 @@ import { UserModule } from './user/user.module';
 
 /* Routing Module */
 import { AppRoutingModule } from './app-routing.module';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   bootstrap: [AppComponent],
   declarations: [
     AppComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,21 @@
 .breadcrumb {
-    &.show-on-small, .show-on-small {
+    &.show-on-small,
+    .show-on-small {
         @media #{$small-and-down} {
             display: inline !important;
         }
+    }
+
+    &.editable:after {
+        content: '\E3C9';
+        color: inherit;
+        vertical-align: top;
+        display: inline-block;
+        font-family: 'Material Icons';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 22px;
+        margin: 0 10px 0 8px;
+        -webkit-font-smoothing: antialiased;
     }
 }

@@ -1,23 +1,23 @@
-import { LayoutContentService } from './shared/layout-content.service';
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 
 import { AuthService } from '../core/auth.service';
+import { LayoutContentService } from './shared/layout-content.service';
 import { LayoutHeaderService } from './shared/layout-header.service';
 import { LayoutSidebarService } from './shared/layout-sidebar.service';
 import { ProfessionalService } from '../core/professional.service';
 
 @Component({
-  selector: 'mb-layout',
+  selector: 'abx-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent implements OnInit {
-  showHeader: boolean = true;
-  showSidebar: boolean = true;
   overflowY: string = 'auto';
   userName: string;
-
+  showHeader: boolean = true;
+  showSidebar: boolean = true;
+  showLoadingToast: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -51,5 +51,43 @@ export class LayoutComponent implements OnInit {
     this.authService.logout();
     this.router.navigate(['/entrar']);
     window.location.reload();
+  }
+
+  toggleLoadingToast(isVisible: boolean): void {
+    $('.abxLoadingToast').fadeOut(400);
+
+    if (isVisible !== undefined) {
+      this.showLoadingToast = isVisible;
+    } else {
+      this.showLoadingToast = !this.showLoadingToast;
+    }
+
+    console.log(this.showLoadingToast);
+
+    if (this.showLoadingToast) {
+      if (this.showLoadingToast) {
+        let toastHtml = `
+          <div style="display: flex;">
+            <div class="preloader-wrapper tiny active mv-red-light">
+              <div class="spinner-layer spinner-green-only">
+                <div class="circle-clipper left">
+                  <div class="circle"></div>
+                </div><div class="gap-patch">
+                  <div class="circle"></div>
+                </div><div class="circle-clipper right">
+                  <div class="circle"></div>
+                </div>
+              </div>
+            </div>
+            <div style="margin-left: 1rem;">Salvando</div>
+          </div>
+        `;
+        let $toast = $(toastHtml);
+        Materialize.toast($toast, 9999999, 'abxLoadingToast');
+
+      } else {
+      }
+    }
+
   }
 }

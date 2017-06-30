@@ -1,10 +1,10 @@
 import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Md2Module, Md2AccordionModule } from 'md2';
 import { MdlExpansionPanelModule } from '@angular-mdl/expansion-panel';
 import { MdlPopoverModule } from '@angular-mdl/popover';
 import { MdlSelectModule } from '@angular-mdl/select';
+import { Md2Module, Md2AccordionModule } from 'md2';
 import { MaterializeModule } from 'ng2-materialize';
 import { TagInputModule } from 'ng2-tag-input';
 

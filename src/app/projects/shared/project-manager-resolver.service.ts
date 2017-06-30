@@ -24,15 +24,5 @@ export class ProjectManagerResolver implements Resolve<Project> {
         if (!project) this.router.navigate(['/projetos']);
         return Promise.resolve(project ? project : null);
 
-            // .toPromise()
-            // .then(project => {
-            //     if (project) {
-            //         return project
-            //     } else {
-            //         this.router.navigate(['/projetos']);
-            
-            //         return null
-            //     }
-            // });
     }
 }

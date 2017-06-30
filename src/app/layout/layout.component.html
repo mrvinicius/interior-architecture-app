@@ -28,7 +28,7 @@
 
         <mdl-layout-header-row>
             <mdl-layout-title>
-                <mb-breadcrumb prefix="Muubox"></mb-breadcrumb>
+                <abx-breadcrumb prefix="Início"></abx-breadcrumb>
             </mdl-layout-title>
 
             <mdl-layout-spacer>
@@ -40,9 +40,11 @@
         </mdl-layout-header-row>-->
     </mdl-layout-header>
 
-    <mdl-layout-content 
-        [style.margin]="!showHeader ? 0 : null"
-        [style.overflow-y]="overflowY" class="layout-content-container">
+    <mdl-layout-content
+        [style.margin]="!showHeader ? 0 : null" 
+        [style.overflow-y]="overflowY"
+        [ngClass]="{'showLoadingToast': showLoadingToast}"
+        class="layout-content-container">
         <!--<div class="z-depth-2" *ngIf="userMenuVisible">
             <a class="black-text" routerLink="/perfil">
             <i class="material-icons right">person_outline</i>
@@ -73,6 +75,13 @@
             3
         </mdl-layout-tab-panel>-->
         <!--Dynamic toolbar content-->
+        <!--<a (click)="toggleLoadingToast()" class="btn">TOGGLE LOADING</a>-->
         <ng-content select="router-outlet, .layout-content"></ng-content>
+        <!--<div id="loadingToastContainer">
+            <div id="abxLoadingToast" class="toast">
+                <mz-spinner [color]="'black'" class="tiny spinner mv-red-light"></mz-spinner>
+                Salvando
+            </div>
+        </div>-->
     </mdl-layout-content>
 </mdl-layout>

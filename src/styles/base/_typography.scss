@@ -8,6 +8,29 @@ body {
     font-family: $body-font;
 }
 
-.italic {
-    font-style: italic;
+@media #{$large-and-up} {
+    h1 { font-size: $h1-fontsize; line-height: 110%; margin: ($h1-fontsize / 2) 0 ($h1-fontsize / 2.5) 0;}
+    h2 { font-size: calc(#{$h2-fontsize} - 0.8rem); line-height: 110%; margin: ($h2-fontsize / 2) 0 ($h2-fontsize / 2.5) 0;}
+    h3 { font-size: calc(#{$h3-fontsize} - 0.8rem); line-height: 110%; margin: ($h3-fontsize / 2) 0 ($h3-fontsize / 2.5) 0;}
+    // h4 { font-size: calc(#{$h4-fontsize} - 0.2rem); line-height: 110%; margin: ($h4-fontsize / 2) 0 ($h4-fontsize / 2.5) 0;}
+    h5 { font-size: $h5-fontsize; line-height: 110%; margin: ($h5-fontsize / 2) 0 ($h5-fontsize / 2.5) 0;}
+    h6 { font-size: $h6-fontsize; line-height: 110%; margin: ($h6-fontsize / 2) 0 ($h6-fontsize / 2.5) 0;}
+}
+
+@media #{$medium-and-down} {
+    h1 { font-size: calc(#{$h1-fontsize} - 1.2rem); line-height: 110%; margin: ($h1-fontsize / 2) 0 ($h1-fontsize / 2.5) 0;}
+    h2 { font-size: calc(#{$h2-fontsize} - 1.2rem); line-height: 110%; margin: ($h2-fontsize / 2) 0 ($h2-fontsize / 2.5) 0;}
+    h3 { font-size: calc(#{$h3-fontsize} - 0.8rem); line-height: 110%; margin: ($h3-fontsize / 2) 0 ($h3-fontsize / 2.5) 0;}
+    h4 { font-size: calc(#{$h4-fontsize} - 0.2rem); line-height: 110%; margin: ($h4-fontsize / 2) 0 ($h4-fontsize / 2.5) 0;}
+    h5 { font-size: $h5-fontsize; line-height: 110%; margin: ($h5-fontsize / 2) 0 ($h5-fontsize / 2.5) 0;}
+    h6 { font-size: $h6-fontsize; line-height: 110%; margin: ($h6-fontsize / 2) 0 ($h6-fontsize / 2.5) 0;}
+}
+
+@media #{$small-and-down} {
+    h1 { font-size: calc(#{$h1-fontsize} - 2rem); line-height: 110%; margin: ($h1-fontsize / 2) 0 ($h1-fontsize / 2.5) 0;}
+    h2 { font-size: calc(#{$h2-fontsize} - 2rem); line-height: 110%; margin: ($h2-fontsize / 2) 0 ($h2-fontsize / 2.5) 0;}
+    h3 { font-size: calc(#{$h3-fontsize} - 1.4rem); line-height: 110%; margin: ($h3-fontsize / 2) 0 ($h3-fontsize / 2.5) 0;}
+    h4 { font-size: calc(#{$h4-fontsize} - 0.4rem); line-height: 110%; margin: ($h4-fontsize / 2) 0 ($h4-fontsize / 2.5) 0;}
+    h5 { font-size: calc(#{$h5-fontsize} - 0.2rem); line-height: 110%; margin: ($h5-fontsize / 2) 0 ($h5-fontsize / 2.5) 0;}
+    h6 { font-size: $h6-fontsize; line-height: 110%; margin: ($h6-fontsize / 2) 0 ($h6-fontsize / 2.5) 0;}
 }

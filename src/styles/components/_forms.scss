@@ -151,6 +151,7 @@ tag-input {
     }
     tag-input-form {
         .ng2-tag-input__text-input {
+            width: 110% !important;
             padding: 0 !important;
             font-family: $body-font !important;
         }

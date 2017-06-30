@@ -9,9 +9,9 @@ import { AmbienceService } from './shared/ambience.service';
   selector: 'mbp-projects',
   providers: [ProjectServicesService],
   template: `
-    <mb-layout>
+    <abx-layout>
       <router-outlet id="projectsRouter"></router-outlet>
-    </mb-layout>
+    </abx-layout>
   `
 })
 export class ProjectsComponent implements OnInit {

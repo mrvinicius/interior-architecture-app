@@ -1,4 +1,4 @@
-<main class="row">
+<main class="u-row layout-content">
   <md2-accordion class="mv-collapsible">
     <md2-accordion-tab>
       <md2-accordion-header class="collapsible-header">
@@ -10,7 +10,7 @@
         <form [formGroup]="clientForm">
           <mz-textarea-container class="col s12">
             <i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>
-            <textarea mz-textarea formControlName="briefing" label='briefing' id="briefing" length="150"></textarea>
+            <textarea mz-textarea formControlName="briefing" label='briefing' id="briefing" length="300"></textarea>
           </mz-textarea-container>
           <div class="col s12 m6">
             <ng-container *ngIf="clientErrorMessages && clientErrorMessages.length">
@@ -51,6 +51,8 @@
         </form>
         <form [formGroup]="locationForm">
           <div class="col s12 m6">
+            <p class="dim-text" style="text-transform: uppercase;">Endereço da obra</p>
+
             <mz-input-container>
               <input mz-input formControlName="CEP" [textMask]="{mask: cepMask, placeholderChar: '\u2000'}" label="CEP" id='cep' type='text'>
             </mz-input-container>
@@ -428,15 +430,10 @@
     </md2-accordion-tab>
   </md2-accordion>
 
-  <div id="abx-toast" class="toast hide">
-    <mz-spinner [color]="'black'" class="tiny spinner mv-red-light"></mz-spinner>
-    Salvando
-  </div>
-
   <div class="col s12" style="margin-top: 0.75rem">
 
     <div class="u-col s12 m9 right-align right">
-      <a (click)="generateProposal()" class="btn waves-effect waves-light">criar proposta</a>
+      <a (click)="generateProposal()" class="btn waves-effect waves-light">ver proposta</a>
       <!--<button (click)="sendProposal()" type="button" class="btn waves-effect">enviar<span class="hide-on-small-only"> ao cliente</span></button>-->
       <!--<button (click)="generateProposal()" class="btn waves-effect">Gerar proposta</button>-->
     </div>

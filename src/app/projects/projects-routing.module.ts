@@ -1,7 +1,9 @@
+import { ProjectsService } from './shared/projects.service';
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 import { AuthGuard } from '../core/auth.guard';
+import { BreadcrumbResolver } from '../layout/shared/breadcrum-resolver.service';
 import { CanDeactivateGuard } from '../core/can-deactivate-guard.service';
 import { ProjectsComponent } from './projects.component';
 import { ProjectListComponent } from './project-list/project-list.component';
@@ -15,21 +17,26 @@ const routes: Routes = [
     path: 'projetos',
     component: ProjectsComponent,
     canActivate: [AuthGuard],
+    data: { breadcrumb: 'Projetos' },
     children: [
       {
         path: '',
         canActivateChild: [AuthGuard],
+        data: { breadcrumb: undefined },
         children: [
           { path: '', component: ProjectListComponent },
-          // { path: 'previa/:url', component: ProjectProposalPreviewComponent },
           {
             path: ':title', component: ProjectManagerComponent,
-            resolve: { project: ProjectManagerResolver },
+            resolve: {
+              project: ProjectManagerResolver,
+              breadcrumb: ProjectsService,
+              // breadcrumb: 'projectBcResolver'
+            },
             canDeactivate: [CanDeactivateGuard]
           },
           {
             path: ':title/proposta/:id', component: ProjectProposalPreviewComponent,
-            resolve: { project: ProjectProposalPreviewResolver }
+            resolve: { project: ProjectProposalPreviewResolver, }
           }
         ]
       }
@@ -37,12 +44,23 @@ const routes: Routes = [
   },
 ];
 
+class DataService {}
+
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
   providers: [
     ProjectManagerResolver,
-    ProjectProposalPreviewResolver
+    ProjectProposalPreviewResolver,
+    // {
+    //   provide: 'projectBcResolver',
+    //   useValue: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+    //     console.log('route: ', route);
+    //     console.log('state: ', state);
+    //   },
+    //   useExisting: DataService,
+    //   useClass: ProjectsService
+    // }
   ]
 })
 export class ProjectsRoutingModule { }

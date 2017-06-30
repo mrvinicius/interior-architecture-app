@@ -8,10 +8,12 @@
 @import "vendors/angular2-mdl";
 @import "vendors/angular2-mdl-ext";
 @import "vendors/materialize-css";
+@import "vendors/socicon";
 
 /*** Helpers ***/
 @import "helpers/behaviors-and-states";
 @import "helpers/color";
+@import "helpers/components";
 @import "helpers/structure";
 @import "helpers/theming";
 @import "helpers/typography";

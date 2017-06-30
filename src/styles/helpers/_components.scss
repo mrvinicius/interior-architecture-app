@@ -1,0 +1,10 @@
+.btn {
+    &.full {
+        width: 100%
+    }
+    &.full-xs {
+        @media #{small-and-down} {
+            width: 100%
+        }
+    }
+}

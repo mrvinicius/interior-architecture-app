@@ -11,19 +11,19 @@ import { UserRecoveryComponent } from './user-recovery/user-recovery.component';
 import { UserRegisterComponent } from './user-register/user-register.component';
 
 const routes: Routes = [
-    {
-        path: '', component: UserComponent,
-        children: [
-            { path: '', redirectTo: '/entrar', pathMatch: 'full' },
+    // {
+    //     path: '', component: UserComponent,
+    //     children: [
+            // { path: '', redirectTo: '/entrar', pathMatch: 'full' },
             { path: 'entrar', component: UserEntryComponent },
             { path: 'cadastro', component: UserRegisterComponent },
             { path: 'quase-la', component: AlmostThereComponent },
-            { path: 'perfil', component: UserProfileComponent },
+            { path: 'perfil', data: { breadcrumb: 'Perfil' }, component: UserProfileComponent },
             { path: 'recuperar', component: UserRecoveryComponent },
             { path: 'senha', component: UserPasswordComponent },
             { path: 'profissao', component: UserProfessionComponent }
-        ]
-    }
+    //     ]
+    // }
 ];
 
 @NgModule({

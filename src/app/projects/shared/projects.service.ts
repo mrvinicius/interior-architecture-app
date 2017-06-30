@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
+import {
+  Router,
+  Resolve,
+  RouterStateSnapshot,
+  ActivatedRouteSnapshot
+} from '@angular/router';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from "rxjs/Subject";
 
@@ -25,7 +31,7 @@ import { Service } from './service.enum';
 import { ServicesGroup } from './services-group.enum';
 
 @Injectable()
-export class ProjectsService {
+export class ProjectsService implements Resolve<string>{
   public _allProjects: Project[] = [];
   public static readonly proposalStatusIds = {
     Approved: '23D887C3-E7A8-4D15-8724-D86D7D72472D',
@@ -303,7 +309,7 @@ export class ProjectsService {
     'a46058ac-d651-4266-83bf-41b747364c6e': 13
   };
 
-  private readonly baseUrl = 'http://52.67.21.201/muuving/api/projeto';
+  private readonly baseUrl = 'https://www.archabox.com.br/api/projeto';
   // Observable string sources
   private newProjectTitleDefinedSource = new Subject<string>();
   // Observable string streams
@@ -735,6 +741,13 @@ export class ProjectsService {
     });
   }
 
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<string> {
+    const pathParam: string = 'title';
+
+    let project = this.getOneBySlugTitle(route.params[pathParam]);
+    return Observable.of(project.title);
+  }
+
   // TODO: Implement Search with layout search input
   search(title: string): Promise<Project[]> {
     title = UtilsService.replaceSpecialChars(title);
@@ -847,7 +860,7 @@ export class ProjectsService {
       });
     }
 
-    console.log(projectData);
+    // console.log(projectData);
 
     return this.http.post(this.baseUrl + '/update', projectData, options)
       .map((response: Response) => {
