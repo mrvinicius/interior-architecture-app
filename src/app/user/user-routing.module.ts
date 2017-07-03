@@ -16,7 +16,7 @@ const routes: Routes = [
     //     children: [
             // { path: '', redirectTo: '/entrar', pathMatch: 'full' },
             { path: 'entrar', component: UserEntryComponent },
-            { path: 'cadastro', component: UserRegisterComponent },
+            { path: 'cadastro', redirectTo: '/', pathMatch: 'full' },
             { path: 'quase-la', component: AlmostThereComponent },
             { path: 'perfil', data: { breadcrumb: 'Perfil' }, component: UserProfileComponent },
             { path: 'recuperar', component: UserRecoveryComponent },

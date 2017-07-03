@@ -58,14 +58,10 @@ export class BillingService {
         break;
 
       case "plano_trimestral":
-        data.Valor = 89.90;
+        data.Valor = 119.90;
         now.setMonth(now.getMonth() + 3)
         break;
 
-      case "plano_anual":
-        data.Valor = 190.90;
-        now.setMonth(now.getMonth() + 12)
-        break;
 
       case "plano_1real":
         data.IdPlano = "722A5DC954394AFE91E5E3A2AA74DCDF";

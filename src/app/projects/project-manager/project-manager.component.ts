@@ -132,7 +132,7 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
   constructor(
     private activateRoute: ActivatedRoute,
-    private ambienceService: AmbienceService,
+    private ambienhomeceService: AmbienceService,
     private auth: AuthService,
     private bankService: BankService,
     private bankAccService: BankAccountService,
@@ -221,15 +221,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
         this.toastService.show('Selecione um cliente', 2500);
 
       }
-      // this.saveProjectInfo((success) => {
-      //   if (success) {
-      //     // this.router.navigate
-      //     this.openProposal(this.router.url + '/proposta/'
-      //       + this.project.id);
-      //     // window.open(this.project.activeProposal.url, '_blank');
-      //     this.spinnerService.toggleLoadingIndicator(false);
-      //   }
-      // }, true);
     }
   }
 
@@ -745,11 +736,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
   protected openProposal(path: string): void {
     var newWindow = this.nativeWindow.open(path);
-    // this.Service.assignActivity(type).subscribe(res => {
-
-    //   newWindow.location = '/#/link/' + res;
-    //   console.log(res);
-    // })
   }
 
 

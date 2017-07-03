@@ -78,27 +78,37 @@ export class ProfessionalService {
   }
 
   // Adiciona um novo profissional à base e atualiza os dados locais
-  add(prof: Professional, isSignUp?: boolean) {
+  add(prof: Professional, isSignUp?: boolean): Observable<any> {
     let options = new RequestOptions({ headers: this.getHeaders() });
     let data = { Email: prof.email, Nome: prof.name };
 
     return this.http.put(this.baseUrl + '/add', data, options)
       .map((response: Response) => {
         let profResp: any = JSON.parse(response.text());
-        let prof: Professional = new Professional(profResp.Nome, profResp.Email, profResp.Id);
+        let prof: Professional;
 
-        prof.cpfCnpj = profResp.CpfCnpj;
-        prof.celular = profResp.Celular;
-        prof.profession = ProfessionalService.professionIds[profResp.ProfissaoId];
+        if (!profResp.HasError) {
+          prof = new Professional(profResp.Nome, profResp.Email, profResp.Id);
+          prof.cpfCnpj = profResp.CpfCnpj;
+          prof.celular = profResp.Celular;
+          prof.profession = ProfessionalService.professionIds[profResp.ProfissaoId];
 
-        if (!isSignUp) {
-          if (!this.allProfessionals) this.allProfessionals = [];
-          this.allProfessionals.push(prof);
-          this.allProfessionalsChange$.next(this.allProfessionals);
-          this.professionalAdded$.next(prof);
+          if (!isSignUp) {
+            if (!this.allProfessionals) this.allProfessionals = [];
+            this.allProfessionals.push(prof);
+            this.allProfessionalsChange$.next(this.allProfessionals);
+            this.professionalAdded$.next(prof);
+          }
+
         }
 
-        return prof;
+        return {
+          hasError: profResp.HasError,
+          errorMessage: profResp.ErrorMessage,
+          professional: prof
+        };
+
+
       }).catch(this.handleError)
     // .subscribe(professional => {
     //   if (professional) {

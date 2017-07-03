@@ -9,11 +9,6 @@ $large-and-up: "only screen and (min-width : #{$medium-screen-up})" !default;
 $small-and-down: "only screen and (max-width : #{$small-screen})" !default;
 $medium-and-down: "only screen and (max-width : #{$medium-screen})" !default;
 $medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})" !default;
-:host {
-    display: block;
-    background-color: white;
-}
-
 .register-wrapper {
     @media #{$large-and-up} {
         padding-top: 6em;
@@ -23,6 +18,14 @@ $medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width 
 .titles-container {
     height: 100%;
     min-height: 250px;
+    @media #{$medium-and-down} {
+        max-height: 500px;
+        margin-top: 75px;
+        height: calc(100% - 75px);
+    }
+    @media #{$small-and-down} {
+        max-height: 405px;
+    }
 }
 
 .register {

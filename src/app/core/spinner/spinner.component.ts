@@ -4,7 +4,7 @@ import { MzSpinnerComponent } from 'ng2-materialize';
 import { SpinnerService } from './spinner.service';
 
 @Component({
-  selector: 'mb-spinner',
+  selector: 'abx-spinner',
   styleUrls: ['./spinner.component.scss'],
   template: `
   <div [style.visibility]="isLoading ? 'visible' : 'hidden'" class="loading-container">

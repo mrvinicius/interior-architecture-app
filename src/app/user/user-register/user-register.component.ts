@@ -6,11 +6,9 @@ import {
   MzInputContainerComponent
 } from 'ng2-materialize';
 
-import { Professional } from './../../core/professional';
-import { ProfessionalService } from './../../core/professional.service';
+import { Professional } from '../../core/professional';
+import { ProfessionalService } from '../../core/professional.service';
 import { SpinnerService } from '../../core/spinner/spinner.service';
-import { UserService } from './../../core/user.service';
-
 @Component({
   selector: 'mbx-user-register',
   templateUrl: './user-register.component.html',
@@ -20,24 +18,14 @@ export class UserRegisterComponent implements OnInit {
   registerForm: FormGroup;
   errorMessage: string;
 
-  createForm() {
-    this.registerForm = this.fb.group({
-      email: ['', Validators.required],
-      name: ['', Validators.required]
-    });
-  }
-
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private spinnerService: SpinnerService,
     private profService: ProfessionalService
-    // private userService: UserService,
   ) {
     this.createForm();
   }
-
-  ngOnInit() { }
 
   addUser() {
     if (this.registerForm.invalid) {
@@ -45,8 +33,7 @@ export class UserRegisterComponent implements OnInit {
     } else {
       this.spinnerService.toggleLoadingIndicator(true);
       let values = this.registerForm.value;
-      let prof: Professional =
-        new Professional(values.name, values.email);
+      let prof: Professional = new Professional(values.name, values.email);
 
       this.profService.add(prof, true)
         .subscribe(response => {
@@ -64,4 +51,13 @@ export class UserRegisterComponent implements OnInit {
         );
     }
   }
+
+  createForm() {
+    this.registerForm = this.fb.group({
+      email: ['', Validators.required],
+      name: ['', Validators.required]
+    });
+  }
+
+  ngOnInit() { }
 }

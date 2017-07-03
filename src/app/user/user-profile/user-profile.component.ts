@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs/Subscription';
-import { Subject } from 'rxjs/Subject';
 import { conformToMask } from 'angular2-text-mask';
 import { default as cep, CEP } from 'cep-promise';
+import { Subscription } from 'rxjs/Subscription';
+import { Subject } from 'rxjs/Subject';
 
 import { AuthService } from '../../core/auth.service';
 import { Profession } from '../../shared/profession.enum';
@@ -40,12 +40,8 @@ export class UserProfileComponent implements OnInit {
   ngOnInit() {
     this.profService.getCurrentProfessional().subscribe(prof => {
       this.professional = prof;
-      console.log(this.professional);
-      
+    
       this.profProfileForm = this.createUserProfileForm(this.professional);
-      console.log(this.profProfileForm.value.professionOpt);
-
-      console.log(this.professional);
 
       this.profProfileFormChangesSubscription = this.subscribeToFormChanges(this.profProfileForm, (formData) => {
         this.profProfileFormHasChange = true;
