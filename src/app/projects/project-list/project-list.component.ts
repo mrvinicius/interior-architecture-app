@@ -1,19 +1,19 @@
-import { AuthService } from './../../core/auth.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MzModalService, MzBaseModal } from "ng2-materialize";
 import { Subscription } from 'rxjs/Subscription';
 
-import { Ambience } from './../shared/ambience';
-import { AmbienceDescription } from './../shared/ambience-description.enum';
-import { Proposal } from './../shared/proposal';
-import { ProposalStatus } from './../shared/proposal-status.enum';
+import { Ambience } from '../shared/ambience';
+import { AmbienceDescription } from '../shared/ambience-description.enum';
+import { AuthService } from '../../core/auth.service';
+import { Proposal } from '../shared/proposal';
+import { ProposalStatus } from '../shared/proposal-status.enum';
 import { SpinnerService } from '../../core/spinner/spinner.service';
 import { UtilsService } from '../../shared/utils/utils.service';
 import { Client } from '../../client/shared/client';
 import { ClientService } from '../../client/shared/client.service';
 import { NewProjectModalComponent } from './new-project-modal.component';
-import { ProfessionalService } from './../../core/professional.service';
+import { ProfessionalService } from '../../core/professional.service';
 import { Project } from '../shared/project';
 import { ProjectsService } from '../shared/projects.service';
 import { ProjectStatus } from '../shared/project-status.enum';
@@ -39,6 +39,8 @@ export class ProjectListComponent implements OnInit {
     private modalService: MzModalService,
     private spinnerService: SpinnerService
   ) {
+    console.log('p list ctor');
+    
     /*
     * MOCK
     let prop = new Proposal(false, ProposalStatus.NotSent);

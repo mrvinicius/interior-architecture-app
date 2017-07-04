@@ -25,7 +25,6 @@ export class AppComponent implements OnInit {
     private winRef: WindowRef
   ) {
     this.window = winRef.getNativeWindow();
-
   }
 
   bootIntercom(): boolean {
@@ -45,7 +44,6 @@ export class AppComponent implements OnInit {
 
     intervalId = setInterval(function () {
       let gtm = (<any>this.window).google_tag_manager;
-      console.log(gtm);
       
       if (gtm !== undefined
         && gtm.dataLayer.gtmDom

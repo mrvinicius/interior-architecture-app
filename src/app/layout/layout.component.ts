@@ -34,27 +34,13 @@ export class LayoutComponent implements OnInit, OnDestroy {
   ) {
     console.log('layout ctor');
     
-    this.tabs = [
-      {
-        title: 'Proposta',
-        selectors: '.project-proposal'
-      },
-      {
-        title: 'Versões',
-        selectors: '.project-versions'
-      },
-      {
-        title: 'Especificação de produto',
-        selectors: 'project-budgets'
-      }
-    ]
     this.activeRoute.data
       .takeUntil(this.ngUnsubscribe)
       .subscribe((data: { tabs: Tab[] }) => {
         if (data.tabs) {
           console.log(data.tabs);
 
-          // this.tabs = data.tabs;
+          this.tabs = data.tabs;
         }
       })
 
@@ -140,5 +126,10 @@ export class LayoutComponent implements OnInit, OnDestroy {
       }
     }
 
+  }
+
+  s() {
+    console.log('ng-content');
+    return true;
   }
 }

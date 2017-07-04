@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MdlExpansionPanelComponent } from '@angular-mdl/expansion-panel';
@@ -60,7 +60,7 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
   professional: Professional;
   professionals: Professional[];
   professionalAddedSubscription: Subscription;
-  project: Project;
+  @Input() project: Project;
   projectSlugTitle: string;
   services: string[];
   nativeWindow: any;
@@ -132,7 +132,6 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
   billingInfoUpdatedSubscription: Subscription;
 
   constructor(
-    private activateRoute: ActivatedRoute,
     private ambienhomeceService: AmbienceService,
     private auth: AuthService,
     private bankService: BankService,
@@ -150,16 +149,14 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
     private spinnerService: SpinnerService,
     private winRef: WindowRef
   ) {
-    console.log('manager ctor');
-    
+    console.log('proposal manager ctor');
+
     // this.ufs = UtilsService.getEnumArray(UF);
     this.ambienceDescriptions = UtilsService.getEnumArray(AmbienceDescription);
     this.deliveryDescriptions = UtilsService.getEnumArray(DeliveryDescription);
     this.services = UtilsService.getEnumArray(Service);
     this.profService.getCurrentProfessional().subscribe(prof => this.professional = prof);
     this.nativeWindow = winRef.getNativeWindow();
-
-
   }
 
   allClients(): Client[] {
@@ -238,296 +235,263 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
     return this.projectsService.allProjects;
   }
 
-  showclientstate() {
-    console.log(this.clientDataBeingSaved);
-    console.log(this.clientForm.value);
-    console.log(this.project);
-
-  }
-
   ngOnInit() {
-    console.log('project manager init');
+    this.clientForm = this.createClientForm(this.project);
+    this.clientFormChangesSubscription = this.subscribeToFormChanges(this.clientForm, () => {
+      this.clientDataHasChanged = true;
+    }, (formData) => {
+      if (!this.clientDataBeingSaved) {
+        this.clientDataHasChanged = false;
+        this.clientDataBeingSaved = true;
+        this.saveClientInfo().subscribe((resp) => {
+          this.clientErrorMessages = [];
 
-    // this.layoutContentService.defineTabs([
-    //   {
-    //     title: 'Proposta',
-    //     selectors: '.project-proposal'
-    //   },
-    //   {
-    //     title: 'Versões',
-    //     selectors: '.project-versions'
-    //   },
-    //   {
-    //     title: 'Especificação de produto',
-    //     selectors: 'project-budgets'
-    //   }
-    // ])
-    this.activateRoute.data
-      .subscribe((data: { project: Project }) => {
-        this.project = data.project;
-
-        this.clientForm = this.createClientForm(this.project);
-        this.clientFormChangesSubscription = this.subscribeToFormChanges(this.clientForm, () => {
-          this.clientDataHasChanged = true;
-        }, (formData) => {
-          if (!this.clientDataBeingSaved) {
-            this.clientDataHasChanged = false;
-            this.clientDataBeingSaved = true;
-            this.saveClientInfo().subscribe((resp) => {
-              this.clientErrorMessages = [];
-
-              if (resp !== undefined) {
-                if (resp.HasError) {
-                  this.clientErrorMessages = resp.errorMessages;
-                  this.clientDataBeingSaved = false;
-                } else {
-                  if (resp.client !== undefined) {
-                    this.project.client = resp.client;
-                    this.clientForm.value.clientId = resp.client.id;
-                  } else if (resp instanceof Client) {
-                    this.project.client = resp;
-                    this.clientForm.value.clientId = resp.id;
-                  }
-
-                  this.clientForm.reset();
-                  this.saveProjectInfo((success) => {
-                    if (success) {
-                      this.clientDataBeingSaved = false;
-                    }
-                  });
-                }
-
-              } else {
-                // this.project.client = undefined;
-                this.clientDataBeingSaved = false;
-              }
-            });
-          }
-        });
-        const cpfCnpjChange$ = this.clientForm.get('cpfCnpj').valueChanges;
-        cpfCnpjChange$.debounceTime(250).subscribe((cpfCnpj: string) => {
-          // console.log('cpfCnpj', cpfCnpj);
-          if (cpfCnpj) {
-            let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
-
-            let mask;
-
-            if (cleanCpfCnpj.length < 12) {
-              mask = UtilsService.cpfMask;
+          if (resp !== undefined) {
+            if (resp.HasError) {
+              this.clientErrorMessages = resp.errorMessages;
+              this.clientDataBeingSaved = false;
             } else {
-              mask = UtilsService.cnpjMask;
+              if (resp.client !== undefined) {
+                this.project.client = resp.client;
+                this.clientForm.value.clientId = resp.client.id;
+              } else if (resp instanceof Client) {
+                this.project.client = resp;
+                this.clientForm.value.clientId = resp.id;
+              }
+
+              this.clientForm.reset();
+              this.saveProjectInfo((success) => {
+                if (success) {
+                  this.clientDataBeingSaved = false;
+                }
+              });
             }
 
-            let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
-              guide: false,
-              placeholderChar: '\u2000'
-            });
-
-            this.clientForm.get('cpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
-              onlySelf: false,
-              emitEvent: false
-            })
+          } else {
+            // this.project.client = undefined;
+            this.clientDataBeingSaved = false;
           }
         });
+      }
+    });
+    const cpfCnpjChange$ = this.clientForm.get('cpfCnpj').valueChanges;
+    cpfCnpjChange$.debounceTime(250).subscribe((cpfCnpj: string) => {
+      // console.log('cpfCnpj', cpfCnpj);
+      if (cpfCnpj) {
+        let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
 
-        this.locationForm = this.createLocationForm(this.project);
-        this.locationFormChangesSubscription = this.subscribeToFormChanges(this.locationForm, () => {
-          this.locationDataHasChanged = true;
-        }, (formData) => {
-          console.log(formData);
-          let cleanCep = formData.CEP.replace(/\D/g, '');
+        let mask;
 
-          if (!this.locationDataBeingSaved && !this.addressFieldsDisabled && String(cleanCep).length > 7) {
-            console.log('Will save location');
-
-            this.locationDataHasChanged = false;
-            this.locationDataBeingSaved = true;
-            this.saveLocationInfo(formData);
-            this.saveProjectInfo((success: boolean) => {
-              this.locationDataBeingSaved = success ? false : false;
-            })
-          }
-        });
-
-        const cepChange$ = this.locationForm.get('CEP').valueChanges;
-        cepChange$.debounceTime(200).subscribe((cep: string) => {
-          if (cep) {
-            let cleanCep = cep.replace(/\D/g, '');
-            this.findLocationByCEP(cleanCep);
-          }
-        });
-
-        this.profForm =
-          this.createProfessionalForm(this.professional);
-
-        this.profFormChangesSubscription = this.subscribeToFormChanges(this.profForm, () => {
-          this.profDataHasChanges = true;
-        }, (formData) => {
-          if (!this.profDataBeingSaved) {
-            this.profDataHasChanges = false;
-            this.profDataBeingSaved = true;
-            this.saveProfessionalInfo().subscribe(response => {
-              if (response !== undefined) {
-                this.saveProjectInfo((success) => {
-                  if (success) {
-                    this.profDataBeingSaved = false;
-                  } else {
-                    this.profDataBeingSaved = false;
-                  }
-                });
-              }
-            });
-          }
-        });
-
-        this.profService.getAll()
-          .subscribe(profs => {
-            this.professionals = profs && profs.length ? profs : []
-          });
-
-
-
-
-
-
-        let deliveriesIndexes: number[] = [];
-
-        if (this.project.activeProposal.deliveries !== undefined) {
-          deliveriesIndexes = this.project.activeProposal.deliveries.map(delivery => {
-            return delivery.deliveryDescription
-          });
+        if (cleanCpfCnpj.length < 12) {
+          mask = UtilsService.cpfMask;
+        } else {
+          mask = UtilsService.cnpjMask;
         }
 
-        this.selectedDeliveriesForm =
-          this.createSelectedDeliveriesForm(deliveriesIndexes);
-        const selectedDeliveriesFormChanges$ =
-          this.selectedDeliveriesForm.get('selectedDeliveries').valueChanges;
-
-        selectedDeliveriesFormChanges$.debounceTime(3000).subscribe((indexes: number[]) => {
-
-          // console.log('value: ', indexes);
-          this.deliveryDataBeingSaved = true;
-          this.deliveryDescriptions.forEach((descStr, index) => {
-            if (indexes.includes(index)) {
-              // this.deliveryDataHasChanges[index] = true;
-            } else {
-              this.disableDelivery(index, indexes);
-            }
-          });
-
-          this.saveDeliveriesInfo().subscribe(result => {
-            if (result !== undefined) {
-              if (result === true) {
-                this.saveProjectInfo((success) => {
-                  this.deliveryDataBeingSaved = false;
-
-                })
-              }
-            }
-          });
+        let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
+          guide: false,
+          placeholderChar: '\u2000'
         });
 
-        this.proposalForm = this.createProposalForm(this.project);
-        this.proposalFormChangesSubscription = this.subscribeToFormChanges(this.proposalForm, () => {
-          this.proposalDataHasChanges = true;
-        }, (formData) => {
-          if (!this.proposalDataBeingSaved) {
-            this.proposalDataHasChanges = false;
-            this.proposalDataBeingSaved = true;
-            this.saveProposalInfo().subscribe(result => {
-              if (result !== undefined) {
-                this.saveProjectInfo((success) => {
-                  if (success) {
-                    this.proposalDataBeingSaved = false;
-                  }
-                });
-              }
-            });
-          }
-        });
-
-        this.paymentForm = this.createPaymentForm(this.project.activeProposal.costFinal);
-        const finalCostChanges$ = this.paymentForm.get('cost').valueChanges;
-        finalCostChanges$.debounceTime(3000).subscribe(value => {
-          this.spinnerService.toggleLoadingIndicator(true);
-          this.project.activeProposal.costFinal = UtilsService.parseMonetaryString(value)
-
-          if (!this.project.activeProposal.costFinal)
-            this.project.activeProposal.costFinal = 0;
-
-          this.saveProjectInfo((success) => {
-            this.spinnerService.toggleLoadingIndicator(false);
-          })
+        this.clientForm.get('cpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
+          onlySelf: false,
+          emitEvent: false
         })
+      }
+    });
 
+    this.locationForm = this.createLocationForm(this.project);
+    this.locationFormChangesSubscription = this.subscribeToFormChanges(this.locationForm, () => {
+      this.locationDataHasChanged = true;
+    }, (formData) => {
+      console.log(formData);
+      let cleanCep = formData.CEP.replace(/\D/g, '');
 
-        this.bankService.getAll().subscribe(banks => this.allBanks = banks);
-        this.bankAccService.getAllByProfessional(this.auth.getCurrentUser().id)
-          .subscribe(bankAccs => { this.bankAccounts = bankAccs ? bankAccs : [] });
+      if (!this.locationDataBeingSaved && !this.addressFieldsDisabled && String(cleanCep).length > 7) {
+        console.log('Will save location');
 
-        this.bankAccountForm = this.createBankAccountForm(this.professional, this.project.activeProposal.bankAccount);
-        this.bankAccountFormChangesSubscription = this.subscribeToFormChanges(this.bankAccountForm, () => {
-          this.bankAccountDataHasChanges = true;
-        }, (formData) => {
+        this.locationDataHasChanged = false;
+        this.locationDataBeingSaved = true;
+        this.saveLocationInfo(formData);
+        this.saveProjectInfo((success: boolean) => {
+          this.locationDataBeingSaved = success ? false : false;
+        })
+      }
+    });
 
-          if (!this.bankAccountDataBeingSaved) {
-            this.bankAccountDataHasChanges = false;
-            this.bankAccountDataBeingSaved = true;
-            this.saveBankAccountInfo(formData).subscribe((bankAcc: BankAccount) => {
+    const cepChange$ = this.locationForm.get('CEP').valueChanges;
+    cepChange$.debounceTime(200).subscribe((cep: string) => {
+      if (cep) {
+        let cleanCep = cep.replace(/\D/g, '');
+        this.findLocationByCEP(cleanCep);
+      }
+    });
 
-              if (bankAcc !== undefined) {
-                this.project.activeProposal.bankAccount = bankAcc;
+    this.profForm =
+      this.createProfessionalForm(this.professional);
 
-                if (formData.bankAccountId === 'new' || formData.bankAccountId === 'undefined') {
-                  this.saveProjectInfo((success) => {
-                    if (success) {
-                      this.bankAccountForm.reset();
-                      this.bankAccounts.push(bankAcc);
-                      this.bankAccountForm.value.bankAccountId = bankAcc.id;
-                      this.bankAccountDataBeingSaved = false;
-                    }
-                  });
-                } else {
-                  this.saveProjectInfo((success) => {
-                    if (success) {
-                      this.bankAccountDataBeingSaved = false;
-                    }
-                  });
-                }
-
-
+    this.profFormChangesSubscription = this.subscribeToFormChanges(this.profForm, () => {
+      this.profDataHasChanges = true;
+    }, (formData) => {
+      if (!this.profDataBeingSaved) {
+        this.profDataHasChanges = false;
+        this.profDataBeingSaved = true;
+        this.saveProfessionalInfo().subscribe(response => {
+          if (response !== undefined) {
+            this.saveProjectInfo((success) => {
+              if (success) {
+                this.profDataBeingSaved = false;
               } else {
-                this.bankAccountDataBeingSaved = false;
+                this.profDataBeingSaved = false;
               }
             });
           }
         });
-        const bankAccountCpfCnpjChange$ = this.bankAccountForm.get('accountCpfCnpj').valueChanges;
-        bankAccountCpfCnpjChange$.debounceTime(500).subscribe((cpfCnpj: string) => {
-          // console.log('cpfCnpj', cpfCnpj);
-          if (cpfCnpj) {
-            let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
+      }
+    });
 
-            let mask;
+    this.profService.getAll()
+      .subscribe(profs => {
+        this.professionals = profs && profs.length ? profs : []
+      });
 
-            if (cleanCpfCnpj.length < 12) {
-              mask = UtilsService.cpfMask;
-            } else {
-              mask = UtilsService.cnpjMask;
-            }
+    let deliveriesIndexes: number[] = [];
 
-            let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
-              guide: false,
-              placeholderChar: '\u2000'
-            });
+    if (this.project.activeProposal.deliveries !== undefined) {
+      deliveriesIndexes = this.project.activeProposal.deliveries.map(delivery => {
+        return delivery.deliveryDescription
+      });
+    }
 
-            this.bankAccountForm.get('accountCpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
-              onlySelf: false,
-              emitEvent: false,
+    this.selectedDeliveriesForm =
+      this.createSelectedDeliveriesForm(deliveriesIndexes);
+    const selectedDeliveriesFormChanges$ =
+      this.selectedDeliveriesForm.get('selectedDeliveries').valueChanges;
+
+    selectedDeliveriesFormChanges$.debounceTime(3000).subscribe((indexes: number[]) => {
+
+      // console.log('value: ', indexes);
+      this.deliveryDataBeingSaved = true;
+      this.deliveryDescriptions.forEach((descStr, index) => {
+        if (indexes.includes(index)) {
+          // this.deliveryDataHasChanges[index] = true;
+        } else {
+          this.disableDelivery(index, indexes);
+        }
+      });
+
+      this.saveDeliveriesInfo().subscribe(result => {
+        if (result !== undefined) {
+          if (result === true) {
+            this.saveProjectInfo((success) => {
+              this.deliveryDataBeingSaved = false;
+
             })
           }
-        });
+        }
       });
+    });
+
+    this.proposalForm = this.createProposalForm(this.project);
+    this.proposalFormChangesSubscription = this.subscribeToFormChanges(this.proposalForm, () => {
+      this.proposalDataHasChanges = true;
+    }, (formData) => {
+      if (!this.proposalDataBeingSaved) {
+        this.proposalDataHasChanges = false;
+        this.proposalDataBeingSaved = true;
+        this.saveProposalInfo().subscribe(result => {
+          if (result !== undefined) {
+            this.saveProjectInfo((success) => {
+              if (success) {
+                this.proposalDataBeingSaved = false;
+              }
+            });
+          }
+        });
+      }
+    });
+
+    this.paymentForm = this.createPaymentForm(this.project.activeProposal.costFinal);
+    const finalCostChanges$ = this.paymentForm.get('cost').valueChanges;
+    finalCostChanges$.debounceTime(3000).subscribe(value => {
+      this.spinnerService.toggleLoadingIndicator(true);
+      this.project.activeProposal.costFinal = UtilsService.parseMonetaryString(value)
+
+      if (!this.project.activeProposal.costFinal)
+        this.project.activeProposal.costFinal = 0;
+
+      this.saveProjectInfo((success) => {
+        this.spinnerService.toggleLoadingIndicator(false);
+      })
+    })
+
+
+    this.bankService.getAll().subscribe(banks => this.allBanks = banks);
+    this.bankAccService.getAllByProfessional(this.auth.getCurrentUser().id)
+      .subscribe(bankAccs => { this.bankAccounts = bankAccs ? bankAccs : [] });
+
+    this.bankAccountForm = this.createBankAccountForm(this.professional, this.project.activeProposal.bankAccount);
+    this.bankAccountFormChangesSubscription = this.subscribeToFormChanges(this.bankAccountForm, () => {
+      this.bankAccountDataHasChanges = true;
+    }, (formData) => {
+
+      if (!this.bankAccountDataBeingSaved) {
+        this.bankAccountDataHasChanges = false;
+        this.bankAccountDataBeingSaved = true;
+        this.saveBankAccountInfo(formData).subscribe((bankAcc: BankAccount) => {
+
+          if (bankAcc !== undefined) {
+            this.project.activeProposal.bankAccount = bankAcc;
+
+            if (formData.bankAccountId === 'new' || formData.bankAccountId === 'undefined') {
+              this.saveProjectInfo((success) => {
+                if (success) {
+                  this.bankAccountForm.reset();
+                  this.bankAccounts.push(bankAcc);
+                  this.bankAccountForm.value.bankAccountId = bankAcc.id;
+                  this.bankAccountDataBeingSaved = false;
+                }
+              });
+            } else {
+              this.saveProjectInfo((success) => {
+                if (success) {
+                  this.bankAccountDataBeingSaved = false;
+                }
+              });
+            }
+
+
+          } else {
+            this.bankAccountDataBeingSaved = false;
+          }
+        });
+      }
+    });
+    const bankAccountCpfCnpjChange$ = this.bankAccountForm.get('accountCpfCnpj').valueChanges;
+    bankAccountCpfCnpjChange$.debounceTime(500).subscribe((cpfCnpj: string) => {
+      // console.log('cpfCnpj', cpfCnpj);
+      if (cpfCnpj) {
+        let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
+
+        let mask;
+
+        if (cleanCpfCnpj.length < 12) {
+          mask = UtilsService.cpfMask;
+        } else {
+          mask = UtilsService.cnpjMask;
+        }
+
+        let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
+          guide: false,
+          placeholderChar: '\u2000'
+        });
+
+        this.bankAccountForm.get('accountCpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
+          onlySelf: false,
+          emitEvent: false,
+        })
+      }
+    });
 
     this.professionalAddedSubscription = this.profService.professionalAdded$
       .subscribe((newProfessional: Professional) => {
@@ -544,12 +508,7 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
         // })
       });
 
-    // let amb = new Ambience();
-    // amb.ambienceDescription = AmbienceDescription.Suíte;
-    // amb.services.push(Service['Layout de distribuição de móveis'])
-    // this.project.ambiences.push(amb);
-    // this.newAmbienceForm = this.createAmbienceForm(amb);
-    // this.newAmbienceFormChangesSubscription = this.subscribeToNewAmbienceChanges();
+
 
   }
 

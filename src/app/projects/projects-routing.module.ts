@@ -32,15 +32,15 @@ const routes: Routes = [
               tabs: [
                 {
                   title: 'Proposta',
-                  selectors: '.project-proposal'
+                  selectors: 'abx-project-proposal-manager'
                 },
                 {
                   title: 'Versões',
-                  selectors: '.project-versions'
+                  selectors: 'abx-project-version-manager'
                 },
                 {
                   title: 'Especificação de produto',
-                  selectors: 'project-budgets'
+                  selectors: 'abx-project-budget-manager'
                 }
               ]
             },

@@ -12,6 +12,7 @@ import { LayoutComponent } from './layout.component';
 import { LayoutContentService } from './shared/layout-content.service';
 import { LayoutHeaderService } from './shared/layout-header.service';
 import { LayoutSidebarService } from './shared/layout-sidebar.service';
+import { LayoutTabContentContainerComponent } from './layout-tab-content-container/layout-tab-content-container.component';
 
 @NgModule({
   imports: [
@@ -23,7 +24,7 @@ import { LayoutSidebarService } from './shared/layout-sidebar.service';
     RouterModule
   ],
   exports: [LayoutComponent],
-  declarations: [LayoutComponent, BreadcrumbsComponent],
+  declarations: [LayoutComponent, BreadcrumbsComponent, LayoutTabContentContainerComponent],
   providers: [],
 })
 export class LayoutModule {
