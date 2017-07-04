@@ -45,9 +45,9 @@ export class ProjectProposalPreviewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.headerService.hideHeader();
-    this.sidebarService.hideSidebar();
-    this.layoutContentService.setOverflowY('hidden');
+    // this.headerService.hideHeader();
+    // this.sidebarService.hideSidebar();
+    // this.layoutContentService.setOverflowY('hidden');
 
     this.route.data.subscribe((data: { project: Project }) => {
       this.project = data.project;

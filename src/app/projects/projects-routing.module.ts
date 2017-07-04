@@ -1,4 +1,3 @@
-import { ProjectsService } from './shared/projects.service';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
@@ -11,6 +10,7 @@ import { ProjectManagerComponent } from './project-manager/project-manager.compo
 import { ProjectManagerResolver } from './shared/project-manager-resolver.service';
 import { ProjectProposalPreviewComponent } from './project-proposal-preview/project-proposal-preview.component';
 import { ProjectProposalPreviewResolver } from './shared/project-proposal-preview-resolver.service';
+import { ProjectsService } from './shared/projects.service';
 
 const routes: Routes = [
   {
@@ -27,12 +27,28 @@ const routes: Routes = [
           { path: '', component: ProjectListComponent },
           {
             path: ':title', component: ProjectManagerComponent,
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+              tabs: [
+                {
+                  title: 'Proposta',
+                  selectors: '.project-proposal'
+                },
+                {
+                  title: 'Versões',
+                  selectors: '.project-versions'
+                },
+                {
+                  title: 'Especificação de produto',
+                  selectors: 'project-budgets'
+                }
+              ]
+            },
             resolve: {
               project: ProjectManagerResolver,
               breadcrumb: ProjectsService,
-              // breadcrumb: 'projectBcResolver'
-            },
-            canDeactivate: [CanDeactivateGuard]
+              // tabs: 'tabsResolver'
+            }
           },
           {
             path: ':title/proposta/:id', component: ProjectProposalPreviewComponent,
@@ -44,19 +60,35 @@ const routes: Routes = [
   },
 ];
 
-class DataService {}
-
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
   providers: [
     ProjectManagerResolver,
     ProjectProposalPreviewResolver,
+    {
+      provide: 'tabsResolver',
+      useValue: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+        return [
+          {
+            title: 'Proposta',
+            selectors: '.project-proposal'
+          },
+          {
+            title: 'Versões',
+            selectors: '.project-versions'
+          },
+          {
+            title: 'Especificação de produto',
+            selectors: 'project-budgets'
+          }
+        ]
+      }
+    }
     // {
     //   provide: 'projectBcResolver',
     //   useValue: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-    //     console.log('route: ', route);
-    //     console.log('state: ', state);
+  
     //   },
     //   useExisting: DataService,
     //   useClass: ProjectsService

@@ -104,7 +104,7 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
       CVC: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      planIdentifier: ['plano_avulso', Validators.required]
+      planIdentifier: ['plano_mensal', Validators.required]
     })
   }
 

@@ -1,0 +1,445 @@
+  <main class="layout-content u-row">
+    <md2-accordion class="mv-collapsible">
+      <md2-accordion-tab>
+        <md2-accordion-header class="collapsible-header">
+          <i *ngIf="!clientDataBeingSaved && !locationDataBeingSaved" class="material-icons">face</i>
+          <mz-spinner *ngIf="clientDataBeingSaved || locationDataBeingSaved" [color]="'black'" class="tiny spinner"></mz-spinner>
+          Cliente
+        </md2-accordion-header>
+        <section *ngIf="professional && project && clientForm && locationForm" class="row">
+          <form [formGroup]="clientForm">
+            <mz-textarea-container class="col s12">
+              <i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>
+              <textarea mz-textarea formControlName="briefing" label='briefing' id="briefing" length="300"></textarea>
+            </mz-textarea-container>
+            <div class="col s12 m6">
+              <ng-container *ngIf="clientErrorMessages && clientErrorMessages.length">
+                <p *ngFor="let msg of clientErrorMessages" class="red-text" style="margin: 0;">{{msg}}</p>
+              </ng-container>
+              <mz-select-container class="has-add-option">
+                <select mz-select #clientSelectInput formControlName="clientId" id='clientSelect' label="cliente">
+                <option [value]="0">- novo cliente -</option>
+                <option *ngFor="let c of allClients()"
+                  [value]="c.id"
+                  [selected]="c.id === project.client.id">{{c.name}}</option>
+             </select>
+              </mz-select-container>
+              <ng-container *ngIf="clientForm && clientForm.value && clientForm.value.clientId">
+                <ng-container *ngIf="clientForm.value.clientId == 0 || clientForm.value.clientId == undefined">
+                  <mz-input-container>
+                    <input mz-input formControlName="name" label="nome" name="Name" id='clientName' type='text'>
+                  </mz-input-container>
+                  <mz-input-container>
+                    <input mz-input formControlName="email" label="email" name='Email' id='clientEmail' type='email'>
+                  </mz-input-container>
+                  <div class="u-radio-group">
+                    <label>gênero</label>
+                    <mz-radio-button-container>
+                      <input mz-radio-button formControlName="clientGenderOpt" label="Feminino" id='femaleOpt' value="F" type="radio" />
+                    </mz-radio-button-container>
+                    <mz-radio-button-container>
+                      <input mz-radio-button formControlName="clientGenderOpt" label="Masculino" id='maleOpt' value="M" type="radio" />
+                    </mz-radio-button-container>
+                  </div>
+                  <mz-input-container>
+                    <input mz-input formControlName="cpfCnpj" label="CPF ou CNPJ" name='CpfCnpj' id='cpfCnpj' type='text'>
+                  </mz-input-container>
+
+                </ng-container>
+              </ng-container>
+            </div>
+          </form>
+          <form [formGroup]="locationForm">
+            <div class="col s12 m6">
+              <p class="dim-text" style="text-transform: uppercase;">Endereço da obra</p>
+
+              <mz-input-container>
+                <input mz-input formControlName="CEP" [textMask]="{mask: cepMask, placeholderChar: '\u2000'}" label="CEP" id='cep' type='text'>
+              </mz-input-container>
+              <div class="u-row">
+                <mz-input-container class="u-col s10">
+                  <input mz-input formControlName="addressArea" [attr.disabled]="addressFieldsDisabled ? addressFieldsDisabled : null" label="logradouro"
+                    id='addressArea' type='text'>
+                </mz-input-container>
+                <mz-input-container class="u-col s2">
+                  <input mz-input formControlName="addressNumber" label="número" id='addressNumber' type='number' max="99999">
+                </mz-input-container>
+              </div>
+              <div class="u-row">
+                <mz-input-container class="col s5" style="padding-left: 0;">
+                  <input mz-input formControlName="neighborhood" [attr.disabled]="addressFieldsDisabled ? addressFieldsDisabled : null" label="bairro"
+                    id='city' type='text'>
+                </mz-input-container>
+                <mz-input-container class="col s5" style="padding-left: 0;">
+                  <input mz-input formControlName="city" [attr.disabled]="addressFieldsDisabled ? addressFieldsDisabled : null" label="cidade"
+                    id='city' type='text'>
+                </mz-input-container>
+
+                <mz-input-container class="col s2" style="padding-right: 0;">
+                  <input mz-input formControlName="UF" [attr.disabled]="addressFieldsDisabled ? addressFieldsDisabled : null" label="UF" id='ufSelect'
+                    type='text'>
+                </mz-input-container>
+              </div>
+              <!--<mz-select-container>
+              <select mz-select formControlName="ufId" id='stateSelect' placeholder="localização da obra">
+                <option *ngFor="let uf of ufs; let i = index"
+                  [value]="i"
+                  [selected]="i === project.uf">{{uf}}</option>
+              </select>
+            </mz-select-container>-->
+            </div>
+          </form>
+        </section>
+      </md2-accordion-tab>
+
+      <md2-accordion-tab>
+        <md2-accordion-header class="collapsible-header">
+          <i *ngIf="!profDataBeingSaved && !partnersDataBeingSaved" class="material-icons">business</i>
+          <mz-spinner *ngIf="profDataBeingSaved || partnersDataBeingSaved" [color]="'black'" class="tiny spinner"></mz-spinner>
+          Profissional
+        </md2-accordion-header>
+        <section *ngIf="professional && profForm" class="row">
+          <div class="col s12 m6">
+            <form [formGroup]="profForm">
+              <mz-input-container>
+                <input mz-input formControlName="name" [value]="professional.name" label="nome profissional ou escritório" name='BusinessName'
+                  id='businessName' type='text'>
+              </mz-input-container>
+              <mz-textarea-container>
+                <textarea mz-textarea formControlName="description" [value]="professional.description" label='descrição profissional' id='businessDescription'
+                  length='400'></textarea>
+              </mz-textarea-container>
+            </form>
+          </div>
+
+          <div *ngIf="professionals" class="col s12 m6">
+            <section *ngIf="setPartnersForm()">
+              <form *ngIf="partnersForm" [formGroup]="partnersForm">
+                <!--<mdl-select formControlName="partnersIds2" multiple="true" placeholder="profissionais envolvidos">
+                <option (click)="openNewPartnerModal()" class="new-option" style="display: block;">
+                  - adicionar profissional -
+                  <mdl-option [value] class="not-is-option"><em>- adicionar profissional -</em></mdl-option>
+                </option>
+                <mdl-option mdl-ripple *ngFor="let p of allProfessionals()" [value]="p.id">{{ p.name }}</mdl-option>
+              </mdl-select>-->
+                <!--<mz-select-container>
+                <select mz-select id='pds' formControlName="partnersIds" label="profissionais participantes" placeholder="- adicionar participante -" class="has-add-option" multiple>
+                  <option disabled>- adicionar participante -</option>
+                  <ng-container *ngFor="let p of allProfessionals()">
+                    <option [value]="p.id">{{p.name}}</option>
+                  </ng-container>
+                </select>
+              </mz-select-container>-->
+                <tag-input id="tagInputContainer" #partnersInput formControlName="partners" [ngModel]="partnersForm.value.partners" [secondaryPlaceholder]="'profissionais participantes'"
+                  [placeholder]="'insira outro profissional'" [onlyFromAutocomplete]="true">
+
+                  <tag-input-dropdown id="tagInputDropdown" [displayBy]="'name'" [limitItemsTo]="6" [identifyBy]="'id'" [showDropdownIfEmpty]="true"
+                    [focusFirstElement]="true" [autocompleteItems]="[{id: 'new', name: '- novo profissional -'}].concat(professionals)">
+                  </tag-input-dropdown>
+                </tag-input>
+              </form>
+            </section>
+
+          </div>
+
+        </section>
+      </md2-accordion-tab>
+
+      <md2-accordion-tab>
+        <md2-accordion-header class="collapsible-header">
+          <i *ngIf="!proposalDataBeingSaved && !ambiencesDataBeingSaved && !deliveryDataBeingSaved" class="material-icons">description</i>
+          <mz-spinner *ngIf="proposalDataBeingSaved || ambiencesDataBeingSaved || deliveryDataBeingSaved" [color]="'black'" class="tiny spinner"></mz-spinner>
+          Detalhes da proposta
+        </md2-accordion-header>
+        <section *ngIf="project">
+          <div class="u-row">
+            <div class="u-col s12">
+              <form [formGroup]="proposalForm">
+                <div class="col s12">
+                  <mz-textarea-container>
+                    <!--<i mz-icon-mdi mz-textarea-prefix class="material-icons">comment</i>-->
+                    <textarea mz-textarea formControlName="proposalIntro" label='introdução da proposta' id='propIntro' length='200'></textarea>
+                  </mz-textarea-container>
+                  <ul *ngIf="followUpCheckbox.checked" class="browser-default" style="-webkit-margin-before: 0; -webkit-padding-start: 20px; list-style-type: circle;">
+                    <li class="dim-text">Organização planilha orçamentária</li>
+                    <li class="dim-text">Elaboração de cronograma do projeto</li>
+                    <li class="dim-text">Acompanhamento da obra</li>
+                    <li class="dim-text">Acompanhamento e sugestão de visitas à lojas</li>
+                    <li class="dim-text">Produção dos ambientes</li>
+                  </ul>
+                  <mz-checkbox-container>
+                    <input mz-checkbox #followUpCheckbox formControlName="followUp" [filledIn]="true" [label]="'Oferecer acompanhamento das entregas e execução do projeto (+40% do valor total)'"
+                      id="followUp" type="checkbox">
+                  </mz-checkbox-container>
+                  <!--<span class="small-font dim-text" style="font-size: .8rem;">* o aceite desta opção pelo cliente acrescentará 40% sobre o valor cobrado.</span>-->
+
+                </div>
+                <div class="col s12">
+                  <p class="dim-text" style="text-transform: uppercase;">Duração estimada</p>
+                </div>
+                <div class="col s4">
+                  <mz-input-container>
+                    <input mz-input formControlName="duration" id="deliveryDeadlineCount" placeholder="duração" type='number'>
+                  </mz-input-container>
+                </div>
+                <div class="col s8">
+                  <mz-select-container>
+                    <select mz-select formControlName="durationTimeUnity" id='deliveryTmeUnitySelect' placeholder="tempo">
+                    <option [value]="0">Dia(s)</option>
+                    <option [value]="1">Semana(s)</option>
+                    <option [value]="2">Mês(es)</option>
+                  </select>
+                  </mz-select-container>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s12">
+              <div class="divider"></div>
+            </div>
+          </div>
+          <!--<a (click)="showDeliveryState()" class="pointer">SHOW DELIVERY STATE</a>-->
+          <div class="u-row">
+            <div class="col s12">
+              <p class="dim-text" style="margin: 0; text-transform: uppercase;">Entregas</p>
+            </div>
+          </div>
+          <div class="u-row">
+            <form [formGroup]="selectedDeliveriesForm" *ngIf="selectedDeliveriesForm">
+              <mz-select-container id="delivertDescSelectContainer" class="col s12">
+                <select mz-select formControlName="selectedDeliveries" id='delivertDescSelect' placeholder="entregas do projeto" multiple>
+                <ng-container *ngFor="let delDesc of deliveryDescriptions; let delI = index">
+                  <option [value]="deliveryDescriptions.indexOf(delDesc)">{{delDesc}}</option>
+                    <!--[selected]="deliveryDescriptions.indexOf(delDesc) === del.deliveryDescription">{{delDesc}}</option>-->
+                </ng-container>
+              </select>
+              </mz-select-container>
+            </form>
+          </div>
+          <ul class="striped row" style="-webkit-margin-before: 0; padding: 0 0.75rem">
+            <ng-container *ngFor="let del of deliveryDescriptions; let delI = index">
+              <ng-container *ngIf="selectedDeliveriesForm && setDeliveryForm(delI)">
+                <li *ngIf="deliveriesForms[delI]" class="u-row row-inputs" style="display: flex;" [class.hide]="!selectedDeliveriesForm.value.selectedDeliveries.includes(delI)">
+                  <form [formGroup]="deliveriesForms[delI]" class="u-col s12">
+                    <div class="col s12 m6 valign-wrapper">
+                      <span style="margin-top: .75rem;">{{deliveryDescriptions[delI]}}</span>
+                    </div>
+                    <div class="col s4 m2" style="margin-bottom: 0.75rem;">
+                      <mz-input-container>
+                        <input mz-input formControlName="deadlineCount" id="deliveryDeadlineCount" placeholder="duração" type='number'>
+                      </mz-input-container>
+                    </div>
+                    <div class="col s8 m4">
+                      <mz-select-container>
+                        <select mz-select formControlName="deadlineTimeUnity" id='deliveryTmeUnitySelect' placeholder="tempo">
+                        <option [value]="0">Dia(s)</option>
+                        <option [value]="1">Semana(s)</option>
+                        <option [value]="2">Mês(es)</option>
+                      </select>
+                      </mz-select-container>
+                    </div>
+                  </form>
+                </li>
+              </ng-container>
+            </ng-container>
+          </ul>
+          <div class="row">
+            <div class="col s12">
+              <div class="divider"></div>
+            </div>
+          </div>
+          <div class="u-row">
+            <div class="col s12">
+              <p class="dim-text" style="margin-top: 0; text-transform: uppercase;">Ambientes</p>
+            </div>
+          </div>
+          <ul class="striped" style="-webkit-margin-before: 0; padding: 0 0.75rem">
+            <ng-container *ngIf="project.ambiences">
+              <li *ngFor="let amb of project.ambiences; let i = index" class="u-row row-inputs" style="display: flex;">
+                <ng-container *ngIf="setAmbienceForm(i)">
+                  <form [formGroup]="ambiencesForms[i]" class="u-col s10 m11">
+                    <div class="col s7 m4">
+                      <mz-select-container>
+                        <select mz-select formControlName="description" id='ambienceSelect' placeholder="ambiente">
+                        <option *ngFor="let ambDesc of ambienceDescriptions;"
+                          [value]="ambienceDescriptions.indexOf(ambDesc)"
+                          [selected]="ambienceDescriptions.indexOf(ambDesc) === amb.ambienceDescription">{{ambDesc}}</option>
+                      </select>
+                      </mz-select-container>
+                    </div>
+                    <div class="col s5 m2">
+                      <mz-input-container>
+                        <input mz-input formControlName="area" id="area" step="0.1" max="9999" placeholder="área (m²)" type='number'>
+                      </mz-input-container>
+                    </div>
+                    <div class="col s12 m6" style="margin-bottom: 0.75rem;">
+                      <mz-select-container>
+                        <select mz-select formControlName="services" id='servicesSelect' placeholder="serviços do ambiente" multiple>
+                      <option *ngFor="let sv of services"
+                        [value]="services.indexOf(sv)"
+                        [selected]="amb.services.includes(services.indexOf(sv))">{{sv}}</option>
+                    </select>
+                      </mz-select-container>
+                    </div>
+                  </form>
+                </ng-container>
+
+                <div class="col s2 m1 valign-wrapper" style="padding: 0; justify-content: center;">
+                  <a (click)="removeAmbience(i)" class="btn-floating btn-small waves-effect waves-dark transparent table-action-cell" style="box-shadow: none">
+                  <i class="material-icons mv-red-light-text">delete</i>
+                </a>
+                </div>
+              </li>
+            </ng-container>
+
+          </ul>
+          <div class="row">
+            <div class="col s12">
+              <span style="display: inline-block;">
+              <a (click)="beginAmbience()" class="pointer" style="display: flex; align-items: flex-end;">
+                Adicionar ambiente
+                <i class="material-icons right">add</i>
+              </a>
+            </span>
+              <span style="display: inline-block;">
+              <!--<a (click)="showState()" class="pointer" style="display: flex; align-items: flex-end;">
+                SHOW STATE
+              </a>-->
+            </span>
+            </div>
+          </div>
+        </section>
+      </md2-accordion-tab>
+
+      <md2-accordion-tab>
+        <md2-accordion-header class="collapsible-header">
+          <i *ngIf="!paymentDataBeingSaved && !bankAccountDataBeingSaved" class="material-icons">attach_money</i>
+          <mz-spinner *ngIf="paymentDataBeingSaved || bankAccountDataBeingSaved" [color]="'black'" class="tiny spinner"></mz-spinner>
+          Recebimento
+        </md2-accordion-header>
+        <section class="row">
+          <form [formGroup]="paymentForm">
+            <div class="col s12">
+              <label for="">Total sugerido</label>
+              <h5 style="margin: 0 0 1em 0;">
+                <b>{{project.activeProposal.cost | currency:'BRL':true}}</b>
+              </h5>
+            </div>
+            <div class="col s12 m6 l4 row">
+              <mz-input-container class="large-text-input">
+                <input mz-input [textMask]="{mask: mascaraReal, placeholderChar: '\u2000'}" formControlName="cost" #costInput label="Valor cobrado"
+                  id="finalCost" style="margin-bottom:0; text-align: right;" type="text">
+              </mz-input-container>
+              <span class="small-font dim-text" style="font-size: .8rem">Cobramos 3% para compensar nosso serviço</span>
+              <p *ngIf="!paymentDataBeingSaved && paymentForm.value.cost != undefined && paymentForm.value.cost != 0">
+                Você receberá <b>{{(parseMonetaryString(paymentForm.value.cost) - parseMonetaryString(paymentForm.value.cost) * 0.03) | currency:'BRL':true}}</b>
+              </p>
+              <!--<ng-container *ngIf="project.activeProposal.cost">
+              <mz-radio-button-container>
+                <input mz-radio-button formControlName="paymentOpt" label="Cobrar {{project.activeProposal.cost | currency:'BRL':true}}"
+                  id='cobrarOp' name="paymentOpt" value="1" type="radio" />
+              </mz-radio-button-container>
+              <mz-radio-button-container>
+                <input mz-radio-button formControlName="paymentOpt" label="Receber {{project.activeProposal.cost | currency:'BRL':true}}"
+                  id='receberOp' name="paymentOpt" value="2" type="radio" />
+              </mz-radio-button-container>
+            </ng-container>-->
+              <!--<ng-container *ngIf="paymentForm.value.paymentOpt">
+              <p *ngIf="paymentForm.value.paymentOpt == 1">Você receberá <b>{{project.activeProposal.costToReceive | currency:'BRL':true}}</b></p>
+              <p *ngIf="paymentForm.value.paymentOpt == 2">Seu cliente deverá pagar <b>{{project.activeProposal.costToClient | currency:'BRL':true}}</b></p>
+            </ng-container>-->
+            </div>
+            <!--<p>{{paymentForm.value.costFinal == 1 && !receiveOp.checked && !collectionOp.checked}}</p>
+          <p>{{paymentForm.value.costFinal == 2 && !receiveOp.checked && !collectionOp.checked}}</p>-->
+          </form>
+          <form [formGroup]="bankAccountForm">
+            <!--<a class="pointer" (click)="showAccountState()">SHOW STATE</a>-->
+
+            <div class="col s12 m6 l5 offset-l1" style="padding: 0;">
+              <mz-select-container class="has-add-option col s12">
+                <select mz-select formControlName="bankAccountId" label="sua conta bancária">
+                <option [value]="'new'">- nova conta -</option>
+                <ng-container *ngIf="bankAccounts && bankAccounts.length">
+                  <ng-container *ngIf="project.activeProposal.bankAccount">
+                    <option *ngFor="let acc of bankAccounts"
+                      [value]="acc.id"
+                      [selected]="acc.id == project.activeProposal.bankAccount.id">{{acc.bank.name}} - {{acc.agency}}</option>
+                  </ng-container>
+                  <ng-container *ngIf="!project.activeProposal.bankAccount">
+                    <option *ngFor="let acc of bankAccounts"
+                      [value]="acc.id">{{acc.bank.name}} - {{acc.agency}}</option>
+                  </ng-container>
+                </ng-container>
+              </select>
+              </mz-select-container>
+              <ng-container *ngIf="bankAccountForm.value.bankAccountId === 'new' || bankAccountForm.value.bankAccountId === 'undefined'">
+                <mz-select-container class=" col s12">
+                  <select mz-select formControlName="bankId" label="banco" placeholder="selecione">
+                  <ng-container *ngIf="allBanks && allBanks.length">
+                    <option *ngFor="let b of allBanks" [value]="b.id">{{b.name}}</option>
+                  </ng-container>
+        
+                  <!--<ng-container *ngIf="allBanks && allBanks.length && project.activeProposal.bankAccount && project.activeProposal.bankAccount.bank">
+                    <option *ngFor="let b of allBanks"
+                      [value]="b.id"
+                      [selected]="b.id === project.activeProposal.bankAccount.bank.id">{{b.name}}</option>
+                  </ng-container>
+                  <ng-container *ngIf="allBanks && allBanks.length && !(!project.activeProposal.bankAccount || !project.activeProposal.bankAccount.bank)">
+
+                  </ng-container>-->
+                </select>
+                </mz-select-container>
+                <div class="u-row">
+                  <mz-input-container class="col s4">
+                    <input mz-input formControlName="agencyNumber" [textMask]="{mask: agencyMask, placeholderChar: '\u2000'}" label="agência"
+                      id="agency" type="text">
+                  </mz-input-container>
+                  <mz-input-container class="col s6" style="padding-right: 0;">
+                    <input mz-input formControlName="accountNumber" [textMask]="{mask: bankAccountMask, placeholderChar: '\u2000'}" label="conta"
+                      id="account" type="text">
+                  </mz-input-container>
+                  <mz-input-container class="col s2" style="padding-left: 0;">
+                    <input mz-input formControlName="accountDigit" label="dígito" id="digit" maxlength="2" type="text">
+                  </mz-input-container>
+                  <mz-input-container class="col s12">
+                    <input mz-input formControlName="titular" label="titular da conta" id="titular" type="text">
+                  </mz-input-container>
+                  <mz-input-container class="col s12">
+                    <input mz-input formControlName="accountCpfCnpj" label="CPF ou CNPF" id="accountCpfCnpj" type="text">
+                  </mz-input-container>
+                </div>
+                <div class="row">
+                  <div class="u-col s6">
+                    <div class="switch">
+                      <label>
+                      <input type="checkbox"  formControlName="saveAccount" checked>
+                      <span class="lever"></span>
+                      salvar conta
+                    </label>
+                    </div>
+                  </div>
+                  <!--<mz-input-container class="col s7">
+                  <input mz-input formControlName="accountNick" label="CPF ou CNPF" id="accountCpfCnpj" type="text">
+                </mz-input-container>-->
+                </div>
+              </ng-container>
+            </div>
+          </form>
+        </section>
+      </md2-accordion-tab>
+    </md2-accordion>
+
+    <div class="col s12" style="margin-top: 0.75rem">
+
+      <div class="u-col s12 m9 right-align right">
+        <a (click)="generateProposal()" class="btn waves-effect waves-light">ver proposta</a>
+        <!--<button (click)="sendProposal()" type="button" class="btn waves-effect">enviar<span class="hide-on-small-only"> ao cliente</span></button>-->
+        <!--<button (click)="generateProposal()" class="btn waves-effect">Gerar proposta</button>-->
+      </div>
+      <!--<div class="u-col s12 m3 right-left left" style="line-height: 36px; letter-spacing: 0.15em; font-size: .8rem; font-weight: 600;">
+      <span *ngIf="clientDataBeingSaved || profDataBeingSaved || proposalDataBeingSaved || ambiencesDataBeingSaved || paymentDataBeingSaved">Salvando...</span>
+      <span *ngIf="!clientDataBeingSaved && !profDataBeingSaved && !proposalDataBeingSaved && !ambiencesDataBeingSaved && !paymentDataBeingSaved">Dados salvos</span>
+    </div>-->
+    </div>
+  </main>

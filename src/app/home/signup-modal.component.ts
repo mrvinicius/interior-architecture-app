@@ -12,7 +12,7 @@ import { SpinnerService } from './../core/spinner/spinner.service';
     template: `
         <mz-modal class="small-modal">
             <mz-modal-header>
-                Cadastro
+                Crie uma conta
             </mz-modal-header>
             <mz-modal-content>
                 <p *ngIf="errorMessage && errorMessage.length" class="red-text">{{errorMessage}}</p>

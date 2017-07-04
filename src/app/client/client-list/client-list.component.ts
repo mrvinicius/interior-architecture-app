@@ -86,8 +86,6 @@ export class ClientListComponent implements OnInit, OnDestroy {
   }
 
   onSelect(client: Client) {
-    console.log(client);
-
     this.selectedClient = client;
   }
 

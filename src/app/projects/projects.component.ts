@@ -1,27 +1,22 @@
-import { ProjectsService } from './shared/projects.service';
 import { Component, OnInit } from '@angular/core';
 
-import { ProfessionalService } from './../core/professional.service';
-import { ProjectServicesService } from './shared/project-services.service';
 import { AmbienceService } from './shared/ambience.service';
+import { ProfessionalService } from './../core/professional.service';
+import { ProjectsService } from './shared/projects.service';
+import { ProjectServicesService } from './shared/project-services.service';
 
 @Component({
-  selector: 'mbp-projects',
+  // selector: 'abx-projects',
   providers: [ProjectServicesService],
   template: `
-    <abx-layout>
       <router-outlet id="projectsRouter"></router-outlet>
-    </abx-layout>
   `
 })
-export class ProjectsComponent implements OnInit {
+export class ProjectsComponent {
 
   constructor(
     private profService: ProfessionalService,
     private projectsService: ProjectsService,
     private projectServService: ProjectServicesService,
   ) { }
-
-  ngOnInit() { }
-
 }

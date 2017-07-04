@@ -51,7 +51,7 @@ export class BillingService {
     }
 
     switch (data.PlanIdentifier) {
-      case "plano_avulso":
+      case "plano_mensal":
         data.IdPlano = "9D55A163EEF144E4970EA2FD3D23BFE9";
         data.Valor = 99.90;
         now.setMonth(now.getMonth() + 1)
