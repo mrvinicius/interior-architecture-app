@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { MzModalService, MzBaseModal } from 'ng2-materialize';
 
-import { ProjectsService } from './../shared/projects.service';
+import { ProjectsService } from '../shared/projects.service';
 
 @Component({
     selector: 'new-project-modal',
     template: `
         <mz-modal class="small-modal">
             <mz-modal-header>
-                Adicionar projeto
+                Criar proposta
             </mz-modal-header>
             <mz-modal-content>
                 <form #newProjectForm="ngForm">

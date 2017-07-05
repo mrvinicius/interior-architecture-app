@@ -51,22 +51,16 @@ export class BillingService {
     }
 
     switch (data.PlanIdentifier) {
-      case "plano_avulso":
-        data.IdPlano = "9D55A163EEF144E4970EA2FD3D23BFE9";
+      case "plano_mensal":
+        data.IdPlano = "B8292E584F6B4EA29965BDBFD8FBF24A";
         data.Valor = 99.90;
         now.setMonth(now.getMonth() + 1)
         break;
 
       case "plano_trimestral":
+        data.IdPlano = "6C943E378CC64999906B553C3072AF48";
         data.Valor = 119.90;
         now.setMonth(now.getMonth() + 3)
-        break;
-
-
-      case "plano_1real":
-        data.IdPlano = "722A5DC954394AFE91E5E3A2AA74DCDF";
-        data.Valor = 1.0;
-        now.setMonth(now.getMonth() + 1)
         break;
 
       default:
@@ -88,34 +82,49 @@ export class BillingService {
         if (billingResp.HasError) {
           let errorMessages = [];
           console.log(billingResp.ErrorMessage);
-          
-          console.log(typeof billingResp.ErrorMessage);
-          
 
-          if (billingResp.ErrorMessage.contains('is not a valid credit card number')) {
+          console.log(typeof billingResp.ErrorMessage);
+
+          let zerofill = (dateOrMonth: number | string): string => {
+            let filled: string = String(dateOrMonth).trim();
+            if (filled.length === 1)
+              filled = "0" + filled;
+
+            return filled;
+          }
+
+          if (billingResp.ErrorMessage
+            .indexOf('is not a valid credit card number') > -1) {
             errorMessages.push('Cartão de crédito inválido')
           }
 
-          if (billingResp.ErrorMessage.contains('')) {
-
+          if (billingResp.ErrorMessage.indexOf('não pode ficar em branco') > -1
+            || billingResp.ErrorMessage.indexOf('can\'t be blank') > -1) {
+            errorMessages.push('Dados em branco')
           }
 
+          // let err = 'não está ativa para receber pagamentos pois não tem conta bancária cadastrada';
+          // if (billingResp.ErrorMessage.indexOf(err) > -1) {
+          //   errorMessages.push('Não há conta bancária')
+          // }
 
-            // let jsonError = "{\"errorMessage\": \"" + billingResp.ErrorMessage + "\" }";
-            // console.log(jsonError);
-            // // let errorObject = JSON.parse(billingResp.ErrorMessage.replace(/\\/g, ""));
-            // let errorObject = JSON.parse(jsonError.replace(/\\/g, ""));
-            // console.log(errorObject);
+          // if (billingResp.ErrorMessage.contains(''))
 
-            // if (errorObject.errorMessage && typeof errorObject.errorMessage === 'object') {
-            //   errorObject.errorMessage.Message.Errors.number.forEach(errMsg => {
-            //     errorMessages.push(this.handleErrMsg(errMsg));
-            //   });
-            // } else {
-            //   errorMessages.push(this.handleErrMsg(errorObject.errorMessage))
-            // }
-            if (!errorMessages.length) errorMessages.push('Erro desconhecido')
-            billingResp.errorMessages = errorMessages;
+          // let jsonError = "{\"errorMessage\": \"" + billingResp.ErrorMessage + "\" }";
+          // console.log(jsonError);
+          // // let errorObject = JSON.parse(billingResp.ErrorMessage.replace(/\\/g, ""));
+          // let errorObject = JSON.parse(jsonError.replace(/\\/g, ""));
+          // console.log(errorObject);
+
+          // if (errorObject.errorMessage && typeof errorObject.errorMessage === 'object') {
+          //   errorObject.errorMessage.Message.Errors.number.forEach(errMsg => {
+          //     errorMessages.push(this.handleErrMsg(errMsg));
+          //   });
+          // } else {
+          //   errorMessages.push(this.handleErrMsg(errorObject.errorMessage))
+          // }
+          if (!errorMessages.length) errorMessages.push('Erro desconhecido')
+          billingResp.errorMessages = errorMessages;
         }
 
         return billingResp;

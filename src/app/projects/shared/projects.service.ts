@@ -760,8 +760,6 @@ export class ProjectsService implements Resolve<string>{
   }
 
   update(project: Project, generateProposal?: boolean): Observable<Project> {
-
-
     let options = new RequestOptions({ headers: this.getHeaders() });
     let projectData = {
       'Id': project.id,
@@ -844,6 +842,16 @@ export class ProjectsService implements Resolve<string>{
           'ProfissionalId': id
         });
       });
+    }
+
+    let currentProfInPartners = projectData.Proposta[0].PropostaProfissionaisParticipantes
+      .find(part => part.ProfissionalId === this.auth.getCurrentUser().id)
+
+    if (currentProfInPartners === undefined) {
+      projectData.Proposta[0].PropostaProfissionaisParticipantes.push({
+        'PropostaId': project.activeProposal.id,
+        'ProfissionalId': this.auth.getCurrentUser().id
+      })
     }
 
     if (project.activeProposal.deliveries !== undefined) {

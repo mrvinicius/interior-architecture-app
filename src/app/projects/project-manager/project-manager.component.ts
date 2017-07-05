@@ -99,6 +99,11 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
   partnersFormChangesSubscription: Subscription;
   @ViewChild('partnersInput') partnersInput: TagInputComponent;
 
+  proposalIntroDataHasChanges: boolean;
+  proposalIntroDataBeingSaved: boolean;
+  proposalIntroForm: FormGroup;
+  proposalIntroFormChangesSubscription: Subscription;
+
   // Refers to Proposal section variables
   proposalDataHasChanges: boolean;
   proposalDataBeingSaved: boolean;
@@ -219,7 +224,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
       } else {
         this.spinnerService.toggleLoadingIndicator(false);
         this.toastService.show('Selecione um cliente', 2500);
-
       }
     }
   }
@@ -274,9 +278,7 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
                     }
                   });
                 }
-
               } else {
-                // this.project.client = undefined;
                 this.clientDataBeingSaved = false;
               }
             });
@@ -363,11 +365,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
             this.professionals = profs && profs.length ? profs : []
           });
 
-
-
-
-
-
         let deliveriesIndexes: number[] = [];
 
         if (this.project.activeProposal.deliveries !== undefined) {
@@ -404,6 +401,24 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
             }
           });
         });
+
+        let introValue = '';
+        if (this.project.activeProposal.intro !== undefined)
+          introValue = this.project.activeProposal.intro;
+
+        this.proposalIntroForm = this.fb.group({
+          proposalIntro: [introValue]
+        })
+
+        const introChanges$ = this.proposalIntroForm.get('proposalIntro').valueChanges;
+        introChanges$.debounceTime(3000).subscribe(value => {
+          this.spinnerService.toggleLoadingIndicator(true);
+
+          this.project.activeProposal.intro = this.proposalIntroForm.value.proposalIntro;
+          this.saveProjectInfo((success) => {
+            this.spinnerService.toggleLoadingIndicator(false);
+          })
+        })
 
         this.proposalForm = this.createProposalForm(this.project);
         this.proposalFormChangesSubscription = this.subscribeToFormChanges(this.proposalForm, () => {
@@ -516,19 +531,7 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
           display: newProfessional.name
         });
 
-        // this.partnersForm.get('partners').setValue(this.partnersForm.value.partners, {
-        //   onlySelf: false,
-        //   emitEvent: false
-        // })
       });
-
-    // let amb = new Ambience();
-    // amb.ambienceDescription = AmbienceDescription.Suíte;
-    // amb.services.push(Service['Layout de distribuição de móveis'])
-    // this.project.ambiences.push(amb);
-    // this.newAmbienceForm = this.createAmbienceForm(amb);
-    // this.newAmbienceFormChangesSubscription = this.subscribeToNewAmbienceChanges();
-
   }
 
   ngOnDestroy() {
@@ -568,7 +571,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
   }
 
   parseMonetaryString(value: string): number {
-
     return UtilsService.parseMonetaryString(value);
   }
 
@@ -591,38 +593,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
         }
       }
     })
-  }
-
-  sendProposal() {
-    this.spinnerService.toggleLoadingIndicator(true);
-
-    if (!this.profService.professional.paying) {
-      this.billingInfoUpdatedSubscription =
-        this.billingService.billingInfoUpdated$
-          .subscribe((success: boolean) => this.sendProposal());
-
-      this.spinnerService.toggleLoadingIndicator(false);
-      this.openBillingModal();
-
-    } else {
-      if (this.project.client && this.project.client.id) {
-        this.saveProjectInfo((success) => {
-          if (success) {
-            this.propService.send(this.project).subscribe((success: boolean) => {
-              if (success) {
-
-                this.spinnerService.toggleLoadingIndicator(false);
-                this.toastService.show('Projeto enviado!', 2500, 'green');
-              }
-            })
-          }
-        }, true)
-      } else {
-        this.spinnerService.toggleLoadingIndicator(false);
-        this.toastService.show('Selecione um cliente', 2500, 'red');
-
-      }
-    }
   }
 
   setAmbienceForm(ambienceIndex: number) {
@@ -738,7 +708,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     var newWindow = this.nativeWindow.open(path);
   }
 
-
   private createAmbienceForm(ambience: Ambience): FormGroup {
     // let description = ambience.description ? ambience.description : '';
     let description =
@@ -788,20 +757,11 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     }
 
     return this.clientForm = this.fb.group({
-      briefing: [project.briefing],
       clientId: [clientId, Validators.required],
       email: [''],
       cpfCnpj: [''],
       name: [''],
-      clientGenderOpt: [],
-
-      // // ufId: [project.UF],
-      // CEP: [project.CEP],
-      // addressArea: [project.addressArea],
-      // addressNumber: [project.addressNumber],
-      // city: [project.city],
-      // neighborhood: [project.neighborhood],
-      // UF: [project.UF]
+      clientGenderOpt: []
     });
   }
 
@@ -823,7 +783,7 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
 
   private createLocationForm(project: Project): FormGroup {
     return this.fb.group({
-      // ufId: [project.UF],
+      briefing: [project.briefing],
       CEP: [project.CEP],
       addressArea: [project.addressArea],
       addressNumber: [project.addressNumber],
@@ -837,7 +797,7 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
   setPartnersForm(): boolean {
     if (this.partnersForm === undefined && this.professionals) {
       this.partnersForm =
-        this.createPartnersForm(this.project.activeProposal.professionalsIds);
+        this.createPartnersForm(this.project.activeProposal.professionalsIds, this.professional.id);
       const partnersChange$ = this.partnersForm.get('partners').valueChanges;
       partnersChange$.do((profs: any[]) => {
         let addOptionIndex = profs.findIndex(obj => obj.value === 'new');
@@ -877,9 +837,14 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     return true;
   }
 
-  private createPartnersForm(ids: any[]): FormGroup {
+  private createPartnersForm(ids: any[], currentProfId: string): FormGroup {
     let chipsData: any[] = [];
     if (ids && ids.length) {
+      let index = ids.indexOf(currentProfId);
+      if (index > -1) {
+        ids.splice(index, 1)
+      }
+
       chipsData = this.getPartnersByIds(ids).map((prof: any) => {
         prof.value = prof.id;
         prof.display = prof.name;
@@ -907,24 +872,20 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
       descriptionValue = professional.description;
 
     return this.fb.group({
-      name: [professional.name, Validators.required],
+      name: [{ value: professional.name, disabled: true }],
       description: [descriptionValue],
     });
   }
 
   private createProposalForm(project: Project): FormGroup {
-    let introValue = '';
     let duration = project.activeProposal.deadlineCount !== undefined ?
       project.activeProposal.deadlineCount : '';
 
     let durationTimeUnity = project.activeProposal.deadlineTimeUnity !== undefined ?
       project.activeProposal.deadlineTimeUnity : '';
 
-    if (project.activeProposal.intro !== undefined)
-      introValue = project.activeProposal.intro;
 
     return this.fb.group({
-      proposalIntro: [introValue],
       followUp: [project.activeProposal.followUp],
       duration: [duration],
       durationTimeUnity: [durationTimeUnity]
@@ -1040,8 +1001,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
   }
 
   private saveClientInfo(): Observable<any> {
-    let briefing = this.clientForm.value.briefing;
-    // let ufId = this.clientForm.value.ufId;
     let selectedClientId = this.clientForm.value.clientId;
     let newClientName = this.clientForm.value.name;
     let newClientEmail = this.clientForm.value.email;
@@ -1049,10 +1008,7 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
     let newClientGender = this.clientForm.value.clientGenderOpt;
     let newClient: Client;
 
-    this.project.briefing = briefing;
 
-    // this.project.UF = ufId;
-    // check newclient option selected
     if (String(selectedClientId) === '0') {
       newClient = new Client();
       newClient = {
@@ -1167,6 +1123,7 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
   }
 
   private saveLocationInfo(formData) {
+    this.project.briefing = formData.briefing;
     this.project.CEP = formData.CEP;
     this.project.addressArea = formData.addressArea;
     this.project.addressNumber = formData.addressNumber;
@@ -1176,13 +1133,10 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
   }
 
   private saveProfessionalInfo(): Observable<any> {
-    let name = this.profForm.value.name;
     let description = this.profForm.value.description;
-    // let partners = this.profForm.value.partners;
     let currentProf = this.professional;
     currentProf.name = name;
     currentProf.description = description;
-    // this.project.activeProposal.professionalsIds = partners;
     this.project.professional = currentProf;
 
     return this.profService.update(currentProf);
@@ -1204,7 +1158,6 @@ export class ProjectManagerComponent implements CanComponentDeactivate, OnInit, 
   }
 
   private saveProposalInfo(): Observable<any> {
-    this.project.activeProposal.intro = this.proposalForm.value.proposalIntro;
     this.project.activeProposal.followUp = this.proposalForm.value.followUp;
     this.project.activeProposal.deadlineCount = this.proposalForm.value.duration;
     this.project.activeProposal.deadlineTimeUnity = this.proposalForm.value.durationTimeUnity;

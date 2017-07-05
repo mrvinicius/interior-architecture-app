@@ -1,4 +1,3 @@
-import { SpinnerService } from './../../core/spinner/spinner.service';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -11,7 +10,9 @@ import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrect
 
 import { BillingInfo } from '../shared/billing-info';
 import { BillingService } from '../shared/billing.service';
+import { Professional } from './../../core/professional';
 import { ProfessionalService } from '../../core/professional.service';
+import { SpinnerService } from '../../core/spinner/spinner.service';
 import { UtilsService } from '../../shared/utils/utils.service';
 
 @Component({
@@ -22,10 +23,11 @@ import { UtilsService } from '../../shared/utils/utils.service';
 export class BillingModalComponent extends MzBaseModal implements OnInit {
   billingForm: FormGroup;
   cardNumberMask = UtilsService.creditCardNumberMask;
+  cvcMask = UtilsService.cardVerificationCode;
   errorMessages: string[];
   expirationDatePipe = createAutoCorrectedDatePipe('mm/yy');
   expirationDateMask = [/\d/, /\d/, '/', /\d/, /\d/];
-  cvcMask = UtilsService.cardVerificationCode;
+  professional: Professional;
 
   constructor(
     private billingService: BillingService,
@@ -34,11 +36,15 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
     private spinnerService: SpinnerService
   ) {
     super();
-    this.billingForm = this.createBillingForm();
+
   }
 
   ngOnInit() {
-
+    this.profService.getCurrentProfessional()
+      .subscribe(prof => {
+        this.professional = prof;
+        this.billingForm = this.createBillingForm(this.professional)
+      });
   }
 
   saveBillingInfo(formData) {
@@ -66,8 +72,6 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
       }
     }
 
-    console.log(billingInfo);
-
     this.billingService.addBillingInfo(billingInfo).subscribe(resp => {
       this.spinnerService.toggleLoadingIndicator(false);
 
@@ -82,11 +86,7 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
   }
 
   updateProfessional() {
-    console.log(this.profService.professional);
-    
     this.profService.update(this.profService.professional).subscribe(resp => {
-      console.log(resp);
-
       if (resp.HasError) {
 
       } else {
@@ -97,14 +97,28 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
     })
   }
 
-  private createBillingForm(): FormGroup {
+  private createBillingForm(prof: Professional): FormGroup {
+    let lastName: string = '';
+
+    if (prof.lastName != undefined && prof.lastName.length > 0)
+      lastName = prof.lastName;
+
     return this.fb.group({
-      cardNumber: ['', Validators.required],
-      expirationDate: ['', Validators.required],
-      CVC: ['', Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      planIdentifier: ['plano_avulso', Validators.required]
+      planIdentifier: ['plano_mensal', Validators.required],
+      cardNumber: ['', [
+        Validators.required,
+        Validators.pattern(/^(\d{4}[- ]){3}\d{4}|\d{16}$/)
+      ]],
+      expirationDate: ['', [
+        Validators.required,
+        Validators.pattern(/^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$/)
+      ]],
+      CVC: ['', [
+        Validators.required,
+        Validators.pattern(/^[0-9]{3,4}$/)
+      ]],
+      firstName: [prof.name, Validators.required],
+      lastName: [lastName, Validators.required]
     })
   }
 
