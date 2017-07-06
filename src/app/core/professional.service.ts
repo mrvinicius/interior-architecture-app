@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { RequestOptions, Http, Headers, Response } from '@angular/http';
+
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/toPromise';
 
 import { AuthService } from './auth.service';
@@ -33,18 +34,6 @@ export class ProfessionalService {
     private auth: AuthService,
     private http: Http
   ) {
-    // this._professional = new Professional();
-    // this._professional.id = 'c11752b0-0475-4d31-9c01-223d1a98aa9f';
-    // this._professional.name = 'Raphael Tristão';
-    // this._professional.email = 'raphael@muuving.com.br';
-    // this._professional.profession = ProfessionalService.professionIds[0];
-    // this._professional.description = 'Escritório de interiores criado por Raphael Tristão';
-
-    // this._professional = new Professional();
-    // this._professional.id = this.auth.currentUser.id;
-    // this._professional.email = this.auth.currentUser.email;
-    // this._professional.profession = Profession.Arquiteto; // TODO: Remove mock
-
     if (localStorage.getItem('currentUser')) {
       this.getOne(this.auth.getCurrentUser().id).subscribe((currentProf: Professional) => {
         this._professional = currentProf;
@@ -99,7 +88,6 @@ export class ProfessionalService {
             this.allProfessionalsChange$.next(this.allProfessionals);
             this.professionalAdded$.next(prof);
           }
-
         }
 
         return {
@@ -107,18 +95,7 @@ export class ProfessionalService {
           errorMessage: profResp.ErrorMessage,
           professional: prof
         };
-
-
       }).catch(this.handleError)
-    // .subscribe(professional => {
-    //   if (professional) {
-    //     let prof = new Professional();
-    //     prof.id = professional.Id;
-    //     prof.name = professional.Nome;
-    //     prof.email = professional.Email;
-    //     this.professionalAdded$.next(prof);
-    //   }
-    // });
   }
 
   // Adiciona um novo cliente associado a este profissional à base e atualiza os dados locais
@@ -294,11 +271,6 @@ export class ProfessionalService {
 
     if (prof.password) {
       data.Senha = this._professional.password;
-    }
-
-    if (data.Senha) {
-      console.log(data.Senha);
-      alert('Senha alterada')
     }
 
     // console.log(data);

@@ -17,6 +17,7 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
   project: Project;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
+
   constructor(
     private activateRoute: ActivatedRoute
   ) {
@@ -34,10 +35,5 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-  }
-
-  s() {
-    console.log('abx-project-proposal-manager');
-    return true;
   }
 }

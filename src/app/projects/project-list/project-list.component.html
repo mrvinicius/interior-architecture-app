@@ -1,7 +1,8 @@
 <abx-layout>
     <main class="layout-content left-space u-row">
+
         <div class="fixed-action-btn">
-            <a (click)="openNewProjectModal()" [ngClass]="{pulse: projects && projects.length < 1}" class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">add</i></a>
+            <a (click)="openNewProjectModal()" title="Criar proposta" [ngClass]="{pulse: projects && projects.length < 1}" class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">add</i></a>
         </div>
 
         <div *ngIf="projects && projects.length < 1" class="background-center-container">
@@ -10,7 +11,7 @@
                 <i class="material-icons large grey-text text-lighten-1">library_books</i>
                 <div class="bottom-text">
                     <div class="dim-text" style="font-size: 1.2rem; font-weight: bold;">Clique no "+"</div>
-                    <div class="dim-text">para adicionar projetos</div>
+                    <div class="dim-text">para criar propostas</div>
                 </div>
             </div>
         </div>

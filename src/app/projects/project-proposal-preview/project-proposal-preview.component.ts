@@ -1,8 +1,10 @@
 import { ActivatedRoute } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DomSanitizer } from "@angular/platform-browser";
 import { MzModalService, MzToastService } from 'ng2-materialize';
+import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/takeUntil';
 
 import { BillingModalComponent } from '../../billing/billing-modal/billing-modal.component';
 import { ProposalService } from '../shared/proposal.service';
@@ -21,11 +23,12 @@ import { Proposal } from '../shared/proposal';
   templateUrl: './project-proposal-preview.component.html',
   styleUrls: ['./project-proposal-preview.component.scss']
 })
-export class ProjectProposalPreviewComponent implements OnInit {
+export class ProjectProposalPreviewComponent implements OnInit, OnDestroy {
   previewUrl;
   project: Project;
   proposalSent: boolean = false;
-  billingInfoUpdatedSubscription: Subscription;
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
+
 
   constructor(
     private billingService: BillingService,
@@ -66,51 +69,41 @@ export class ProjectProposalPreviewComponent implements OnInit {
         this.previewUrl = this.domSanatizer
           .bypassSecurityTrustResourceUrl(this.project.activeProposal.url);
       }
-
-
-
     });
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   sendProposal() {
     this.spinnerService.toggleLoadingIndicator(true);
-    if (this.project.client && this.project.client.id) {
-      this.propService.send(this.project).subscribe((success: boolean) => {
-        if (success) {
-          this.spinnerService.toggleLoadingIndicator(false);
-          this.proposalSent = true;
-          this.toastService.show('Projeto enviado!', 3000, 'green');
-        }
-      })
+
+    if (!this.profService.professional.paying) {
+      this.billingService.billingInfoUpdated$
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe((success: boolean) => this.sendProposal());
+
+      this.spinnerService.toggleLoadingIndicator(false);
+      let modalRef = this.modalService.open(BillingModalComponent, {});
 
     } else {
-      this.spinnerService.toggleLoadingIndicator(false);
-      this.toastService.show('Selecione um cliente', 3000, 'red');
+      if (this.project.client && this.project.client.id) {
+        this.propService.send(this.project)
+          .takeUntil(this.ngUnsubscribe)
+          .subscribe((success: boolean) => {
+            if (success) {
+              this.spinnerService.toggleLoadingIndicator(false);
+              this.proposalSent = true;
+              this.toastService.show('Projeto enviado!', 3000, 'green');
+            }
+          })
 
+      } else {
+        this.spinnerService.toggleLoadingIndicator(false);
+        this.toastService.show('Selecione um cliente', 3000, 'red');
+      }
     }
-    // if (!this.profService.professional.paying) {
-    //   this.billingInfoUpdatedSubscription =
-    //     this.billingService.billingInfoUpdated$
-    //       .subscribe((success: boolean) => this.sendProposal());
-
-    //   this.spinnerService.toggleLoadingIndicator(false);
-    //   let modalRef = this.modalService.open(BillingModalComponent, {});
-
-    // } else {
-    //   if (this.project.client && this.project.client.id) {
-    //     this.propService.send(this.project).subscribe((success: boolean) => {
-    //       if (success) {
-    //         this.spinnerService.toggleLoadingIndicator(false);
-    //         this.proposalSent = true;
-    //         this.toastService.show('Projeto enviado!', 3000, 'green');
-    //       }
-    //     })
-
-    //   } else {
-    //     this.spinnerService.toggleLoadingIndicator(false);
-    //     this.toastService.show('Selecione um cliente', 3000, 'red');
-
-    //   }
-    // }
   }
 }

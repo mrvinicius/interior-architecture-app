@@ -43,12 +43,16 @@ import { UF } from '../../shared/uf.enum';
 import { UtilsService } from '../../shared/utils/utils.service';
 import { WindowRef } from '../../core/window-ref.service';
 
+export interface TabParentComponent {
+
+}
+
 @Component({
   selector: 'abx-project-proposal-manager',
   templateUrl: './project-proposal-manager.component.html',
   styleUrls: ['./project-proposal-manager.component.scss']
 })
-export class ProjectProposalManagerComponent implements CanComponentDeactivate, OnInit, OnDestroy {
+export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
   // Refers to component global variables
   ambienceDescriptions: string[];
   ambienceSlug: string;
@@ -100,6 +104,11 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
   partnersFormChangesSubscription: Subscription;
   @ViewChild('partnersInput') partnersInput: TagInputComponent;
 
+  proposalIntroDataHasChanges: boolean;
+  proposalIntroDataBeingSaved: boolean;
+  proposalIntroForm: FormGroup;
+  proposalIntroFormChangesSubscription: Subscription;
+
   // Refers to Proposal section variables
   proposalDataHasChanges: boolean;
   proposalDataBeingSaved: boolean;
@@ -149,9 +158,6 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
     private spinnerService: SpinnerService,
     private winRef: WindowRef
   ) {
-    console.log('proposal manager ctor');
-
-    // this.ufs = UtilsService.getEnumArray(UF);
     this.ambienceDescriptions = UtilsService.getEnumArray(AmbienceDescription);
     this.deliveryDescriptions = UtilsService.getEnumArray(DeliveryDescription);
     this.services = UtilsService.getEnumArray(Service);
@@ -222,7 +228,6 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
       } else {
         this.spinnerService.toggleLoadingIndicator(false);
         this.toastService.show('Selecione um cliente', 2500);
-
       }
     }
   }
@@ -266,9 +271,7 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
                 }
               });
             }
-
           } else {
-            // this.project.client = undefined;
             this.clientDataBeingSaved = false;
           }
         });
@@ -392,6 +395,24 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
       });
     });
 
+    let introValue = '';
+    if (this.project.activeProposal.intro !== undefined)
+      introValue = this.project.activeProposal.intro;
+
+    this.proposalIntroForm = this.fb.group({
+      proposalIntro: [introValue]
+    })
+
+    const introChanges$ = this.proposalIntroForm.get('proposalIntro').valueChanges;
+    introChanges$.debounceTime(3000).subscribe(value => {
+      this.spinnerService.toggleLoadingIndicator(true);
+
+      this.project.activeProposal.intro = this.proposalIntroForm.value.proposalIntro;
+      this.saveProjectInfo((success) => {
+        this.spinnerService.toggleLoadingIndicator(false);
+      })
+    })
+
     this.proposalForm = this.createProposalForm(this.project);
     this.proposalFormChangesSubscription = this.subscribeToFormChanges(this.proposalForm, () => {
       this.proposalDataHasChanges = true;
@@ -492,7 +513,6 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
         })
       }
     });
-
     this.professionalAddedSubscription = this.profService.professionalAdded$
       .subscribe((newProfessional: Professional) => {
         this.partnersInput.appendTag({
@@ -502,14 +522,7 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
           display: newProfessional.name
         });
 
-        // this.partnersForm.get('partners').setValue(this.partnersForm.value.partners, {
-        //   onlySelf: false,
-        //   emitEvent: false
-        // })
       });
-
-
-
   }
 
   ngOnDestroy() {
@@ -549,7 +562,6 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
   }
 
   parseMonetaryString(value: string): number {
-
     return UtilsService.parseMonetaryString(value);
   }
 
@@ -572,38 +584,6 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
         }
       }
     })
-  }
-
-  sendProposal() {
-    this.spinnerService.toggleLoadingIndicator(true);
-
-    if (!this.profService.professional.paying) {
-      this.billingInfoUpdatedSubscription =
-        this.billingService.billingInfoUpdated$
-          .subscribe((success: boolean) => this.sendProposal());
-
-      this.spinnerService.toggleLoadingIndicator(false);
-      this.openBillingModal();
-
-    } else {
-      if (this.project.client && this.project.client.id) {
-        this.saveProjectInfo((success) => {
-          if (success) {
-            this.propService.send(this.project).subscribe((success: boolean) => {
-              if (success) {
-
-                this.spinnerService.toggleLoadingIndicator(false);
-                this.toastService.show('Projeto enviado!', 2500, 'green');
-              }
-            })
-          }
-        }, true)
-      } else {
-        this.spinnerService.toggleLoadingIndicator(false);
-        this.toastService.show('Selecione um cliente', 2500, 'red');
-
-      }
-    }
   }
 
   setAmbienceForm(ambienceIndex: number) {
@@ -702,6 +682,49 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
     return true;
   }
 
+  setPartnersForm(): boolean {
+    if (this.partnersForm === undefined && this.professionals) {
+      this.partnersForm =
+        this.createPartnersForm(this.project.activeProposal.professionalsIds, this.professional.id);
+      const partnersChange$ = this.partnersForm.get('partners').valueChanges;
+      partnersChange$.do((profs: any[]) => {
+        let addOptionIndex = profs.findIndex(obj => obj.value === 'new');
+
+        if (addOptionIndex !== -1) {
+          profs.splice(addOptionIndex, 1);
+
+          this.partnersForm.get('partners').setValue(profs, {
+            onlySelf: false,
+            emitEvent: false
+          })
+          this.openNewPartnerModal()
+        } else {
+          this.project.activeProposal.professionalsIds = profs.map(p => { return p.value })
+
+          this.partnersDataHasChanges = true;
+        }
+
+
+
+      }).debounceTime(3000).subscribe(profs => {
+        if (!this.partnersDataBeingSaved) {
+          this.partnersDataHasChanges = false;
+          this.partnersDataBeingSaved = true;
+          this.saveProjectInfo((success) => {
+            if (success) {
+              this.partnersDataBeingSaved = false;
+            } else {
+              this.partnersDataBeingSaved = false;
+            }
+          })
+        }
+
+      });
+
+    }
+    return true;
+  }
+
   showDeliveryState() {
     // console.log(this.selectedDeliveries);
     console.log('subscriptions: ');
@@ -768,20 +791,11 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
     }
 
     return this.clientForm = this.fb.group({
-      briefing: [project.briefing],
       clientId: [clientId, Validators.required],
       email: [''],
       cpfCnpj: [''],
       name: [''],
-      clientGenderOpt: [],
-
-      // // ufId: [project.UF],
-      // CEP: [project.CEP],
-      // addressArea: [project.addressArea],
-      // addressNumber: [project.addressNumber],
-      // city: [project.city],
-      // neighborhood: [project.neighborhood],
-      // UF: [project.UF]
+      clientGenderOpt: []
     });
   }
 
@@ -803,7 +817,7 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
 
   private createLocationForm(project: Project): FormGroup {
     return this.fb.group({
-      // ufId: [project.UF],
+      briefing: [project.briefing],
       CEP: [project.CEP],
       addressArea: [project.addressArea],
       addressNumber: [project.addressNumber],
@@ -814,52 +828,14 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
 
   }
 
-  setPartnersForm(): boolean {
-    if (this.partnersForm === undefined && this.professionals) {
-      this.partnersForm =
-        this.createPartnersForm(this.project.activeProposal.professionalsIds);
-      const partnersChange$ = this.partnersForm.get('partners').valueChanges;
-      partnersChange$.do((profs: any[]) => {
-        let addOptionIndex = profs.findIndex(obj => obj.value === 'new');
-
-        if (addOptionIndex !== -1) {
-          profs.splice(addOptionIndex, 1);
-
-          this.partnersForm.get('partners').setValue(profs, {
-            onlySelf: false,
-            emitEvent: false
-          })
-          this.openNewPartnerModal()
-        } else {
-          this.project.activeProposal.professionalsIds = profs.map(p => { return p.value })
-
-          this.partnersDataHasChanges = true;
-        }
-
-
-
-      }).debounceTime(3000).subscribe(profs => {
-        if (!this.partnersDataBeingSaved) {
-          this.partnersDataHasChanges = false;
-          this.partnersDataBeingSaved = true;
-          this.saveProjectInfo((success) => {
-            if (success) {
-              this.partnersDataBeingSaved = false;
-            } else {
-              this.partnersDataBeingSaved = false;
-            }
-          })
-        }
-
-      });
-
-    }
-    return true;
-  }
-
-  private createPartnersForm(ids: any[]): FormGroup {
+  private createPartnersForm(ids: any[], currentProfId: string): FormGroup {
     let chipsData: any[] = [];
     if (ids && ids.length) {
+      let index = ids.indexOf(currentProfId);
+      if (index > -1) {
+        ids.splice(index, 1)
+      }
+
       chipsData = this.getPartnersByIds(ids).map((prof: any) => {
         prof.value = prof.id;
         prof.display = prof.name;
@@ -887,24 +863,20 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
       descriptionValue = professional.description;
 
     return this.fb.group({
-      name: [professional.name, Validators.required],
+      name: [{ value: professional.name, disabled: true }],
       description: [descriptionValue],
     });
   }
 
   private createProposalForm(project: Project): FormGroup {
-    let introValue = '';
     let duration = project.activeProposal.deadlineCount !== undefined ?
       project.activeProposal.deadlineCount : '';
 
     let durationTimeUnity = project.activeProposal.deadlineTimeUnity !== undefined ?
       project.activeProposal.deadlineTimeUnity : '';
 
-    if (project.activeProposal.intro !== undefined)
-      introValue = project.activeProposal.intro;
 
     return this.fb.group({
-      proposalIntro: [introValue],
       followUp: [project.activeProposal.followUp],
       duration: [duration],
       durationTimeUnity: [durationTimeUnity]
@@ -1020,26 +992,16 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
   }
 
   private saveClientInfo(): Observable<any> {
-    let briefing = this.clientForm.value.briefing;
-    // let ufId = this.clientForm.value.ufId;
     let selectedClientId = this.clientForm.value.clientId;
-    let newClientName = this.clientForm.value.name;
-    let newClientEmail = this.clientForm.value.email;
-    let newClientCpfCnpj = this.clientForm.value.cpfCnpj;
-    let newClientGender = this.clientForm.value.clientGenderOpt;
     let newClient: Client;
 
-    this.project.briefing = briefing;
-
-    // this.project.UF = ufId;
-    // check newclient option selected
     if (String(selectedClientId) === '0') {
       newClient = new Client();
       newClient = {
-        name: newClientName,
-        email: newClientEmail,
-        cpfCnpj: newClientCpfCnpj,
-        gender: newClientGender
+        name: this.clientForm.value.name,
+        email: this.clientForm.value.email,
+        cpfCnpj: this.clientForm.value.cpfCnpj,
+        gender: this.clientForm.value.clientGenderOpt
       };
 
       let newClientValid = Boolean(newClient.name)
@@ -1047,8 +1009,8 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
         && Boolean(newClient.email)
         && UtilsService.isEmail(newClient.email)
         && UtilsService.isCpfCnpj(newClient.cpfCnpj)
-        && (newClientGender === 'M'
-          || newClientGender === 'F');
+        && (newClient.gender === 'M'
+          || newClient.gender === 'F');
 
       if (newClientValid
         && Boolean(newClient.cpfCnpj)
@@ -1084,20 +1046,16 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
       if (deliveryValid) {
         someDeliveryWasChanged = true;
         this.project.activeProposal.deliveries[deliveryIndex] = delivery;
-
       }
 
       this.deliveryDataHasChanges[deliveryIndex] = false;
-
-
     });
-
-    console.log('someDeliveryWasChanged: ', someDeliveryWasChanged);
 
     return Observable.of(true);
   }
 
   private saveLocationInfo(formData) {
+    this.project.briefing = formData.briefing;
     this.project.CEP = formData.CEP;
     this.project.addressArea = formData.addressArea;
     this.project.addressNumber = formData.addressNumber;
@@ -1107,13 +1065,10 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
   }
 
   private saveProfessionalInfo(): Observable<any> {
-    let name = this.profForm.value.name;
     let description = this.profForm.value.description;
-    // let partners = this.profForm.value.partners;
     let currentProf = this.professional;
     currentProf.name = name;
     currentProf.description = description;
-    // this.project.activeProposal.professionalsIds = partners;
     this.project.professional = currentProf;
 
     return this.profService.update(currentProf);
@@ -1135,7 +1090,6 @@ export class ProjectProposalManagerComponent implements CanComponentDeactivate, 
   }
 
   private saveProposalInfo(): Observable<any> {
-    this.project.activeProposal.intro = this.proposalForm.value.proposalIntro;
     this.project.activeProposal.followUp = this.proposalForm.value.followUp;
     this.project.activeProposal.deadlineCount = this.proposalForm.value.duration;
     this.project.activeProposal.deadlineTimeUnity = this.proposalForm.value.durationTimeUnity;
