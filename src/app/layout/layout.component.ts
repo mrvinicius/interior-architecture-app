@@ -21,6 +21,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   showSidebar: boolean = true;
   showLoadingToast: boolean = false;
   tabs: Tab[];
+  tabsReady: boolean = false;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
@@ -34,15 +35,16 @@ export class LayoutComponent implements OnInit, OnDestroy {
   ) {
     console.log('layout ctor');
     
-    this.activeRoute.data
-      .takeUntil(this.ngUnsubscribe)
-      .subscribe((data: { tabs: Tab[] }) => {
-        if (data.tabs) {
-          console.log(data.tabs);
+    // this.activeRoute.data
+    //   .takeUntil(this.ngUnsubscribe)
+    //   .subscribe((data: { tabs: Tab[] }) => {
+    //     if (data.tabs) {
+    //       console.log(data.tabs);
 
-          this.tabs = data.tabs;
-        }
-      })
+    //       this.tabs = data.tabs;
+    //       this.tabsReady = true;
+    //     }
+    //   })
 
     this.router.events
       .filter(event => event instanceof NavigationStart)

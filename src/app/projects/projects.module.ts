@@ -1,6 +1,6 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MdlLayoutModule } from '@angular-mdl/core';
 import { MdlExpansionPanelModule } from '@angular-mdl/expansion-panel';
 import { MdlPopoverModule } from '@angular-mdl/popover';
@@ -27,7 +27,6 @@ import { ProjectProposalManagerComponent } from './project-proposal-manager/proj
   imports: [
     SharedModule,
     FormsModule,
-    LayoutModule,
     MaterializeModule,
     Md2Module,
     Md2AccordionModule,

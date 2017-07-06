@@ -9,7 +9,9 @@ import { ProjectServicesService } from './shared/project-services.service';
   // selector: 'abx-projects',
   providers: [ProjectServicesService],
   template: `
+    <abx-layout>
       <router-outlet id="projectsRouter"></router-outlet>
+    </abx-layout>
   `
 })
 export class ProjectsComponent {

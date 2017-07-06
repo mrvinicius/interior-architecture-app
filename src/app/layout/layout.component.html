@@ -43,13 +43,14 @@
     <mdl-layout-content [style.margin]="!showHeader ? 0 : null" [style.overflow-y]="overflowY" [ngClass]="{'showLoadingToast': showLoadingToast}"
         class="layout-content-container">
 
-        <ng-container *ngIf="tabs">
+        <!--<ng-container *ngIf=" tabs">
             <mdl-layout-tab-panel *ngFor="let tab of tabs" mdl-layout-tab-panel-title="{{tab.title}}">
                 <ng-content select="tab.selectors"></ng-content>
-                <!--<abx-layout-tab-content-container [componentData]="tab.componentData"></abx-layout-tab-content-container>-->
+                <abx-layout-tab-content-container [componentData]="tab.componentData"></abx-layout-tab-content-container>
             </mdl-layout-tab-panel>
-        </ng-container>
-        <ng-content *ngIf="!tabs" select="router-outlet, .layout-content"></ng-content>
+        </ng-container>-->
+
+        <ng-content select="router-outlet, .layout-content"></ng-content>
 
         <!--<ng-container>
             <mdl-layout-tab-panel mdl-layout-tab-panel-title="Proposta">
@@ -58,7 +59,7 @@
             <mdl-layout-tab-panel mdl-layout-tab-panel-title="Versões">
                 3
             </mdl-layout-tab-panel>
-        </ng-container>
+        </ng-container>-->
 
 
         <!--Dynamic toolbar content-->

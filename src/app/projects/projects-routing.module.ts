@@ -1,3 +1,4 @@
+import { ProjectProposalManagerComponent } from './project-proposal-manager/project-proposal-manager.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
@@ -26,28 +27,31 @@ const routes: Routes = [
         children: [
           { path: '', component: ProjectListComponent },
           {
-            path: ':title', component: ProjectManagerComponent,
+            path: ':title',
+            component: ProjectManagerComponent,
             canDeactivate: [CanDeactivateGuard],
-            data: {
-              tabs: [
-                {
-                  title: 'Proposta',
-                  selectors: 'abx-project-proposal-manager'
-                },
-                {
-                  title: 'Versões',
-                  selectors: 'abx-project-version-manager'
-                },
-                {
-                  title: 'Especificação de produto',
-                  selectors: 'abx-project-budget-manager'
-                }
-              ]
-            },
+            // data: {
+            //   tabs: [
+            //     {
+            //       title: 'Proposta',
+            //       selectors: 'abx-project-proposal-manager',
+            //       componentData: {
+            //         componentType: ProjectProposalManagerComponent,
+            //       }
+            //     },
+            //     {
+            //       title: 'Versões',
+            //       selectors: 'abx-project-version-manager'
+            //     },
+            //     {
+            //       title: 'Especificação de produto',
+            //       selectors: 'abx-project-budget-manager'
+            //     }
+            //   ]
+            // },
             resolve: {
               project: ProjectManagerResolver,
-              breadcrumb: ProjectsService,
-              // tabs: 'tabsResolver'
+              breadcrumb: ProjectsService
             }
           },
           {
@@ -65,30 +69,11 @@ const routes: Routes = [
   exports: [RouterModule],
   providers: [
     ProjectManagerResolver,
-    ProjectProposalPreviewResolver,
-    {
-      provide: 'tabsResolver',
-      useValue: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-        return [
-          {
-            title: 'Proposta',
-            selectors: '.project-proposal'
-          },
-          {
-            title: 'Versões',
-            selectors: '.project-versions'
-          },
-          {
-            title: 'Especificação de produto',
-            selectors: 'project-budgets'
-          }
-        ]
-      }
-    }
+    ProjectProposalPreviewResolver
     // {
     //   provide: 'projectBcResolver',
     //   useValue: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-  
+
     //   },
     //   useExisting: DataService,
     //   useClass: ProjectsService

@@ -158,6 +158,8 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     private spinnerService: SpinnerService,
     private winRef: WindowRef
   ) {
+    console.log('prop mang ctor');
+    
     this.ambienceDescriptions = UtilsService.getEnumArray(AmbienceDescription);
     this.deliveryDescriptions = UtilsService.getEnumArray(DeliveryDescription);
     this.services = UtilsService.getEnumArray(Service);
@@ -240,7 +242,7 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     return this.projectsService.allProjects;
   }
 
-  ngOnInit() {
+  ngOnInit() {    
     this.clientForm = this.createClientForm(this.project);
     this.clientFormChangesSubscription = this.subscribeToFormChanges(this.clientForm, () => {
       this.clientDataHasChanged = true;
