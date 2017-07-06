@@ -2,6 +2,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
+import { LayoutContentService } from '../../layout/shared/layout-content.service';
 import { Project } from '../shared/project';
 
 export interface TabParentComponent {
@@ -15,16 +16,25 @@ export interface TabParentComponent {
 })
 export class ProjectManagerComponent implements OnInit, OnDestroy {
   project: Project;
+  public activeIndex = 0;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
 
   constructor(
-    private activateRoute: ActivatedRoute
+    private activateRoute: ActivatedRoute,
+    private layoutContentService: LayoutContentService,
+
   ) {
-    console.log('manager ctor');
+
+  }
+
+  public tabChanged({ index }) {
+    this.activeIndex = index;
   }
 
   ngOnInit() {
+    this.layoutContentService.ajustTabLayout();
+
     this.activateRoute.data
       .takeUntil(this.ngUnsubscribe)
       .subscribe((data: { project: Project }) => {
@@ -36,4 +46,5 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
+
 }

@@ -10,16 +10,14 @@ export interface Tab {
 export class LayoutContentService {
   private overflowYDefinedSource = new Subject<string>();
   overflowYDefined$ = this.overflowYDefinedSource.asObservable();
-  // private tabsDefinedSource = new Subject<Tab[]>();
-  // tabsDefined$ = this.tabsDefinedSource.asObservable();
+  private tabAjustedSource = new Subject<string>();
+  tabAjusted$ = this.tabAjustedSource.asObservable();
 
-  constructor() {
+  constructor() {}
 
+  ajustTabLayout() {
+    this.tabAjustedSource.next();
   }
-
-  // defineTabs(tabs: Tab[]) {
-  //   this.tabsDefinedSource.next(tabs);
-  // }
 
   setOverflowY(propVal: string) {
     this.overflowYDefinedSource.next(propVal);

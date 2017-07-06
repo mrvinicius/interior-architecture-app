@@ -20,8 +20,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   showHeader: boolean = true;
   showSidebar: boolean = true;
   showLoadingToast: boolean = false;
-  tabs: Tab[];
-  tabsReady: boolean = false;
+  tabsInChild: boolean = false;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
@@ -34,7 +33,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     private router: Router
   ) {
     console.log('layout ctor');
-    
+
     // this.activeRoute.data
     //   .takeUntil(this.ngUnsubscribe)
     //   .subscribe((data: { tabs: Tab[] }) => {
@@ -50,9 +49,12 @@ export class LayoutComponent implements OnInit, OnDestroy {
       .filter(event => event instanceof NavigationStart)
       .takeUntil(this.ngUnsubscribe)
       .subscribe(event => {
+        
+        // Reset
         this.showHeader = true;
         this.showSidebar = true;
         this.overflowY = 'auto';
+        this.tabsInChild = false;
       });
 
     this.headerService.headerHidden$
@@ -66,6 +68,10 @@ export class LayoutComponent implements OnInit, OnDestroy {
     this.layoutContentService.overflowYDefined$
       .takeUntil(this.ngUnsubscribe)
       .subscribe((val) => this.overflowY = val);
+
+    this.layoutContentService.tabAjusted$
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(() => this.tabsInChild = true)
   }
 
   getRouteTabs(route: ActivatedRoute) {
@@ -128,10 +134,5 @@ export class LayoutComponent implements OnInit, OnDestroy {
       }
     }
 
-  }
-
-  s() {
-    console.log('ng-content');
-    return true;
   }
 }

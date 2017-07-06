@@ -157,9 +157,7 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     private router: Router,
     private spinnerService: SpinnerService,
     private winRef: WindowRef
-  ) {
-    console.log('prop mang ctor');
-    
+  ) {    
     this.ambienceDescriptions = UtilsService.getEnumArray(AmbienceDescription);
     this.deliveryDescriptions = UtilsService.getEnumArray(DeliveryDescription);
     this.services = UtilsService.getEnumArray(Service);

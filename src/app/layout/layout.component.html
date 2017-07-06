@@ -24,7 +24,7 @@
         </nav>
     </mdl-layout-drawer>
 
-    <mdl-layout-header *ngIf="showHeader" class="top-bar">
+    <mdl-layout-header *ngIf="showHeader" [ngClass]="{'z-depth-0': tabsInChild}" class="top-bar">
 
         <mdl-layout-header-row>
             <mdl-layout-title>

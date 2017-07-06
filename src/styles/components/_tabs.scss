@@ -1,0 +1,23 @@
+.mdl-tabs__tab.disabled {
+    cursor: not-allowed;
+    color: rgba(0, 0, 0, 0.26);
+}
+
+.mv-tabs {
+    .mdl-tabs__tab-bar {
+        z-index: 3;
+        border-bottom: none;
+        background-color: $primary-color;
+        @extend .z-depth-1;
+        @extend .tabs;
+        .mdl-tabs__tab {
+            color: white;
+        }
+        .mdl-tabs__tab.is-active {
+            color: white;
+        }
+        .mdl-tabs__tab.is-active::after {
+            background-color: white;
+        }
+    }
+}

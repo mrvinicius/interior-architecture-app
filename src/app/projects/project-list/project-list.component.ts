@@ -39,7 +39,6 @@ export class ProjectListComponent implements OnInit {
     private modalService: MzModalService,
     private spinnerService: SpinnerService
   ) {
-    console.log('p list ctor');
     
     /*
     * MOCK
