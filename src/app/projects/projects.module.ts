@@ -22,6 +22,7 @@ import { ProposalService } from './shared/proposal.service';
 import { SharedModule } from '../shared/shared.module';
 import { ProjectProposalPreviewComponent } from './project-proposal-preview/project-proposal-preview.component';
 import { ProjectProposalManagerComponent } from './project-proposal-manager/project-proposal-manager.component';
+import { ProjectBudgetManagerComponent } from './project-budget-manager/project-budget-manager.component';
 
 @NgModule({
   imports: [
@@ -50,6 +51,7 @@ import { ProjectProposalManagerComponent } from './project-proposal-manager/proj
     ProjectManagerComponent,
     ProjectProposalPreviewComponent,
     ProjectProposalManagerComponent,
+    ProjectBudgetManagerComponent,
   ],
   providers: [],
   entryComponents: [

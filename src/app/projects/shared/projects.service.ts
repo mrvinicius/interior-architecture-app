@@ -21,6 +21,7 @@ import { ClientService } from '../../client/shared/client.service';
 import { Delivery } from './delivery';
 import { Professional } from '../../core/professional';
 import { ProfessionalService } from '../../core/professional.service';
+import { Product } from './product';
 import { Project } from './project';
 import { ProjectStatus } from './project-status.enum';
 import { Proposal } from './proposal';
@@ -469,20 +470,12 @@ export class ProjectsService implements Resolve<string>{
                 );
 
                 if (proposal.ContaBancariaId) {
-                  prop.bankAccount = new BankAccount(
-                    // proposal.ContaBancaria.Agencia,
-                    // proposal.ContaBancaria.Conta,
-                    // proposal.ContaBancaria.DigitoConta,
-                    // proposal.ContaBancaria.Id,
-                  );
+                  prop.bankAccount = new BankAccount();
                   prop.bankAccount.id = proposal.ContaBancariaId;
 
                   if (proposal.BancoId) {
                     prop.bankAccount.bank = new Bank(
                       proposal.BancoId
-                      // proposal.ContaBancaria.Banco.Id,
-                      // proposal.ContaBancaria.Banco.Nome,
-                      // proposal.ContaBancaria.Banco.NomeCompleto,
                     );
                   }
                 }
@@ -580,6 +573,12 @@ export class ProjectsService implements Resolve<string>{
           if (ambience.Descricao in AmbienceDescription) {
             amb.ambienceDescription = AmbienceDescription[AmbienceDescription[ProjectsService.ambienceDescriptionIds[ambience.ComodoId]]]
           }
+
+          let products: Product[] = ambience.ProjetoComodoProduto.map(product => {
+            let p: Product = new Product();
+
+            return p;
+          });
 
           let services: Service[] = ambience.ProjetoComodoServicos.map(service => {
             return Service[Service[ProjectsService.servicesIds[service.TipoServicoId]]]
@@ -741,11 +740,16 @@ export class ProjectsService implements Resolve<string>{
     });
   }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<string> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot)
+    : Observable<string> {
     const pathParam: string = 'title';
 
     let project = this.getOneBySlugTitle(route.params[pathParam]);
-    return Observable.of(project.title);
+    
+    if (project && project.title)
+      return Observable.of(project.title);
+
+    return undefined;
   }
 
   // TODO: Implement Search with layout search input

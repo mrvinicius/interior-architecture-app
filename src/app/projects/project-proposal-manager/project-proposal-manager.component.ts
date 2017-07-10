@@ -28,7 +28,6 @@ import { ClientService } from '../../client/shared/client.service';
 import { Delivery } from '../shared/delivery';
 import { DeliveryDescription } from '../shared/delivery-description.enum';
 import { IncompleteProfileModalComponent } from '../../user/incomplete-profile-modal/incomplete-profile-modal.component';
-import { LayoutContentService } from './../../layout/shared/layout-content.service';
 import { NewPartnerModalComponent } from './new-partner-modal.component';
 import { Professional } from '../../core/professional';
 import { ProfessionalService } from '../../core/professional.service';
@@ -148,7 +147,6 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     private billingService: BillingService,
     private clientService: ClientService,
     private fb: FormBuilder,
-    private layoutContentService: LayoutContentService,
     private modalService: MzModalService,
     private toastService: MzToastService,
     private profService: ProfessionalService,
