@@ -15,7 +15,7 @@ import { SpinnerService } from '../../core/spinner/spinner.service';
 import { UtilsService } from '../../shared/utils/utils.service';
 
 @Component({
-  selector: 'app-client-modal',
+  selector: 'abx-client-modal',
   templateUrl: './client-modal.component.html',
   styleUrls: ['./client-modal.component.css']
 })

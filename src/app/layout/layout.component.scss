@@ -19,6 +19,7 @@ $large-screen: 1200px !default;
 }
 
 .side-bar {
+    border-right: none;
     .mdl-navigation {
         height: calc(100% - 70px);
     }

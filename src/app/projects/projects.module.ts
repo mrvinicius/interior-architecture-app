@@ -1,7 +1,8 @@
+import { BudgetService } from './shared/budget.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MdlLayoutModule, MdlTabsModule } from '@angular-mdl/core';
+import { MdlLayoutModule } from '@angular-mdl/core';
 import { MdlExpansionPanelModule } from '@angular-mdl/expansion-panel';
 import { MdlPopoverModule } from '@angular-mdl/popover';
 import { MdlSelectModule } from '@angular-mdl/select';
@@ -22,6 +23,7 @@ import { ProposalService } from './shared/proposal.service';
 import { SharedModule } from '../shared/shared.module';
 import { ProjectProposalPreviewComponent } from './project-proposal-preview/project-proposal-preview.component';
 import { ProjectProposalManagerComponent } from './project-proposal-manager/project-proposal-manager.component';
+import { ProjectBudgetManagerComponent } from './project-budget-manager/project-budget-manager.component';
 
 @NgModule({
   imports: [
@@ -32,7 +34,6 @@ import { ProjectProposalManagerComponent } from './project-proposal-manager/proj
     LayoutModule,
     Md2AccordionModule,
     MdlLayoutModule,
-    MdlTabsModule,
     MdlExpansionPanelModule,
     MdlPopoverModule,
     MdlSelectModule,
@@ -50,6 +51,7 @@ import { ProjectProposalManagerComponent } from './project-proposal-manager/proj
     ProjectManagerComponent,
     ProjectProposalPreviewComponent,
     ProjectProposalManagerComponent,
+    ProjectBudgetManagerComponent,
   ],
   providers: [],
   entryComponents: [
@@ -72,6 +74,7 @@ export class ProjectsModule {
         AmbienceService,
         ProposalService,
         ProjectsService,
+        BudgetService
       ]
     };
   }

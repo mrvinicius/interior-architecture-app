@@ -87,10 +87,8 @@ $aside-layout-max-size: 725px;
     display: block;
     float: left;
     margin-right: 0;
-    width: 70%;
-    // height: calc(100vh - 64px);
-    overflow-y: hidden;
-    // @media only screen and (min-width: #{$small-screen-up}) and (max-width: 1024px) {
+    width: 70%; // height: calc(100vh - 64px);
+    overflow-y: hidden; // @media only screen and (min-width: #{$small-screen-up}) and (max-width: 1024px) {
     //     height: calc(100vh - 56px);
     // }
     @media only screen and (max-width: #{$aside-layout-max-size}) {
@@ -125,6 +123,13 @@ $aside-layout-max-size: 725px;
 
 .u-radio-group {
     margin-bottom: 2rem;
+}
+
+.out-of-container {
+    padding: 0 1.50rem;
+    @media #{$small-and-down} {
+    padding: 0 0.75rem;
+    }
 }
 
 // Centralize

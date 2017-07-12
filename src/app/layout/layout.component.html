@@ -1,6 +1,6 @@
 <!--mdl-layout-fixed-drawer-->
 <mdl-layout mdl-layout-fixed-header mdl-layout-fixed-drawer #mdlLayout1="mdlLayout">
-    <mdl-layout-drawer *ngIf="showSidebar" class="side-bar">
+    <mdl-layout-drawer *ngIf="showSidebar" class="side-bar z-depth-4">
         <mdl-layout-title class="title truncate">{{userName}}</mdl-layout-title>
         <nav class="mdl-navigation">
             <a class="mdl-navigation__link side-bar__link has-icon black-text" routerLink="/projetos" (click)="mdlLayout1.closeDrawer()">

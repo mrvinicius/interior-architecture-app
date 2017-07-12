@@ -14,7 +14,7 @@
             </ng-container>
             <mz-select-container class="has-add-option">
               <select mz-select #clientSelectInput formControlName="clientId" id='clientSelect' label="cliente">
-                  <option [value]="0">- novo cliente -</option>
+                  <option [value]="0">- adicionar cliente -</option>
                   <option *ngFor="let c of allClients()"
                   [value]="c.id"
                   [selected]="c.id === project.client.id">{{c.name}}</option>
@@ -69,7 +69,7 @@
           <div class="row">
             <div class="col s12">
               <span class="dim-text" style="text-transform: uppercase; display: inline-block;">
-                  <i class="material-icons" style="vertical-align: sub; margin-right: 10px;">weekend</i>Ambientes
+                  <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">weekend</i>Ambientes
               </span>
             </div>
           </div>
@@ -129,7 +129,7 @@
           </div>
           <div class="row col s12">
             <span class="dim-text" style="text-transform: uppercase; display: inline-block;">
-                <i class="material-icons" style="vertical-align: sub; margin-right: 10px;">location_on</i>Localização da obra
+                <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">location_on</i>Localização da obra
             </span>
           </div>
           <mz-input-container class="col s12 m6 l6">
@@ -189,7 +189,7 @@
         <div class="u-row">
           <div class="col s12">
             <span class="dim-text" style="text-transform: uppercase; display: inline-block;">
-                <i class="material-icons" style="vertical-align: sub; margin-right: 10px;">event_available</i>Entregas
+                <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">event_available</i>Entregas
             </span>
           </div>
         </div>
@@ -241,7 +241,7 @@
             <form [formGroup]="proposalForm">
               <div class="col s12">
                 <span class="dim-text" style="text-transform: uppercase; display: inline-block;">
-                    <i class="material-icons" style="vertical-align: sub; margin-right: 10px;">date_range</i>Estimativa para
+                    <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">date_range</i>Estimativa para
                     desenvolvimento das entregas
                 </span>
               </div>
@@ -304,7 +304,7 @@
               <tag-input id="tagInputContainer" #partnersInput formControlName="partners" [ngModel]="partnersForm.value.partners" [secondaryPlaceholder]="'outros profissionais ou escritórios participantes'"
                 [placeholder]="'outros profissionais ou escritórios participantes'" [onlyFromAutocomplete]="true">
                 <tag-input-dropdown id="tagInputDropdown" [displayBy]="'name'" [limitItemsTo]="6" [identifyBy]="'id'" [showDropdownIfEmpty]="true"
-                  [focusFirstElement]="true" [autocompleteItems]="[{id: 'new', name: '- novo profissional -'}].concat(professionals)">
+                  [focusFirstElement]="true" [autocompleteItems]="[{id: 'new', name: '- adicionar profissional -'}].concat(professionals)">
                 </tag-input-dropdown>
               </tag-input>
             </form>
@@ -342,7 +342,7 @@
           <div class="col s12 m6 l5 offset-l1" style="padding: 0;">
             <mz-select-container class="has-add-option col s12">
               <select mz-select formControlName="bankAccountId" label="sua conta bancária">
-                <option [value]="'new'">- nova conta -</option>
+                <option [value]="'new'">- adicionar conta -</option>
                 <ng-container *ngIf="bankAccounts && bankAccounts.length">
                   <ng-container *ngIf="project.activeProposal.bankAccount">
                     <option *ngFor="let acc of bankAccounts"

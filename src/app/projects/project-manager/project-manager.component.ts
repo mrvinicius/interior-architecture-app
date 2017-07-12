@@ -5,10 +5,6 @@ import { Subject } from 'rxjs/Subject';
 import { LayoutContentService } from '../../layout/shared/layout-content.service';
 import { Project } from '../shared/project';
 
-export interface TabParentComponent {
-
-}
-
 @Component({
   selector: 'abx-project-manager',
   templateUrl: './project-manager.component.html',
@@ -22,8 +18,7 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
 
   constructor(
     private activateRoute: ActivatedRoute,
-    private layoutContentService: LayoutContentService,
-
+    private layoutContentService: LayoutContentService
   ) {
 
   }

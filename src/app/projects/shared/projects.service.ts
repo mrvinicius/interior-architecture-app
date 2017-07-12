@@ -745,7 +745,10 @@ export class ProjectsService implements Resolve<string>{
     const pathParam: string = 'title';
 
     let project = this.getOneBySlugTitle(route.params[pathParam]);
-    return Observable.of(project.title);
+    if (project && project.title)
+      return Observable.of(project.title);
+
+    return Observable.of(undefined);
   }
 
   // TODO: Implement Search with layout search input

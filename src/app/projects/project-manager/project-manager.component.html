@@ -1,17 +1,9 @@
-<mdl-tabs mdl-ripple mdl-tab-active-index="0" class="mv-tabs" (mdl-tab-active-changed)="tabChanged($event)">
-  <mdl-tab-panel>
-    <mdl-tab-panel-title>
-      <span>Proposta</span>
-    </mdl-tab-panel-title>
-    <mdl-tab-panel-content>
-      <abx-project-proposal-manager *ngIf="project" [project]="project">
-      </abx-project-proposal-manager>
-    </mdl-tab-panel-content>
-  </mdl-tab-panel>
-  <!--<mdl-tab-panel mdl-tab-panel-title="Versões" [disabled]="true">
-    
-  </mdl-tab-panel>-->
-  <!--<mdl-tab-panel mdl-tab-panel-title="Especificação de produtos">
-
-  </mdl-tab-panel>-->
-</mdl-tabs>
+<md2-tabs selectedIndex="0" class="mv-tabs">
+  <md2-tab label="Proposta">
+    <abx-project-proposal-manager *ngIf="project" [project]="project"></abx-project-proposal-manager>
+  </md2-tab>
+  <md2-tab>
+    <ng-template md2-tab-label>Orçamento de Produtos</ng-template>
+    <abx-project-budget-manager *ngIf="project" [project]="project"></abx-project-budget-manager>
+  </md2-tab>
+</md2-tabs>
