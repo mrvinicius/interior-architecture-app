@@ -23,14 +23,7 @@ export class AuthService {
     private http: Http,
     private router: Router
   ) {
-    
-    // this.currentUser = {
-    //   id: 'c11752b0-0475-4d31-9c01-223d1a98aa9f',
-    //   name: 'Raphael',
-    //   email: 'raphael@muuving.com.br'
-    // };
-    console.log(localStorage.getItem('currentUser'));
-
+    // console.log(localStorage.getItem('currentUser'));
   }
 
   getCurrentUser(): User {
@@ -82,6 +75,4 @@ export class AuthService {
 
   //   return Observable.of(isUser).delay(1000).do(val => this.isLoggedIn = true);
   // }
-
-
 }

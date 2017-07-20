@@ -32,19 +32,6 @@ export class LayoutComponent implements OnInit, OnDestroy {
     private sidebarService: LayoutSidebarService,
     private router: Router
   ) {
-    console.log('layout ctor');
-
-    // this.activeRoute.data
-    //   .takeUntil(this.ngUnsubscribe)
-    //   .subscribe((data: { tabs: Tab[] }) => {
-    //     if (data.tabs) {
-    //       console.log(data.tabs);
-
-    //       this.tabs = data.tabs;
-    //       this.tabsReady = true;
-    //     }
-    //   })
-
     this.router.events
       .filter(event => event instanceof NavigationStart)
       .takeUntil(this.ngUnsubscribe)

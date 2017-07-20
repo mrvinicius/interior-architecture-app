@@ -1,11 +1,12 @@
-import { SignupModalComponent } from './signup-modal.component';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MzModalService } from 'ng2-materialize';
+import { Subject } from 'rxjs/Subject';
 
 import { Professional } from '../core/professional';
 import { ProfessionalService } from '../core/professional.service';
+import { SignupModalComponent } from './signup-modal.component';
 import { SpinnerService } from '../core/spinner/spinner.service';
 
 @Component({
@@ -13,12 +14,15 @@ import { SpinnerService } from '../core/spinner/spinner.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   registerForm: FormGroup;
   errorMessage: string;
+  fromArchathon: boolean;
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
+    private route: ActivatedRoute,
     private router: Router,
     private modalService: MzModalService,
     private spinnerService: SpinnerService,
@@ -39,6 +43,7 @@ export class HomeComponent implements OnInit {
         new Professional(values.name, values.email);
 
       this.profService.add(prof, true)
+        .takeUntil(this.ngUnsubscribe)
         .subscribe(response => {
           this.spinnerService.toggleLoadingIndicator(false);
 
@@ -60,7 +65,22 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.route.queryParams
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(params => {
+        this.fromArchathon = params['archathon'];
+
+        if (this.fromArchathon) {
+          console.log(this.fromArchathon);
+        }
+      })
+
     $('.scrollspy').scrollSpy();
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   openSignupModal() {

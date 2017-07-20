@@ -1,10 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MzModalService, MzBaseModal } from "ng2-materialize";
 import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
 
@@ -36,7 +31,6 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
     private spinnerService: SpinnerService
   ) {
     super();
-
   }
 
   ngOnInit() {
@@ -62,8 +56,8 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
       professionalId: this.profService.professional.id,
       description: 'Assinatura',
       planIdentifier: formData.planIdentifier,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
+      firstName: formData.firstName.trim(),
+      lastName: formData.lastName.trim(),
       creditCardInfo: {
         number: cardNumber,
         expirationMonth: month,
@@ -115,7 +109,7 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
       ]],
       CVC: ['', [
         Validators.required,
-        Validators.pattern(/^[0-9]{3,4}$/)
+        Validators.pattern(/^([0-9]{3,4})|^([0-9]\s)/)
       ]],
       firstName: [prof.name, Validators.required],
       lastName: [lastName, Validators.required]

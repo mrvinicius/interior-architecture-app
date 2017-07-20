@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MzModalService, MzBaseModal } from "ng2-materialize";
+import { Subject } from 'rxjs/Subject'; 
 import { Subscription } from 'rxjs/Subscription';
 
 import { Ambience } from '../shared/ambience';
@@ -13,22 +14,24 @@ import { UtilsService } from '../../shared/utils/utils.service';
 import { Client } from '../../client/shared/client';
 import { ClientService } from '../../client/shared/client.service';
 import { NewProjectModalComponent } from './new-project-modal.component';
+import { Professional } from '../../core/professional';
 import { ProfessionalService } from '../../core/professional.service';
 import { Project } from '../shared/project';
 import { ProjectsService } from '../shared/projects.service';
 import { ProjectStatus } from '../shared/project-status.enum';
 
 @Component({
-  selector: 'mbp-project-list',
+  selector: 'abx-project-list',
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.scss']
 })
 export class ProjectListComponent implements OnInit {
+  allProjectTitles: string[];
   projects: Project[];
+  professional: Professional;
   clients: Client[];
   ProjectStatus = ProjectStatus;
-  allClientsChangeSubinscription: Subscription;
-  newProjectTitleDefinedSubinscription: Subscription;
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
     private auth: AuthService,
@@ -39,7 +42,8 @@ export class ProjectListComponent implements OnInit {
     private modalService: MzModalService,
     private spinnerService: SpinnerService
   ) {
-    
+    this.profService.getCurrentProfessional().subscribe(prof => this.professional = prof);
+
     /*
     * MOCK
     let prop = new Proposal(false, ProposalStatus.NotSent);
@@ -77,56 +81,55 @@ export class ProjectListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.projectsService.newProjectTitleDefined$
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(projectTitle => this.beginProject(projectTitle));
 
-    this.newProjectTitleDefinedSubinscription =
-      this.projectsService.newProjectTitleDefined$
-        .subscribe(projectTitle => this.beginProject(projectTitle));
+    this.projectsService.newAtnProjectTitleDefined$
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(projectTitle => this.beginProject(projectTitle, true));
 
     this.projectsService.getAllByProfessional(this.auth.getCurrentUser().id, 999)
+      .takeUntil(this.ngUnsubscribe)
       .subscribe(projects => {
         projects = projects.filter(p => p.isActive);
         this.projects = projects && projects.length ? projects : [];
+        this.allProjectTitles = this.projects.map(p => p.title)
       });
 
     this.clientService.getAllByProfessional(this.auth.getCurrentUser().id, 999)
+      .takeUntil(this.ngUnsubscribe)
       .subscribe(clients => this.clients = clients ? clients : [])
   }
 
   ngOnDestroy() {
-    this.newProjectTitleDefinedSubinscription.unsubscribe();
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   openNewProjectModal() {
     let modalRef = this.modalService.open(NewProjectModalComponent, {});
   }
 
-  private beginProject(title: string) {
-    this.spinnerService.toggleLoadingIndicator(true);
+  private beginProject(title: string, atnProject?: boolean) {
     let sameNameProjects: Project[];
+    let definitiveTitle = title;
+    this.spinnerService.toggleLoadingIndicator(true);
 
-    if (this.projects && this.projects.length) {
-      sameNameProjects = this.projects.filter(project => {
-        console.log(project);
-        return UtilsService.slugify(title) === UtilsService.slugify(project.title);
-
+    if (this.allProjectTitles && this.allProjectTitles.length) {
+      this.allProjectTitles.forEach(t => {
+        if (definitiveTitle === t) {
+          definitiveTitle = t + ' (1)';
+        }
       });
     }
 
-    if (sameNameProjects && sameNameProjects.length > 0) {
-      title += ' (' + sameNameProjects.length + ')';
-    }
-
-    console.log(title);
-
-    this.projectsService.add(title).subscribe((project: Project) => {
-      console.log('RespProject: ', project);
-      this.projects.push(project);
-
-      this.spinnerService.toggleLoadingIndicator(false);
-      this.redirectToProject(project.title);
-    });
-
-
+    this.projectsService.add(definitiveTitle, atnProject)
+      .subscribe((project: Project) => {
+        this.projects.push(project);
+        this.spinnerService.toggleLoadingIndicator(false);
+        this.redirectToProject(project.title);
+      });
   }
 
   private redirectToProject(title: string): void {

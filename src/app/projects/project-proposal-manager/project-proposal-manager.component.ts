@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, Input, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MdlExpansionPanelComponent } from '@angular-mdl/expansion-panel';
@@ -7,6 +7,7 @@ import { default as cep, CEP } from 'cep-promise';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { MzSelectDirective, MzModalService, MzToastService } from 'ng2-materialize';
 import { TagInputComponent } from 'ng2-tag-input';
+import { UploadOutput, UploadInput, UploadFile, UploadStatus } from 'ngx-uploader';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
@@ -42,8 +43,10 @@ import { UF } from '../../shared/uf.enum';
 import { UtilsService } from '../../shared/utils/utils.service';
 import { WindowRef } from '../../core/window-ref.service';
 
-export interface TabParentComponent {
-
+interface FormData {
+  concurrency: number;
+  autoUpload: boolean;
+  verbose: boolean;
 }
 
 @Component({
@@ -52,9 +55,8 @@ export interface TabParentComponent {
   styleUrls: ['./project-proposal-manager.component.scss']
 })
 export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
-  // Refers to component global variables
+  @Input() project: Project;
   ambienceDescriptions: string[];
-  ambienceSlug: string;
   addressNumberMask = UtilsService.addressNumberMask;
   cepMask = UtilsService.cepMask;
   agencyMask = UtilsService.bankAccountAgencyMask;
@@ -62,9 +64,6 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
   deliveryDescriptions: string[];
   professional: Professional;
   professionals: Professional[];
-  professionalAddedSubscription: Subscription;
-  @Input() project: Project;
-  projectSlugTitle: string;
   services: string[];
   nativeWindow: any;
   mascaraReal = createNumberMask({
@@ -73,10 +72,10 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     decimalSymbol: ',', // allowLeadingZeroes: true,
     allowDecimal: true, // requireDecimal: true
   });
-  allBanks: Bank[];
-  bankAccounts: BankAccount[];
+  UploadStatus = UploadStatus;
 
-  // Refers to Client section variables
+
+  // Cliente tab
   clientErrorMessages: string[];
   clientDataHasChanged: boolean;
   clientDataBeingSaved: boolean;
@@ -84,60 +83,62 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
   clientForm: FormGroup;
   clientFormChangesSubscription: Subscription;
 
+  // Projeto tab
+  ambiencesDataHasChanges: boolean[] = [];
+  ambiencesDataBeingSaved: boolean;
+  ambiencesForms: FormGroup[] = [];
+  ambiencesFormsChangesSubscription: Subscription[] = [];
   addressFieldsDisabled: boolean = false;
+  imagesUploadInput: EventEmitter<UploadInput> = new EventEmitter<UploadInput>();
+  files: UploadFile[] = [];
+  dragOver: boolean = false;
+  formData: FormData = {
+    concurrency: 0,
+    autoUpload: true,
+    verbose: false
+  };
+
   locationDataHasChanged: boolean;
   locationDataBeingSaved: boolean;
   locationSaved: boolean = true;
   locationForm: FormGroup;
-  locationFormChangesSubscription: Subscription;
 
-  // Refers to Professional section variables
+  // Detalhes tab
+  proposalIntroDataHasChanges: boolean;
+  proposalIntroDataBeingSaved: boolean;
+  proposalIntroForm: FormGroup;
+  selectedDeliveriesForm: FormGroup;
+  deliveryDataHasChanges: boolean[] = [];
+  deliveryDataBeingSaved: boolean;
+  deliveriesForms: FormGroup[] = [];
+  deliveryFormsChangesSubscription: Subscription[] = [];
+  proposalDataHasChanges: boolean;
+  proposalDataBeingSaved: boolean;
+  proposalForm: FormGroup;
+
+  // Profissional tab
   profDataHasChanges: boolean;
   profDataBeingSaved: boolean;
   profForm: FormGroup;
-  profFormChangesSubscription: Subscription;
-
   partnersDataHasChanges: boolean;
   partnersDataBeingSaved: boolean;
   partnersForm: FormGroup;
   partnersFormChangesSubscription: Subscription;
   @ViewChild('partnersInput') partnersInput: TagInputComponent;
 
-  proposalIntroDataHasChanges: boolean;
-  proposalIntroDataBeingSaved: boolean;
-  proposalIntroForm: FormGroup;
-  proposalIntroFormChangesSubscription: Subscription;
 
-  // Refers to Proposal section variables
-  proposalDataHasChanges: boolean;
-  proposalDataBeingSaved: boolean;
-  proposalForm: FormGroup;
-  proposalFormChangesSubscription: Subscription;
-
-  deliveryDataHasChanges: boolean[] = [];
-  deliveryDataBeingSaved: boolean;
-  deliveriesForms: FormGroup[] = [];
-  deliveryFormsChangesSubscription: Subscription[] = [];
-  selectedDeliveriesForm: FormGroup;
-  // selectedDeliveries: number[] = [];
-
-  ambiencesDataHasChanges: boolean[] = [];
-  ambiencesDataBeingSaved: boolean;
-  ambiencesForms: FormGroup[] = [];
-  ambiencesFormsChangesSubscription: Subscription[] = [];
-
-  // Refers to Payment section variables
+  // Recebimento tab
+  allBanks: Bank[];
+  bankAccounts: BankAccount[];
   paymentDataHasChanges: boolean;
   paymentDataBeingSaved: boolean;
   paymentForm: FormGroup;
   paymentFormChangesSubscription: Subscription;
-
   bankAccountDataHasChanges: boolean;
   bankAccountDataBeingSaved: boolean;
   bankAccountForm: FormGroup;
-  bankAccountFormChangesSubscription: Subscription;
 
-  billingInfoUpdatedSubscription: Subscription;
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
     private ambienhomeceService: AmbienceService,
@@ -155,11 +156,13 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     private router: Router,
     private spinnerService: SpinnerService,
     private winRef: WindowRef
-  ) {    
+  ) {
     this.ambienceDescriptions = UtilsService.getEnumArray(AmbienceDescription);
     this.deliveryDescriptions = UtilsService.getEnumArray(DeliveryDescription);
     this.services = UtilsService.getEnumArray(Service);
-    this.profService.getCurrentProfessional().subscribe(prof => this.professional = prof);
+    this.profService.getCurrentProfessional()
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(prof => this.professional = prof);
     this.nativeWindow = winRef.getNativeWindow();
   }
 
@@ -179,6 +182,11 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
       this.project.activeProposal.deliveries = []
 
     let newLength = this.project.activeProposal.deliveries.push(new Delivery());
+  }
+
+  cancelImageUpload(id: string): void {
+    this.imagesUploadInput.emit({ type: 'cancel', id: id });
+    this.imagesUploadInput.emit({ type: 'remove', id: id });
   }
 
   canDeactivate(): boolean {
@@ -208,6 +216,7 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
 
     let profileIncomplete: boolean =
       !Boolean(this.profService.professional.name)
+      // || !Boolean(this.profService.professional.lastName)
       || !Boolean(this.profService.professional.addressArea)
       || !Boolean(this.profService.professional.addressNumber)
       || !Boolean(this.profService.professional.celular)
@@ -219,14 +228,46 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
       this.spinnerService.toggleLoadingIndicator(false);
       this.modalService.open(IncompleteProfileModalComponent);
     } else {
-      if (this.project.client && this.project.client.id) {
+      if (this.project.atnProject) {
+        let members = this.partnersForm.get('partners').value;
+
+        if (members && members.length !== 2) {
+          this.spinnerService.toggleLoadingIndicator(false);
+
+          if (members.length > 2) {
+            this.toastService.show('Convide apenas 2 integrantes para sua equipe', 3000);
+          } else if (members.length === 0) {
+            this.toastService.show('Sua equipe deve ter mais 2 integrantes', 3000);
+          } else {
+            this.toastService.show('Sua equipe deve ter mais 1 integrante', 3000);
+          }
+          return;
+        }
+
+        this.spinnerService.toggleLoadingIndicator(false);
         this.openProposal(this.router.url + '/proposta/'
           + this.project.id);
-        this.spinnerService.toggleLoadingIndicator(false);
+
       } else {
         this.spinnerService.toggleLoadingIndicator(false);
-        this.toastService.show('Selecione um cliente', 2500);
+        if (!this.project.client || !this.project.client.id) {
+          this.toastService.show('Selecione um cliente', 3000);
+          return;
+        }
+
+        this.openProposal(this.router.url + '/proposta/'
+          + this.project.id);
       }
+
+
+      // if ((this.project.client && this.project.client.id) || this.project.atnProject) {
+      //   this.openProposal(this.router.url + '/proposta/'
+      //     + this.project.id);
+      //   this.spinnerService.toggleLoadingIndicator(false);
+      // } else {
+      //   this.spinnerService.toggleLoadingIndicator(false);
+      //   this.toastService.show('Selecione um cliente', 2500);
+      // }
     }
   }
 
@@ -238,71 +279,78 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     return this.projectsService.allProjects;
   }
 
-  ngOnInit() {    
-    this.clientForm = this.createClientForm(this.project);
-    this.clientFormChangesSubscription = this.subscribeToFormChanges(this.clientForm, () => {
-      this.clientDataHasChanged = true;
-    }, (formData) => {
-      if (!this.clientDataBeingSaved) {
-        this.clientDataHasChanged = false;
-        this.clientDataBeingSaved = true;
-        this.saveClientInfo().subscribe((resp) => {
-          this.clientErrorMessages = [];
+  imagesChange(event) {
 
-          if (resp !== undefined) {
-            if (resp.HasError) {
-              this.clientErrorMessages = resp.errorMessages;
-              this.clientDataBeingSaved = false;
-            } else {
-              if (resp.client !== undefined) {
-                this.project.client = resp.client;
-                this.clientForm.value.clientId = resp.client.id;
-              } else if (resp instanceof Client) {
-                this.project.client = resp;
-                this.clientForm.value.clientId = resp.id;
-              }
+    // let fileList: FileList = event.target.files;
 
-              this.clientForm.reset();
+    // this.projectsService.uploadImage()
+
+
+    // if (fileList.length > 0) {
+    //   for (var i = 0; i < fileList.length; i++) {
+    //     let file: File = fileList[i];
+    //     let formData: FormData = new FormData();
+    //     formData.append('uploadFile', file, file)
+
+    //   }
+    // }
+  }
+
+  ngOnInit() {
+    if (!this.project.atnProject) {
+      this.clientForm = this.createClientForm(this.project);
+
+      const clientIdChanges$ = this.clientForm.get('clientId').valueChanges;
+      clientIdChanges$.do(id => {
+        this.clientDataHasChanged = true;
+
+        if (String(id) !== '0' && String(id) != undefined) {
+          this.clientDataBeingSaved = true;
+          this.clientService.getOne(id)
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe((client: Client) => {
+              this.project.client = client;
+
               this.saveProjectInfo((success) => {
-                if (success) {
+                if (success)
                   this.clientDataBeingSaved = false;
-                }
               });
+            })
+        }
+      }).takeUntil(this.ngUnsubscribe)
+        .subscribe();
+
+      const cpfCnpjChange$ = this.clientForm.get('cpfCnpj').valueChanges;
+      cpfCnpjChange$.debounceTime(250)
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe((cpfCnpj: string) => {
+          // console.log('cpfCnpj', cpfCnpj);
+          if (cpfCnpj) {
+            let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
+
+            let mask;
+
+            if (cleanCpfCnpj.length < 12) {
+              mask = UtilsService.cpfMask;
+            } else {
+              mask = UtilsService.cnpjMask;
             }
-          } else {
-            this.clientDataBeingSaved = false;
+
+            let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
+              guide: false,
+              placeholderChar: '\u2000'
+            });
+
+            this.clientForm.get('cpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
+              onlySelf: false,
+              emitEvent: false
+            })
           }
         });
-      }
-    });
-    const cpfCnpjChange$ = this.clientForm.get('cpfCnpj').valueChanges;
-    cpfCnpjChange$.debounceTime(250).subscribe((cpfCnpj: string) => {
-      // console.log('cpfCnpj', cpfCnpj);
-      if (cpfCnpj) {
-        let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
-
-        let mask;
-
-        if (cleanCpfCnpj.length < 12) {
-          mask = UtilsService.cpfMask;
-        } else {
-          mask = UtilsService.cnpjMask;
-        }
-
-        let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
-          guide: false,
-          placeholderChar: '\u2000'
-        });
-
-        this.clientForm.get('cpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
-          onlySelf: false,
-          emitEvent: false
-        })
-      }
-    });
+    }
 
     this.locationForm = this.createLocationForm(this.project);
-    this.locationFormChangesSubscription = this.subscribeToFormChanges(this.locationForm, () => {
+    this.subscribeToFormChanges(this.locationForm, () => {
       this.locationDataHasChanged = true;
     }, (formData) => {
       console.log(formData);
@@ -321,37 +369,43 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     });
 
     const cepChange$ = this.locationForm.get('CEP').valueChanges;
-    cepChange$.debounceTime(200).subscribe((cep: string) => {
-      if (cep) {
-        let cleanCep = cep.replace(/\D/g, '');
-        this.findLocationByCEP(cleanCep);
-      }
-    });
+    cepChange$.debounceTime(200)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe((cep: string) => {
+        if (cep) {
+          let cleanCep = cep.replace(/\D/g, '');
+          this.findLocationByCEP(cleanCep);
+        }
+      });
+
 
     this.profForm =
       this.createProfessionalForm(this.professional);
 
-    this.profFormChangesSubscription = this.subscribeToFormChanges(this.profForm, () => {
+    this.subscribeToFormChanges(this.profForm, () => {
       this.profDataHasChanges = true;
     }, (formData) => {
       if (!this.profDataBeingSaved) {
         this.profDataHasChanges = false;
         this.profDataBeingSaved = true;
-        this.saveProfessionalInfo().subscribe(response => {
-          if (response !== undefined) {
-            this.saveProjectInfo((success) => {
-              if (success) {
-                this.profDataBeingSaved = false;
-              } else {
-                this.profDataBeingSaved = false;
-              }
-            });
-          }
-        });
+        this.saveProfessionalInfo()
+          .takeUntil(this.ngUnsubscribe)
+          .subscribe(response => {
+            if (response !== undefined) {
+              this.saveProjectInfo((success) => {
+                if (success) {
+                  this.profDataBeingSaved = false;
+                } else {
+                  this.profDataBeingSaved = false;
+                }
+              });
+            }
+          });
       }
     });
 
     this.profService.getAll()
+      .takeUntil(this.ngUnsubscribe)
       .subscribe(profs => {
         this.professionals = profs && profs.length ? profs : []
       });
@@ -369,29 +423,33 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     const selectedDeliveriesFormChanges$ =
       this.selectedDeliveriesForm.get('selectedDeliveries').valueChanges;
 
-    selectedDeliveriesFormChanges$.debounceTime(3000).subscribe((indexes: number[]) => {
+    selectedDeliveriesFormChanges$.debounceTime(3000)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe((indexes: number[]) => {
 
-      // console.log('value: ', indexes);
-      this.deliveryDataBeingSaved = true;
-      this.deliveryDescriptions.forEach((descStr, index) => {
-        if (indexes.includes(index)) {
-          // this.deliveryDataHasChanges[index] = true;
-        } else {
-          this.disableDelivery(index, indexes);
-        }
-      });
-
-      this.saveDeliveriesInfo().subscribe(result => {
-        if (result !== undefined) {
-          if (result === true) {
-            this.saveProjectInfo((success) => {
-              this.deliveryDataBeingSaved = false;
-
-            })
+        // console.log('value: ', indexes);
+        this.deliveryDataBeingSaved = true;
+        this.deliveryDescriptions.forEach((descStr, index) => {
+          if (indexes.includes(index)) {
+            // this.deliveryDataHasChanges[index] = true;
+          } else {
+            this.disableDelivery(index, indexes);
           }
-        }
+        });
+
+        this.saveDeliveriesInfo()
+          .takeUntil(this.ngUnsubscribe)
+          .subscribe(result => {
+            if (result !== undefined) {
+              if (result === true) {
+                this.saveProjectInfo((success) => {
+                  this.deliveryDataBeingSaved = false;
+
+                })
+              }
+            }
+          });
       });
-    });
 
     let introValue = '';
     if (this.project.activeProposal.intro !== undefined)
@@ -402,116 +460,132 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     })
 
     const introChanges$ = this.proposalIntroForm.get('proposalIntro').valueChanges;
-    introChanges$.debounceTime(3000).subscribe(value => {
-      this.spinnerService.toggleLoadingIndicator(true);
+    introChanges$.debounceTime(3000)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(value => {
+        this.spinnerService.toggleLoadingIndicator(true);
 
-      this.project.activeProposal.intro = this.proposalIntroForm.value.proposalIntro;
-      this.saveProjectInfo((success) => {
-        this.spinnerService.toggleLoadingIndicator(false);
+        this.project.activeProposal.intro = this.proposalIntroForm.value.proposalIntro;
+        this.saveProjectInfo((success) => {
+          this.spinnerService.toggleLoadingIndicator(false);
+        })
       })
-    })
 
     this.proposalForm = this.createProposalForm(this.project);
-    this.proposalFormChangesSubscription = this.subscribeToFormChanges(this.proposalForm, () => {
+    this.subscribeToFormChanges(this.proposalForm, () => {
       this.proposalDataHasChanges = true;
     }, (formData) => {
       if (!this.proposalDataBeingSaved) {
         this.proposalDataHasChanges = false;
         this.proposalDataBeingSaved = true;
-        this.saveProposalInfo().subscribe(result => {
-          if (result !== undefined) {
-            this.saveProjectInfo((success) => {
-              if (success) {
-                this.proposalDataBeingSaved = false;
-              }
-            });
-          }
-        });
-      }
-    });
-
-    this.paymentForm = this.createPaymentForm(this.project.activeProposal.costFinal);
-    const finalCostChanges$ = this.paymentForm.get('cost').valueChanges;
-    finalCostChanges$.debounceTime(3000).subscribe(value => {
-      this.spinnerService.toggleLoadingIndicator(true);
-      this.project.activeProposal.costFinal = UtilsService.parseMonetaryString(value)
-
-      if (!this.project.activeProposal.costFinal)
-        this.project.activeProposal.costFinal = 0;
-
-      this.saveProjectInfo((success) => {
-        this.spinnerService.toggleLoadingIndicator(false);
-      })
-    })
-
-
-    this.bankService.getAll().subscribe(banks => this.allBanks = banks);
-    this.bankAccService.getAllByProfessional(this.auth.getCurrentUser().id)
-      .subscribe(bankAccs => { this.bankAccounts = bankAccs ? bankAccs : [] });
-
-    this.bankAccountForm = this.createBankAccountForm(this.professional, this.project.activeProposal.bankAccount);
-    this.bankAccountFormChangesSubscription = this.subscribeToFormChanges(this.bankAccountForm, () => {
-      this.bankAccountDataHasChanges = true;
-    }, (formData) => {
-
-      if (!this.bankAccountDataBeingSaved) {
-        this.bankAccountDataHasChanges = false;
-        this.bankAccountDataBeingSaved = true;
-        this.saveBankAccountInfo(formData).subscribe((bankAcc: BankAccount) => {
-
-          if (bankAcc !== undefined) {
-            this.project.activeProposal.bankAccount = bankAcc;
-
-            if (formData.bankAccountId === 'new' || formData.bankAccountId === 'undefined') {
+        this.saveProposalInfo()
+          .takeUntil(this.ngUnsubscribe)
+          .subscribe(result => {
+            if (result !== undefined) {
               this.saveProjectInfo((success) => {
                 if (success) {
-                  this.bankAccountForm.reset();
-                  this.bankAccounts.push(bankAcc);
-                  this.bankAccountForm.value.bankAccountId = bankAcc.id;
-                  this.bankAccountDataBeingSaved = false;
-                }
-              });
-            } else {
-              this.saveProjectInfo((success) => {
-                if (success) {
-                  this.bankAccountDataBeingSaved = false;
+                  this.proposalDataBeingSaved = false;
                 }
               });
             }
+          });
+      }
+    });
+
+    if (!this.project.atnProject) {
+      this.paymentForm = this.createPaymentForm(this.project.activeProposal.costFinal);
+      const finalCostChanges$ = this.paymentForm.get('cost').valueChanges;
+      finalCostChanges$.debounceTime(3000)
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe(value => {
+          this.spinnerService.toggleLoadingIndicator(true);
+          this.project.activeProposal.costFinal = UtilsService.parseMonetaryString(value)
+
+          if (!this.project.activeProposal.costFinal)
+            this.project.activeProposal.costFinal = 0;
+
+          this.saveProjectInfo((success) => {
+            this.spinnerService.toggleLoadingIndicator(false);
+          })
+        })
+
+      this.bankService.getAll()
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe(banks => this.allBanks = banks);
+      this.bankAccService.getAllByProfessional(this.auth.getCurrentUser().id)
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe(bankAccs => { this.bankAccounts = bankAccs ? bankAccs : [] });
+
+      this.bankAccountForm = this.createBankAccountForm(this.professional, this.project.activeProposal.bankAccount);
+      this.subscribeToFormChanges(this.bankAccountForm, () => {
+        this.bankAccountDataHasChanges = true;
+      }, (formData) => {
+
+        if (!this.bankAccountDataBeingSaved) {
+          this.bankAccountDataHasChanges = false;
+          this.bankAccountDataBeingSaved = true;
+          this.saveBankAccountInfo(formData)
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe((bankAcc: BankAccount) => {
+
+              if (bankAcc !== undefined) {
+                this.project.activeProposal.bankAccount = bankAcc;
+
+                if (formData.bankAccountId === 'new' || formData.bankAccountId === 'undefined') {
+                  this.saveProjectInfo((success) => {
+                    if (success) {
+                      this.bankAccountForm.reset();
+                      this.bankAccounts.push(bankAcc);
+                      this.bankAccountForm.value.bankAccountId = bankAcc.id;
+                      this.bankAccountDataBeingSaved = false;
+                    }
+                  });
+                } else {
+                  this.saveProjectInfo((success) => {
+                    if (success) {
+                      this.bankAccountDataBeingSaved = false;
+                    }
+                  });
+                }
 
 
-          } else {
-            this.bankAccountDataBeingSaved = false;
+              } else {
+                this.bankAccountDataBeingSaved = false;
+              }
+            });
+        }
+      });
+      const bankAccountCpfCnpjChange$ = this.bankAccountForm.get('accountCpfCnpj').valueChanges;
+      bankAccountCpfCnpjChange$.debounceTime(500)
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe((cpfCnpj: string) => {
+          // console.log('cpfCnpj', cpfCnpj);
+          if (cpfCnpj) {
+            let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
+
+            let mask;
+
+            if (cleanCpfCnpj.length < 12) {
+              mask = UtilsService.cpfMask;
+            } else {
+              mask = UtilsService.cnpjMask;
+            }
+
+            let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
+              guide: false,
+              placeholderChar: '\u2000'
+            });
+
+            this.bankAccountForm.get('accountCpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
+              onlySelf: false,
+              emitEvent: false,
+            })
           }
         });
-      }
-    });
-    const bankAccountCpfCnpjChange$ = this.bankAccountForm.get('accountCpfCnpj').valueChanges;
-    bankAccountCpfCnpjChange$.debounceTime(500).subscribe((cpfCnpj: string) => {
-      // console.log('cpfCnpj', cpfCnpj);
-      if (cpfCnpj) {
-        let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
+    }
 
-        let mask;
-
-        if (cleanCpfCnpj.length < 12) {
-          mask = UtilsService.cpfMask;
-        } else {
-          mask = UtilsService.cnpjMask;
-        }
-
-        let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
-          guide: false,
-          placeholderChar: '\u2000'
-        });
-
-        this.bankAccountForm.get('accountCpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
-          onlySelf: false,
-          emitEvent: false,
-        })
-      }
-    });
-    this.professionalAddedSubscription = this.profService.professionalAdded$
+    this.profService.professionalAdded$
+      .takeUntil(this.ngUnsubscribe)
       .subscribe((newProfessional: Professional) => {
         this.partnersInput.appendTag({
           id: newProfessional.id,
@@ -519,35 +593,77 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
           name: newProfessional.name,
           display: newProfessional.name
         });
-
       });
   }
 
   ngOnDestroy() {
-    if (!this.clientFormChangesSubscription.closed)
-      this.clientFormChangesSubscription.unsubscribe();
-
-    if (!this.profFormChangesSubscription.closed)
-      this.profFormChangesSubscription.unsubscribe();
-
-    if (!this.proposalFormChangesSubscription.closed)
-      this.proposalFormChangesSubscription.unsubscribe();
-
     this.ambiencesFormsChangesSubscription.forEach(subscription => {
       if (!subscription.closed) subscription.unsubscribe()
     });
+    this.deliveryFormsChangesSubscription.forEach(subscription => {
+      if (subscription && !subscription.closed) subscription.unsubscribe()
+    });
 
-    // if (!this.paymentFormChangesSubscription.closed)
-    //   this.paymentFormChangesSubscription.unsubscribe();
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
 
-    if (this.professionalAddedSubscription && !this.professionalAddedSubscription.closed)
-      this.professionalAddedSubscription.unsubscribe();
-    // this.newAmbienceFormChangesSubscription.unsubscribe();
+  onImagesOutput(output: UploadOutput) {
+    // console.log(output);
+    let headers: Headers = new Headers();
+    headers.append('Authorization', 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==');
+    // headers.append('Content-Type', 'application/json');
+    headers.append('Accept', 'image/*');
+    headers.append('Access-Control-Allow-Origin', '*');
+    headers.append('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
 
-    if (this.billingInfoUpdatedSubscription &&
-      !this.billingInfoUpdatedSubscription.closed) {
+    // when all files added in queue
+    if (output.type === 'allAddedToQueue') {
+      // uncomment this if you want to auto upload files when added
+      // const event: UploadInput = {
+      //   type: 'uploadAll',
+      //   url: '/upload',
+      //   method: 'POST',
+      //   data: { foo: 'bar' },
+      //   concurrency: 0
+      // };
 
-      this.billingInfoUpdatedSubscription.unsubscribe();
+      if (this.formData.autoUpload) {
+        const event: UploadInput = {
+          type: 'uploadAll',
+          url: 'http://52.67.21.201/muuving/api/projeto/saveFile',
+          method: 'POST',
+          data: {
+            projetoID: this.project.id
+          },
+          concurrency: this.formData.concurrency,
+          headers: {
+            "Authorization": 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==',
+            "Accept": '*',
+            "Content-Type": 'multipart/form-data'
+          },
+          fieldName: "uploadFile"
+          // file: output.file
+        }
+
+        this.imagesUploadInput.emit(event);
+      }
+
+    } else if (output.type === 'addedToQueue') {
+      this.files.push(output.file); // add file to array when added
+    } else if (output.type === 'uploading') {
+      // update current data in files array for uploading file
+      const index = this.files.findIndex(file => file.id === output.file.id);
+      this.files[index] = output.file;
+    } else if (output.type === 'removed') {
+      // remove file from array when removed
+      this.files = this.files.filter((file: UploadFile) => file !== output.file);
+    } else if (output.type === 'dragOver') { // drag over event
+      this.dragOver = true;
+    } else if (output.type === 'dragOut') { // drag out event
+      this.dragOver = false;
+    } else if (output.type === 'drop') { // on drop event
+      this.dragOver = false;
     }
   }
 
@@ -569,19 +685,74 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     this.ambiencesForms.splice(ambienceIndex, 1);
     this.project.ambiences.splice(ambienceIndex, 1);
     this.ambiencesDataHasChanges[ambienceIndex] = true;
-    this.saveAmbiencesInfo().subscribe(result => {
-      if (result !== undefined) {
-        if (result === true) {
-          this.saveProjectInfo((success) => {
-            if (success) {
-              this.ambiencesDataBeingSaved = false;
-            } else {
-              this.ambiencesDataBeingSaved = false;
-            }
-          });
+    this.saveAmbiencesInfo()
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(result => {
+        if (result !== undefined) {
+          if (result === true) {
+            this.saveProjectInfo((success) => {
+              if (success) {
+                this.ambiencesDataBeingSaved = false;
+              } else {
+                this.ambiencesDataBeingSaved = false;
+              }
+            });
+          }
         }
+      })
+  }
+
+  saveClient(formData: any) {
+    let newClient: Client;
+
+    newClient = {
+      name: formData.name,
+      email: formData.email,
+      cpfCnpj: formData.cpfCnpj,
+      gender: formData.clientGenderOpt
+    };
+
+    let newClientValid = Boolean(newClient.name)
+      && newClient.name.length > 0
+      && Boolean(newClient.email)
+      && UtilsService.isEmail(newClient.email)
+      && (newClient.gender === 'M' || newClient.gender === 'F');
+
+    if (Boolean(newClient.cpfCnpj)) {
+      if (newClient.cpfCnpj.length !== 14
+        && newClient.cpfCnpj.length !== 18) {
+        newClientValid = false;
       }
-    })
+    }
+
+    if (newClientValid) {
+      this.clientDataBeingSaved = true;
+      this.clientErrorMessages = [];
+      this.clientService
+        .addByProfessional(newClient, this.professional.id)
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe(resp => {
+          console.log(resp);
+
+          if (resp.HasError) {
+            this.clientErrorMessages = resp.errorMessages;
+            this.clientDataBeingSaved = false;
+          } else {
+            this.project.client = resp.client;
+            this.clientForm.value.clientId = resp.client.id;
+            this.saveProjectInfo((success) => {
+              if (success) {
+                this.clientDataBeingSaved = false;
+              }
+            });
+          }
+
+          this.clientDataBeingSaved = false
+
+        });
+    } else {
+
+    }
   }
 
   setAmbienceForm(ambienceIndex: number) {
@@ -595,23 +766,25 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
         }, (formData) => {
           if (!this.ambiencesDataBeingSaved) {
             this.ambiencesDataBeingSaved = true;
-            this.saveAmbiencesInfo().subscribe((result: boolean) => {
-              console.log(result);
+            this.saveAmbiencesInfo()
+              .takeUntil(this.ngUnsubscribe)
+              .subscribe((result: boolean) => {
+                console.log(result);
 
-              if (result !== undefined) {
-                if (result === true) {
-                  this.saveProjectInfo((success) => {
-                    if (success) {
-                      this.ambiencesDataBeingSaved = false;
-                    } else {
-                      this.ambiencesDataBeingSaved = false;
-                    }
-                  });
-                } else {
-                  this.ambiencesDataBeingSaved = false;
+                if (result !== undefined) {
+                  if (result === true) {
+                    this.saveProjectInfo((success) => {
+                      if (success) {
+                        this.ambiencesDataBeingSaved = false;
+                      } else {
+                        this.ambiencesDataBeingSaved = false;
+                      }
+                    });
+                  } else {
+                    this.ambiencesDataBeingSaved = false;
+                  }
                 }
-              }
-            });
+              });
           }
         });
     }
@@ -660,19 +833,21 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
           if (!this.deliveryDataBeingSaved) {
 
             this.deliveryDataBeingSaved = true;
-            this.saveDeliveriesInfo().subscribe((result: boolean) => {
-              if (result !== undefined) {
-                if (result === true) {
-                  this.saveProjectInfo(success => {
-                    if (success) {
-                      this.deliveryDataBeingSaved = false;
-                    }
-                  })
-                } else {
-                  this.deliveryDataBeingSaved = false;
+            this.saveDeliveriesInfo()
+              .takeUntil(this.ngUnsubscribe)
+              .subscribe((result: boolean) => {
+                if (result !== undefined) {
+                  if (result === true) {
+                    this.saveProjectInfo(success => {
+                      if (success) {
+                        this.deliveryDataBeingSaved = false;
+                      }
+                    })
+                  } else {
+                    this.deliveryDataBeingSaved = false;
+                  }
                 }
-              }
-            })
+              })
           }
         });
     }
@@ -694,30 +869,30 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
           this.partnersForm.get('partners').setValue(profs, {
             onlySelf: false,
             emitEvent: false
-          })
-          this.openNewPartnerModal()
-        } else {
-          this.project.activeProposal.professionalsIds = profs.map(p => { return p.value })
+          });
 
+          this.openNewPartnerModal();
+        } else {
+          this.project.activeProposal.professionalsIds =
+            profs.map(p => { return p.value })
           this.partnersDataHasChanges = true;
         }
+      }).debounceTime(3000)
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe(profs => {
+          if (!this.partnersDataBeingSaved) {
+            this.partnersDataHasChanges = false;
+            this.partnersDataBeingSaved = true;
 
-
-
-      }).debounceTime(3000).subscribe(profs => {
-        if (!this.partnersDataBeingSaved) {
-          this.partnersDataHasChanges = false;
-          this.partnersDataBeingSaved = true;
-          this.saveProjectInfo((success) => {
-            if (success) {
-              this.partnersDataBeingSaved = false;
-            } else {
-              this.partnersDataBeingSaved = false;
-            }
-          })
-        }
-
-      });
+            this.saveProjectInfo((success) => {
+              if (success) {
+                this.partnersDataBeingSaved = false;
+              } else {
+                this.partnersDataBeingSaved = false;
+              }
+            })
+          }
+        });
 
     }
     return true;
@@ -790,10 +965,10 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
 
     return this.clientForm = this.fb.group({
       clientId: [clientId, Validators.required],
-      email: [''],
-      cpfCnpj: [''],
-      name: [''],
-      clientGenderOpt: []
+      name: ['', Validators.required],
+      email: ['', Validators.required],
+      clientGenderOpt: [undefined, Validators.required],
+      cpfCnpj: ['']
     });
   }
 
@@ -1074,16 +1249,18 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
 
   private saveProjectInfo(callback?: (success) => void, generateProposal?: boolean) {
 
-    this.projectsService.update(this.project, generateProposal).subscribe((project: Project) => {
-      console.log('Update result: ', project);
+    this.projectsService.update(this.project, generateProposal)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe((project: Project) => {
+        console.log('Update result: ', project);
 
-      this.project.activeProposal.cost = project.activeProposal.cost;
-      this.project.activeProposal.url = project.activeProposal.url;
+        this.project.activeProposal.cost = project.activeProposal.cost;
+        this.project.activeProposal.url = project.activeProposal.url;
 
-      if (callback !== undefined) {
-        callback(true);
-      }
-    });
+        if (callback !== undefined) {
+          callback(true);
+        }
+      });
 
   }
 
@@ -1097,6 +1274,9 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
   private subscribeToFormChanges(form: FormGroup, doIt: (data?) => void, callback?: (data) => void): Subscription {
     const formChanges$ = form.valueChanges;
 
-    return formChanges$.do(data => doIt(data)).debounceTime(3000).subscribe(data => callback(data));
+    return formChanges$.do(data => doIt(data))
+      .debounceTime(3000)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(data => callback(data));
   }
 }

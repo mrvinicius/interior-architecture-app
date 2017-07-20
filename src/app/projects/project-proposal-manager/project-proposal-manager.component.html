@@ -1,6 +1,6 @@
 <main *ngIf="project" class="layout-content u-row">
   <md2-accordion class="mv-collapsible">
-    <md2-accordion-tab>
+    <md2-accordion-tab *ngIf="!project.atnProject">
       <md2-accordion-header class="collapsible-header">
         <i *ngIf="!clientDataBeingSaved" class="material-icons">face</i>
         <mz-spinner *ngIf="clientDataBeingSaved" [color]="'black'" class="tiny spinner"></mz-spinner>
@@ -40,12 +40,14 @@
                 <mz-input-container>
                   <input mz-input formControlName="cpfCnpj" label="CPF ou CNPJ" name='CpfCnpj' id='cpfCnpj' type='text'>
                 </mz-input-container>
-
+                <div class="right-align">
+                  <button (click)="saveClient(clientForm.value)" [disabled]="clientForm.invalid" class="btn-flat waves-effect waves-light"
+                    type="button">Salvar</button>
+                </div>
               </ng-container>
             </ng-container>
           </div>
         </form>
-
       </section>
     </md2-accordion-tab>
 
@@ -129,6 +131,96 @@
           </div>
           <div class="row col s12">
             <span class="dim-text" style="text-transform: uppercase; display: inline-block;">
+                <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">photo_library</i>Imagens do projeto
+            </span>
+          </div>
+
+
+
+
+
+          <ng-container *ngIf="project.atnProject">
+            <div class="row col s12">
+              <div class="drag-area-wrapper col hide-on-small-only">
+                <div ngFileDrop class="drop-area square grey lighten-3" (uploadOutput)="onImagesOutput($event)" [uploadInput]="imagesUploadInput"
+                  [ngClass]="{ 'is-drop-over': dragOver }">
+                  <div class="drop-area__content square__content center-align">
+                    <i class="material-icons medium grey-text text-lighten-1">cloud_upload</i>
+                    <span class="grey-text text-darken-5" style="font-size: 1.2rem;">
+                    <span style="font-weight: bold;">Solte os arquivos aqui</span><br> ou
+                    <div class="file-field">
+                      <div>
+                        <span class="pointer underline mv-red-text">
+                            selecione
+                            <input ngFileSelect
+                              (uploadOutput)="onImagesOutput($event)"
+                              [uploadInput]="imagesUploadInput"
+                              type="file"
+                              accept="image/*"
+                              multiple>
+                            </span>
+
+                      </div>
+                      <div class="hide file-path-wrapper">
+                        <input disabled class="file-path" placeholder="selecione os imagens" type="text">
+                      </div>
+                    </div>
+                    <!--<span class="pointer underline">
+                        selecione
+
+                      </span>-->
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="uploading-files col" *ngIf="files && files.length">
+                <div class="uploading-file" *ngFor="let img of files; let i = index;">
+                  <div class="uploadingHeader" style="display: flex; justify-content: space-between;">
+                    <span>{{img.name}}</span>
+                    <a class="pointer circle waves-effect waves-dark" (click)="cancelImageUpload(img.id)"><i class="material-icons black-secondary-text" style="vertical-align: bottom; text-align: right;">close</i></a>
+                  </div>
+                  <div class="progress row col s12" style="margin-bottom: 5px;">
+                    <div class="determinate" [style.width]="img.progress.data.percentage + '%'"></div>
+                  </div>
+                  <div class="black-secondary-text">
+                    {{img.progress.data.percentage}}% ({{UploadStatus[img.progress.status]}})
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="file-field input-field col s12 hide-on-med-and-up">
+              <div class="btn">
+                <i class="material-icons white-text">file_upload</i>
+                <input ngFileSelect (uploadOutput)="onImagesOutput($event)" [uploadInput]="imagesUploadInput" type="file" accept="image/*"
+                  multiple>
+              </div>
+              <div class="file-path-wrapper">
+                <input disabled class="file-path" placeholder="selecione os imagens" type="text">
+              </div>
+            </div>
+
+            <!--<div class="progress row col s12" style="margin-top: 0;">
+            <div class="determinate" style="width: 70%"></div>
+          </div>-->
+          </ng-container>
+
+
+
+
+
+
+
+
+
+          <div class="row">
+            <div class="col s12">
+              <div class="divider"></div>
+            </div>
+          </div>
+          <div class="row col s12">
+            <span class="dim-text" style="text-transform: uppercase; display: inline-block;">
                 <i class="material-icons" style="vertical-align: sub; margin-right: 10px;">location_on</i>Localização da obra
             </span>
           </div>
@@ -167,11 +259,11 @@
       <md2-accordion-header class="collapsible-header">
         <i *ngIf="!proposalDataBeingSaved && !deliveryDataBeingSaved && !proposalIntroDataBeingSaved" class="material-icons">description</i>
         <mz-spinner *ngIf="proposalDataBeingSaved || deliveryDataBeingSaved || proposalIntroDataBeingSaved" [color]="'black'" class="tiny spinner"></mz-spinner>
-        Detalhes da proposta
+        <ng-container *ngIf="!project.atnProject">Detalhes da proposta</ng-container>
+        <ng-container *ngIf="project.atnProject">Detalhes do projeto</ng-container>
       </md2-accordion-header>
       <section *ngIf="project">
         <div class="row">
-
           <div class="col s12">
             <form [formGroup]="proposalIntroForm">
               <mz-textarea-container>
@@ -259,7 +351,7 @@
                   </select>
                 </mz-select-container>
               </div>
-              <div class="col s12">
+              <div class="col s12" *ngIf="!project.atnProject">
                 <ul *ngIf="followUpCheckbox.checked" class="browser-default" style="-webkit-margin-before: 0; -webkit-padding-start: 20px; list-style-type: circle;">
                   <li class="dim-text">Organização planilha orçamentária</li>
                   <li class="dim-text">Elaboração de cronograma do projeto</li>
@@ -280,9 +372,15 @@
 
     <md2-accordion-tab>
       <md2-accordion-header class="collapsible-header">
-        <i *ngIf="!profDataBeingSaved && !partnersDataBeingSaved" class="material-icons">business</i>
+        <ng-container *ngIf="!project.atnProject">
+          <i *ngIf="!profDataBeingSaved && !partnersDataBeingSaved" class="material-icons">business</i>
+        </ng-container>
+        <ng-container *ngIf="project.atnProject">
+          <i *ngIf="!profDataBeingSaved && !partnersDataBeingSaved" class="material-icons">people</i>
+        </ng-container>
         <mz-spinner *ngIf="profDataBeingSaved || partnersDataBeingSaved" [color]="'black'" class="tiny spinner"></mz-spinner>
-        Profissional
+        <ng-container *ngIf="!project.atnProject">Profissional</ng-container>
+        <ng-container *ngIf="project.atnProject">Equipe</ng-container>
       </md2-accordion-header>
       <section *ngIf="professional && profForm" class="row">
         <div class="col s12 m6">
@@ -301,10 +399,11 @@
         <div *ngIf="professionals" class="col s12 m6">
           <section *ngIf="setPartnersForm()">
             <form *ngIf="partnersForm" [formGroup]="partnersForm">
-              <tag-input id="tagInputContainer" #partnersInput formControlName="partners" [ngModel]="partnersForm.value.partners" [secondaryPlaceholder]="'outros profissionais ou escritórios participantes'"
-                [placeholder]="'outros profissionais ou escritórios participantes'" [onlyFromAutocomplete]="true">
+              <tag-input id="tagInputContainer" #partnersInput formControlName="partners" [ngModel]="partnersForm.value.partners" [secondaryPlaceholder]="project.atnProject ? 'outros integrantes da equipe' : 'outros profissionais ou escritórios participantes'"
+                [placeholder]="project.atnProject ? 'outros integrantes da equipe' : 'outros profissionais ou escritórios participantes'"
+                [onlyFromAutocomplete]="true">
                 <tag-input-dropdown id="tagInputDropdown" [displayBy]="'name'" [limitItemsTo]="6" [identifyBy]="'id'" [showDropdownIfEmpty]="true"
-                  [focusFirstElement]="true" [autocompleteItems]="[{id: 'new', name: '- novo profissional -'}].concat(professionals)">
+                  [focusFirstElement]="true" [autocompleteItems]="[{id: 'new', name: project.atnProject ? '- adicionar integrante -' : '- adicionar profissional -'}].concat(professionals)">
                 </tag-input-dropdown>
               </tag-input>
             </form>
@@ -313,7 +412,7 @@
       </section>
     </md2-accordion-tab>
 
-    <md2-accordion-tab>
+    <md2-accordion-tab *ngIf="!project.atnProject">
       <md2-accordion-header class="collapsible-header">
         <i *ngIf="!paymentDataBeingSaved && !bankAccountDataBeingSaved" class="material-icons">attach_money</i>
         <mz-spinner *ngIf="paymentDataBeingSaved || bankAccountDataBeingSaved" [color]="'black'" class="tiny spinner"></mz-spinner>

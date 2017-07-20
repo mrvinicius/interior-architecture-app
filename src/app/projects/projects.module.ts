@@ -7,6 +7,7 @@ import { MdlPopoverModule } from '@angular-mdl/popover';
 import { MdlSelectModule } from '@angular-mdl/select';
 import { Md2Module, Md2AccordionModule } from 'md2';
 import { MaterializeModule } from 'ng2-materialize';
+import { NgUploaderModule } from 'ngx-uploader';
 import { TagInputModule } from 'ng2-tag-input';
 
 import { AmbienceService } from './shared/ambience.service';
@@ -39,6 +40,7 @@ import { ProjectBudgetManagerComponent } from './project-budget-manager/project-
     MdlSelectModule,
     TagInputModule,
     ReactiveFormsModule,
+    NgUploaderModule,
     
     BrowserAnimationsModule,
     ProjectsRoutingModule

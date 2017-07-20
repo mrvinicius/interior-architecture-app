@@ -36,9 +36,6 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     // Two approaches
     // if (this.authService.isLoggedIn) { return true; }
     if (localStorage.getItem('currentUser')) {
-      // console.log(this.profService.serviceId);
-      // console.log(this.profService.professional);
-      
       return true;
     }
 

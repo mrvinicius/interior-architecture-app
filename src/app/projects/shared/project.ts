@@ -24,6 +24,8 @@ export class Project {
     neighborhood?: string;
     city?: string;
 
+    atnProject?: boolean;
+    
     constructor(activeProposal: Proposal, id?: string, title?: string, professional?: Professional) {
         this.activeProposal = activeProposal;
         this.id = id;

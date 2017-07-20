@@ -23,7 +23,7 @@ export class ProjectProposalPreviewResolver implements Resolve<Project> {
         let id = route.params['id'];
         console.log(id);
         
-        return this.projectsService.getOneById(id, true).map(project => {
+        return this.projectsService.getOneById(id, true).map(project => {            
             return project;
         }).first();
     }

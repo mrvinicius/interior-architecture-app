@@ -21,8 +21,13 @@ mz-modal.small-modal .modal {
     @media #{$small-and-down} {
         width: 90%;
     }
-    .modal-footer {
-        // .btn, .btn-flat, .btn-large { float: initial; }
+}
+
+mz-modal {
+    &.no-footer {
+        .modal-footer {
+            display: none;
+        }
     }
 }
 

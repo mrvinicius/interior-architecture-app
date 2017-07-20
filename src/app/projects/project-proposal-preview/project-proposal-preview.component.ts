@@ -43,9 +43,7 @@ export class ProjectProposalPreviewComponent implements OnInit, OnDestroy {
     private sidebarService: LayoutSidebarService,
     private spinnerService: SpinnerService,
     private toastService: MzToastService
-  ) {
-
-  }
+  ) { }
 
   ngOnInit() {
     this.headerService.hideHeader();
@@ -79,6 +77,10 @@ export class ProjectProposalPreviewComponent implements OnInit, OnDestroy {
 
   sendProposal() {
     this.spinnerService.toggleLoadingIndicator(true);
+  
+    this.spinnerService.toggleLoadingIndicator(false);
+    let modalRef = this.modalService.open(BillingModalComponent, {});
+
 
     if (!this.profService.professional.paying) {
       this.billingService.billingInfoUpdated$
@@ -89,14 +91,16 @@ export class ProjectProposalPreviewComponent implements OnInit, OnDestroy {
       let modalRef = this.modalService.open(BillingModalComponent, {});
 
     } else {
-      if (this.project.client && this.project.client.id) {
+      if ((this.project.client && this.project.client.id) || this.project.atnProject) {
         this.propService.send(this.project)
           .takeUntil(this.ngUnsubscribe)
           .subscribe((success: boolean) => {
             if (success) {
               this.spinnerService.toggleLoadingIndicator(false);
               this.proposalSent = true;
-              this.toastService.show('Projeto enviado!', 3000, 'green');
+
+              let successMsg = this.project.atnProject ? 'Inscrição completa!' : 'Projeto enviado!';
+              this.toastService.show(successMsg, 3000, 'green');
             }
           })
 

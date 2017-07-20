@@ -27,7 +27,7 @@ export class ProfessionalService {
   professionalAdded$: Subject<Professional> = new Subject<Professional>();
   modalDismissed$: Subject<Professional> = new Subject<Professional>();
   allProfessionalsChange$: Subject<Professional[]> = new Subject<Professional[]>();
-  private readonly baseUrl: string = 'https://www.archabox.com.br/api/profissional';
+  private readonly baseUrl: string = 'http://52.67.21.201/muuving/api/profissional';
   private _professional: Professional;
 
   constructor(
@@ -67,9 +67,12 @@ export class ProfessionalService {
   }
 
   // Adiciona um novo profissional à base e atualiza os dados locais
-  add(prof: Professional, isSignUp?: boolean): Observable<any> {
+  add(prof: Professional, isSignUp?: boolean, ): Observable<any> {
     let options = new RequestOptions({ headers: this.getHeaders() });
-    let data = { Email: prof.email, Nome: prof.name };
+    let data = {
+      Email: prof.email,
+      Nome: prof.name
+    };
 
     return this.http.put(this.baseUrl + '/add', data, options)
       .map((response: Response) => {
@@ -153,7 +156,7 @@ export class ProfessionalService {
   getOne(id: string): Observable<Professional> {
     let options = new RequestOptions({ headers: this.getHeaders() });
 
-    //https://www.archabox.com.br/api/profissional/getone?id=c11752b0-0475-4d31-9c01-223d1a98aa9f
+    //http://52.67.21.201/muuving/api/profissional/getone?id=c11752b0-0475-4d31-9c01-223d1a98aa9f
     return this.http.get(this.baseUrl + '/getone?id=' + id, options)
       .map((response: Response) => {
         let body = JSON.parse(response.text());
@@ -165,7 +168,7 @@ export class ProfessionalService {
         professional.CEP = body.CEP;
         professional.paying = body.Assinante ? body.Assinante : false;
         professional.iuguId = body.IdClienteIugu ? body.IdClienteIugu : undefined;
-
+        professional.lastName = body.Sobrenome;
         professional.nacionality = body.Nacionalidade;
         professional.gender = body.Genero;
         professional.maritalStatus = body.EstadoCivil;
@@ -234,6 +237,7 @@ export class ProfessionalService {
     let options = new RequestOptions({ headers: this.getHeaders() });
 
     if (prof.name) this._professional.name = prof.name;
+    if (prof.lastName) this._professional.lastName = prof.lastName;
     if (prof.email) this._professional.email = prof.email;
     if (prof.description !== undefined) this._professional.description = prof.description;
     if (prof.cpfCnpj) this._professional.cpfCnpj = prof.cpfCnpj;
@@ -252,6 +256,7 @@ export class ProfessionalService {
     let data: any = {
       id: this._professional.id,
       Nome: this._professional.name,
+      Sobrenome: this._professional.lastName,
       Email: this._professional.email,
       Descricao: this._professional.description,
       CpfCnpj: this._professional.cpfCnpj,
@@ -268,11 +273,9 @@ export class ProfessionalService {
       NumeroLogradouro: this._professional.addressNumber
     };
 
-
     if (prof.password) {
       data.Senha = this._professional.password;
     }
-
     // console.log(data);
 
     return this.http.post(this.baseUrl + '/update', data, options)

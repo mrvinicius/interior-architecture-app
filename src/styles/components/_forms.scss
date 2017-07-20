@@ -174,3 +174,21 @@ ng2-dropdown-menu {
         }
     }
 }
+
+
+/* 6. File upload
+========================================================================== */
+.drop-area {
+    border: dashed 3px lightgray;
+    .drop-area__content {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+    &.is-drop-over {
+        border-color: $primary-color;
+        i.material-icons {
+            color: $primary-color !important;
+        }
+    }
+}

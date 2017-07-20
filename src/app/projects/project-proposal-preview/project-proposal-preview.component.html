@@ -7,9 +7,13 @@
   allowfullscreen></iframe>
 <div *ngIf="!proposalSent" class="fixed-action-btn toolbar active white right-align">
   <div class="full-inline-container" style="height: 56px; line-height: 56px;">
-    <button [disabled]="!previewUrl && !project.client || !project.client.id" (click)="sendProposal()" class="waves-effect waves-light btn"
+    <button *ngIf="!project.atnProject" [disabled]="!previewUrl && !project.client || !project.client.id" (click)="sendProposal()" class="waves-effect waves-light btn"
       type="button" style="margin-top: -2px; margin-left: 15px; margin-right: 15px;">
       <i class="material-icons right">send</i>enviar
+    </button>
+    <button *ngIf="project.atnProject" [disabled]="!previewUrl" (click)="sendProposal()" class="waves-effect waves-light btn"
+      type="button" style="margin-top: -2px; margin-left: 15px; margin-right: 15px;">
+      <i class="material-icons right">send</i>enviar inscrição
     </button>
   </div>
 </div>

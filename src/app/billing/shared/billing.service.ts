@@ -8,7 +8,7 @@ import { BillingInfo } from './billing-info';
 
 @Injectable()
 export class BillingService {
-  private readonly baseUrl: string = 'https://www.archabox.com.br/api/pagamento';
+  private readonly baseUrl: string = 'http://52.67.21.201/muuving/api/pagamento';
   // Observable string sources
   private billingInfoUpdatedSource = new Subject<boolean>();
   // Observable string streams
@@ -83,8 +83,6 @@ export class BillingService {
           let errorMessages = [];
           console.log(billingResp.ErrorMessage);
 
-          console.log(typeof billingResp.ErrorMessage);
-
           let zerofill = (dateOrMonth: number | string): string => {
             let filled: string = String(dateOrMonth).trim();
             if (filled.length === 1)
@@ -103,7 +101,12 @@ export class BillingService {
             errorMessages.push('Dados em branco')
           }
 
-          if (!errorMessages.length) errorMessages.push('Erro desconhecido')
+          let msg = 'não está ativa para receber pagamentos pois não tem conta bancária cadastrada';
+          if (billingResp.ErrorMessage.indexOf(msg) > -1) {
+            errorMessages.push('Dados de cartão de crédito inválidos')
+          }
+
+            if (!errorMessages.length) errorMessages.push('Erro desconhecido')
           billingResp.errorMessages = errorMessages;
         }
 

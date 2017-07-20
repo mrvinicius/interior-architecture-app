@@ -1,20 +1,15 @@
-import { SpinnerService } from './../../core/spinner/spinner.service';
-import { ProfessionalService } from './../../core/professional.service';
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { AuthService } from '../../core/auth.service';
 import { Professional } from '../../core/professional';
+import { ProfessionalService } from './../../core/professional.service';
+import { SpinnerService } from './../../core/spinner/spinner.service';
 import { UserService } from '../../core/user.service';
 
 @Component({
-  selector: 'mbx-user-password',
+  selector: 'abx-user-password',
   templateUrl: './user-password.component.html',
   styleUrls: ['./user-password.component.scss']
 })
@@ -74,7 +69,7 @@ export class UserPasswordComponent implements OnInit {
       this.spinnerService.toggleLoadingIndicator(false);
       // this.router.navigate(['/profissao?id=' + this.id + '&email=' + this.email,]);
       console.log(this.id, this.email);
-      
+
       this.router.navigate(['/profissao',]);
     }
   }

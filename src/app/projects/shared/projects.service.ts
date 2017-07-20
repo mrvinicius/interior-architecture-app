@@ -9,7 +9,6 @@ import {
 import { Observable } from 'rxjs/Rx';
 import { Subject } from "rxjs/Subject";
 
-// import { AuthService } from '../../core/auth.service';
 import { Ambience } from './ambience';
 import { AmbienceDescription } from './ambience-description.enum';
 import { AmbienceService } from './ambience.service';
@@ -310,12 +309,11 @@ export class ProjectsService implements Resolve<string>{
     'a46058ac-d651-4266-83bf-41b747364c6e': 13
   };
 
-  private readonly baseUrl = 'https://www.archabox.com.br/api/projeto';
-  // Observable string sources
+  private readonly baseUrl = 'http://52.67.21.201/muuving/api/projeto';
   private newProjectTitleDefinedSource = new Subject<string>();
-  // Observable string streams
   newProjectTitleDefined$ = this.newProjectTitleDefinedSource.asObservable();
-
+  private newAtnProjectTitleDefinedSource = new Subject<string>();
+  newAtnProjectTitleDefined$ = this.newAtnProjectTitleDefinedSource.asObservable();
 
   constructor(
     private auth: AuthService,
@@ -328,7 +326,6 @@ export class ProjectsService implements Resolve<string>{
     ProjectsService.proposalStatusIds[2] = ProjectsService.proposalStatusIds.NotSent;
     ProjectsService.proposalStatusIds[3] = ProjectsService.proposalStatusIds.Waiting;
     ProjectsService.proposalStatusIds[4] = ProjectsService.proposalStatusIds.Deprecated;
-
     ProjectsService.servicesGroupIds[0] = ProjectsService.servicesGroupIds.Low;
     ProjectsService.servicesGroupIds[1] = ProjectsService.servicesGroupIds.Medium;
     ProjectsService.servicesGroupIds[2] = ProjectsService.servicesGroupIds.High;
@@ -342,10 +339,9 @@ export class ProjectsService implements Resolve<string>{
     return this._allProjects;
   }
 
-  add(title: string): Observable<Project> {
+  add(title: string, atnProject?: boolean): Observable<Project> {
     let options = new RequestOptions({ headers: this.getHeaders() });
-
-    return this.http.put(this.baseUrl + '/add', {
+    let data: any = {
       "ProfissionalId": this.auth.getCurrentUser().id,
       "Descricao": title,
       "IsActive": true,
@@ -361,15 +357,37 @@ export class ProjectsService implements Resolve<string>{
           "StatusId": ProjectsService.proposalStatusIds.NotSent,
         }
       ]
-    }, options).map((response: Response) => {
+    };
+
+    if (atnProject) {
+      data.PropostaArchathon = true;
+      data.Proposta[0].PropostaArchathon = true;
+    }
+
+    return this.http.put(this.baseUrl + '/add', data, options).map((response: Response) => {
       let body = JSON.parse(response.text());
       let projectProposal = new Proposal(false, ProposalStatus.NotSent);
-      let currentProf =
-        new Professional(this.auth.getCurrentUser().name, this.auth.getCurrentUser().email, this.auth.getCurrentUser().id);
-      let newProject =
-        new Project(projectProposal, body.Id, body.Descricao, currentProf);
+      let currentProf = new Professional(
+        this.auth.getCurrentUser().name,
+        this.auth.getCurrentUser().email,
+        this.auth.getCurrentUser().id
+      );
+
+      let newProject = new Project(
+        projectProposal,
+        body.Id,
+        body.Descricao,
+        currentProf
+      );
+
       newProject.client = new Client();
-      newProject.activeProposal = new Proposal(false, ProposalStatus.NotSent, body.Proposta[0].Id);
+      newProject.activeProposal = new Proposal(
+        false,
+        ProposalStatus.NotSent,
+        body.Proposta[0].Id
+      );
+      newProject.atnProject = atnProject;
+
       if (!this.allProjects) this.allProjects = [];
 
       this.allProjects.push(newProject);
@@ -377,8 +395,12 @@ export class ProjectsService implements Resolve<string>{
     }).catch(this.handleError);
   }
 
-  defineNewProjectTitleName(name: string) {
-    this.newProjectTitleDefinedSource.next(name);
+  defineNewAtnProjectTitle(title: string) {
+    this.newAtnProjectTitleDefinedSource.next(title);
+  }
+
+  defineNewProjectTitle(title: string) {
+    this.newProjectTitleDefinedSource.next(title);
   }
 
   disableProject(id: string): Observable<Project> {
@@ -391,7 +413,6 @@ export class ProjectsService implements Resolve<string>{
   }
 
   getAllByProfessional(professionalId: string, take: number, skip?: number): Observable<Project[]> {
-
     let options = new RequestOptions({ headers: this.getHeaders() });
     let data = {
       Skip: skip,
@@ -489,6 +510,7 @@ export class ProjectsService implements Resolve<string>{
                 prop.costToReceive = proposal.ValorRecebido;
                 prop.costFinal = proposal.ValorFatura;
                 prop.followUp = proposal.AcompanhamentoObra;
+                prop.isAtnProposal = proposal.PropostaArchathon;
 
                 if (proposal.PropostaEntrega.length) {
                   prop.deliveries = proposal.PropostaEntrega.map(delivery => {
@@ -497,7 +519,6 @@ export class ProjectsService implements Resolve<string>{
                     d.deliveryDescription = ProjectsService.deliveryIds[delivery.TipoEntregaId];
                     d.duration = delivery.Prazo;
                     d.durationTimeUnity = ProjectsService.timeUnityIds[delivery.TempoId];
-
 
                     return d;
                   });
@@ -528,12 +549,15 @@ export class ProjectsService implements Resolve<string>{
 
               if (proposals.length > 0) {
                 p.activeProposal = proposals[proposals.length - 1]
+                p.atnProject = p.activeProposal.isAtnProposal;
               } else {
                 p.isActive = false;
                 new Proposal(false, ProposalStatus.NotSent);
               }
 
               c.id = project.ClienteId;
+              c.name = project.NomeCliente;
+              c.email = project.EmailCliente;
               p.client = c;
               p.briefing = project.Briefing;
 
@@ -552,160 +576,6 @@ export class ProjectsService implements Resolve<string>{
     }
 
 
-  }
-
-  private getFromBackEnd(id: string): Observable<Project> {
-    let options = new RequestOptions({ headers: this.getHeaders() });
-
-    return this.http.get(this.baseUrl + '/getone?id=' + id, options)
-      .map((response: Response) => {
-        let project = JSON.parse(response.text());
-        // let client = new Client(body.Nome, body.Email, body.ID);
-        // client.cpfCnpj = body.CpfCnpj;
-        let activeProposal: Proposal,
-          p: Project,
-          c: Client;
-
-        // TODO: Get last and active proposal
-        let ambiences: Ambience[] = project.ProjetoComodo.map(ambience => {
-          let amb: Ambience = new Ambience(ambience.ComodoId);
-
-          if (ambience.Descricao in AmbienceDescription) {
-            amb.ambienceDescription = AmbienceDescription[AmbienceDescription[ProjectsService.ambienceDescriptionIds[ambience.ComodoId]]]
-          }
-
-          let products: Product[] = ambience.ProjetoComodoProduto.map(product => {
-            let p: Product = new Product();
-
-            return p;
-          });
-
-          let services: Service[] = ambience.ProjetoComodoServicos.map(service => {
-            return Service[Service[ProjectsService.servicesIds[service.TipoServicoId]]]
-          });
-
-          amb.services = services;
-
-          amb.comments = ambience.Observacao;
-          amb.area = ambience.MetragemArea;
-          amb.cost = ambience.Valor;
-          amb.isActive = ambience.IsActive;
-
-          return amb;
-        });
-
-        let proposals: Proposal[] = project.Proposta.map(proposal => {
-          let propStatus: ProposalStatus;
-          let prop: Proposal;
-
-          switch (proposal.StatusId.toUpperCase()) {
-            case ProjectsService.proposalStatusIds.Approved.toUpperCase():
-              propStatus = ProposalStatus.Approved;
-              break;
-            case ProjectsService.proposalStatusIds.Deprecated.toUpperCase():
-              propStatus = ProposalStatus.Deprecated;
-              break;
-            case ProjectsService.proposalStatusIds.Disabled.toUpperCase():
-              propStatus = ProposalStatus.Disabled;
-              break;
-            case ProjectsService.proposalStatusIds.Waiting.toUpperCase():
-              propStatus = ProposalStatus.Waiting;
-              break;
-            case ProjectsService.proposalStatusIds.NotSent.toUpperCase():
-              propStatus = ProposalStatus.NotSent;
-              break;
-            default:
-              console.error('Status de proposta inválido: ', proposal.StatusId);
-              propStatus = ProposalStatus.NotSent;
-              break;
-          }
-
-          prop = new Proposal(
-            proposal.ValorRecebido === 0 ? false : true,
-            propStatus,
-            proposal.Id
-          );
-
-          if (proposal.ContaBancariaId) {
-            prop.bankAccount = new BankAccount(
-              // proposal.ContaBancaria.Agencia,
-              // proposal.ContaBancaria.Conta,
-              // proposal.ContaBancaria.DigitoConta,
-              // proposal.ContaBancaria.Id,
-            );
-            prop.bankAccount.id = proposal.ContaBancariaId;
-
-            if (proposal.BancoId) {
-              prop.bankAccount.bank = new Bank(
-                proposal.BancoId
-                // proposal.ContaBancaria.Banco.Id,
-                // proposal.ContaBancaria.Banco.Nome,
-                // proposal.ContaBancaria.Banco.NomeCompleto,
-              );
-            }
-          }
-
-          prop.deadlineCount = proposal.Prazo;
-          prop.deadlineTimeUnity = ProjectsService.timeUnityIds[proposal.TempoId];
-          prop.url = proposal.UrlPreview;
-          prop.intro = proposal.Descricao;
-          prop.cost = proposal.CustoTotal;
-          prop.costToClient = proposal.ValorCobrado;
-          prop.costToReceive = proposal.ValorRecebido;
-          prop.costFinal = proposal.ValorFatura;
-          prop.followUp = proposal.AcompanhamentoObra;
-
-          if (proposal.PropostaEntrega.length) {
-            prop.deliveries = proposal.PropostaEntrega.map(delivery => {
-
-              let d: Delivery = new Delivery();
-              d.deliveryDescription = ProjectsService.deliveryIds[delivery.TipoEntregaId];
-              d.duration = delivery.Prazo;
-              d.durationTimeUnity = ProjectsService.timeUnityIds[delivery.TempoId];
-
-
-              return d;
-            });
-          }
-
-          prop.professionalsIds =
-            proposal.PropostaProfissionaisParticipantes.map(professional => {
-              return professional.ProfissionalId;
-            });
-
-          return prop;
-        });
-
-        let currentProf =
-          new Professional(this.auth.getCurrentUser().name, this.auth.getCurrentUser().email, this.auth.getCurrentUser().id);
-
-        c = new Client();
-        p = new Project(activeProposal, project.Id, project.Descricao, currentProf);
-        p.isActive = project.IsActive;
-        p.ambiences = ambiences;
-        p.proposals = proposals;
-        p.UF = project.UF;
-        p.CEP = project.CEP;
-        p.addressArea = project.Logradouro;
-        p.addressNumber = project.NumeroLogradouro;
-        p.neighborhood = project.Bairro;
-        p.city = project.Cidade;
-
-        if (proposals.length > 0) {
-          p.activeProposal = proposals[proposals.length - 1]
-        } else {
-          p.isActive = false;
-          new Proposal(false, ProposalStatus.NotSent);
-        }
-
-        c.id = project.ClienteId;
-        p.client = c;
-        p.briefing = project.Briefing;
-
-        return p;
-        // return client;
-      })
-      .catch(this.handleError);
   }
 
   getOneById(id: string, fromBackEnd?: boolean): Observable<Project> {
@@ -745,7 +615,7 @@ export class ProjectsService implements Resolve<string>{
     const pathParam: string = 'title';
 
     let project = this.getOneBySlugTitle(route.params[pathParam]);
-    
+
     if (project && project.title)
       return Observable.of(project.title);
 
@@ -769,6 +639,7 @@ export class ProjectsService implements Resolve<string>{
       'Id': project.id,
       'ProfissionalId': this.auth.getCurrentUser().id,
       'ClienteId': project.client.id,
+      'PropostaArchathon': project.atnProject,
       'Descricao': project.title,
       'Briefing': project.briefing,
       'IsActive': project.isActive,
@@ -792,6 +663,8 @@ export class ProjectsService implements Resolve<string>{
           'ContaBancariaId': undefined,
           'GeraPropostaQwilr': generateProposal,
           'AcompanhamentoObra': project.activeProposal.followUp,
+          'PropostaArchathon': project.activeProposal.isAtnProposal,
+
           // "Banco": null,
           // "ContaBancaria": null,
           'PropostaEntrega': [],
@@ -800,6 +673,8 @@ export class ProjectsService implements Resolve<string>{
       ],
       'ProjetoComodo': []
     }
+
+    if (!projectData.UF) projectData.UF = 'SP'
 
     if (project.activeProposal.bankAccount && project.activeProposal.bankAccount.bank) {
       projectData.Proposta[0].BancoId = project.activeProposal.bankAccount.bank.id;
@@ -954,6 +829,164 @@ export class ProjectsService implements Resolve<string>{
         return p;
 
       });
+  }
+
+  uploadImage(file: File) {
+    let options = new RequestOptions({ headers: this.getHeaders() });
+    let formData: FormData = new FormData();
+    formData.append('uploadFile', file)
+
+    // this.http.post('api/projeto/saveFile', )
+  }
+
+  // uploadImage(file: File | File[]): Observable<any> {
+
+  //   return this.http.post('', formData, options)
+  // }
+
+  private getFromBackEnd(id: string): Observable<Project> {
+    let options = new RequestOptions({ headers: this.getHeaders() });
+
+    return this.http.get(this.baseUrl + '/getone?id=' + id, options)
+      .map((response: Response) => {
+        let project = JSON.parse(response.text());
+        // let client = new Client(body.Nome, body.Email, body.ID);
+        // client.cpfCnpj = body.CpfCnpj;
+        let activeProposal: Proposal,
+          p: Project,
+          cli: Client;
+
+        // TODO: Get last and active proposal
+        let ambiences: Ambience[] = project.ProjetoComodo.map(ambience => {
+          let amb: Ambience = new Ambience(ambience.ComodoId);
+
+          if (ambience.Descricao in AmbienceDescription) {
+            amb.ambienceDescription = AmbienceDescription[AmbienceDescription[ProjectsService.ambienceDescriptionIds[ambience.ComodoId]]]
+          }
+
+          let products: Product[] = ambience.ProjetoComodoProduto.map(product => {
+            let p: Product = new Product();
+
+            return p;
+          });
+
+          let services: Service[] = ambience.ProjetoComodoServicos.map(service => {
+            return Service[Service[ProjectsService.servicesIds[service.TipoServicoId]]]
+          });
+
+          amb.services = services;
+          amb.comments = ambience.Observacao;
+          amb.area = ambience.MetragemArea;
+          amb.cost = ambience.Valor;
+          amb.isActive = ambience.IsActive;
+
+          return amb;
+        });
+
+        let proposals: Proposal[] = project.Proposta.map(proposal => {
+          let propStatus: ProposalStatus;
+          let prop: Proposal;
+
+          switch (proposal.StatusId.toUpperCase()) {
+            case ProjectsService.proposalStatusIds.Approved.toUpperCase():
+              propStatus = ProposalStatus.Approved;
+              break;
+            case ProjectsService.proposalStatusIds.Deprecated.toUpperCase():
+              propStatus = ProposalStatus.Deprecated;
+              break;
+            case ProjectsService.proposalStatusIds.Disabled.toUpperCase():
+              propStatus = ProposalStatus.Disabled;
+              break;
+            case ProjectsService.proposalStatusIds.Waiting.toUpperCase():
+              propStatus = ProposalStatus.Waiting;
+              break;
+            case ProjectsService.proposalStatusIds.NotSent.toUpperCase():
+              propStatus = ProposalStatus.NotSent;
+              break;
+            default:
+              console.error('Status de proposta inválido: ', proposal.StatusId);
+              propStatus = ProposalStatus.NotSent;
+              break;
+          }
+
+          prop = new Proposal(
+            proposal.ValorRecebido === 0 ? false : true,
+            propStatus,
+            proposal.Id
+          );
+
+          if (proposal.ContaBancariaId) {
+            prop.bankAccount = new BankAccount();
+            prop.bankAccount.id = proposal.ContaBancariaId;
+
+            if (proposal.BancoId) {
+              prop.bankAccount.bank = new Bank(proposal.BancoId);
+            }
+          }
+
+          prop.deadlineCount = proposal.Prazo;
+          prop.deadlineTimeUnity = ProjectsService.timeUnityIds[proposal.TempoId];
+          prop.url = proposal.UrlPreview;
+          prop.intro = proposal.Descricao;
+          prop.cost = proposal.CustoTotal;
+          prop.costToClient = proposal.ValorCobrado;
+          prop.costToReceive = proposal.ValorRecebido;
+          prop.costFinal = proposal.ValorFatura;
+          prop.followUp = proposal.AcompanhamentoObra;
+          prop.isAtnProposal = proposal.PropostaArchathon;
+
+          if (proposal.PropostaEntrega.length) {
+            prop.deliveries = proposal.PropostaEntrega.map(delivery => {
+
+              let d: Delivery = new Delivery();
+              d.deliveryDescription = ProjectsService.deliveryIds[delivery.TipoEntregaId];
+              d.duration = delivery.Prazo;
+              d.durationTimeUnity = ProjectsService.timeUnityIds[delivery.TempoId];
+
+              return d;
+            });
+          }
+
+          prop.professionalsIds =
+            proposal.PropostaProfissionaisParticipantes.map(professional => {
+              return professional.ProfissionalId;
+            });
+
+          return prop;
+        });
+
+        let currentProf =
+          new Professional(this.auth.getCurrentUser().name, this.auth.getCurrentUser().email, this.auth.getCurrentUser().id);
+
+        cli = new Client();
+        p = new Project(activeProposal, project.Id, project.Descricao, currentProf);
+        p.isActive = project.IsActive;
+        p.ambiences = ambiences;
+        p.proposals = proposals;
+        p.UF = project.UF;
+        p.CEP = project.CEP;
+        p.addressArea = project.Logradouro;
+        p.addressNumber = project.NumeroLogradouro;
+        p.neighborhood = project.Bairro;
+        p.city = project.Cidade;
+
+        if (proposals.length > 0) {
+          p.activeProposal = proposals[proposals.length - 1];
+          p.atnProject = p.activeProposal.isAtnProposal;
+        } else {
+          p.isActive = false;
+          new Proposal(false, ProposalStatus.NotSent);
+        }
+
+        cli.id = project.ClienteId;
+        // cli.email = project.ClienteEmail;
+        // cli.name = project.ClienteNome;
+        p.client = cli;
+        p.briefing = project.Briefing;
+        return p;
+        // return client;
+      })
+      .catch(this.handleError);
   }
 
   private getHeaders() {
