@@ -831,18 +831,27 @@ export class ProjectsService implements Resolve<string>{
       });
   }
 
-  uploadImage(file: File) {
-    let options = new RequestOptions({ headers: this.getHeaders() });
+  uploadImage(file: File, projectId: string): Observable<any> {
+    let headers = new Headers();
+    headers.append('Authorization', 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==');
+    headers.append('Content-Type', 'multipart/form-data');
+    headers.append('Accept', 'application/json');
+    headers.append('Access-Control-Allow-Origin', '*');
+    headers.append('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
+
+    let options = new RequestOptions({ headers: headers });
+  
     let formData: FormData = new FormData();
-    formData.append('uploadFile', file)
+    formData.append('uploadFile', file, file.name);
+    formData.append('projetoID', projectId);
+    // (<any>formData).projetoID = projectId;
 
-    // this.http.post('api/projeto/saveFile', )
+    console.log('formData: ', formData);
+    
+    return this.http.post(this.baseUrl + '/saveFile', formData, options)
+      .map(res => res)
+      .catch(this.handleError);
   }
-
-  // uploadImage(file: File | File[]): Observable<any> {
-
-  //   return this.http.post('', formData, options)
-  // }
 
   private getFromBackEnd(id: string): Observable<Project> {
     let options = new RequestOptions({ headers: this.getHeaders() });

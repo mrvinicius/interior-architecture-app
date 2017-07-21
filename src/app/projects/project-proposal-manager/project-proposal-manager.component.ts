@@ -7,7 +7,7 @@ import { default as cep, CEP } from 'cep-promise';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { MzSelectDirective, MzModalService, MzToastService } from 'ng2-materialize';
 import { TagInputComponent } from 'ng2-tag-input';
-import { UploadOutput, UploadInput, UploadFile, UploadStatus } from 'ngx-uploader';
+import { UploadOutput, UploadInput, UploadFile, UploadStatus, NgUploaderService } from 'ngx-uploader';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
@@ -608,14 +608,27 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
+  onImagesChange(event) {
+    let fileList: FileList = event.target.files;
+
+    if (fileList.length > 0) {
+      let file: File = fileList[0];
+      console.log(file);
+
+      this.projectsService.uploadImage(file, this.project.id)
+        .subscribe(res => console.log(res))
+    }
+  }
+
   onImagesOutput(output: UploadOutput) {
-    // console.log(output);
-    let headers: Headers = new Headers();
-    headers.append('Authorization', 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==');
-    // headers.append('Content-Type', 'application/json');
-    headers.append('Accept', 'image/*');
-    headers.append('Access-Control-Allow-Origin', '*');
-    headers.append('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
+    const allowedFileTypes = [
+      'image/png',
+      'image/jpeg',
+      'image/gif',
+      'image/tif'
+    ]
+    console.log(output);
+
 
     // when all files added in queue
     if (output.type === 'allAddedToQueue') {
@@ -639,7 +652,7 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
           concurrency: this.formData.concurrency,
           headers: {
             "Authorization": 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==',
-            "Accept": '*',
+            "Accept": 'application/json',
             "Content-Type": 'multipart/form-data'
           },
           fieldName: "uploadFile"
@@ -650,7 +663,13 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
       }
 
     } else if (output.type === 'addedToQueue') {
-      this.files.push(output.file); // add file to array when added
+
+      if (allowedFileTypes.includes(output.file.type)) {
+        this.files.push(output.file); // add file to array when added
+      } else {
+        this.toastService.show('Somente extensões JPG, PNG, GIF e TIF', 3000)
+      }
+
     } else if (output.type === 'uploading') {
       // update current data in files array for uploading file
       const index = this.files.findIndex(file => file.id === output.file.id);

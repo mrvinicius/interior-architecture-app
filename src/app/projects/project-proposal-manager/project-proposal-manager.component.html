@@ -124,22 +124,23 @@
               </span>
             </div>
           </div>
-          <div class="row">
-            <div class="col s12">
-              <div class="divider"></div>
+          <ng-container *ngIf="project.atnProject">
+
+            <div class="row">
+              <div class="col s12">
+                <div class="divider"></div>
+              </div>
             </div>
-          </div>
-          <div class="row col s12">
-            <span class="dim-text" style="text-transform: uppercase; display: inline-block;">
+            <div class="row col s12">
+              <span class="dim-text" style="text-transform: uppercase; display: inline-block;">
                 <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">photo_library</i>Imagens do projeto
             </span>
-          </div>
+            </div>
 
 
 
 
-
-          <ng-container *ngIf="project.atnProject">
+            <!--
             <div class="row col s12">
               <div class="drag-area-wrapper col hide-on-small-only">
                 <div ngFileDrop class="drop-area square grey lighten-3" (uploadOutput)="onImagesOutput($event)" [uploadInput]="imagesUploadInput"
@@ -165,10 +166,6 @@
                         <input disabled class="file-path" placeholder="selecione os imagens" type="text">
                       </div>
                     </div>
-                    <!--<span class="pointer underline">
-                        selecione
-
-                      </span>-->
                     </span>
                   </div>
                 </div>
@@ -199,11 +196,20 @@
               <div class="file-path-wrapper">
                 <input disabled class="file-path" placeholder="selecione os imagens" type="text">
               </div>
-            </div>
+            </div>-->
 
             <!--<div class="progress row col s12" style="margin-top: 0;">
             <div class="determinate" style="width: 70%"></div>
           </div>-->
+            <div class="file-field input-field col s12">
+              <div class="btn">
+                <i class="material-icons white-text">file_upload</i>
+                <input (change)="onImagesChange($event)" type="file" accept="image/*" multiple>
+              </div>
+              <div class="file-path-wrapper">
+                <input disabled class="file-path" placeholder="selecione os imagens" type="text">
+              </div>
+            </div>
           </ng-container>
 
 
