@@ -43,9 +43,7 @@ export class ProjectProposalPreviewComponent implements OnInit, OnDestroy {
     private sidebarService: LayoutSidebarService,
     private spinnerService: SpinnerService,
     private toastService: MzToastService
-  ) {
-
-  }
+  ) { }
 
   ngOnInit() {
     this.headerService.hideHeader();

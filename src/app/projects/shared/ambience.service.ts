@@ -14,7 +14,7 @@ import { ServicesGroup } from './services-group.enum';
 
 @Injectable()
 export class AmbienceService {
-  private static readonly baseUrl = 'https://www.archabox.com.br/api/comodo';
+  private static readonly baseUrl = 'https://archaboxapi.azurewebsites.net/api/comodo';
   
   constructor(
     private projectsService: ProjectsService,
