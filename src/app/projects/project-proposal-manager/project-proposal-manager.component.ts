@@ -613,7 +613,6 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
 
     if (fileList.length > 0) {
       let file: File = fileList[0];
-      console.log(file);
 
       this.projectsService.uploadImage(file, this.project.id)
         .subscribe(res => console.log(res))

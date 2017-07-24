@@ -833,20 +833,15 @@ export class ProjectsService implements Resolve<string>{
 
   uploadImage(file: File, projectId: string): Observable<any> {
     let headers = new Headers();
-    headers.append('Authorization', 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==');
     headers.append('Content-Type', 'multipart/form-data');
     headers.append('Accept', 'application/json');
-    headers.append('Access-Control-Allow-Origin', '*');
-    headers.append('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
+    headers.append('Authorization', 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==');
 
     let options = new RequestOptions({ headers: headers });
   
     let formData: FormData = new FormData();
     formData.append('uploadFile', file, file.name);
     formData.append('projetoID', projectId);
-    // (<any>formData).projetoID = projectId;
-
-    console.log('formData: ', formData);
     
     return this.http.post(this.baseUrl + '/saveFile', formData, options)
       .map(res => res)
