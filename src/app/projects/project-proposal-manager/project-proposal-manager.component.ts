@@ -610,12 +610,27 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
 
   onImagesChange(event) {
     let fileList: FileList = event.target.files;
+    // console.log(event.target);
+    // let base64Image = event.target.result.split(',')[1];
+    // console.log(base64Image);
 
     if (fileList.length > 0) {
       let file: File = fileList[0];
 
-      this.projectsService.uploadImage(file, this.project.id)
-        .subscribe(res => console.log(res))
+      let reader: FileReader = new FileReader();
+      reader.onloadend = () => {
+        console.log(reader.result);
+        let base64Image = reader.result.split(',')[1];
+
+        this.projectsService.uploadImage(file, this.project.id, base64Image)
+          .subscribe(res => console.log(res))
+      }
+
+
+      reader.readAsDataURL(file)
+
+
+
     }
   }
 

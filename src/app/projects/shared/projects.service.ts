@@ -831,19 +831,22 @@ export class ProjectsService implements Resolve<string>{
       });
   }
 
-  uploadImage(file: File, projectId: string): Observable<any> {
+  uploadImage(file: File, projectId: string, image: any): Observable<any> {
     let headers = new Headers();
-    headers.append('Content-Type', 'multipart/form-data');
-    headers.append('Accept', 'application/json');
+    // headers.append('Content-Type', 'multipart/form-data');
+    // headers.append('Accept', 'application/json');
     headers.append('Authorization', 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==');
 
     let options = new RequestOptions({ headers: headers });
   
-    let formData: FormData = new FormData();
-    formData.append('uploadFile', file, file.name);
-    formData.append('projetoID', projectId);
-    
-    return this.http.post(this.baseUrl + '/saveFile', formData, options)
+    // let formData: FormData = new FormData();
+    // formData.append('uploadFile', file);
+    // formData.append('projetoID', projectId);
+
+    return this.http.post(this.baseUrl + '/saveFile', {
+      projetoID: projectId,
+      uploadFile: image
+    }, options)
       .map(res => res)
       .catch(this.handleError);
   }
