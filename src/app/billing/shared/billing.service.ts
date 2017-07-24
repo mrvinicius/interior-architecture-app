@@ -83,8 +83,6 @@ export class BillingService {
           let errorMessages = [];
           console.log(billingResp.ErrorMessage);
 
-          console.log(typeof billingResp.ErrorMessage);
-
           let zerofill = (dateOrMonth: number | string): string => {
             let filled: string = String(dateOrMonth).trim();
             if (filled.length === 1)
