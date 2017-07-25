@@ -1101,4 +1101,8 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
 
     return formChanges$.do(data => doIt(data)).debounceTime(3000).subscribe(data => callback(data));
   }
+
+  private toggleLoadingToast(isVisible?: boolean) {
+    this.layoutContentService.toggleLoadingToast(isVisible);
+  }
 }
