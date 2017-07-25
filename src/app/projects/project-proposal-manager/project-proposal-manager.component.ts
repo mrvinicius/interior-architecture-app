@@ -616,21 +616,18 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
 
     if (fileList.length > 0) {
       let file: File = fileList[0];
+      this.projectsService.uploadImage2(file, this.project.id).then(res => console.log(res))
+      // let reader: FileReader = new FileReader();
+      // reader.onloadend = () => {
+      //   // console.log(reader.result);
+      //   // let base64Image = reader.result.split(',')[1];
+      //   console.log(file);
 
-      let reader: FileReader = new FileReader();
-      reader.onloadend = () => {
-        console.log(reader.result);
-        let base64Image = reader.result.split(',')[1];
+      //   this.projectsService.uploadImage(file, this.project.id)
+      //     .subscribe(res => console.log(res))
+      // }
 
-        this.projectsService.uploadImage(file, this.project.id, base64Image)
-          .subscribe(res => console.log(res))
-      }
-
-
-      reader.readAsDataURL(file)
-
-
-
+      // reader.readAsDataURL(file)
     }
   }
 
@@ -666,8 +663,8 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
           concurrency: this.formData.concurrency,
           headers: {
             "Authorization": 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==',
-            "Accept": 'application/json',
-            "Content-Type": 'multipart/form-data'
+            "Accept": 'application/json'
+            // "Content-Type": 'multipart/form-data'
           },
           fieldName: "uploadFile"
           // file: output.file
@@ -681,7 +678,7 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
       if (allowedFileTypes.includes(output.file.type)) {
         this.files.push(output.file); // add file to array when added
       } else {
-        this.toastService.show('Somente extensões JPG, PNG, GIF e TIF', 3000)
+        this.toastService.show('Somente arquivos JPG, PNG, GIF e TIF', 3000)
       }
 
     } else if (output.type === 'uploading') {

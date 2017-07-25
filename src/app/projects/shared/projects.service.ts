@@ -831,24 +831,49 @@ export class ProjectsService implements Resolve<string>{
       });
   }
 
-  uploadImage(file: File, projectId: string, image: any): Observable<any> {
+  uploadImage(file: File, projectId: string, image?: any): Observable<any> {
     let headers = new Headers();
     // headers.append('Content-Type', 'multipart/form-data');
-    // headers.append('Accept', 'application/json');
     headers.append('Authorization', 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==');
+    headers.append('Accept', 'application/json');
 
-    let options = new RequestOptions({ headers: headers });
-  
-    // let formData: FormData = new FormData();
-    // formData.append('uploadFile', file);
-    // formData.append('projetoID', projectId);
+    let options = new RequestOptions({ headers: headers, withCredentials: true });
 
-    return this.http.post(this.baseUrl + '/saveFile', {
-      projetoID: projectId,
-      uploadFile: image
-    }, options)
+    let formData: FormData = new FormData();
+    formData.append('uploadFile', file);
+    formData.append('projetoID', projectId);
+
+    // let data = {
+    //   projetoID: projectId,
+    //   uploadFile: image
+    // };
+
+    return this.http.post(this.baseUrl + '/saveFile', {}, options)
       .map(res => res)
       .catch(this.handleError);
+  }
+
+  uploadImage2(file: File, projectId: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let xhr: XMLHttpRequest = new XMLHttpRequest();
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            resolve(JSON.parse(xhr.response))
+          } else {
+            reject(xhr.response)
+          }
+        }
+      }
+
+      xhr.open('POST', this.baseUrl + '/saveFile', true)
+
+      let formData = new FormData();
+      formData.append("projetoID", projectId);
+      formData.append("uploadFile", file, file.name);
+      xhr.setRequestHeader('Authorization', 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==')
+      xhr.send(formData);
+    });
   }
 
   private getFromBackEnd(id: string): Observable<Project> {
