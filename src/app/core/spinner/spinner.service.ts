@@ -5,8 +5,8 @@ import 'rxjs/add/operator/share';
 
 @Injectable()
 export class SpinnerService {
-  loading$: Observable<String>
-  private _observer: Observer<String>;
+  loading$: Observable<{}>
+  private _observer: Observer<{}>;
 
   constructor() {
     this.loading$ = new Observable(

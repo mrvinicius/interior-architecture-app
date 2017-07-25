@@ -897,10 +897,10 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
 
     cep(cepCode).then(CEP => {
       this.addressFieldsDisabled = false;
-      this.locationForm.get('addressArea').setValue(CEP.street, { onlySelf: false, emitEvent: false });
-      this.locationForm.get('city').setValue(CEP.city, { onlySelf: false, emitEvent: false });
-      this.locationForm.get('neighborhood').setValue(CEP.neighborhood, { onlySelf: false, emitEvent: false });
-      this.locationForm.get('UF').setValue(CEP.state, { onlySelf: false, emitEvent: false });
+      this.locationForm.get('addressArea').setValue(CEP.street, { onlySelf: false, emitEvent: true });
+      this.locationForm.get('city').setValue(CEP.city, { onlySelf: false, emitEvent: true });
+      this.locationForm.get('neighborhood').setValue(CEP.neighborhood, { onlySelf: false, emitEvent: true });
+      this.locationForm.get('UF').setValue(CEP.state, { onlySelf: false, emitEvent: true });
 
 
       Materialize.updateTextFields();
