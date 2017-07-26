@@ -616,7 +616,9 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
 
     if (fileList.length > 0) {
       let file: File = fileList[0];
-      this.projectsService.uploadImage2(file, this.project.id).then(res => console.log(res))
+      this.projectsService.uploadImage3(file, this.project.id)
+        .subscribe(resp => console.log(resp));
+        
       // let reader: FileReader = new FileReader();
       // reader.onloadend = () => {
       //   // console.log(reader.result);
@@ -663,10 +665,10 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
           concurrency: this.formData.concurrency,
           headers: {
             "Authorization": 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==',
-            "Accept": 'application/json'
+            // "Accept": 'application/json'
             // "Content-Type": 'multipart/form-data'
           },
-          fieldName: "uploadFile"
+          fieldName: "file"
           // file: output.file
         }
 
