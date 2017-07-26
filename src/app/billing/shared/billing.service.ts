@@ -101,7 +101,13 @@ export class BillingService {
             errorMessages.push('Dados em branco')
           }
 
-          if (!errorMessages.length) errorMessages.push('Erro desconhecido')
+          if (billingResp.ErrorMessage.indexOf('is not a valid credit card number') > -1) {
+            errorMessages.push('Cartão de crédito recusado')
+          }
+
+          if (!errorMessages.length)
+            errorMessages.push('Erro desconhecido')
+
           billingResp.errorMessages = errorMessages;
         }
 
