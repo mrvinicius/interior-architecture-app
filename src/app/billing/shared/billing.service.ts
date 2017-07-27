@@ -110,6 +110,10 @@ export class BillingService {
             errorMessages.push('Cartão de crédito recusado')
           }
 
+          if (billingResp.ErrorMessage.indexOf('credit_card não é suportado') > -1) {
+            
+          }
+
           if (!errorMessages.length)
             errorMessages.push('Erro desconhecido')
 
