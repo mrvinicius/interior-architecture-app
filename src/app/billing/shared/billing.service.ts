@@ -63,6 +63,11 @@ export class BillingService {
         now.setMonth(now.getMonth() + 3)
         break;
 
+      case "teste_producao":
+        data.IdPlano = "C570805D9D7A43F0899CEEE79CE8998A";
+        data.Valor = 1.00;
+        now.setMonth(now.getMonth() + 3);
+        break;
       default:
         console.error('plano não identificado');
         break;
