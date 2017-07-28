@@ -1,20 +1,15 @@
-import { SpinnerService } from './../../core/spinner/spinner.service';
-import { ProfessionalService } from './../../core/professional.service';
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { AuthService } from '../../core/auth.service';
 import { Professional } from '../../core/professional';
+import { ProfessionalService } from '../../core/professional.service';
+import { SpinnerService } from '../../core/spinner/spinner.service';
 import { UserService } from '../../core/user.service';
 
 @Component({
-  selector: 'mbx-user-password',
+  selector: 'abx-user-password',
   templateUrl: './user-password.component.html',
   styleUrls: ['./user-password.component.scss']
 })
@@ -28,9 +23,9 @@ export class UserPasswordComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private fb: FormBuilder,
+    private profService: ProfessionalService,
     private route: ActivatedRoute,
     private router: Router,
-    private profService: ProfessionalService,
     private spinnerService: SpinnerService
   ) {
     this.createForm();
@@ -52,7 +47,6 @@ export class UserPasswordComponent implements OnInit {
     //   let id = params['id'];
     //   let email = params['email'];
     //   console.log(id, email);
-
     // })
   }
 
@@ -74,7 +68,7 @@ export class UserPasswordComponent implements OnInit {
       this.spinnerService.toggleLoadingIndicator(false);
       // this.router.navigate(['/profissao?id=' + this.id + '&email=' + this.email,]);
       console.log(this.id, this.email);
-      
+
       this.router.navigate(['/profissao',]);
     }
   }
@@ -103,7 +97,6 @@ export class UserPasswordComponent implements OnInit {
       this.authenticate(this.professional);
     });
   }
-
 
   private createForm() {
     this.passwordForm = this.fb.group({
