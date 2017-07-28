@@ -324,7 +324,7 @@
           <div class="col s12">
             <label for="">Total sugerido</label>
             <h5 style="margin: 0 0 1em 0;">
-              <b>{{project.activeProposal.cost | currency:'BRL':true}}</b>
+              <b>{{project.activeProposal.cost | currencyFormat:'BRL':true}}</b>
             </h5>
           </div>
           <div class="col s12 m6 l4 row">
@@ -334,7 +334,7 @@
             </mz-input-container>
             <span class="small-font dim-text" style="font-size: .8rem">Cobramos 3% para compensar nosso serviço</span>
             <p *ngIf="!paymentDataBeingSaved && paymentForm.value.cost != undefined && paymentForm.value.cost != 0">
-              Você receberá <b>{{(parseMonetaryString(paymentForm.value.cost) - parseMonetaryString(paymentForm.value.cost) * 0.03) | currency:'BRL':true}}</b>
+              Você receberá <b>{{(parseMonetaryString(paymentForm.value.cost) - parseMonetaryString(paymentForm.value.cost) * 0.03) | currencyFormat:'BRL':true}}</b>
             </p>
           </div>
         </form>
