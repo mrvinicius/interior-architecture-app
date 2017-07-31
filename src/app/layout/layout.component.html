@@ -1,24 +1,28 @@
 <!--mdl-layout-fixed-drawer-->
 <mdl-layout mdl-layout-fixed-header mdl-layout-fixed-drawer #mdlLayout1="mdlLayout">
     <mdl-layout-drawer *ngIf="showSidebar" class="side-bar z-depth-4">
-        <mdl-layout-title class="title truncate">{{userName}}</mdl-layout-title>
+        <!-- <mdl-layout-title class="title truncate">{{userName}}</mdl-layout-title> -->
+        <div style="display: flex">
+            <img src="/assets/images/icon-sidebar.png" class="shadow-2dp responsive-img" style="margin: 0 auto;" alt="Logo Archabox">
+
+        </div>
         <nav class="mdl-navigation">
             <a class="mdl-navigation__link side-bar__link has-icon black-text" routerLink="/projetos" (click)="mdlLayout1.closeDrawer()">
-                <img src="/assets/images/project.svg" class="detailed-icons large" alt="Projetos">
+                <img src="/assets/images/project.svg" class="detailed-icons medium" alt="Projetos">
                 <span class="link-label">Propostas</span>
             </a>
             <a class="mdl-navigation__link side-bar__link has-icon black-text" routerLink="/clientes">
-                <img src="/assets/images/clients.svg" class="detailed-icons large" alt="Clientes">
+                <img src="/assets/images/clients.svg" class="detailed-icons medium" alt="Clientes">
                 <span class="link-label">Clientes</span>
             </a>
             <div class="divider"></div>
             <a class="mdl-navigation__link side-bar__link has-icon black-text pointer" routerLink="/perfil" (click)="mdlLayout1.closeDrawer()"> 
-                <img src="/assets/images/user.svg" class="detailed-icons large" alt="Perfil">
+                <img src="/assets/images/user.svg" class="detailed-icons medium" alt="Perfil">
                 <span class="link-label">Perfil</span>
                 <!--<i class="material-icons right">navigate_next</i>-->
             </a>
             <a class="mdl-navigation__link side-bar__link has-icon black-text pointer" (click)="logout(); mdlLayout1.closeDrawer();">
-                <img src="/assets/images/power.svg" class="detailed-icons large" alt="Sair">
+                <img src="/assets/images/power.svg" class="detailed-icons medium" alt="Sair">
                 <span class="link-label">Sair</span>
             </a>
         </nav>
