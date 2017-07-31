@@ -9,7 +9,7 @@ import { Project } from './project';
 
 @Injectable()
 export class ProposalService {
-  private readonly baseUrl = 'https://www.archabox.com.br/api/proposta';
+  private readonly baseUrl = 'https://archaboxapi.azurewebsites.net/api/proposta';
 
   constructor(
     private auth: AuthService,

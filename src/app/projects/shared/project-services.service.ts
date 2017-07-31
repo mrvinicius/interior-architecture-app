@@ -12,7 +12,7 @@ import { UtilsService } from './../../shared/utils/utils.service';
 @Injectable()
 export class ProjectServicesService {
   // public readonly serviceTypes: ServiceType[] = [];
-  private readonly typeBaseUrl = 'https://www.archabox.com.br/api/tipoServico';
+  private readonly typeBaseUrl = 'https://archaboxapi.azurewebsites.net/api/tipoServico';
 
   constructor(
     private http: Http

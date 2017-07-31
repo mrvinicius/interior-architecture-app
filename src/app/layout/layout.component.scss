@@ -14,6 +14,22 @@ $large-screen: 1200px !default;
     background-color: #D44D5C;
 }
 
+$drawer-width: 105px;
+/deep/ .mdl-layout--fixed-drawer.is-upgraded:not(.is-small-screen) {
+    > .mdl-layout__header {
+        margin-left: $drawer-width;
+        width: calc(100% - #{$drawer-width});
+    }
+}
+
+.mdl-layout__drawer {
+    width: $drawer-width;
+}
+
+.mdl-layout__content {
+    margin-left: $drawer-width;
+}
+
 .mdl-layout__drawer-button {
     color: white;
 }
