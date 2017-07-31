@@ -354,9 +354,10 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
       this.locationDataHasChanged = true;
     }, (formData) => {
       console.log(formData);
-      let cleanCep = formData.CEP.replace(/\D/g, '');
+      // let cleanCep = formData.CEP.replace(/\D/g, '');
 
-      if (!this.locationDataBeingSaved && !this.addressFieldsDisabled && String(cleanCep).length > 7) {
+      // if (!this.locationDataBeingSaved && !this.addressFieldsDisabled && String(cleanCep).length > 7) {
+      if (!this.locationDataBeingSaved && !this.addressFieldsDisabled) {
         console.log('Will save location');
 
         this.locationDataHasChanged = false;
@@ -618,7 +619,7 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
       let file: File = fileList[0];
       this.projectsService.uploadImage3(file, this.project.id)
         .subscribe(resp => console.log(resp));
-        
+
       // let reader: FileReader = new FileReader();
       // reader.onloadend = () => {
       //   // console.log(reader.result);

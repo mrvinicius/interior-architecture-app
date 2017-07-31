@@ -663,7 +663,7 @@ export class ProjectsService implements Resolve<string>{
           'ContaBancariaId': undefined,
           'GeraPropostaQwilr': generateProposal,
           'AcompanhamentoObra': project.activeProposal.followUp,
-          'PropostaArchathon': project.activeProposal.isAtnProposal,
+          'PropostaArchathon': project.atnProject,
 
           // "Banco": null,
           // "ContaBancaria": null,
