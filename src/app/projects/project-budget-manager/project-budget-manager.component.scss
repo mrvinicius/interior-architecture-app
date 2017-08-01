@@ -3,3 +3,24 @@
         padding: 1rem;
     }
 }
+
+.products-collapsible /deep/ {
+    .collapsible.popout {
+        li:not(.active) {
+            margin: 0 12px;
+        }
+    }
+}
+
+#newBudgetButton {
+    position: absolute;
+    top: -20px;
+    right: 12px;
+    &.btn-large {
+        top: -28px;
+    }
+}
+
+#budgetsHeader {
+
+}

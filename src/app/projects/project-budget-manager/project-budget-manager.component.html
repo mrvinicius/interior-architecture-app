@@ -1,10 +1,16 @@
 <div class="out-of-container" style="margin-top: .75rem;">
-  <label for="totalProductsCost">Total</label>
-  <h5 id="totalProductsCost" style="margin: 0 0 1em 0;">R$ 1.400,00</h5>
-  <div class="row">
-    <div class="divider"></div>
-  </div>
-  <div class="row">
+  <section id="budgetsHeader">
+    <label for="totalProductsCost">Total</label>
+    <h5 id="totalProductsCost" style="margin: 0 0 1em 0;">R$ 1.400,00</h5>
+    <div class="row" style="position: relative;">
+      <div class="divider">
+      </div>
+      <a id="newBudgetButton" class="btn-floating waves-effect waves-light hide-on-med-and-up"><i class="material-icons">add</i></a>
+      <a id="newBudgetButton" [ngClass]="{pulse: !hasBudgets}" class="btn-floating btn-large waves-effect waves-light hide-on-small-only"><i class="material-icons">add</i></a>
+    </div>
+  </section>
+
+  <!-- <div class="row">
     <div class="u-col s12">
       <span class="dim-text" style="text-transform: uppercase; display: inline-block;">
         <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">add_shopping_cart</i>
@@ -35,19 +41,98 @@
     <mz-input-container class="col s3 m4 l3">
       <input mz-input id="productDesc" label="produto">
     </mz-input-container>
-
   </div>
   <div class="row">
+    <div class="divider"></div>
+  </div> -->
+  <section>
+    <div class="row">
+      <div class="u-col s12">
+        <span class="dim-text" style="text-transform: uppercase;display: inline-block;font-size: 1.2em;">
+        <i class="material-icons small" style="vertical-align: bottom; margin-right: 10px;">attach_money</i>Orçamentos (4)
+      </span>
+      </div>
+    </div>
+    <div *ngIf="!hasBudgets">
 
-  </div>
+    </div>
+    <div *ngIf="hasBudgets" class="budgets-lists">
+      <div class="u-row">
+        <div class="u-col s12">
+          <span class="dim-text" style="text-transform: uppercase; display: inline-block; margin: 0 12px;">
+        Cozinha
+      </span>
+        </div>
+      </div>
+      <mz-collapsible class="products-collapsible" [popout]="true">
+        <mz-collapsible-item>
+          <mz-collapsible-item-header>
+            Mesa e cadeiras
+          </mz-collapsible-item-header>
+          <mz-collapsible-item-body>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </mz-collapsible-item-body>
+        </mz-collapsible-item>
+        <mz-collapsible-item>
+          <mz-collapsible-item-header>
+            Armário
+          </mz-collapsible-item-header>
+          <mz-collapsible-item-body>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </mz-collapsible-item-body>
+        </mz-collapsible-item>
+      </mz-collapsible>
+      <div class="u-row">
+        <div class="u-col s12">
+          <span class="dim-text" style="text-transform: uppercase; display: inline-block; margin: 0 12px;">
+        Sala
+      </span>
+        </div>
+      </div>
+      <mz-collapsible class="products-collapsible" [popout]="true">
+        <mz-collapsible-item>
+          <mz-collapsible-item-header>
+            Mesa e cadeiras
+          </mz-collapsible-item-header>
+          <mz-collapsible-item-body>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </mz-collapsible-item-body>
+        </mz-collapsible-item>
+        <mz-collapsible-item>
+          <mz-collapsible-item-header>
+            Armário
+          </mz-collapsible-item-header>
+          <mz-collapsible-item-body>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </mz-collapsible-item-body>
+        </mz-collapsible-item>
+      </mz-collapsible>
+    </div>
+  </section>
+
+
+  <!-- <md2-tabs selectedIndex="0" class="mv-tabs">
+    <md2-tab label="Cozinha">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    </md2-tab>
+    <md2-tab label="Sala">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    </md2-tab>
+    <md2-tab label="Quarto">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    </md2-tab>
+    <md2-tab label="Jantar">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    </md2-tab>
+  </md2-tabs>
   <ul id="productCollection" class="collection collapsible-wrapper with-header z-depth-2">
     <li class="collection-header">
-      <h4 style="margin: 0;">Produtos (2)</h4>
+      <h4 style="margin: 0;">Cozinha</h4>
     </li>
     <mz-collapsible [onClose]="closeFunctionCallback">
       <mz-collapsible-item>
         <mz-collapsible-item-header>
-          First
+          Mesa e cadeiras
         </mz-collapsible-item-header>
         <mz-collapsible-item-body>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -55,18 +140,18 @@
       </mz-collapsible-item>
       <mz-collapsible-item>
         <mz-collapsible-item-header>
-          First
+          Armário
         </mz-collapsible-item-header>
         <mz-collapsible-item-body>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </mz-collapsible-item-body>
       </mz-collapsible-item>
     </mz-collapsible>
-  </ul>
+  </ul> -->
 
 
 </div>
-<ul class="collection collection-flat">
+<!-- <ul class="collection collection-flat">
   <li class="collection-item">
     <span class="collection-title">Title</span>
     <p>First Line <br> Second Line
@@ -86,4 +171,4 @@
     </p>
     <a class="secondary-content"><i class="material-icons">more_vert</i></a>
   </li>
-</ul>
+</ul> -->

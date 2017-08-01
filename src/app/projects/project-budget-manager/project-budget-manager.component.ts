@@ -9,6 +9,7 @@ import { Project } from '../shared/project';
 })
 export class ProjectBudgetManagerComponent implements OnInit {
   @Input() project: Project;
+  hasBudgets;
 
   constructor() { }
 
