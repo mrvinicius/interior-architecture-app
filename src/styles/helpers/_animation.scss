@@ -1,0 +1,11 @@
+.spin-left {
+    -webkit-animation: spin-left 0.6s 0.7 ease-out;
+    animation: spin-left 0.6s 0.7 ease-out;
+    animation-fill-mode: forwards;
+}
+
+.spin-right {
+    -webkit-animation: spin-right 0.6s 0.7 ease-out;
+    animation: spin-right 0.6s 0.7 ease-out;
+    animation-fill-mode: forwards;
+}

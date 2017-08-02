@@ -1,0 +1,35 @@
+<mz-modal class="small-modal">
+  <mz-modal-header>
+    Solicitar orçamento
+  </mz-modal-header>
+  <mz-modal-content>
+    <form *ngIf="budgetForm" [formGroup]="budgetForm">
+      <mz-select-container class="has-add-option">
+        <select mz-select id='suppliersSelect' label="fornecedor">
+          <option [value]="0">- adicionar fornecedor -</option>
+          <option [value]="1">Deca</option>
+      </select>
+      </mz-select-container>
+      <tag-input class="col s12" [secondaryPlaceholder]="'filiais'" [placeholder]="'filiais'" [onlyFromAutocomplete]="true">
+        <tag-input-dropdown id="tagInputDropdown" [displayBy]="'name'" [limitItemsTo]="6" [identifyBy]="'id'" [showDropdownIfEmpty]="true"
+          [autocompleteItems]="[{id: 'new', name: '- adicionar profissional -'}]">
+        </tag-input-dropdown>
+      </tag-input>
+      <mz-select-container class="">
+        <select mz-select label="tipo de dimensionamento" id='unityTypeSelect'>
+        <option [value]="'unidade'" selected>Unidade</option>
+        <option [value]="'quilo'">Quilo</option>
+        <option [value]="'medida2d'">Medida (2 dimensões)</option>
+        <option [value]="'medida3d'">Medida (3 dimensões)</option>
+      </select>
+      </mz-select-container>
+      <mz-input-container class="col">
+        <input mz-input id="productDesc" name="ProductDesc" label="produto" type="text">
+      </mz-input-container>
+    </form>
+  </mz-modal-content>
+  <mz-modal-footer>
+    <button mz-button [disabled]="budgetForm.invalid">Solicitar</button>
+    <button mz-button [flat]="true" mz-modal-close>Cancelar</button>
+  </mz-modal-footer>
+</mz-modal>

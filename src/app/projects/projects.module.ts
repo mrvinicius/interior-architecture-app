@@ -24,6 +24,7 @@ import { SharedModule } from '../shared/shared.module';
 import { ProjectProposalPreviewComponent } from './project-proposal-preview/project-proposal-preview.component';
 import { ProjectProposalManagerComponent } from './project-proposal-manager/project-proposal-manager.component';
 import { ProjectBudgetManagerComponent } from './project-budget-manager/project-budget-manager.component';
+import { NewBudgetModalComponent } from './new-budget-modal/new-budget-modal.component';
 
 @NgModule({
   imports: [
@@ -52,11 +53,13 @@ import { ProjectBudgetManagerComponent } from './project-budget-manager/project-
     ProjectProposalPreviewComponent,
     ProjectProposalManagerComponent,
     ProjectBudgetManagerComponent,
+    NewBudgetModalComponent,
   ],
   providers: [],
   entryComponents: [
     NewPartnerModalComponent,
-    NewProjectModalComponent
+    NewProjectModalComponent,
+    NewBudgetModalComponent
   ]
 })
 export class ProjectsModule {

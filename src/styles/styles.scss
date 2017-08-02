@@ -17,8 +17,10 @@
 @import "helpers/structure";
 @import "helpers/theming";
 @import "helpers/typography";
+@import "helpers/animation";
 
 /*** Base ***/
+@import "base/animation";
 @import "base/color";
 @import "base/components";
 // @import "base/global";

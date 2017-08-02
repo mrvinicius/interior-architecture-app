@@ -1,60 +1,88 @@
 <div class="out-of-container" style="margin-top: .75rem;">
+  <!-- <div class="fixed-action-btn">
+    <a id="newBudgetButton" class="btn-floating btn-large">
+      <i class="large material-icons">add</i>
+    </a>
+  </div> -->
+  <div class="tap-target" data-activates="newBudgetButton">
+    <div class="tap-target-content white-text">
+      <h5>Title</h5>
+      <p class="white-text">A bunch of text</p>
+    </div>
+  </div>
   <section id="budgetsHeader">
     <label for="totalProductsCost">Total</label>
-    <h5 id="totalProductsCost" style="margin: 0 0 1em 0;">R$ 1.400,00</h5>
+    <h5 id="totalProductsCost" style="margin: 0 0 1em 0;">R$ 0,00</h5>
     <div class="row" style="position: relative;">
       <div class="divider">
       </div>
-      <a id="newBudgetButton" class="btn-floating waves-effect waves-light hide-on-med-and-up"><i class="material-icons">add</i></a>
-      <a id="newBudgetButton" [ngClass]="{pulse: !hasBudgets}" class="btn-floating btn-large waves-effect waves-light hide-on-small-only"><i class="material-icons">add</i></a>
+      <a (click)="toggleNewBudgeForm()" [ngClass]="{pulse: !hasBudgets}" class="btn-floating z-depth-2 add-button-on-divider hide-on-med-and-up" id="newBudgetButton">
+        <i class="large material-icons"  [ngClass]="{'spin-left': newBudgetFormOpened, 'spin-right': !newBudgetFormOpened}">add</i>
+      </a>
+      <a (click)="toggleNewBudgeForm()" [ngClass]="{pulse: !hasBudgets}" class="btn-floating btn-large z-depth-2 add-button-on-divider hide-on-small-only"
+        id="newBudgetButton">
+        <i class="large material-icons" [ngClass]="{'spin-left': newBudgetFormOpened, 'spin-right': !newBudgetFormOpened}">add</i>
+      </a>
+      <!-- <a id="newBudgetButton" (click)="openNewBudgetModal()" [ngClass]="{pulse: !hasBudgets}" class="btn-floating waves-effect waves-light hide-on-med-and-up"><i class="material-icons">add</i></a> -->
+      <!-- <a id="newBudgetButton" [ngClass]="{pulse: !hasBudgets}" class="btn-floating btn-large waves-effect waves-light hide-on-small-only"><i class="material-icons">add</i></a> -->
     </div>
   </section>
 
-  <!-- <div class="row">
-    <div class="u-col s12">
-      <span class="dim-text" style="text-transform: uppercase; display: inline-block;">
+  <section id="newBudgetFormContainer" style="display: none;">
+    <div class="row">
+      <div class="u-col s12">
+        <span class="dim-text" style="text-transform: uppercase; display: inline-block;">
         <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">add_shopping_cart</i>
         Solicitar orçamento<span class="hide-on-small-only"> para fornecedor</span>
-      </span>
+        </span>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <mz-select-container class="has-add-option col s12 m4" style="padding-left: 0;">
-      <select mz-select id='suppliersSelect' label="fornecedor">
+    <div class="row">
+      <mz-select-container class="has-add-option col s12 m4" style="padding-left: 0;">
+        <select mz-select id='suppliersSelect' label="fornecedor">
           <option [value]="0">- adicionar fornecedor -</option>
           <option [value]="1">Deca</option>
       </select>
-    </mz-select-container>
-    <tag-input class="col s12 m4" [secondaryPlaceholder]="'filiais'" [placeholder]="'filiais'" [onlyFromAutocomplete]="true">
-      <tag-input-dropdown id="tagInputDropdown" [displayBy]="'name'" [limitItemsTo]="6" [identifyBy]="'id'" [showDropdownIfEmpty]="true"
-        [autocompleteItems]="[{id: 'new', name: '- adicionar profissional -'}]">
-      </tag-input-dropdown>
-    </tag-input>
-    <mz-select-container class="col s9 m4">
-      <select mz-select label="tipo de dimensionamento" id='unityTypeSelect'>
+      </mz-select-container>
+      <tag-input class="col s12 m4" [secondaryPlaceholder]="'filiais'" [placeholder]="'filiais'" [onlyFromAutocomplete]="true">
+        <tag-input-dropdown id="tagInputDropdown" [displayBy]="'name'" [limitItemsTo]="6" [identifyBy]="'id'" [showDropdownIfEmpty]="true"
+          [autocompleteItems]="[{id: 'new', name: '- adicionar profissional -'}]">
+        </tag-input-dropdown>
+      </tag-input>
+      <mz-select-container class="col s9 m4">
+        <select mz-select label="tipo de dimensionamento" id='unityTypeSelect'>
         <option [value]="'unidade'" selected>Unidade</option>
         <option [value]="'quilo'">Quilo</option>
         <option [value]="'medida2d'">Medida (2 dimensões)</option>
         <option [value]="'medida3d'">Medida (3 dimensões)</option>
       </select>
-    </mz-select-container>
-    <mz-input-container class="col s3 m4 l3">
-      <input mz-input id="productDesc" label="produto">
-    </mz-input-container>
-  </div>
-  <div class="row">
-    <div class="divider"></div>
-  </div> -->
-  <section>
+      </mz-select-container>
+      <mz-input-container class="col s3 m4 l3">
+        <input mz-input id="productDesc" label="produto" type="text">
+      </mz-input-container>
+      <div class="u-col s12 right-align">
+        <button class="btn waves-effect waves-light">Enviar</button>
+      </div>
+    </div>
     <div class="row">
+      <div class="divider"></div>
+    </div>
+  </section>
+
+
+  <section>
+    <div *ngIf="hasBudgets" class="row">
       <div class="u-col s12">
         <span class="dim-text" style="text-transform: uppercase;display: inline-block;font-size: 1.2em;">
         <i class="material-icons small" style="vertical-align: bottom; margin-right: 10px;">attach_money</i>Orçamentos (4)
       </span>
       </div>
     </div>
-    <div *ngIf="!hasBudgets">
-
+    <div *ngIf="!hasBudgets && !newBudgetFormOpened" id="" class="center-align no-select">
+      <i class="material-icons medium grey-text text-darken-5" style="display: block;">add_shopping_cart</i>
+      <span class="grey-text text-darken-5" style="font-size: 1.2rem;">
+        <span style="font-weight: bold;">Clique no '+'</span><br>para solicitar orçamento para um fornecedor
+      </span>
     </div>
     <div *ngIf="hasBudgets" class="budgets-lists">
       <div class="u-row">

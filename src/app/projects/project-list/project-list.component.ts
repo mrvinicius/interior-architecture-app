@@ -19,7 +19,7 @@ import { ProjectsService } from '../shared/projects.service';
 import { ProjectStatus } from '../shared/project-status.enum';
 
 @Component({
-  selector: 'mbp-project-list',
+  selector: 'abp-project-list',
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.scss']
 })
