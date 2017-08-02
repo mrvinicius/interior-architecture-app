@@ -16,10 +16,11 @@
     <div class="row" style="position: relative;">
       <div class="divider">
       </div>
-      <a (click)="toggleNewBudgeForm()" [ngClass]="{pulse: !hasBudgets}" class="btn-floating z-depth-2 add-button-on-divider hide-on-med-and-up" id="newBudgetButton">
+      <a (click)="toggleNewBudgeForm()" [ngClass]="{pulse: !hasBudgets && !newBudgetFormOpened}" class="btn-floating z-depth-2 add-button-on-divider hide-on-med-and-up"
+        id="newBudgetButton">
         <i class="large material-icons"  [ngClass]="{'spin-left': newBudgetFormOpened, 'spin-right': !newBudgetFormOpened}">add</i>
       </a>
-      <a (click)="toggleNewBudgeForm()" [ngClass]="{pulse: !hasBudgets}" class="btn-floating btn-large z-depth-2 add-button-on-divider hide-on-small-only"
+      <a (click)="toggleNewBudgeForm()" [ngClass]="{pulse: !hasBudgets && !newBudgetFormOpened}" class="btn-floating btn-large z-depth-2 add-button-on-divider hide-on-small-only"
         id="newBudgetButton">
         <i class="large material-icons" [ngClass]="{'spin-left': newBudgetFormOpened, 'spin-right': !newBudgetFormOpened}">add</i>
       </a>
