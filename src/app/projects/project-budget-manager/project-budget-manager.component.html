@@ -16,11 +16,11 @@
     <div class="row" style="position: relative;">
       <div class="divider">
       </div>
-      <a (click)="toggleNewBudgeForm()" [ngClass]="{pulse: !hasBudgets && !newBudgetFormOpened}" class="btn-floating z-depth-2 add-button-on-divider hide-on-med-and-up"
+      <a (click)="toggleNewBudgeForm()" [ngClass]="{'pulse': !hasBudgets && !newBudgetFormOpened}" class="btn-floating waves-effect waves-light z-depth-2 add-button-on-divider hide-on-med-and-up"
         id="newBudgetButton">
-        <i class="large material-icons"  [ngClass]="{'spin-left': newBudgetFormOpened, 'spin-right': !newBudgetFormOpened}">add</i>
+        <i class="large material-icons" [ngClass]="{'spin-left': newBudgetFormOpened, 'spin-right': !newBudgetFormOpened}">add</i>
       </a>
-      <a (click)="toggleNewBudgeForm()" [ngClass]="{pulse: !hasBudgets && !newBudgetFormOpened}" class="btn-floating btn-large z-depth-2 add-button-on-divider hide-on-small-only"
+      <a (click)="toggleNewBudgeForm()" [ngClass]="{'pulse': !hasBudgets && !newBudgetFormOpened}" class="btn-floating waves-effect waves-light btn-large z-depth-2 add-button-on-divider hide-on-small-only"
         id="newBudgetButton">
         <i class="large material-icons" [ngClass]="{'spin-left': newBudgetFormOpened, 'spin-right': !newBudgetFormOpened}">add</i>
       </a>
@@ -39,28 +39,52 @@
       </div>
     </div>
     <div class="row">
-      <mz-select-container class="has-add-option col s12 m4" style="padding-left: 0;">
-        <select mz-select id='suppliersSelect' label="fornecedor">
-          <option [value]="0">- adicionar fornecedor -</option>
-          <option [value]="1">Deca</option>
-      </select>
-      </mz-select-container>
-      <tag-input class="col s12 m4" [secondaryPlaceholder]="'filiais'" [placeholder]="'filiais'" [onlyFromAutocomplete]="true">
-        <tag-input-dropdown id="tagInputDropdown" [displayBy]="'name'" [limitItemsTo]="6" [identifyBy]="'id'" [showDropdownIfEmpty]="true"
-          [autocompleteItems]="[{id: 'new', name: '- adicionar profissional -'}]">
-        </tag-input-dropdown>
-      </tag-input>
-      <mz-select-container class="col s9 m4">
-        <select mz-select label="tipo de dimensionamento" id='unityTypeSelect'>
-        <option [value]="'unidade'" selected>Unidade</option>
-        <option [value]="'quilo'">Quilo</option>
-        <option [value]="'medida2d'">Medida (2 dimensões)</option>
-        <option [value]="'medida3d'">Medida (3 dimensões)</option>
-      </select>
-      </mz-select-container>
-      <mz-input-container class="col s3 m4 l3">
-        <input mz-input id="productDesc" label="produto" type="text">
-      </mz-input-container>
+      <form *ngIf="newBudgetForm" [formGroup]="newBudgetForm">
+        <mz-select-container class="has-add-option col s12 m4" style="padding-left: 0;">
+          <select mz-select formControlName="supplierId" id='suppliersSelect' label="fornecedor">
+            <option [value]="0">- adicionar fornecedor -</option>
+            <option [value]="1">Deca</option>
+          </select>
+        </mz-select-container>
+        <tag-input class="col s12 m4" [secondaryPlaceholder]="'filiais'" [placeholder]="'filiais'" [onlyFromAutocomplete]="true">
+          <tag-input-dropdown id="tagInputDropdown" [displayBy]="'name'" [limitItemsTo]="6" [identifyBy]="'id'" [showDropdownIfEmpty]="true"
+            [autocompleteItems]="[{id: 'new', name: '- adicionar profissional -'}]">
+          </tag-input-dropdown>
+        </tag-input>
+        <mz-input-container class="col s6 m4 l3">
+          <input mz-input id="productDesc" label="produto" type="text">
+        </mz-input-container>
+
+        <mz-select-container class="col s6 m4 l3">
+          <select mz-select formControlName="quantityUnity" label="tipo de dimensionamento" id='unityTypeSelect'>
+            <option [value]="'unidade'" selected>Unidade</option>
+            <option [value]="'quilo'">Quilo</option>
+            <option [value]="'medida2d'">Medida (2 dimensões)</option>
+            <option [value]="'medida3d'">Medida (3 dimensões)</option>
+          </select>
+        </mz-select-container>
+
+        <ng-container *ngIf="newBudgetForm.value.quantityUnity === 'unidade'">
+
+        </ng-container>
+        <ng-container *ngIf="newBudgetForm.value.quantityUnity === 'quilo'">
+
+        </ng-container>
+        <ng-container *ngIf="newBudgetForm.value.quantityUnity === 'medida2d'">
+
+        </ng-container>
+        <ng-container *ngIf="newBudgetForm.value.quantityUnity === 'medida3d'">
+
+        </ng-container>
+
+        <mz-input-container class="col s6 m4 l3">
+          <input mz-input id="productDesc" label="cor (opcional)" type="text">
+        </mz-input-container>
+
+        <mz-textarea-container class="col s12">
+          <textarea mz-textarea label="observações (opcional)" id="note" length="500"></textarea>
+        </mz-textarea-container>
+      </form>
       <div class="u-col s12 right-align">
         <button class="btn waves-effect waves-light">Enviar</button>
       </div>

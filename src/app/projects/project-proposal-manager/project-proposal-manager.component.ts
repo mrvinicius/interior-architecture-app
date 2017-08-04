@@ -157,7 +157,7 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     private router: Router,
     private spinnerService: SpinnerService,
     private winRef: WindowRef
-  ) {    
+  ) {
     this.ambienceDescriptions = UtilsService.getEnumArray(AmbienceDescription);
     this.deliveryDescriptions = UtilsService.getEnumArray(DeliveryDescription);
     this.services = UtilsService.getEnumArray(Service);
@@ -240,7 +240,7 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     return this.projectsService.allProjects;
   }
 
-  ngOnInit() {    
+  ngOnInit() {
     this.clientForm = this.createClientForm(this.project);
     this.clientFormChangesSubscription = this.subscribeToFormChanges(this.clientForm, () => {
       this.clientDataHasChanged = true;
@@ -829,7 +829,8 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
   }
 
   private createPartnersForm(ids: any[], currentProfId: string): FormGroup {
-    let chipsData: any[] = [];
+    let chipsData: { value: string; display: string }[] = [];
+    
     if (ids && ids.length) {
       let index = ids.indexOf(currentProfId);
       if (index > -1) {

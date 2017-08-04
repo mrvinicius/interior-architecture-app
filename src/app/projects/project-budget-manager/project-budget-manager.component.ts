@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { MzModalService } from 'ng2-materialize';
 
 import { NewBudgetModalComponent } from '../new-budget-modal/new-budget-modal.component';
@@ -12,12 +13,14 @@ import { Project } from '../shared/project';
 export class ProjectBudgetManagerComponent implements OnInit {
   @Input() project: Project;
   hasBudgets;
+  newBudgetForm: FormGroup;
   newBudgetFormOpened: boolean;
 
   constructor(
+    private fb: FormBuilder,
     private modalService: MzModalService
   ) {
-
+    this.newBudgetForm = this.createBudgetForm();
   }
 
   ngOnInit() {
@@ -31,8 +34,8 @@ export class ProjectBudgetManagerComponent implements OnInit {
 
     this.newBudgetFormOpened = !this.newBudgetFormOpened;
 
-    console.log(this.newBudgetFormOpened);
-    
+    // console.log(this.newBudgetFormOpened);
+
     if (this.newBudgetFormOpened) {
       $formContainer.slideDown({
         duration: 350,
@@ -48,4 +51,16 @@ export class ProjectBudgetManagerComponent implements OnInit {
     }
   }
 
+  private createBudgetForm(budget?): FormGroup {
+    let supplierId = '0';
+    let chipsData: { value: string; display: string }[] = [];
+
+    return this.fb.group({
+      supplierId: [supplierId],
+      subsidiary: [chipsData],
+      productDesc: [],
+      quantityUnity: ['unidade'],
+
+    });
+  }
 }
