@@ -78,33 +78,30 @@ export class ProjectProposalPreviewComponent implements OnInit, OnDestroy {
   sendProposal() {
     this.spinnerService.toggleLoadingIndicator(true);
 
-    this.spinnerService.toggleLoadingIndicator(false);
-    let modalRef = this.modalService.open(BillingModalComponent, {});
+    if (!this.profService.professional.paying) {
+      this.billingService.billingInfoUpdated$
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe((success: boolean) => this.sendProposal());
 
-    // if (!this.profService.professional.paying) {
-    //   this.billingService.billingInfoUpdated$
-    //     .takeUntil(this.ngUnsubscribe)
-    //     .subscribe((success: boolean) => this.sendProposal());
+      this.spinnerService.toggleLoadingIndicator(false);
+      let modalRef = this.modalService.open(BillingModalComponent, {});
 
-    //   this.spinnerService.toggleLoadingIndicator(false);
-    //   let modalRef = this.modalService.open(BillingModalComponent, {});
+    } else {
+      if (this.project.client && this.project.client.id) {
+        this.propService.send(this.project)
+          .takeUntil(this.ngUnsubscribe)
+          .subscribe((success: boolean) => {
+            if (success) {
+              this.spinnerService.toggleLoadingIndicator(false);
+              this.proposalSent = true;
+              this.toastService.show('Projeto enviado!', 3000, 'green');
+            }
+          })
 
-    // } else {
-    //   if (this.project.client && this.project.client.id) {
-    //     this.propService.send(this.project)
-    //       .takeUntil(this.ngUnsubscribe)
-    //       .subscribe((success: boolean) => {
-    //         if (success) {
-    //           this.spinnerService.toggleLoadingIndicator(false);
-    //           this.proposalSent = true;
-    //           this.toastService.show('Projeto enviado!', 3000, 'green');
-    //         }
-    //       })
-
-    //   } else {
-    //     this.spinnerService.toggleLoadingIndicator(false);
-    //     this.toastService.show('Selecione um cliente', 3000, 'red');
-    //   }
-    // }
+      } else {
+        this.spinnerService.toggleLoadingIndicator(false);
+        this.toastService.show('Selecione um cliente', 3000, 'red');
+      }
+    }
   }
 }

@@ -96,11 +96,6 @@ export class BillingService {
             return filled;
           }
 
-          if (billingResp.ErrorMessage
-            .indexOf('is not a valid credit card number') > -1) {
-            errorMessages.push('Cartão de crédito inválido')
-          }
-
           if (billingResp.ErrorMessage.indexOf('não pode ficar em branco') > -1
             || billingResp.ErrorMessage.indexOf('can\'t be blank') > -1) {
             errorMessages.push('Dados em branco')
@@ -108,6 +103,10 @@ export class BillingService {
 
           if (billingResp.ErrorMessage.indexOf('is not a valid credit card number') > -1) {
             errorMessages.push('Cartão de crédito recusado')
+          }
+
+          if (billingResp.ErrorMessage.indexOf('Customer Not Found') > -1) {
+            errorMessages.push('Customer Not Found')
           }
 
           if (!errorMessages.length)
