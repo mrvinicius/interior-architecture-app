@@ -105,8 +105,8 @@ export class BillingService {
             errorMessages.push('Cartão de crédito recusado')
           }
 
-          if (billingResp.ErrorMessage.indexOf('credit_card não é suportado') > -1) {
-            
+          if (billingResp.ErrorMessage.indexOf('Customer Not Found') > -1) {
+            errorMessages.push('Customer Not Found')
           }
 
           if (!errorMessages.length)
