@@ -78,8 +78,8 @@ export class ProjectProposalPreviewComponent implements OnInit, OnDestroy {
   sendProposal() {
     this.spinnerService.toggleLoadingIndicator(true);
 
-    this.spinnerService.toggleLoadingIndicator(false);
-    let modalRef = this.modalService.open(BillingModalComponent, {});
+    // this.spinnerService.toggleLoadingIndicator(false);
+    // let modalRef = this.modalService.open(BillingModalComponent, {});
 
     if (this.project.atnProject) {
       this.propService.send(this.project)
