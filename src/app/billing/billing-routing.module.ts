@@ -6,19 +6,21 @@ import { AuthGuard } from './../core/auth.guard';
 
 const routes: Routes = [
     {
-         path: 'faturamento',
-         component: BillingComponent,
-         canActivate: [AuthGuard],
-         children: [
-             {
-                 path: '',
-                 canActivateChild: [AuthGuard],
-                 children: [
+        path: 'faturamento',
+        component: BillingComponent,
+        data: { breadcrumb: 'Faturamento' },
+        canActivate: [AuthGuard],
+        children: [
+            {
+                path: '',
+                canActivateChild: [AuthGuard],
+                data: { breadcrumb: undefined },
+                children: [
 
-                 ]
-             }
-         ]
- }
+                ]
+            }
+        ]
+    }
 ]
 
 @NgModule({

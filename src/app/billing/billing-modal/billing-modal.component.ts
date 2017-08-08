@@ -80,15 +80,16 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
   }
 
   updateProfessional() {
-    this.profService.update(this.profService.professional).subscribe(resp => {
-      if (resp.HasError) {
+    this.profService.update(this.profService.professional)
+      .subscribe(resp => {
+        if (resp.HasError) {
 
-      } else {
-        this.billingService.billingInfoUpdated(true);
-        this.modalComponent.close();
-      }
+        } else {
+          this.billingService.billingInfoUpdated(true);
+          this.modalComponent.close();
+        }
 
-    })
+      })
   }
 
   private createBillingForm(prof: Professional): FormGroup {
