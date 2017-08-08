@@ -10,7 +10,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class UserService {
   // public user: User;
-  // private readonly baseUrl: string = 'http://52.67.21.201/muuving/api/';
+  // private readonly baseUrl: string = 'https://archaboxapi.azurewebsites.net/api/';
 
   constructor(
     // private http: Http

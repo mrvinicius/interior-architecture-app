@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MzModalService } from 'ng2-materialize';
+import { Subject } from 'rxjs/Subject';
 
 import { BillingModalComponent } from './billing-modal/billing-modal.component';
 import { ProfessionalService } from './../core/professional.service';
@@ -13,8 +14,10 @@ import { ProfessionalService } from './../core/professional.service';
   //   </abx-layout>
   // `
 })
-export class BillingComponent implements OnInit {
+export class BillingComponent implements OnInit, OnDestroy {
   paying: boolean;
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
+
 
   constructor(
     private profService: ProfessionalService,
@@ -27,7 +30,16 @@ export class BillingComponent implements OnInit {
 
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.profService.professionalChange$
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(prof => this.paying = prof.paying);
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
 
   openBillingModal() {
     let modalRef = this.modalService.open(BillingModalComponent, {});

@@ -21,7 +21,7 @@ export class ClientService {
   // clientAdded$ = this.clientAddedSource.asObservable();
   // public modalDismissedSource = new Subject<any>();
   // modalDismissed$ = this.modalDismissedSource.asObservable();
-  private readonly baseUrl: string = 'http://52.67.21.201/muuving/api/cliente';
+  private readonly baseUrl: string = 'https://archaboxapi.azurewebsites.net/api/cliente';
 
   constructor(
     private auth: AuthService,

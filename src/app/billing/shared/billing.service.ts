@@ -8,7 +8,7 @@ import { BillingInfo } from './billing-info';
 
 @Injectable()
 export class BillingService {
-  private readonly baseUrl: string = 'http://52.67.21.201/muuving/api/pagamento';
+  private readonly baseUrl: string = 'https://archaboxapi.azurewebsites.net/api/pagamento';
   // Observable string sources
   private billingInfoUpdatedSource = new Subject<boolean>();
   // Observable string streams
@@ -63,6 +63,12 @@ export class BillingService {
         now.setMonth(now.getMonth() + 3)
         break;
 
+      case "teste_producao":
+        data.IdPlano = "C570805D9D7A43F0899CEEE79CE8998A";
+        data.Valor = 1.00;
+        now.setMonth(now.getMonth() + 1)
+        break;
+
       default:
         console.error('plano não identificado');
         break;
@@ -105,8 +111,13 @@ export class BillingService {
           if (billingResp.ErrorMessage.indexOf(msg) > -1) {
             errorMessages.push('Dados de cartão de crédito inválidos')
           }
+          
+          msg = 'Assinatura desse profissional para esse plano já existe';
+          if (billingResp.ErrorMessage.indexOf(msg) > -1) {
+            errorMessages.push('Você ja é assinante deste plano')
+          }
 
-            if (!errorMessages.length) errorMessages.push('Erro desconhecido')
+          if (!errorMessages.length) errorMessages.push('Erro desconhecido')
           billingResp.errorMessages = errorMessages;
         }
 
