@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MzModalService, MzBaseModal } from "ng2-materialize";
+import { MzModalService, MzBaseModal, MzToastService } from "ng2-materialize";
 import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
 
 import { BillingInfo } from '../shared/billing-info';
@@ -28,7 +28,8 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
     private billingService: BillingService,
     private fb: FormBuilder,
     private profService: ProfessionalService,
-    private spinnerService: SpinnerService
+    private spinnerService: SpinnerService,
+    private toastService: MzToastService
   ) {
     super();
   }
@@ -85,6 +86,7 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
         if (resp.HasError) {
 
         } else {
+          this.toastService.show('Você se tornou assinante', 3000, 'green');
           this.billingService.billingInfoUpdated(true);
           this.modalComponent.close();
         }
