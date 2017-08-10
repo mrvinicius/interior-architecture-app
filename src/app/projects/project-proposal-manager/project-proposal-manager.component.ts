@@ -279,23 +279,6 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     return this.projectsService.allProjects;
   }
 
-  imagesChange(event) {
-
-    // let fileList: FileList = event.target.files;
-
-    // this.projectsService.uploadImage()
-
-
-    // if (fileList.length > 0) {
-    //   for (var i = 0; i < fileList.length; i++) {
-    //     let file: File = fileList[i];
-    //     let formData: FormData = new FormData();
-    //     formData.append('uploadFile', file, file)
-
-    //   }
-    // }
-  }
-
   ngOnInit() {
     if (!this.project.atnProject) {
       this.clientForm = this.createClientForm(this.project);
@@ -607,31 +590,6 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
 
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-  }
-
-  onImagesChange(event) {
-    let fileList: FileList = event.target.files;
-    // console.log(event.target);
-    // let base64Image = event.target.result.split(',')[1];
-    // console.log(base64Image);
-
-    if (fileList.length > 0) {
-      let file: File = fileList[0];
-      this.projectsService.uploadImage3(file, this.project.id)
-        .subscribe(resp => console.log(resp));
-
-      // let reader: FileReader = new FileReader();
-      // reader.onloadend = () => {
-      //   // console.log(reader.result);
-      //   // let base64Image = reader.result.split(',')[1];
-      //   console.log(file);
-
-      //   this.projectsService.uploadImage(file, this.project.id)
-      //     .subscribe(res => console.log(res))
-      // }
-
-      // reader.readAsDataURL(file)
-    }
   }
 
   onImagesOutput(output: UploadOutput) {

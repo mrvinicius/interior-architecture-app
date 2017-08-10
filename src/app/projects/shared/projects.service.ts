@@ -6,6 +6,7 @@ import {
   RouterStateSnapshot,
   ActivatedRouteSnapshot
 } from '@angular/router';
+import { UploadOutput } from 'ngx-uploader';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from "rxjs/Subject";
 
@@ -309,7 +310,7 @@ export class ProjectsService implements Resolve<string>{
     'a46058ac-d651-4266-83bf-41b747364c6e': 13
   };
 
-  private readonly baseUrl = 'https://archaboxapi.azurewebsites.net/api/projeto';
+  private readonly baseUrl = 'http://52.67.21.201/muuving/api/projeto';
   private newProjectTitleDefinedSource = new Subject<string>();
   newProjectTitleDefined$ = this.newProjectTitleDefinedSource.asObservable();
   private newAtnProjectTitleDefinedSource = new Subject<string>();
@@ -532,6 +533,8 @@ export class ProjectsService implements Resolve<string>{
                 return prop;
               });
 
+              let images = project.ProjetoAnexos.map(imageObject => 'data:image/png;base64,' + imageObject.Arquivo);
+
               let currentProf =
                 new Professional(this.auth.getCurrentUser().name, this.auth.getCurrentUser().email, this.auth.getCurrentUser().id);
 
@@ -546,6 +549,7 @@ export class ProjectsService implements Resolve<string>{
               p.addressNumber = project.NumeroLogradouro;
               p.neighborhood = project.Bairro;
               p.city = project.Cidade;
+              p.images64 = images;
 
               if (proposals.length > 0) {
                 p.activeProposal = proposals[proposals.length - 1]
@@ -831,69 +835,71 @@ export class ProjectsService implements Resolve<string>{
       });
   }
 
-  // uploadImages() 
+  uploadImages(output: UploadOutput) {
 
-  uploadImage(file: File, projectId: string): Observable<any> {
-    let headers = new Headers();
-    // headers.append('Content-Type', 'multipart/form-data');
-    headers.append('Authorization', 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==');
-    headers.append('Accept', 'application/json');
-
-    let options = new RequestOptions({ headers: headers, withCredentials: true });
-
-    let formData: FormData = new FormData();
-    formData.append('uploadFile', file);
-    formData.append('projetoID', projectId);
-
-    // let data = {
-    //   projetoID: projectId,
-    //   uploadFile: image
-    // };
-
-    return this.http.post(this.baseUrl + '/saveFile', {}, options)
-      .map(res => res)
-      .catch(this.handleError);
   }
 
-  uploadImage2(file: File, projectId: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      let xhr: XMLHttpRequest = new XMLHttpRequest();
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4) {
-          if (xhr.status === 200) {
-            resolve(JSON.parse(xhr.response))
-          } else {
-            reject(xhr.response)
-          }
-        }
-      }
+  // uploadImage(file: File, projectId: string): Observable<any> {
+  //   let headers = new Headers();
+  //   // headers.append('Content-Type', 'multipart/form-data');
+  //   headers.append('Authorization', 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==');
+  //   headers.append('Accept', 'application/json');
 
-      xhr.open('POST', this.baseUrl + '/saveFile', true)
+  //   let options = new RequestOptions({ headers: headers, withCredentials: true });
 
-      let formData = new FormData();
-      formData.append("projetoID", projectId);
-      formData.append("uploadFile", file, file.name);
-      xhr.setRequestHeader('Authorization', 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==')
-      xhr.send(formData);
-    });
-  }
+  //   let formData: FormData = new FormData();
+  //   formData.append('uploadFile', file);
+  //   formData.append('projetoID', projectId);
 
-  uploadImage3(file: File, projectId: string): Observable<any> {
-    let fd: FormData = new FormData();
-    fd.append('file', file);
-    fd.append('projetoID', projectId);
-    console.log(projectId);
-    
-    let headers = new Headers();
-    headers.append('Authorization', 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==');
-    // headers.append('Accept', 'application/json');
+  //   // let data = {
+  //   //   projetoID: projectId,
+  //   //   uploadFile: image
+  //   // };
 
-    let options = new RequestOptions({ headers: headers });
+  //   return this.http.post(this.baseUrl + '/saveFile', {}, options)
+  //     .map(res => res)
+  //     .catch(this.handleError);
+  // }
 
-    return this.http.post(this.baseUrl + '/saveFile', fd, options)
-      .map(resp => resp)
-      .catch(this.handleError)
-  }
+  // uploadImage2(file: File, projectId: string): Promise<any> {
+  //   return new Promise((resolve, reject) => {
+  //     let xhr: XMLHttpRequest = new XMLHttpRequest();
+  //     xhr.onreadystatechange = () => {
+  //       if (xhr.readyState === 4) {
+  //         if (xhr.status === 200) {
+  //           resolve(JSON.parse(xhr.response))
+  //         } else {
+  //           reject(xhr.response)
+  //         }
+  //       }
+  //     }
+
+  //     xhr.open('POST', this.baseUrl + '/saveFile', true)
+
+  //     let formData = new FormData();
+  //     formData.append("projetoID", projectId);
+  //     formData.append("uploadFile", file, file.name);
+  //     xhr.setRequestHeader('Authorization', 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==')
+  //     xhr.send(formData);
+  //   });
+  // }
+
+  // uploadImage3(file: File, projectId: string): Observable<any> {
+  //   let fd: FormData = new FormData();
+  //   fd.append('file', file);
+  //   fd.append('projetoID', projectId);
+  //   console.log(projectId);
+
+  //   let headers = new Headers();
+  //   headers.append('Authorization', 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==');
+  //   // headers.append('Accept', 'application/json');
+
+  //   let options = new RequestOptions({ headers: headers });
+
+  //   return this.http.post(this.baseUrl + '/saveFile', fd, options)
+  //     .map(resp => resp)
+  //     .catch(this.handleError)
+  // }
 
   private getFromBackEnd(id: string): Observable<Project> {
     let options = new RequestOptions({ headers: this.getHeaders() });

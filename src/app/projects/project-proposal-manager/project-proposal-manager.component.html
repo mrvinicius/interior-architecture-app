@@ -131,10 +131,10 @@
 
 
 
-<!--           
-          <ng-container *ngIf="project.atnProject">
 
-             <div class="row">
+          <ng-container>
+
+            <div class="row">
               <div class="col s12">
                 <div class="divider"></div>
               </div>
@@ -142,13 +142,12 @@
             <div class="row col s12">
               <span class="dim-text" style="text-transform: uppercase; display: inline-block;">
                 <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">photo_library</i>Imagens do projeto
-            </span>
+              </span>
             </div>
+            <!-- <div *ngIf="project.images64 && project.images64.length" class="row">
+              <img *ngFor="let img64 of project.images64" [src]="img64" class="responsi" alt="">
+            </div> -->
 
-
-
-
-              
             <div class="row col s12">
               <div class="drag-area-wrapper col hide-on-small-only">
                 <div ngFileDrop class="drop-area square grey lighten-3" (uploadOutput)="onImagesOutput($event)" [uploadInput]="imagesUploadInput"
@@ -204,10 +203,10 @@
               <div class="file-path-wrapper">
                 <input disabled class="file-path" placeholder="selecione os imagens" type="text">
               </div>
-            </div> 
+            </div>
 
 
-          </ng-container> -->
+          </ng-container>
 
 
 
