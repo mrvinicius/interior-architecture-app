@@ -15,7 +15,7 @@ export class Project {
     ambiences?: Ambience[];
     proposals?: Proposal[];
     activeProposal: Proposal;
-    images64: WindowBase64
+    images64: any[]
     isActive: boolean;
     
     CEP?: string;

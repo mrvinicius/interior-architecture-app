@@ -1012,6 +1012,8 @@ export class ProjectsService implements Resolve<string>{
           return prop;
         });
 
+        let images = project.ProjetoAnexos.map(imageObject => 'data:image/png;base64,' + imageObject.Arquivo);
+
         let currentProf =
           new Professional(this.auth.getCurrentUser().name, this.auth.getCurrentUser().email, this.auth.getCurrentUser().id);
 
@@ -1026,6 +1028,7 @@ export class ProjectsService implements Resolve<string>{
         p.addressNumber = project.NumeroLogradouro;
         p.neighborhood = project.Bairro;
         p.city = project.Cidade;
+        p.images64 = images;
 
         if (proposals.length > 0) {
           p.activeProposal = proposals[proposals.length - 1];

@@ -144,9 +144,12 @@
                 <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">photo_library</i>Imagens do projeto
               </span>
             </div>
-            <!-- <div *ngIf="project.images64 && project.images64.length" class="row">
-              <img *ngFor="let img64 of project.images64" [src]="img64" class="responsi" alt="">
-            </div> -->
+
+            <div *ngIf="project.images64 && project.images64.length" class="row">
+              <div class="col s12">
+                <gallery></gallery>
+              </div>
+            </div>
 
             <div class="row col s12">
               <div class="drag-area-wrapper col hide-on-small-only">
@@ -166,8 +169,7 @@
                               type="file"
                               accept="image/*"
                               multiple>
-                            </span>
-
+                        </span>
                       </div>
                       <div class="hide file-path-wrapper">
                         <input disabled class="file-path" placeholder="selecione os imagens" type="text">

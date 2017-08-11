@@ -1,3 +1,4 @@
+import { GalleryService } from 'ng-gallery';
 import { Component, OnInit, OnDestroy, ViewChild, Input, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -148,6 +149,7 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     private billingService: BillingService,
     private clientService: ClientService,
     private fb: FormBuilder,
+    private gallery: GalleryService,
     private modalService: MzModalService,
     private toastService: MzToastService,
     private profService: ProfessionalService,
@@ -578,6 +580,15 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
           display: newProfessional.name
         });
       });
+
+    if (this.project.images64) {
+      let images = this.project.images64.map(img64 => {
+        return { src: img64, thumbnail: img64 }
+      })
+
+      this.gallery.load(images)
+    }
+
   }
 
   ngOnDestroy() {
@@ -616,7 +627,7 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
       if (this.formData.autoUpload) {
         const event: UploadInput = {
           type: 'uploadAll',
-          url: 'https://archaboxapi.azurewebsites.net/api/projeto/saveFile',
+          url: 'http://52.67.21.201/muuving/api/projeto/saveFile',
           method: 'POST',
           data: {
             projetoID: this.project.id
@@ -638,6 +649,28 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
 
       if (allowedFileTypes.includes(output.file.type)) {
         this.files.push(output.file); // add file to array when added
+
+
+        let reader = new FileReader();
+        reader.onloadend = (e) => {
+          if (!this.project.images64) {
+            this.project.images64 = []
+          }
+
+          this.project.images64.push(reader.result)
+
+          let images = this.project.images64.map(img64 => {
+            return { src: img64, thumbnail: img64 }
+          })
+
+          this.gallery.load(images)
+
+
+        }
+
+        reader.readAsDataURL(output.nativeFile)
+
+
       } else {
         this.toastService.show('Somente arquivos JPG, PNG, GIF e TIF', 3000)
       }

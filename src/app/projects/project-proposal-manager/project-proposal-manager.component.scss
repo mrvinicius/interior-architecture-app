@@ -34,3 +34,20 @@ $medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width 
         margin-top: 20px;
     }
 }
+
+gallery /deep/ {
+    gallery-main {
+        height: initial !important;
+    }
+    .g-container {
+        width: 100% !important;
+        height: 100% !important;
+        height: -moz-available !important;
+        height: stretch !important;
+        background-color: #9e9e9e !important;
+    }
+
+    gallery-thumb {
+        background-color: transparent !important;
+    }
+}
