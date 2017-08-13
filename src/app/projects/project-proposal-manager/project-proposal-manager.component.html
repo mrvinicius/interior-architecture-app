@@ -145,11 +145,7 @@
               </span>
             </div>
 
-            <div *ngIf="project.images64 && project.images64.length" class="row">
-              <div class="col s12">
-                <gallery></gallery>
-              </div>
-            </div>
+
 
             <div class="row col s12">
               <div class="drag-area-wrapper col hide-on-small-only">
@@ -204,6 +200,11 @@
               </div>
               <div class="file-path-wrapper">
                 <input disabled class="file-path" placeholder="selecione os imagens" type="text">
+              </div>
+            </div>
+            <div *ngIf="project.images64 && project.images64.length" class="row">
+              <div class="col s12">
+                <gallery></gallery>
               </div>
             </div>
 

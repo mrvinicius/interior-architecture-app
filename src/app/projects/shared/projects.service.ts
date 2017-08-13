@@ -1015,7 +1015,11 @@ export class ProjectsService implements Resolve<string>{
         let images = project.ProjetoAnexos.map(imageObject => 'data:image/png;base64,' + imageObject.Arquivo);
 
         let currentProf =
-          new Professional(this.auth.getCurrentUser().name, this.auth.getCurrentUser().email, this.auth.getCurrentUser().id);
+          new Professional(
+            this.auth.getCurrentUser().name,
+            this.auth.getCurrentUser().email,
+            this.auth.getCurrentUser().id
+          );
 
         cli = new Client();
         p = new Project(activeProposal, project.Id, project.Descricao, currentProf);
