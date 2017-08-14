@@ -58,14 +58,14 @@ const routes: Routes = [
           {
             path: ':title/proposta/:id', component: ProjectProposalPreviewComponent,
             resolve: { project: ProjectProposalPreviewResolver }
-          },
-          {
-            path: ':title/imagens/:id', component: ProjectGalleryComponent,
-            resolve: { project: ProjectProposalPreviewResolver}
           }
         ]
       }
     ]
+  },
+  {
+    path: 'imagens/:id', component: ProjectGalleryComponent,
+    resolve: { project: ProjectProposalPreviewResolver }
   },
 ];
 

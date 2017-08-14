@@ -91,10 +91,10 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
   ambiencesFormsChangesSubscription: Subscription[] = [];
   addressFieldsDisabled: boolean = false;
   imagesUploadInput: EventEmitter<UploadInput> = new EventEmitter<UploadInput>();
-  files: UploadFile[] = [];
+  files: UploadFile[] = []; // Files to be/being uploaded
   dragOver: boolean = false;
   formData: FormData = {
-    concurrency: 0,
+    concurrency: 1,
     autoUpload: true,
     verbose: false
   };
@@ -610,20 +610,9 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
       'image/gif',
       'image/tif'
     ]
-    console.log(output);
-
 
     // when all files added in queue
     if (output.type === 'allAddedToQueue') {
-      // uncomment this if you want to auto upload files when added
-      // const event: UploadInput = {
-      //   type: 'uploadAll',
-      //   url: '/upload',
-      //   method: 'POST',
-      //   data: { foo: 'bar' },
-      //   concurrency: 0
-      // };
-
       if (this.formData.autoUpload) {
         const event: UploadInput = {
           type: 'uploadAll',
@@ -645,11 +634,9 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
         this.imagesUploadInput.emit(event);
       }
 
-    } else if (output.type === 'addedToQueue') {
-
+    } else if (output.type === 'addedToQueue' && typeof output.file !== 'undefined') {
       if (allowedFileTypes.includes(output.file.type)) {
         this.files.push(output.file); // add file to array when added
-
 
         let reader = new FileReader();
         reader.onloadend = (e) => {
@@ -664,20 +651,15 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
           })
 
           this.gallery.load(images)
-
-
         }
 
-        reader.readAsDataURL(output.nativeFile)
-
-
+        reader.readAsDataURL(output.file.nativeFile)
       } else {
         this.toastService.show('Somente arquivos JPG, PNG, GIF e TIF', 3000)
       }
-
-    } else if (output.type === 'uploading') {
+    } else if (output.type === 'uploading' && typeof output.file !== 'undefined') {
       // update current data in files array for uploading file
-      const index = this.files.findIndex(file => file.id === output.file.id);
+      const index = this.files.findIndex(file => typeof output.file !== 'undefined' && file.id === output.file.id);
       this.files[index] = output.file;
     } else if (output.type === 'removed') {
       // remove file from array when removed
@@ -841,18 +823,6 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
       this.deliveryFormsChangesSubscription[deliveryIndex] =
         this.subscribeToFormChanges(this.deliveriesForms[deliveryIndex], (formData) => {
           this.deliveryDataHasChanges[deliveryIndex] = true;
-
-
-          // let deliveryDescIndex = Number(formData.description);
-          // console.log(deliveryDescIndex);
-
-          // if (deliveryIndex !== NaN && deliveryDescIndex >= 0) {
-          //   // this.deliveryDescriptions[deliveryIndex].slice(deliveryIndex, 1);
-          //   // this.selectedDeliveries[deliveryIndex] = deliveryDescIndex;
-          //   this.selectedDeliveries[deliveryIndex] = deliveryDescIndex;
-          // } else {
-          //   this.selectedDeliveries[deliveryIndex] = -1;
-          // }
         }, (formData) => {
           if (!this.deliveryDataBeingSaved) {
 

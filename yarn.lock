@@ -3210,9 +3210,9 @@ ng2-tag-input@^1.3.3:
   dependencies:
     ng2-material-dropdown "0.7.7"
 
-ngx-uploader@^3.3.0:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/ngx-uploader/-/ngx-uploader-3.3.1.tgz#4a2d79eeb12848add013b69249febcceb218b563"
+ngx-uploader@^3.3.7:
+  version "3.3.6"
+  resolved "https://registry.yarnpkg.com/ngx-uploader/-/ngx-uploader-3.3.6.tgz#9f4a7313fc28dca342d0146cbe18b7f2bce414cd"
 
 no-case@^2.2.0:
   version "2.3.1"

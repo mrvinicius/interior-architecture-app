@@ -17,7 +17,6 @@ import { AuthService } from '../../core/auth.service';
 import { Bank } from '../../billing/shared/bank';
 import { BankAccount } from './../../billing/shared/bank-account';
 import { Client } from '../../client/shared/client';
-import { ClientService } from '../../client/shared/client.service';
 import { Delivery } from './delivery';
 import { Professional } from '../../core/professional';
 import { ProfessionalService } from '../../core/professional.service';
@@ -319,8 +318,7 @@ export class ProjectsService implements Resolve<string>{
   constructor(
     private auth: AuthService,
     private http: Http,
-    private profService: ProfessionalService,
-    private clientService: ClientService
+    private profService: ProfessionalService
   ) {
     ProjectsService.proposalStatusIds[0] = ProjectsService.proposalStatusIds.Approved;
     ProjectsService.proposalStatusIds[1] = ProjectsService.proposalStatusIds.Disabled;
@@ -534,9 +532,17 @@ export class ProjectsService implements Resolve<string>{
               });
 
               let images = project.ProjetoAnexos.map(imageObject => 'data:image/png;base64,' + imageObject.Arquivo);
+              let currentUser = this.auth.getCurrentUser(),
+                currentProf: Professional;
+              if (currentUser) {
 
-              let currentProf =
-                new Professional(this.auth.getCurrentUser().name, this.auth.getCurrentUser().email, this.auth.getCurrentUser().id);
+                currentProf =
+                  new Professional(
+                    currentUser.name,
+                    currentUser.email,
+                    currentUser.id
+                  );
+              }
 
               c = new Client();
               p = new Project(activeProposal, project.Id, project.Descricao, currentProf);
@@ -558,7 +564,7 @@ export class ProjectsService implements Resolve<string>{
                 p.isActive = false;
                 new Proposal(false, ProposalStatus.NotSent);
               }
-
+              
               c.id = project.ClienteId;
               c.name = project.NomeCliente;
               c.email = project.EmailCliente;
@@ -751,8 +757,6 @@ export class ProjectsService implements Resolve<string>{
       });
     }
 
-    // console.log(projectData);
-
     return this.http.post(this.baseUrl + '/update', projectData, options)
       .map((response: Response) => {
         let project = JSON.parse(response.text());
@@ -809,8 +813,16 @@ export class ProjectsService implements Resolve<string>{
           });
         }
 
-        let currentProf =
-          new Professional(this.auth.getCurrentUser().name, this.auth.getCurrentUser().email, this.auth.getCurrentUser().id);
+        let currentUser = this.auth.getCurrentUser(),
+          currentProf: Professional;
+        if (currentUser) {
+          currentProf =
+            new Professional(
+              currentUser.name,
+              currentUser.email,
+              currentUser.id
+            );
+        }
         c = new Client();
         p = new Project(activeProposal, project.Id, project.Descricao, currentProf);
         p.isActive = project.IsActive;
@@ -1014,12 +1026,16 @@ export class ProjectsService implements Resolve<string>{
 
         let images = project.ProjetoAnexos.map(imageObject => 'data:image/png;base64,' + imageObject.Arquivo);
 
-        let currentProf =
-          new Professional(
-            this.auth.getCurrentUser().name,
-            this.auth.getCurrentUser().email,
-            this.auth.getCurrentUser().id
-          );
+        let currentUser = this.auth.getCurrentUser(),
+          currentProf: Professional;
+        if (currentUser) {
+          currentProf =
+            new Professional(
+              currentUser.name,
+              currentUser.email,
+              currentUser.id
+            );
+        }
 
         cli = new Client();
         p = new Project(activeProposal, project.Id, project.Descricao, currentProf);
@@ -1043,8 +1059,6 @@ export class ProjectsService implements Resolve<string>{
         }
 
         cli.id = project.ClienteId;
-        // cli.email = project.ClienteEmail;
-        // cli.name = project.ClienteNome;
         p.client = cli;
         p.briefing = project.Briefing;
         return p;

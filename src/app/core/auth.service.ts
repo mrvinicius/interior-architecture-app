@@ -27,13 +27,17 @@ export class AuthService {
   }
 
   getCurrentUser(): User {
-    if (this.currentUser === undefined) {
+    if (!this.currentUser) {
       let userData: any = JSON.parse(localStorage.getItem('currentUser'));
-      let user: User = new User(userData.name, userData.email, userData.id);
-      return user;
+      if (userData) {
+        return new User(userData.name, userData.email, userData.id);
+      }
+
+      return null;
     } else {
       return this.currentUser;
     }
+
   }
 
   setCurrentUser(user: User): void {
