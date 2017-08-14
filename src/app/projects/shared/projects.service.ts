@@ -309,7 +309,7 @@ export class ProjectsService implements Resolve<string>{
     'a46058ac-d651-4266-83bf-41b747364c6e': 13
   };
 
-  private readonly baseUrl = 'http://52.67.21.201/muuving/api/projeto';
+  private readonly baseUrl = 'https://archaboxapi.azurewebsites.net/api/projeto';
   private newProjectTitleDefinedSource = new Subject<string>();
   newProjectTitleDefined$ = this.newProjectTitleDefinedSource.asObservable();
   private newAtnProjectTitleDefinedSource = new Subject<string>();
@@ -531,7 +531,11 @@ export class ProjectsService implements Resolve<string>{
                 return prop;
               });
 
-              let images = project.ProjetoAnexos.map(imageObject => 'data:image/png;base64,' + imageObject.Arquivo);
+
+              let images;
+              if (project.ProjetoAnexos) {
+                images = project.ProjetoAnexos.map(imageObject => 'data:image/png;base64,' + imageObject.Arquivo);
+              }
               let currentUser = this.auth.getCurrentUser(),
                 currentProf: Professional;
               if (currentUser) {
@@ -564,7 +568,7 @@ export class ProjectsService implements Resolve<string>{
                 p.isActive = false;
                 new Proposal(false, ProposalStatus.NotSent);
               }
-              
+
               c.id = project.ClienteId;
               c.name = project.NomeCliente;
               c.email = project.EmailCliente;
@@ -1024,7 +1028,10 @@ export class ProjectsService implements Resolve<string>{
           return prop;
         });
 
-        let images = project.ProjetoAnexos.map(imageObject => 'data:image/png;base64,' + imageObject.Arquivo);
+        let images;
+        if (project.ProjetoAnexos) {
+          images = project.ProjetoAnexos.map(imageObject => 'data:image/png;base64,' + imageObject.Arquivo);
+        }
 
         let currentUser = this.auth.getCurrentUser(),
           currentProf: Professional;

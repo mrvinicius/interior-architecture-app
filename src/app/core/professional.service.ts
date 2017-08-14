@@ -26,7 +26,7 @@ export class ProfessionalService {
   professionalAdded$: Subject<Professional> = new Subject<Professional>();
   modalDismissed$: Subject<Professional> = new Subject<Professional>();
   allProfessionalsChange$: Subject<Professional[]> = new Subject<Professional[]>();
-  private readonly baseUrl: string = 'http://52.67.21.201/muuving/api/profissional';
+  private readonly baseUrl: string = 'https://archaboxapi.azurewebsites.net/api/profissional';
   private _professional: Professional;
 
   constructor(
@@ -155,7 +155,7 @@ export class ProfessionalService {
   getOne(id: string): Observable<Professional> {
     let options = new RequestOptions({ headers: this.getHeaders() });
 
-    //http://52.67.21.201/muuving/api/profissional/getone?id=c11752b0-0475-4d31-9c01-223d1a98aa9f
+    //https://archaboxapi.azurewebsites.net/api/profissional/getone?id=c11752b0-0475-4d31-9c01-223d1a98aa9f
     return this.http.get(this.baseUrl + '/getone?id=' + id, options)
       .map((response: Response) => {
         let body = JSON.parse(response.text());
