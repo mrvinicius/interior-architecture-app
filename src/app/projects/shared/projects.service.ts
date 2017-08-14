@@ -533,7 +533,7 @@ export class ProjectsService implements Resolve<string>{
 
 
               let images;
-              if (project.ProjetoAnexos) {
+              if (project.ProjetoAnexos && project.ProjetoAnexos.length) {
                 images = project.ProjetoAnexos.map(imageObject => 'data:image/png;base64,' + imageObject.Arquivo);
               }
               let currentUser = this.auth.getCurrentUser(),
@@ -1029,7 +1029,7 @@ export class ProjectsService implements Resolve<string>{
         });
 
         let images;
-        if (project.ProjetoAnexos) {
+        if (project.ProjetoAnexos && project.ProjetoAnexos.length) {
           images = project.ProjetoAnexos.map(imageObject => 'data:image/png;base64,' + imageObject.Arquivo);
         }
 
