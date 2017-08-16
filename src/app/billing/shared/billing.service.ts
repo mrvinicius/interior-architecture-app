@@ -69,6 +69,12 @@ export class BillingService {
         now.setMonth(now.getMonth() + 1)
         break;
 
+      case "teste_producao2":
+        data.IdPlano = "105A5EE5905F4D0B92FE21D18A5CD32E";
+        data.Valor = 1.00;
+        now.setDate(now.getDate()) // today test
+        break;
+
       default:
         console.error('plano não identificado');
         break;
@@ -111,7 +117,7 @@ export class BillingService {
           if (billingResp.ErrorMessage.indexOf(msg) > -1) {
             errorMessages.push('Dados de cartão de crédito inválidos')
           }
-          
+
           msg = 'Assinatura desse profissional para esse plano já existe';
           if (billingResp.ErrorMessage.indexOf(msg) > -1) {
             errorMessages.push('Você ja é assinante deste plano')

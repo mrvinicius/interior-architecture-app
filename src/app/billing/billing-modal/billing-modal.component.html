@@ -11,6 +11,7 @@
         <i mz-icon-mdi mz-textarea-prefix class="material-icons">date_range</i>
         <select mz-select formControlName="planIdentifier" id='planSelect'>
           <option [value]="'plano_mensal'" selected>Mensal</option>
+          <!-- <option [value]="'teste_producao2'" selected>teste_producao2</option> -->
           <!-- <option [value]="'teste_producao'" selected>teste Produção</option> -->
           <!-- <option [value]="'plano_trimestral'">Trimestral</option> -->
         </select>
@@ -42,12 +43,12 @@
         <input mz-input [textMask]="{mask: cvcMask, placeholderChar: '\u2000' }" label='CVC' placeholder="999" formControlName="CVC"
           id="cvc" type="text">
       </mz-input-container>
-      <mz-input-container *ngIf="professional" class="col s6" style="padding-left: 0;">
+      <mz-input-container *ngIf="professional" class="col s12 m6" style="padding-left: 0;">
         <i mz-icon-mdi mz-textarea-prefix class="material-icons">perm_identity</i>
-        <input mz-input label='nome' formControlName="firstName" id="firstName" type="text">
+        <input mz-input label='nome impresso no cartão' formControlName="firstName" id="firstName" type="text">
       </mz-input-container>
-      <mz-input-container *ngIf="professional" class="col s6" style="padding: 0;">
-        <input mz-input label='sobrenome' formControlName="lastName" id="lastName" type="text">
+      <mz-input-container *ngIf="professional" class="col s12 m6" style="padding: 0;">
+        <input mz-input label='sobrenome impresso no cartão' formControlName="lastName" id="lastName" type="text">
       </mz-input-container>
     </form>
   </mz-modal-content>
