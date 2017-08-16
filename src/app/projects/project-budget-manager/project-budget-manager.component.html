@@ -11,8 +11,8 @@
     </div>
   </div>
   <section id="budgetsHeader">
-    <label for="totalProductsCost">Total</label>
-    <h5 id="totalProductsCost" style="margin: 0 0 1em 0;">R$ 0,00</h5>
+    <label for="totalProductsCost"  class="readonly-value-label">Total</label>
+    <h5 id="totalProductsCost">R$ 0,00</h5>
     <div class="row" style="position: relative;">
       <div class="divider">
       </div>
@@ -39,55 +39,67 @@
       </div>
     </div>
     <div class="row">
-      <form *ngIf="newBudgetForm" [formGroup]="newBudgetForm">
-        <mz-select-container class="has-add-option col s12 m4" style="padding-left: 0;">
-          <select mz-select formControlName="supplierId" id='suppliersSelect' label="fornecedor">
+      <div class="col m10 l8" style="padding: 0;">
+
+        <form *ngIf="newBudgetForm" [formGroup]="newBudgetForm">
+          <mz-select-container class="has-add-option col s12 m6" style="padding-left: 0;">
+            <select mz-select formControlName="supplierId" id='suppliersSelect' label="fornecedor">
             <option [value]="0">- adicionar fornecedor -</option>
             <option [value]="1">Deca</option>
           </select>
-        </mz-select-container>
-        <tag-input class="col s12 m4" [secondaryPlaceholder]="'filiais'" [placeholder]="'filiais'" [onlyFromAutocomplete]="true">
-          <tag-input-dropdown id="tagInputDropdown" [displayBy]="'name'" [limitItemsTo]="6" [identifyBy]="'id'" [showDropdownIfEmpty]="true"
-            [autocompleteItems]="[{id: 'new', name: '- adicionar profissional -'}]">
-          </tag-input-dropdown>
-        </tag-input>
-        <mz-input-container class="col s6 m4 l3">
-          <input mz-input id="productDesc" label="produto" type="text">
-        </mz-input-container>
+          </mz-select-container>
+          <tag-input class="col s12 m6" [secondaryPlaceholder]="'filiais'" [placeholder]="'filiais'" [onlyFromAutocomplete]="true"
+            style="padding-left: 0;">
+            <tag-input-dropdown id="tagInputDropdown" [displayBy]="'name'" [limitItemsTo]="6" [identifyBy]="'id'" [showDropdownIfEmpty]="true"
+              [autocompleteItems]="[{id: 'new', name: '- adicionar profissional -'}]">
+            </tag-input-dropdown>
+          </tag-input>
+          <div class="u-col s12">
+            <mz-input-container class="col s12 m6" style="padding-left: 0;">
+              <input mz-input id="productDesc" label="produto" type="text">
+            </mz-input-container>
+          </div>
 
-        <mz-select-container class="col s6 m4 l3">
-          <select mz-select formControlName="quantityUnity" label="tipo de dimensionamento" id='unityTypeSelect'>
+          <mz-select-container class="col s6" style="padding-left: 0;">
+            <select mz-select formControlName="quantityUnity" label="tipo de dimensionamento" id='unityTypeSelect'>
             <option [value]="'unidade'" selected>Unidade</option>
-            <option [value]="'quilo'">Quilo</option>
+            <option [value]="'peso'">Quilo</option>
             <option [value]="'medida2d'">Medida (2 dimensões)</option>
             <option [value]="'medida3d'">Medida (3 dimensões)</option>
           </select>
-        </mz-select-container>
+          </mz-select-container>
 
-        <ng-container *ngIf="newBudgetForm.value.quantityUnity === 'unidade'">
+          <ng-container *ngIf="newBudgetForm.value.quantityUnity === 'unidade'">
+            <mz-input-container class="col s6 m6">
+              <input mz-input formControlName="units" label="n° de unidades" id='units' type='number'>
+            </mz-input-container>
+          </ng-container>
 
-        </ng-container>
-        <ng-container *ngIf="newBudgetForm.value.quantityUnity === 'quilo'">
+          <ng-container *ngIf="newBudgetForm.value.quantityUnity === 'peso'">
+            <mz-input-container class="col s6 m6">
+              <input mz-input [textMask]="{mask: mascaraQuilos}" formControlName="weight" label="peso" id='weight' type='text'>
+            </mz-input-container>
+          </ng-container>
 
-        </ng-container>
-        <ng-container *ngIf="newBudgetForm.value.quantityUnity === 'medida2d'">
+          <ng-container *ngIf="newBudgetForm.value.quantityUnity === 'medida2d'">
+          </ng-container>
 
-        </ng-container>
-        <ng-container *ngIf="newBudgetForm.value.quantityUnity === 'medida3d'">
+          <ng-container *ngIf="newBudgetForm.value.quantityUnity === 'medida3d'">
+          </ng-container>
 
-        </ng-container>
+          <mz-input-container class="col s12 m6" style="padding-left: 0">
+            <input mz-input formControlName="color" id="color" label="cor (opcional)" type="text">
+          </mz-input-container>
 
-        <mz-input-container class="col s6 m4 l3">
-          <input mz-input id="productDesc" label="cor (opcional)" type="text">
-        </mz-input-container>
-
-        <mz-textarea-container class="col s12">
-          <textarea mz-textarea label="observações (opcional)" id="note" length="500"></textarea>
-        </mz-textarea-container>
-      </form>
-      <div class="u-col s12 right-align">
-        <button class="btn waves-effect waves-light">Enviar</button>
+          <mz-textarea-container class="col s12 m6" style="padding-left: 0">
+            <textarea mz-textarea label="observações (opcional)" id="note" length="500"></textarea>
+          </mz-textarea-container>
+        </form>
+        <div class="col s12 right-align" style="padding-left: 0">
+          <button [disabled]="newBudgetForm.invalid" (click)="sendBudgetRequest(newBudgetForm.value)" class="btn waves-effect waves-light">Enviar</button>
+        </div>
       </div>
+
     </div>
     <div class="row">
       <div class="divider"></div>
@@ -109,7 +121,8 @@
         <span style="font-weight: bold;">Clique no '+'</span><br>para solicitar orçamento para um fornecedor
       </span>
     </div>
-    <div *ngIf="hasBudgets" class="budgets-lists">
+    <!-- <div *ngIf="hasBudgets" class="budgets-lists"> -->
+    <div *ngIf="true" class="budgets-lists">
       <div class="u-row">
         <div class="u-col s12">
           <span class="dim-text" style="text-transform: uppercase; display: inline-block; margin: 0 12px;">
@@ -123,7 +136,18 @@
             Mesa e cadeiras
           </mz-collapsible-item-header>
           <mz-collapsible-item-body>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            <div class="u-col s12">
+              <label class="readonly-value-label">Fornecedor</label>
+              <h5>Deca</h5>
+            </div>
+            <div class="u-col s12">
+              <label class="readonly-value-label">Filiais</label>
+              <h5>Alphaville, JK, Morumbi, Vila Olímpia</h5>
+            </div>
+            <div class="u-col s12">
+              <label class="readonly-value-label">Produto</label>
+              <h5>Sofá 'L'</h5>
+            </div>
           </mz-collapsible-item-body>
         </mz-collapsible-item>
         <mz-collapsible-item>

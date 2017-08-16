@@ -140,7 +140,20 @@ export class UtilsService {
         value = String(value)
 
         value = value
+            .replace(' ', '')
             .replace('R$', '')
+            .replace(/[.]/g, '')
+            .replace(/[,]/g, '.');
+
+        return parseFloat(value);
+    }
+
+    public static parseKilogramString(value: string): number {
+        value = String(value)
+
+        value = value
+            .replace(' ', '')
+            .replace('kg', '')
             .replace(/[.]/g, '')
             .replace(/[,]/g, '.');
 

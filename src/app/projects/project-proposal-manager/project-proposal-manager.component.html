@@ -322,8 +322,8 @@
       <section class="row">
         <form [formGroup]="paymentForm">
           <div class="col s12">
-            <label for="">Total sugerido</label>
-            <h5 style="margin: 0 0 1em 0;">
+            <label class="readonly-value-label">Total sugerido</label>
+            <h5>
               <b>{{project.activeProposal.cost | currency:'BRL':true}}</b>
             </h5>
           </div>
