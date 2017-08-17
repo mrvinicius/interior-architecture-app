@@ -50,11 +50,15 @@ export class ClientService {
           errorMessages.push(this.handleErrMsg(clientResp.ErrorMessage))
           clientResp.errorMessages = errorMessages;
         } else {
-          let newClient: Client = new Client(clientResp.Nome, clientResp.Email, clientResp.ID);
+          let newClient: Client = new Client(
+            clientResp.Nome,
+            clientResp.Email,
+            clientResp.ID
+          );
+
           newClient.isActive = clientResp.IsActive;
           newClient.gender = clientResp.Genero;
           newClient.cpfCnpj = clientResp.CpfCnpj;
-
 
           if (!this.allClients) this.allClients = [];
           clientResp.client = newClient;
@@ -63,8 +67,6 @@ export class ClientService {
           // this.clientAddedSource.next(newClient);
           this.profService.addClients(newClient);
         }
-
-
 
         return clientResp;
       })
@@ -184,6 +186,9 @@ export class ClientService {
         break;
       case "Nome do cliente não informado":
         userMsg = 'Nome do cliente não informado';
+        break;
+      case "Cpf/Cnpj do cliente não informado":
+        userMsg = 'Cpf ou Cnpj do cliente não informado';
         break;
       default:
         userMsg = 'Erro desconhecido'

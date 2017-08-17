@@ -15,6 +15,7 @@ export class Project {
     ambiences?: Ambience[];
     proposals?: Proposal[];
     activeProposal: Proposal;
+    images64: any[]
     isActive: boolean;
     
     CEP?: string;
@@ -24,6 +25,8 @@ export class Project {
     neighborhood?: string;
     city?: string;
 
+    atnProject?: boolean;
+    
     constructor(activeProposal: Proposal, id?: string, title?: string, professional?: Professional) {
         this.activeProposal = activeProposal;
         this.id = id;

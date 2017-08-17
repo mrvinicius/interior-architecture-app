@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
             <h1>Quase lá!</h1>
             <h2>Precisamos que você confirme seu endereço de email.</h2>
             <p>Para completar sua inscrição, clique no link no email que te enviamos, não se esqueça de ver na pasta de spam.</p>
-            <p>Se não receber o email dentro de 5 minutos, <b>clique aqui</b> para que o email seja enviado novamente.</p>
+            <p>Se não receber o email dentro de 5 minutos, entre em contato com nosso suporte através do email <b>atendimento@archabox.com.br</b>.</p>
         <div>
     `
 })

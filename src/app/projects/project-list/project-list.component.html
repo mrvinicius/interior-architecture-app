@@ -33,7 +33,14 @@
                         <!--(click)="redirectToProject(p.title)"-->
                         <tr *ngIf="p.isActive">
                             <td (click)="redirectToProject(p.title)" class="pointer">{{p.title}}</td>
-                            <td (click)="redirectToProject(p.title)" class="pointer hide-on-small-only"><span *ngIf="p.client && p.client.id">{{getClientName(p.client.id)}}</span></td>
+                            <td (click)="redirectToProject(p.title)" class="pointer hide-on-small-only">
+                                <ng-container *ngIf="!p.atnProject">
+                                    <span *ngIf="p.client && p.client.id">{{getClientName(p.client.id)}}</span>
+                                </ng-container>
+                                <ng-container *ngIf="p.atnProject">
+                                    ARCHATHON
+                                </ng-container>
+                            </td>
                             <!--<td (click)="redirectToProject(p.title)" class="pointer hide-on-small-only"><span *ngIf="p.wasPaid !== null">{{p.wasPaid ? 'Pago' : 'Pendente'}}</span></td>-->
                             <!--<td hidden>
                             <div *ngIf="p.status !== null" [ngSwitch]="p.status">
@@ -56,5 +63,4 @@
             </table>
         </ng-container>
     </div>
-
 </main>

@@ -33,14 +33,12 @@ export class UserProfileComponent implements OnInit {
     private profService: ProfessionalService,
     private fb: FormBuilder,
     private spinnerService: SpinnerService
-  ) {
-
-  }
+  ) { }
 
   ngOnInit() {
     this.profService.getCurrentProfessional().subscribe(prof => {
       this.professional = prof;
-    
+
       this.profProfileForm = this.createUserProfileForm(this.professional);
 
       this.profProfileFormChangesSubscription = this.subscribeToFormChanges(this.profProfileForm, (formData) => {
@@ -71,25 +69,11 @@ export class UserProfileComponent implements OnInit {
           placeholderChar: '\u2000'
         });
 
-
-        // console.log('conformedCpfCnpj', conformedCpfCnpj);
-
-        // console.log(!(/\D/).test(cpfCnpj.slice(-1)));
-
-        // if (!(/\D/).test(cpfCnpj.slice(-1))) {
-        //   console.log('mask!');
-
         this.profProfileForm.get('cpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
           onlySelf: false,
-          emitEvent: false,
-          // keepCharPositions: true
+          emitEvent: false
         })
-
-        // }
-
-
       });
-
     });
   }
 
@@ -97,9 +81,9 @@ export class UserProfileComponent implements OnInit {
     this.spinnerService.toggleLoadingIndicator(true);
 
     this.professional.name = this.profProfileForm.value.name;
+    this.professional.lastName = this.profProfileForm.value.lastName;
     this.professional.description = this.profProfileForm.value.description;
     this.professional.cpfCnpj = this.profProfileForm.value.cpfCnpj;
-    // this.professional.rg = this.profProfileForm.value.rg;
     this.professional.CAU = this.profProfileForm.value.CAU;
     this.professional.celular = this.profProfileForm.value.celular;
     this.professional.maritalStatus = this.profProfileForm.value.maritalStatus;
@@ -112,7 +96,6 @@ export class UserProfileComponent implements OnInit {
     return this.profService.update(this.professional).subscribe(resp => {
       this.spinnerService.toggleLoadingIndicator(false);
       this.profProfileFormHasChange = false;
-
     });
   }
 
@@ -121,9 +104,9 @@ export class UserProfileComponent implements OnInit {
 
     return this.fb.group({
       name: [prof.name],
+      lastName: [prof.lastName],
       description: [description],
       cpfCnpj: [prof.cpfCnpj],
-      // rg: [prof.rg],
       CAU: [prof.CAU],
       celular: [prof.celular],
       maritalStatus: [prof.maritalStatus],
@@ -131,10 +114,7 @@ export class UserProfileComponent implements OnInit {
       addressArea: [prof.addressArea],
       addressNumber: [prof.addressNumber],
       professionOpt: [prof.profession],
-      CEP: [prof.CEP],
-
-
-      // showPassword: [false]
+      CEP: [prof.CEP]
     });
   }
 

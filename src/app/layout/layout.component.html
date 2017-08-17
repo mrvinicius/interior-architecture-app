@@ -17,6 +17,11 @@
                 <span class="link-label">Perfil</span>
                 <!--<i class="material-icons right">navigate_next</i>-->
             </a>
+            <a class="mdl-navigation__link side-bar__link has-icon black-text pointer" routerLink="/assinatura" (click)="mdlLayout1.closeDrawer()"> 
+                <img src="/assets/images/bill.svg" class="detailed-icons large" alt="Assinatura">
+                <span class="link-label">Assinatura</span>
+                <!--<i class="material-icons right">navigate_next</i>-->
+            </a>
             <a class="mdl-navigation__link side-bar__link has-icon black-text pointer" (click)="logout(); mdlLayout1.closeDrawer();">
                 <img src="/assets/images/power.svg" class="detailed-icons large" alt="Sair">
                 <span class="link-label">Sair</span>
@@ -72,4 +77,3 @@
         </div>-->
     </mdl-layout-content>
 </mdl-layout>
-

@@ -8,6 +8,7 @@ import { MaterializeModule } from 'ng2-materialize';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { CanDeactivateGuard } from './can-deactivate-guard.service';
+import { NoAuthGuard } from './no-auth.guard';
 import { ProfessionalService } from './professional.service';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { SpinnerService } from './spinner/spinner.service';
@@ -42,6 +43,7 @@ export class CoreModule {
         AuthGuard,
         AuthService,
         CanDeactivateGuard,
+        NoAuthGuard,
         ProfessionalService,
         SpinnerService,
         UserService,

@@ -3,22 +3,8 @@
     <form *ngIf="professional && profProfileForm" [formGroup]="profProfileForm" class="row">
       <div class="col s12 m6 l5">
         <mz-input-container>
-          <input mz-input formControlName="name" label="nome profissional *" name='BusinessName' id='businessName' type='text'>
+          <input mz-input formControlName="name" label="nome *" id='businessName' type='text'>
         </mz-input-container>
-
-        <!--<mz-input-container class="u-col s12">
-          <input mz-input label='senha' formControlName="password" [attr.type]="profProfileForm.value.showPassword ? 'text' : 'password'"
-            id="password">
-        </mz-input-container>
-        <div class="u-col s12 row">
-          <div class="switch">
-            <label style="display: flex; align-items: center;">
-                <input type="checkbox" formControlName="showPassword">
-                <span class="lever" style="margin-left: 0;"></span>
-                <i class="material-icons" [ngClass]="{'mv-wine-text': profProfileForm.value.showPassword}">visibility</i>
-              </label>
-          </div>
-        </div>-->
         <div class="u-radio-group">
           <label>profissão</label>
           <mz-radio-button-container>
@@ -50,12 +36,12 @@
         <div>
           <label>gênero (opcional)</label>
           <mz-radio-button-container>
-            <input mz-radio-button [checked]="profProfileForm.value.genderOpt === 'F' ? true : null"
-            formControlName="genderOpt" label="Feminino" id='femaleOpt' value="F" type="radio" />
+            <input mz-radio-button [checked]="profProfileForm.value.genderOpt === 'F' ? true : null" formControlName="genderOpt" label="Feminino"
+              id='femaleOpt' value="F" type="radio" />
           </mz-radio-button-container>
           <mz-radio-button-container>
-            <input mz-radio-button [checked]="profProfileForm.value.genderOpt === 'M' ? true : null"
-            formControlName="genderOpt" label="Masculino" id='maleOpt' value="M" type="radio" />
+            <input mz-radio-button [checked]="profProfileForm.value.genderOpt === 'M' ? true : null" formControlName="genderOpt" label="Masculino"
+              id='maleOpt' value="M" type="radio" />
           </mz-radio-button-container>
         </div>
       </div>
@@ -70,35 +56,36 @@
             <input [value]="" disabled class="file-path validate" placeholder="selecione sua logo" type="text">
           </div>
         </div>-->
+        <mz-input-container>
+          <input mz-input formControlName="lastName" label="sobrenome *" id='lastname' type='text'>
+        </mz-input-container>
         <mz-textarea-container>
-          <textarea mz-textarea formControlName="description" [value]="professional.description"
-          label='descrição profissional (opcional)' id='businessDescription' length='400'></textarea>
+          <textarea mz-textarea formControlName="description" [value]="professional.description" label='descrição profissional (opcional)'
+            id='businessDescription' length='400'></textarea>
         </mz-textarea-container>
         <mz-input-container>
-          <input mz-input formControlName="CEP" [textMask]="{mask: cepMask, placeholderChar: '\u2000'}"
-            label="CEP *" id='cep' type='text'>
+          <input mz-input formControlName="CEP" [textMask]="{mask: cepMask, placeholderChar: '\u2000'}" label="CEP *" id='cep' type='text'>
         </mz-input-container>
         <div class="u-row">
           <mz-input-container class="u-col s10">
-            <input mz-input formControlName="addressArea" [attr.disabled]="addressFieldsDisabled ? addressFieldsDisabled : null"
-              label="logradouro *" id='addressArea' type='text'>
+            <input mz-input formControlName="addressArea" [attr.disabled]="addressFieldsDisabled ? addressFieldsDisabled : null" label="logradouro *"
+              id='addressArea' type='text'>
           </mz-input-container>
           <mz-input-container class="u-col s2">
-            <input mz-input formControlName="addressNumber" label="número *"
-              id='addressNumber' type='text'>
+            <input mz-input formControlName="addressNumber" label="número *" id='addressNumber' type='text'>
           </mz-input-container>
         </div>
 
 
         <mz-input-container>
-          <input mz-input formControlName="cpfCnpj" label="CPF/CPNJ *" name='Cpf' id='cpf' type='text'>
+          <input mz-input formControlName="cpfCnpj" label="CPF ou CPNJ *" id='cpfCnpj' type='text'>
         </mz-input-container>
         <!--<mz-input-container>
           <input mz-input formControlName="rg" label="RG" id='rg' type='text'>
         </mz-input-container>-->
         <mz-input-container>
-          <input mz-input formControlName="CAU" [textMask]="{mask: cauMask, placeholderChar: '\u2000', keepCharPositions: true}"
-            label="CAU (opcional)" id='cau' type='text'>
+          <input mz-input formControlName="CAU" [textMask]="{mask: cauMask, placeholderChar: '\u2000', keepCharPositions: true}" label="CAU (opcional)"
+            id='cau' type='text'>
         </mz-input-container>
       </div>
     </form>

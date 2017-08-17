@@ -20,18 +20,18 @@ export class ProjectManagerComponent implements OnInit, OnDestroy {
 
   constructor(
     private activateRoute: ActivatedRoute
-  ) {}
+  ) { }
 
   public tabChanged({ index }) {
     this.activeIndex = index;
   }
 
   ngOnInit() {
-
     this.activateRoute.data
       .takeUntil(this.ngUnsubscribe)
       .subscribe((data: { project: Project }) => {
         this.project = data.project;
+        console.log(this.project);
       })
   }
 

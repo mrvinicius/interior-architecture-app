@@ -20,6 +20,7 @@ export class Proposal {
     deliveries: Delivery[];
     url?: string;
     followUp?: boolean;
+    isAtnProposal?: boolean;
 
     constructor(wasPaid: boolean, status: ProposalStatus, id?: string) {
         this.id = id;

@@ -1,3 +1,4 @@
+import { ProjectGalleryComponent } from './project-gallery/project-gallery.component';
 import { ProjectProposalManagerComponent } from './project-proposal-manager/project-proposal-manager.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
@@ -56,11 +57,15 @@ const routes: Routes = [
           },
           {
             path: ':title/proposta/:id', component: ProjectProposalPreviewComponent,
-            resolve: { project: ProjectProposalPreviewResolver, }
+            resolve: { project: ProjectProposalPreviewResolver }
           }
         ]
       }
     ]
+  },
+  {
+    path: 'imagens/:id', component: ProjectGalleryComponent,
+    resolve: { project: ProjectProposalPreviewResolver }
   },
 ];
 
