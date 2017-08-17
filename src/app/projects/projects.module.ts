@@ -9,7 +9,7 @@ import { Md2Module, Md2AccordionModule } from 'md2';
 import { MaterializeModule } from 'ng2-materialize';
 import { NgUploaderModule } from 'ngx-uploader';
 import { TagInputModule } from 'ng2-tag-input';
-import { GalleryModule } from 'ng-gallery';
+import { GalleryModule, GalleryConfig } from 'ng-gallery';
 
 import { AmbienceService } from './shared/ambience.service';
 import { LayoutModule } from '../layout/layout.module';
@@ -27,7 +27,8 @@ import { ProjectProposalManagerComponent } from './project-proposal-manager/proj
 import { ProjectBudgetManagerComponent } from './project-budget-manager/project-budget-manager.component';
 import { ProjectGalleryComponent } from './project-gallery/project-gallery.component';
 
-export const galleryConfig = {
+export const galleryConfig: GalleryConfig = {
+  "gestures": true,
   "style": {
     "background": "#121519",
     "width": "900px",

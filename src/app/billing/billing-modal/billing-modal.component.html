@@ -6,7 +6,7 @@
     <ng-container *ngIf="errorMessages && errorMessages.length">
       <p *ngFor="let msg of errorMessages" class="red-text" style="margin: 0;">{{msg}}</p>
     </ng-container>
-    <form *ngIf="billingForm" [formGroup]="billingForm" class="row">
+    <form *ngIf="billingForm" [formGroup]="billingForm" class="u-row">
       <mz-select-container class="col s7" style="padding-left: 0;">
         <i mz-icon-mdi mz-textarea-prefix class="material-icons">date_range</i>
         <select mz-select formControlName="planIdentifier" id='planSelect'>

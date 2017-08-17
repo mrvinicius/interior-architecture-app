@@ -92,7 +92,8 @@ export class BillingService {
         let billingResp = JSON.parse(response.text());
 
         if (billingResp.HasError) {
-          let errorMessages = [];
+          let errorMessages = [],
+            msg; // Aux to larger messages
           console.log(billingResp.ErrorMessage);
 
           let zerofill = (dateOrMonth: number | string): string => {
@@ -105,34 +106,31 @@ export class BillingService {
 
           if (billingResp.ErrorMessage.indexOf('não pode ficar em branco') > -1
             || billingResp.ErrorMessage.indexOf('can\'t be blank') > -1) {
-            errorMessages.push('Dados em branco')
+            errorMessages.push('Preencha todos os campos')
           }
 
-<<<<<<< HEAD
-          if (billingResp.ErrorMessage.indexOf('is not a valid credit card number') > -1) {
-            errorMessages.push('Cartão de crédito recusado')
-          }
 
           if (billingResp.ErrorMessage.indexOf('Customer Not Found') > -1) {
             errorMessages.push('Customer Not Found')
           }
 
-          if (!errorMessages.length)
-            errorMessages.push('Erro desconhecido')
-
-=======
-          let msg = 'não está ativa para receber pagamentos pois não tem conta bancária cadastrada';
-          if (billingResp.ErrorMessage.indexOf(msg) > -1) {
-            errorMessages.push('Dados de cartão de crédito inválidos')
+          if (billingResp.ErrorMessage.indexOf('is not a valid credit card number') > -1) {
+            errorMessages.push('Cartão de crédito recusado')
           }
 
-          msg = 'Assinatura desse profissional para esse plano já existe';
+          msg = 'não está ativa para receber pagamentos pois não tem conta bancária cadastrada';
+          if (billingResp.ErrorMessage.indexOf(msg) > -1) {
+            // errorMessages.push('erro na conta bancãria do IUGU')
+          }
+
+          msg = 'Assinatura deste profissional para esse plano já existe';
           if (billingResp.ErrorMessage.indexOf(msg) > -1) {
             errorMessages.push('Você ja é assinante deste plano')
           }
 
-          if (!errorMessages.length) errorMessages.push('Erro desconhecido')
->>>>>>> archathon-integration
+          if (!errorMessages.length)
+            errorMessages.push('Erro desconhecido')
+
           billingResp.errorMessages = errorMessages;
         }
 
