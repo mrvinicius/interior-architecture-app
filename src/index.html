@@ -15,7 +15,7 @@
   <link href="https://fonts.googleapis.com/css?family=Oswald:300,400|Questrial" rel="stylesheet">
   <link rel="canonical" href="https://www.archabox.com.br/" />
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="/manifest.json">
   <!-- Google Tag Manager -->
   <script>
     (function (w, d, s, l, i) { w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f); })(window, document, 'script', 'dataLayer', 'GTM-MRJJF28');
@@ -31,17 +31,17 @@
       alert('Habilite os Cookies no seu navegador para que a plataforma funcione corretamente.')
     }
 
-    // if ('serviceWorker' in navigator) {
-    //   window.addEventListener('load', function () {
-    //     navigator.serviceWorker.register('/sw.js').then(function (registration) {
-    //       // Registration was successful
-    //       console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    //     }).catch(function (err) {
-    //       // registration failed :(
-    //       console.log('ServiceWorker registration failed: ', err);
-    //     });
-    //   });
-    // }
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').then(function (registration) {
+          // Registration was successful
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }).catch(function (err) {
+          // registration failed :(
+          console.log('ServiceWorker registration failed: ', err);
+        });
+      });
+    }
   </script>
 </head>
 
