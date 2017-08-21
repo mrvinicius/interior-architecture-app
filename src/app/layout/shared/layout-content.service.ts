@@ -12,8 +12,10 @@ export class LayoutContentService {
   overflowYDefined$ = this.overflowYDefinedSource.asObservable();
   private tabAjustedSource = new Subject<string>();
   tabAjusted$ = this.tabAjustedSource.asObservable();
+  private loadingToastToggledSource = new Subject<boolean>();
+  loadingToastToggled$ = this.loadingToastToggledSource.asObservable();
 
-  constructor() {}
+  constructor() { }
 
   ajustTabLayout() {
     this.tabAjustedSource.next();
@@ -21,5 +23,9 @@ export class LayoutContentService {
 
   setOverflowY(propVal: string) {
     this.overflowYDefinedSource.next(propVal);
+  }
+
+  toggleLoadingToast(isVisible?: boolean) {
+    this.loadingToastToggledSource.next(isVisible);
   }
 }

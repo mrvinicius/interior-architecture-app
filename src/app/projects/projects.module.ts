@@ -1,7 +1,7 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MdlLayoutModule, MdlTabsModule } from '@angular-mdl/core';
+import { MdlLayoutModule } from '@angular-mdl/core';
 import { MdlExpansionPanelModule } from '@angular-mdl/expansion-panel';
 import { MdlPopoverModule } from '@angular-mdl/popover';
 import { MdlSelectModule } from '@angular-mdl/select';
@@ -12,6 +12,7 @@ import { TagInputModule } from 'ng2-tag-input';
 import { GalleryModule, GalleryConfig } from 'ng-gallery';
 
 import { AmbienceService } from './shared/ambience.service';
+import { BudgetService } from './shared/budget.service';
 import { LayoutModule } from '../layout/layout.module';
 import { NewPartnerModalComponent } from './project-proposal-manager/new-partner-modal.component';
 import { NewProjectModalComponent } from './project-list/new-project-modal.component';
@@ -21,11 +22,12 @@ import { ProjectManagerComponent } from './project-manager/project-manager.compo
 import { ProjectsComponent } from './projects.component';
 import { ProjectsRoutingModule } from './projects-routing.module';
 import { ProposalService } from './shared/proposal.service';
-import { SharedModule } from '../shared/shared.module';
 import { ProjectProposalPreviewComponent } from './project-proposal-preview/project-proposal-preview.component';
 import { ProjectProposalManagerComponent } from './project-proposal-manager/project-proposal-manager.component';
 import { ProjectBudgetManagerComponent } from './project-budget-manager/project-budget-manager.component';
 import { ProjectGalleryComponent } from './project-gallery/project-gallery.component';
+import { SharedModule } from '../shared/shared.module';
+
 
 export const galleryConfig: GalleryConfig = {
   "gestures": true,
@@ -61,6 +63,7 @@ export const galleryConfig: GalleryConfig = {
   "navigation": true
 }
 
+
 @NgModule({
   imports: [
     SharedModule,
@@ -70,7 +73,6 @@ export const galleryConfig: GalleryConfig = {
     LayoutModule,
     Md2AccordionModule,
     MdlLayoutModule,
-    MdlTabsModule,
     MdlExpansionPanelModule,
     MdlPopoverModule,
     MdlSelectModule,
@@ -91,7 +93,7 @@ export const galleryConfig: GalleryConfig = {
     ProjectProposalPreviewComponent,
     ProjectProposalManagerComponent,
     ProjectBudgetManagerComponent,
-    ProjectGalleryComponent,
+    ProjectGalleryComponent
   ],
   providers: [],
   entryComponents: [
@@ -114,6 +116,7 @@ export class ProjectsModule {
         AmbienceService,
         ProposalService,
         ProjectsService,
+        BudgetService
       ]
     };
   }

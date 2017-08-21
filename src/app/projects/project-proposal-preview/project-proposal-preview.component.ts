@@ -27,7 +27,7 @@ export class ProjectProposalPreviewComponent implements OnInit, OnDestroy {
   previewUrl;
   project: Project;
   proposalSent: boolean = false;
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+  private ngUnsubscribe: Subject<any> = new Subject<any>();
 
 
   constructor(

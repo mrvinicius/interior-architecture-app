@@ -51,3 +51,12 @@ gallery /deep/ {
         background-color: transparent !important;
     }
 }
+
+tag-input {
+    tag-input-form {
+        .ng2-tag-input__text-input {
+            min-width: 210px !important;
+        }
+    }
+}
+

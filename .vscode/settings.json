@@ -1,4 +1,5 @@
 {
     "vsicons.presets.angular": true,
-    "editor.snippetSuggestions": "top"
+    "editor.snippetSuggestions": "top",
+    "typescript.tsdk": "node_modules/typescript/lib"
 }

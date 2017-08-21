@@ -21,3 +21,28 @@
         }
     }
 }
+
+// MD2
+.mv-tabs {
+    border: none;
+    .md2-tabs-header-wrapper {
+        @extend .z-depth-1;
+        border: 0;
+        z-index: 3;
+        background-color: $primary-color;
+        .md2-tab-label {
+            color: rgba(#FFF, 0.7);
+        }
+        .md2-tab-label.active, .md2-prev-button, md2-prev-button {
+            color: white;
+        }
+        .md2-tab-ink-bar {
+            background-color: white;
+        }
+    }
+    .md2-tabs-body-wrapper {
+        md2-tab {
+            padding: 0;
+        }
+    }
+}

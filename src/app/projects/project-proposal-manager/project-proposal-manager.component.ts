@@ -30,6 +30,7 @@ import { ClientService } from '../../client/shared/client.service';
 import { Delivery } from '../shared/delivery';
 import { DeliveryDescription } from '../shared/delivery-description.enum';
 import { IncompleteProfileModalComponent } from '../../user/incomplete-profile-modal/incomplete-profile-modal.component';
+import { LayoutContentService } from '../../layout/shared/layout-content.service';
 import { NewPartnerModalComponent } from './new-partner-modal.component';
 import { Professional } from '../../core/professional';
 import { ProfessionalService } from '../../core/professional.service';
@@ -150,13 +151,14 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     private clientService: ClientService,
     private fb: FormBuilder,
     private gallery: GalleryService,
+    private layoutContentService: LayoutContentService,
     private modalService: MzModalService,
-    private toastService: MzToastService,
     private profService: ProfessionalService,
     private projectsService: ProjectsService,
     private propService: ProposalService,
     private router: Router,
     private spinnerService: SpinnerService,
+    private toastService: MzToastService,
     private winRef: WindowRef
   ) {
     this.ambienceDescriptions = UtilsService.getEnumArray(AmbienceDescription);
@@ -295,6 +297,7 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
             .takeUntil(this.ngUnsubscribe)
             .subscribe((client: Client) => {
               this.project.client = client;
+
 
               this.saveProjectInfo((success) => {
                 if (success)
@@ -996,7 +999,8 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
   }
 
   private createPartnersForm(ids: any[], currentProfId: string): FormGroup {
-    let chipsData: any[] = [];
+    let chipsData: { value: string; display: string }[] = [];
+    
     if (ids && ids.length) {
       let index = ids.indexOf(currentProfId);
       if (index > -1) {
@@ -1272,5 +1276,9 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
       .debounceTime(3000)
       .takeUntil(this.ngUnsubscribe)
       .subscribe(data => callback(data));
+  }
+
+  private toggleLoadingToast(isVisible?: boolean) {
+    this.layoutContentService.toggleLoadingToast(isVisible);
   }
 }

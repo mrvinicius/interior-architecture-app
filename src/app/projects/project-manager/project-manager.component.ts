@@ -4,10 +4,6 @@ import { Subject } from 'rxjs/Subject';
 
 import { Project } from '../shared/project';
 
-export interface TabParentComponent {
-
-}
-
 @Component({
   selector: 'abx-project-manager',
   templateUrl: './project-manager.component.html',
@@ -16,11 +12,11 @@ export interface TabParentComponent {
 export class ProjectManagerComponent implements OnInit, OnDestroy {
   project: Project;
   public activeIndex = 0;
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+  private ngUnsubscribe: Subject<any> = new Subject<any>();
 
   constructor(
     private activateRoute: ActivatedRoute
-  ) { }
+  ) {}
 
   public tabChanged({ index }) {
     this.activeIndex = index;

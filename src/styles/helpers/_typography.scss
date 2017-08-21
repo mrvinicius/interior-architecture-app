@@ -18,10 +18,9 @@
     font-style: italic;
 }
 
-.title {
-    font-family: $head-font;
-}
-
+// .title {
+//     font-family: $head-font;
+// }
 .bold {
     font-weight: bold;
 }
@@ -52,4 +51,16 @@
 
 .title-line-height {
     line-height: 130%;
+}
+
+.readonly-value-label+ {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p {
+        margin: 0 0 1em 0;
+    }
 }

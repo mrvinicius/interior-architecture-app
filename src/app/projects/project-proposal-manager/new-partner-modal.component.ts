@@ -6,7 +6,7 @@ import { ProfessionalService } from '../../core/professional.service';
 import { ProjectsService } from '../shared/projects.service';
 
 @Component({
-    selector: 'new-partner-modal',
+    selector: 'abx-partner-modal',
     template: `
         <mz-modal class="small-modal">
             <mz-modal-header>

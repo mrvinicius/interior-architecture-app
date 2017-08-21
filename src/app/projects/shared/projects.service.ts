@@ -627,13 +627,12 @@ export class ProjectsService implements Resolve<string>{
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot)
     : Observable<string> {
     const pathParam: string = 'title';
-
     let project = this.getOneBySlugTitle(route.params[pathParam]);
 
     if (project && project.title)
       return Observable.of(project.title);
 
-    return undefined;
+    return Observable.of(undefined);
   }
 
   // TODO: Implement Search with layout search input

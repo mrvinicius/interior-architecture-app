@@ -21,7 +21,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   showSidebar: boolean = true;
   showLoadingToast: boolean = false;
   tabsInChild: boolean = false;
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+  private ngUnsubscribe: Subject<any> = new Subject<any>();
 
   constructor(
     private activeRoute: ActivatedRoute,
@@ -36,7 +36,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
       .filter(event => event instanceof NavigationStart)
       .takeUntil(this.ngUnsubscribe)
       .subscribe(event => {
-        
+
         // Reset
         this.showHeader = true;
         this.showSidebar = true;
@@ -56,9 +56,13 @@ export class LayoutComponent implements OnInit, OnDestroy {
       .takeUntil(this.ngUnsubscribe)
       .subscribe((val) => this.overflowY = val);
 
-    this.layoutContentService.tabAjusted$
+    // this.layoutContentService.tabAjusted$
+    //   .takeUntil(this.ngUnsubscribe)
+    //   .subscribe(() => this.tabsInChild = true);
+
+    this.layoutContentService.loadingToastToggled$
       .takeUntil(this.ngUnsubscribe)
-      .subscribe(() => this.tabsInChild = true)
+      .subscribe((isVisible) => this.toggleLoadingToast(isVisible));
   }
 
   getRouteTabs(route: ActivatedRoute) {
@@ -85,8 +89,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
     window.location.reload();
   }
 
-  toggleLoadingToast(isVisible: boolean): void {
-    $('.abxLoadingToast').fadeOut(400);
+  toggleLoadingToast(isVisible?: boolean): void {
+    $('.abxLoadingToast').fadeOut(400).remove();
 
     if (isVisible !== undefined) {
       this.showLoadingToast = isVisible;
@@ -97,8 +101,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     console.log(this.showLoadingToast);
 
     if (this.showLoadingToast) {
-      if (this.showLoadingToast) {
-        let toastHtml = `
+      let toastHtml = `
           <div style="display: flex;">
             <div class="preloader-wrapper tiny active mv-red-light">
               <div class="spinner-layer spinner-green-only">
@@ -114,12 +117,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
             <div style="margin-left: 1rem;">Salvando</div>
           </div>
         `;
-        let $toast = $(toastHtml);
-        Materialize.toast($toast, 9999999, 'abxLoadingToast');
-
-      } else {
-      }
+      let $toast = $(toastHtml);
+      Materialize.toast($toast, 9999999, 'abxLoadingToast');
     }
-
   }
 }

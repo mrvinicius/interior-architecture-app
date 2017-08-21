@@ -138,3 +138,11 @@ $aside-layout-max-size: 725px;
         height: 100%;
     }
 }
+
+.out-of-container {
+    padding: 0 1.50rem;
+    @media #{$small-and-down} {
+    padding: 0 0.75rem;
+    }
+}
+

@@ -34,3 +34,7 @@ body {
     h5 { font-size: calc(#{$h5-fontsize} - 0.2rem); line-height: 110%; margin: ($h5-fontsize / 2) 0 ($h5-fontsize / 2.5) 0;}
     h6 { font-size: $h6-fontsize; line-height: 110%; margin: ($h6-fontsize / 2) 0 ($h6-fontsize / 2.5) 0;}
 }
+
+p {
+    color: rgba(0,0,0,0.71);
+}
