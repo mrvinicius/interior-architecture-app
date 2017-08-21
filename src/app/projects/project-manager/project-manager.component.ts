@@ -13,7 +13,7 @@ import { Project } from '../shared/project';
 export class ProjectManagerComponent implements OnInit, OnDestroy {
   project: Project;
   public activeIndex = 0;
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+  private ngUnsubscribe: Subject<any> = new Subject<any>();
 
 
   constructor(

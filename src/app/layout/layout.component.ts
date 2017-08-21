@@ -21,7 +21,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   showSidebar: boolean = true;
   showLoadingToast: boolean = false;
   tabsInChild: boolean = false;
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+  private ngUnsubscribe: Subject<any> = new Subject<any>();
 
   constructor(
     private activeRoute: ActivatedRoute,
@@ -69,9 +69,9 @@ export class LayoutComponent implements OnInit, OnDestroy {
       .takeUntil(this.ngUnsubscribe)
       .subscribe((val) => this.overflowY = val);
 
-    this.layoutContentService.tabAjusted$
-      .takeUntil(this.ngUnsubscribe)
-      .subscribe(() => this.tabsInChild = true);
+    // this.layoutContentService.tabAjusted$
+    //   .takeUntil(this.ngUnsubscribe)
+    //   .subscribe(() => this.tabsInChild = true);
 
     this.layoutContentService.loadingToastToggled$
       .takeUntil(this.ngUnsubscribe)
@@ -132,8 +132,6 @@ export class LayoutComponent implements OnInit, OnDestroy {
         `;
       let $toast = $(toastHtml);
       Materialize.toast($toast, 9999999, 'abxLoadingToast');
-
     }
-
   }
 }

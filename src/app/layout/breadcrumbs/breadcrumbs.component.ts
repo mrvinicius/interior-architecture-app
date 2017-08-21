@@ -44,7 +44,7 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
   public breadcrumbs: IBreadcrumb[];
   public _urls: string[];
   public _routerSubscription: any;
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+  private ngUnsubscribe: Subject<any> = new Subject<any>();
 
   constructor(
     private router: Router,
