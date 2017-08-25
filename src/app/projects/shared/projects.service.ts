@@ -447,6 +447,8 @@ export class ProjectsService implements Resolve<string>{
                   return Service[Service[ProjectsService.servicesIds[service.TipoServicoId]]]
                 });
 
+                
+
                 amb.services = services;
 
                 amb.comments = ambience.Observacao;
@@ -538,8 +540,8 @@ export class ProjectsService implements Resolve<string>{
               }
               let currentUser = this.auth.getCurrentUser(),
                 currentProf: Professional;
-              if (currentUser) {
 
+              if (currentUser) {
                 currentProf =
                   new Professional(
                     currentUser.name,
@@ -687,7 +689,9 @@ export class ProjectsService implements Resolve<string>{
       'ProjetoComodo': []
     }
 
-    if (!projectData.UF) projectData.UF = 'SP'
+    if (!projectData.UF) {
+      projectData.UF = 'SP';
+    }
 
     if (project.activeProposal.bankAccount && project.activeProposal.bankAccount.bank) {
       projectData.Proposta[0].BancoId = project.activeProposal.bankAccount.bank.id;
@@ -849,73 +853,7 @@ export class ProjectsService implements Resolve<string>{
 
       });
   }
-
-  uploadImages(output: UploadOutput) {
-
-  }
-
-  // uploadImage(file: File, projectId: string): Observable<any> {
-  //   let headers = new Headers();
-  //   // headers.append('Content-Type', 'multipart/form-data');
-  //   headers.append('Authorization', 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==');
-  //   headers.append('Accept', 'application/json');
-
-  //   let options = new RequestOptions({ headers: headers, withCredentials: true });
-
-  //   let formData: FormData = new FormData();
-  //   formData.append('uploadFile', file);
-  //   formData.append('projetoID', projectId);
-
-  //   // let data = {
-  //   //   projetoID: projectId,
-  //   //   uploadFile: image
-  //   // };
-
-  //   return this.http.post(this.baseUrl + '/saveFile', {}, options)
-  //     .map(res => res)
-  //     .catch(this.handleError);
-  // }
-
-  // uploadImage2(file: File, projectId: string): Promise<any> {
-  //   return new Promise((resolve, reject) => {
-  //     let xhr: XMLHttpRequest = new XMLHttpRequest();
-  //     xhr.onreadystatechange = () => {
-  //       if (xhr.readyState === 4) {
-  //         if (xhr.status === 200) {
-  //           resolve(JSON.parse(xhr.response))
-  //         } else {
-  //           reject(xhr.response)
-  //         }
-  //       }
-  //     }
-
-  //     xhr.open('POST', this.baseUrl + '/saveFile', true)
-
-  //     let formData = new FormData();
-  //     formData.append("projetoID", projectId);
-  //     formData.append("uploadFile", file, file.name);
-  //     xhr.setRequestHeader('Authorization', 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==')
-  //     xhr.send(formData);
-  //   });
-  // }
-
-  // uploadImage3(file: File, projectId: string): Observable<any> {
-  //   let fd: FormData = new FormData();
-  //   fd.append('file', file);
-  //   fd.append('projetoID', projectId);
-  //   console.log(projectId);
-
-  //   let headers = new Headers();
-  //   headers.append('Authorization', 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==');
-  //   // headers.append('Accept', 'application/json');
-
-  //   let options = new RequestOptions({ headers: headers });
-
-  //   return this.http.post(this.baseUrl + '/saveFile', fd, options)
-  //     .map(resp => resp)
-  //     .catch(this.handleError)
-  // }
-
+  
   private getFromBackEnd(id: string): Observable<Project> {
     let options = new RequestOptions({ headers: this.getHeaders() });
 
@@ -936,11 +874,11 @@ export class ProjectsService implements Resolve<string>{
             amb.ambienceDescription = AmbienceDescription[AmbienceDescription[ProjectsService.ambienceDescriptionIds[ambience.ComodoId]]]
           }
 
-          let products: Product[] = ambience.ProjetoComodoProduto.map(product => {
-            let p: Product = new Product();
+          // let products: Product[] = ambience.ProjetoComodoProduto.map(product => {
+          //   let p: Product = new Product();
 
-            return p;
-          });
+          //   return p;
+          // });
 
           let services: Service[] = ambience.ProjetoComodoServicos.map(service => {
             return Service[Service[ProjectsService.servicesIds[service.TipoServicoId]]]

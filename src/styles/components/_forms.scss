@@ -7,7 +7,6 @@
 
 /* 1. Checkbox
 ========================================================================== */
-
 .mdl-checkbox__tick-outline {
     -webkit-mask: url('/assets/images/tick-mask.svg?embed');
     mask: url('/assets/images/tick-mask.svg?embed');
@@ -22,7 +21,6 @@
 
 /* 2. File Input
 ========================================================================== */
-
 .mdl-select {
     .mdl-textfield__input {
         margin-bottom: 0;
@@ -76,7 +74,6 @@
 
 /* 3. Icon Prefix
 ========================================================================== */
-
 .prefix {
     position: absolute;
     width: $input-height;
@@ -124,7 +121,6 @@
 
 /* 4. Text Input
 ========================================================================== */
-
 .large-text-input {
     // $label-size: 1.3rem;
     &.input-field {
@@ -144,7 +140,6 @@
 
 /* 5. NG2 Tag Input
 ========================================================================== */
-
 tag-input {
     margin-top: 1rem;
     .tag__text {
@@ -202,4 +197,12 @@ ng2-dropdown-menu {
             color: $primary-color !important;
         }
     }
+}
+
+
+/* 7. Autocomplete
+========================================================================== */
+.float-dropdown .autocomplete-content {
+    position: absolute;
+    width: 100%;
 }

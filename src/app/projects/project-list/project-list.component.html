@@ -53,8 +53,8 @@
                             <td (click)="redirectToProject(p.title)" class="pointer right-align"><span>{{p.activeProposal.costFinal | currency:'BRL':true}}</span></td>
                             <!--<td (click)="redirectToProject(p.title)" class="pointer right-align"><span *ngIf="p.received">{{p.received}}</span></td>-->
                             <td class="right-align">
-                                <a (click)="disableProject(p.id)" class="btn-floating btn-small waves-effect waves-dark transparent table-action-cell" style="box-shadow: none; line-height: 1; height: inherit;">
-                                    <i class="material-icons mv-red-light-text" style="line-height: 1;">delete</i>
+                                <a (click)="disableProject(p.id)" title="Excluir" class="btn-floating btn-small waves-effect waves-dark transparent table-action-cell" style="box-shadow: none; line-height: 1; height: inherit;">
+                                    <i class="material-icons mv-red-light-text">delete</i>
                                 </a>
                             </td>
                         </tr>

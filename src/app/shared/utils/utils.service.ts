@@ -156,7 +156,7 @@ export class UtilsService {
             .replace('kg', '')
             .replace(/[.]/g, '')
             .replace(/[,]/g, '.');
-
+    
         return parseFloat(value);
     }
 }

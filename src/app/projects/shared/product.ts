@@ -1,15 +1,30 @@
+type QuantityUnity = 'unidade' | 'peso' | 'medida2d' | 'medida3d';
+
 export class Product {
-    id: string;
-    color?: string;
-    quantity: number;
-    // note: string;
+	id?: string;
+	description: string;
+	supplier: string;
+	quantityUnity: QuantityUnity;
+	quantity: string | number;
+	color?: string;
+	note?: string;
+
+	constructor(
+		description: string,
+		supplier: string,
+		quantityUnity: QuantityUnity,
+		quantity: string | number
+	) {
+		this.description = description;
+		this.supplier = supplier;
+		this.quantityUnity = quantityUnity;
+		this.quantity = quantity;
+	}
 }
 
 /*
 
-
-
-{
+ProjetoComodoOrcamentoDTO = {
 	"OrcamentoId" : "C16A1111-9999-999-9999-999999999",
 	"ProjetoId":  "C16A1111-EC02-4DCB-B00C-04A908A1CEC4",
 	"ComodoId": "A631598C-1EE5-41EB-B251-1D91581093E7",

@@ -73,7 +73,7 @@ export class BillingService {
       case "teste_producao2":
         data.IdPlano = "105A5EE5905F4D0B92FE21D18A5CD32E";
         data.Valor = 1.00;
-        now.setDate(now.getDate()) // today test
+        now.setDate(now.getDate() + 7) // today test
         break;
       default:
         console.error('plano não identificado');

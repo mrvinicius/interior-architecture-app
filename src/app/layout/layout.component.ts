@@ -56,9 +56,9 @@ export class LayoutComponent implements OnInit, OnDestroy {
       .takeUntil(this.ngUnsubscribe)
       .subscribe((val) => this.overflowY = val);
 
-    // this.layoutContentService.tabAjusted$
-    //   .takeUntil(this.ngUnsubscribe)
-    //   .subscribe(() => this.tabsInChild = true);
+    this.layoutContentService.tabAjusted$
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(() => this.tabsInChild = true);
 
     this.layoutContentService.loadingToastToggled$
       .takeUntil(this.ngUnsubscribe)

@@ -1,4 +1,5 @@
 import { Ambience } from './ambience';
+import { Budget } from './budget';
 import { Client } from '../../client/shared/client';
 import { Professional } from '../../core/professional';
 import { ProjectStatus } from './project-status.enum';
@@ -13,11 +14,13 @@ export class Project {
     briefing?: string;
     client?: Client;
     ambiences?: Ambience[];
+    budgets?: Budget[];
     proposals?: Proposal[];
     activeProposal: Proposal;
     images64: any[]
     isActive: boolean;
     
+    // Adress
     CEP?: string;
     UF?: string;
     addressArea?: string;

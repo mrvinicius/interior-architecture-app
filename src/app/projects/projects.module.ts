@@ -16,6 +16,7 @@ import { BudgetService } from './shared/budget.service';
 import { LayoutModule } from '../layout/layout.module';
 import { NewPartnerModalComponent } from './project-proposal-manager/new-partner-modal.component';
 import { NewProjectModalComponent } from './project-list/new-project-modal.component';
+import { NewSupplierModal } from './project-budget-manager/new-supplier-modal.component';
 import { ProjectsService } from './shared/projects.service';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectManagerComponent } from './project-manager/project-manager.component';
@@ -27,6 +28,7 @@ import { ProjectProposalManagerComponent } from './project-proposal-manager/proj
 import { ProjectBudgetManagerComponent } from './project-budget-manager/project-budget-manager.component';
 import { ProjectGalleryComponent } from './project-gallery/project-gallery.component';
 import { SharedModule } from '../shared/shared.module';
+import { SupplierService } from './shared/supplier.service';
 
 
 export const galleryConfig: GalleryConfig = {
@@ -49,7 +51,7 @@ export const galleryConfig: GalleryConfig = {
     "text": true,
     "counter": true
   },
-  "bullets": false,
+  // "bullets": false,
   "player": {
     "autoplay": false,
     "speed": 3000
@@ -60,7 +62,7 @@ export const galleryConfig: GalleryConfig = {
     "position": "top",
     "space": 20
   },
-  "navigation": true
+  // "navigation": true
 }
 
 
@@ -87,6 +89,7 @@ export const galleryConfig: GalleryConfig = {
   declarations: [
     NewPartnerModalComponent,
     NewProjectModalComponent,
+    NewSupplierModal,
     ProjectsComponent,
     ProjectListComponent,
     ProjectManagerComponent,
@@ -98,7 +101,8 @@ export const galleryConfig: GalleryConfig = {
   providers: [],
   entryComponents: [
     NewPartnerModalComponent,
-    NewProjectModalComponent
+    NewProjectModalComponent,
+    NewSupplierModal
   ]
 })
 export class ProjectsModule {
@@ -114,9 +118,10 @@ export class ProjectsModule {
       // Add Services that should have only one instance - Singletons - App-wide
       providers: [
         AmbienceService,
+        BudgetService,
         ProposalService,
         ProjectsService,
-        BudgetService
+        SupplierService
       ]
     };
   }

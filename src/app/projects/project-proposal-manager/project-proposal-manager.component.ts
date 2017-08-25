@@ -1,4 +1,3 @@
-import { GalleryService } from 'ng-gallery';
 import { Component, OnInit, OnDestroy, ViewChild, Input, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -6,6 +5,7 @@ import { MdlExpansionPanelComponent } from '@angular-mdl/expansion-panel';
 import { conformToMask } from 'angular2-text-mask';
 import { default as cep, CEP } from 'cep-promise';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+import { GalleryService } from 'ng-gallery';
 import { MzSelectDirective, MzModalService, MzToastService } from 'ng2-materialize';
 import { TagInputComponent } from 'ng2-tag-input';
 import { UploadOutput, UploadInput, UploadFile, UploadStatus, NgUploaderService } from 'ngx-uploader';
@@ -756,11 +756,10 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
             });
           }
 
-          this.clientDataBeingSaved = false
-
+          this.clientDataBeingSaved = false;
         });
     } else {
-
+      return;
     }
   }
 
@@ -1162,42 +1161,42 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
     }
   }
 
-  private saveClientInfo(): Observable<any> {
-    let selectedClientId = this.clientForm.value.clientId;
-    let newClient: Client;
+  // private saveClientInfo(): Observable<any> {
+  //   let selectedClientId = this.clientForm.value.clientId;
+  //   let newClient: Client;
 
-    if (String(selectedClientId) === '0') {
-      newClient = new Client();
-      newClient = {
-        name: this.clientForm.value.name,
-        email: this.clientForm.value.email,
-        cpfCnpj: this.clientForm.value.cpfCnpj,
-        gender: this.clientForm.value.clientGenderOpt
-      };
+  //   if (String(selectedClientId) === '0') {
+  //     newClient = new Client();
+  //     newClient = {
+  //       name: this.clientForm.value.name,
+  //       email: this.clientForm.value.email,
+  //       cpfCnpj: this.clientForm.value.cpfCnpj,
+  //       gender: this.clientForm.value.clientGenderOpt
+  //     };
 
-      let newClientValid = Boolean(newClient.name)
-        && newClient.name.length > 0
-        && Boolean(newClient.email)
-        && UtilsService.isEmail(newClient.email)
-        && UtilsService.isCpfCnpj(newClient.cpfCnpj)
-        && (newClient.gender === 'M'
-          || newClient.gender === 'F');
+  //     let newClientValid = Boolean(newClient.name)
+  //       && newClient.name.length > 0
+  //       && Boolean(newClient.email)
+  //       && UtilsService.isEmail(newClient.email)
+  //       && UtilsService.isCpfCnpj(newClient.cpfCnpj)
+  //       && (newClient.gender === 'M'
+  //         || newClient.gender === 'F');
 
-      if (newClientValid
-        && Boolean(newClient.cpfCnpj)
-        && (newClient.cpfCnpj.length === 14
-          || newClient.cpfCnpj.length === 18)) {
-        return this.clientService
-          .addByProfessional(newClient, this.professional.id);
-      } else {
-        return Observable.of(undefined);
-      }
-    } else {
-      // Associate to an existing Client
-      return this.clientService
-        .getOne(selectedClientId);
-    }
-  }
+  //     if (newClientValid
+  //       && Boolean(newClient.cpfCnpj)
+  //       && (newClient.cpfCnpj.length === 14
+  //         || newClient.cpfCnpj.length === 18)) {
+  //       return this.clientService
+  //         .addByProfessional(newClient, this.professional.id);
+  //     } else {
+  //       return Observable.of(undefined);
+  //     }
+  //   } else {
+  //     // Associate to an existing Client
+  //     return this.clientService
+  //       .getOne(selectedClientId);
+  //   }
+  // }
 
   private saveDeliveriesInfo(): Observable<boolean> {
     let someDeliveryWasChanged: boolean = false;
