@@ -5,11 +5,11 @@
     <div class="row" style="position: relative;">
       <div class="divider">
       </div>
-      <a (click)="toggleNewBudgetForm()" [ngClass]="{'pulse': !hasBudgets && !newBudgetFormOpened}" class="btn-floating waves-effect waves-light z-depth-2 add-button-on-divider hide-on-med-and-up"
+      <a (click)="toggleNewBudgetForm()" [ngClass]="{'pulse': !budgets || !budgets.length && !newBudgetFormOpened}" class="btn-floating waves-effect waves-light z-depth-2 add-button-on-divider hide-on-med-and-up"
         id="newBudgetButton">
         <i class="large material-icons" [ngClass]="{'spin-left': newBudgetFormOpened, 'spin-right': !newBudgetFormOpened}">add</i>
       </a>
-      <a (click)="toggleNewBudgetForm()" [ngClass]="{'pulse': !hasBudgets && !newBudgetFormOpened}" class="btn-floating waves-effect waves-light btn-large z-depth-2 add-button-on-divider hide-on-small-only"
+      <a (click)="toggleNewBudgetForm()" [ngClass]="{'pulse': !budgets || !budgets.length && !newBudgetFormOpened}" class="btn-floating waves-effect waves-light btn-large z-depth-2 add-button-on-divider hide-on-small-only"
         id="newBudgetButton">
         <i class="large material-icons" [ngClass]="{'spin-left': newBudgetFormOpened, 'spin-right': !newBudgetFormOpened}">add</i>
       </a>
@@ -30,35 +30,33 @@
       <div class="col m10 l8" style="padding: 0;">
 
         <form *ngIf="newBudgetForm" [formGroup]="newBudgetForm" novalidate>
-          <div style="display: flex; align-items: center; padding-left: 0;" class="col s12 m6">
-            <mz-input-container class="float-dropdown" style="flex: auto;">
-              <input mz-input
-                formControlName="supplier"
-                [label]="'fornecedor'"
-                [autocomplete]="suppliersAutocomplete"
-                id="supplier"
+          <!-- <div style="display: flex; align-items: center; padding-left: 0;" class="col s12 m6"> -->
+          <div style="padding-left: 0;" class="col s12 m6">
+            <mz-input-container class="float-dropdown">
+              <input mz-input formControlName="supplier" [label]="'fornecedor'" [autocomplete]="suppliersAutocomplete" id="supplier" class="custom-error"
                 type="text">
+              <!-- <span class="feedback red-text">{{errorMessageResource.supplier}}</span> -->
             </mz-input-container>
-            <a (click)="openNewSupplierModal()" title="Adicionar fornecedor"
+            <!-- <mz-input-container [ngClass]="{'hide': existingSupplier}">
+              <input mz-input formControlName="supplierEmail" label="email do fornecedor" id='supplierEmail' type='email'>
+            </mz-input-container> -->
+            <!-- <a (click)="openNewSupplierModal()" title="Adicionar fornecedor"
               class="btn-floating btn-small waves-effect waves-dark transparent mv-red-light-text z-depth-0">
               <i class="material-icons inherit-color">add</i>
-            </a>
+            </a> -->
           </div>
-          <tag-input class="col s12 m6" [disabled]="!newBudgetForm.controls['supplier'].value" [secondaryPlaceholder]="'filiais'" [placeholder]="'filiais'" [onlyFromAutocomplete]="true"
-            style="padding-left: 0;">
+          <tag-input class="col s12 m6" [disabled]="!newBudgetForm.controls['supplier'].value" formControlName="subsidiaries" [ngModel]="newBudgetForm.value.subsidiaries"
+            [placeholder]="'filiais'" [secondaryPlaceholder]="'filiais'" [onlyFromAutocomplete]="false" style="padding-left: 0;">
             <tag-input-dropdown id="tagInputDropdown" [displayBy]="'name'" [limitItemsTo]="6" [identifyBy]="'id'" [showDropdownIfEmpty]="false"
               [autocompleteItems]="[{id: 'new', name: '- adicionar filial -'}]">
             </tag-input-dropdown>
           </tag-input>
-          <div class="u-col s12" style="">
+          <div class="u-col s12">
             <!-- <div class="u-col s12 m8" style="display: flex; align-items: center;"> -->
             <div class="col s12 m8" style="align-items: center; padding-left: 0;">
               <mz-input-container class="float-dropdown" style="flex: auto;">
-                <input mz-input mz-validation
-                  formControlName="productDesc"
-                  [formControlDisabled]="!newBudgetForm.controls['supplier'].value"
-                  [label]="'produto'" [autocomplete]="productsAutocomplete"
-                  id="productDesc" type="text">
+                <input mz-input mz-validation formControlName="productDesc" [formControlDisabled]="!newBudgetForm.controls['supplier'].value"
+                  [label]="'produto'" [autocomplete]="productsAutocomplete" id="productDesc" type="text">
               </mz-input-container>
               <!-- <a title="Adicionar produto" [ngClass]="{ 'disabled': newBudgetForm.controls['productDesc'].disabled }"  class="btn-floating btn-small waves-effect waves-dark transparent mv-red-light-text" style="box-shadow: none;">
                 <i class="material-icons inherit-color">add</i>
@@ -66,11 +64,8 @@
             </div>
           </div>
           <mz-select-container class="col s6 m4" style="padding-left: 0;">
-            <select #select mz-select mz-validation
-              formControlName="quantityUnity"
-              [disabled]="newBudgetForm.controls['productDesc'].disabled || !newBudgetForm.controls['productDesc'].value"
-              label="tipo de dimensionamento"
-              id="unityTypeSelect">
+            <select #select mz-select mz-validation formControlName="quantityUnity" [disabled]="newBudgetForm.controls['productDesc'].disabled || !newBudgetForm.controls['productDesc'].value"
+              label="tipo de dimensionamento" id="unityTypeSelect">
               <option [value]="'unidade'" selected>Unidade</option>
               <option [value]="'peso'">Quilo</option>
               <option [value]="'medida2d'">Medida (2 dimensões)</option>
@@ -81,62 +76,45 @@
           <!-- <ng-container *ngIf="newBudgetForm.value.quantityUnity === 'unidade'"> -->
           <ng-container *ngIf="newBudgetForm.controls['quantityUnity'].value === 'unidade'">
             <mz-input-container class="col s6 m4" style="padding-left: 0">
-              <input mz-input mz-validation
-              formControlName="units"
-              [formControlDisabled]="newBudgetForm.controls['productDesc'].disabled || !newBudgetForm.controls['productDesc'].value"
-              label="n° de unidades" id='units' min="1" max="999999" type='number'>
+              <input mz-input mz-validation formControlName="units" [formControlDisabled]="newBudgetForm.controls['productDesc'].disabled || !newBudgetForm.controls['productDesc'].value"
+                label="n° de unidades" id='units' min="1" max="999999" type='number'>
             </mz-input-container>
           </ng-container>
 
           <ng-container *ngIf="newBudgetForm.controls['quantityUnity'].value === 'peso'">
             <mz-input-container class="col s6 m4" style="padding-left: 0">
-              <input mz-input
-                mz-validation
-                [textMask]="{mask: mascaraQuilos}"
-                formControlName="weight"
-                [formControlDisabled]="newBudgetForm.controls['productDesc'].disabled || !newBudgetForm.controls['productDesc'].value"
+              <input mz-input mz-validation [textMask]="{mask: mascaraQuilos}" formControlName="weight" [formControlDisabled]="newBudgetForm.controls['productDesc'].disabled || !newBudgetForm.controls['productDesc'].value"
                 label="peso (kg)" id='weight' type='text'>
             </mz-input-container>
           </ng-container>
 
           <ng-container *ngIf="newBudgetForm.controls['quantityUnity'].value === 'medida2d'">
             <mz-input-container class="col s6 m4" style="padding-left: 0">
-              <input mz-input
-              mz-validation
-              formControlName="measurement2d"
-              [formControlDisabled]="newBudgetForm.controls['productDesc'].disabled || !newBudgetForm.controls['productDesc'].value"              
-              label="medidas (2d)" placeholder="Ex.: 10m x 30cm" id='measurement2d' type='text'>
+              <input mz-input mz-validation formControlName="measurement2d" [formControlDisabled]="newBudgetForm.controls['productDesc'].disabled || !newBudgetForm.controls['productDesc'].value"
+                label="medidas (2d)" placeholder="Ex.: 10m x 30cm" id='measurement2d' type='text'>
             </mz-input-container>
           </ng-container>
 
           <ng-container *ngIf="newBudgetForm.controls['quantityUnity'].value === 'medida3d'">
             <mz-input-container class="col s6 m4" style="padding-left: 0">
-              <input mz-input
-                mz-validation
-                formControlName="measurement3d"
-                [formControlDisabled]="newBudgetForm.controls['productDesc'].disabled || !newBudgetForm.controls['productDesc'].value"            
-                label="medidas (3d)" placeholder="Ex.: 15m x 4m x 20mm" id='measurement3d'
-                type='text'>
+              <input mz-input mz-validation formControlName="measurement3d" [formControlDisabled]="newBudgetForm.controls['productDesc'].disabled || !newBudgetForm.controls['productDesc'].value"
+                label="medidas (3d)" placeholder="Ex.: 15m x 4m x 20mm" id='measurement3d' type='text'>
             </mz-input-container>
           </ng-container>
 
           <mz-input-container class="col s12 m4" style="padding-left: 0">
-            <input mz-input mz-validation
-              formControlName="color"
-              [formControlDisabled]="newBudgetForm.controls['productDesc'].disabled || !newBudgetForm.controls['productDesc'].value"
+            <input mz-input mz-validation formControlName="color" [formControlDisabled]="newBudgetForm.controls['productDesc'].disabled || !newBudgetForm.controls['productDesc'].value"
               id="color" label="cor (opcional)" type="text">
           </mz-input-container>
 
           <mz-textarea-container class="col s12" style="padding-left: 0">
-            <textarea mz-textarea
-              mz-validation
-              formControlName="note"
-              [formControlDisabled]="newBudgetForm.controls['productDesc'].disabled || !newBudgetForm.controls['productDesc'].value"              
+            <textarea mz-textarea mz-validation formControlName="note" [formControlDisabled]="newBudgetForm.controls['productDesc'].disabled || !newBudgetForm.controls['productDesc'].value"
               label="observações (opcional)" id="note" length="500"></textarea>
           </mz-textarea-container>
         </form>
         <div class="col s12 right-align" style="padding-left: 0">
-          <button (click)="sendBudgetRequest(newBudgetForm.value)" class="btn waves-effect waves-light">Enviar</button>
+          <!-- <button (click)="logThis(newBudgetForm.value)" class="btn-flat waves-effect waves-light">State</button> -->
+          <button [disabled]="newBudgetForm.invalid" (click)="validateAndSendBudgetForm(newBudgetForm.value)" class="btn waves-effect waves-light">Enviar</button>
         </div>
       </div>
 
@@ -148,101 +126,140 @@
 
 
   <section>
-    <div *ngIf="hasBudgets" class="row">
-      <div class="u-col s12">
-        <span class="dim-text" style="text-transform: uppercase;display: inline-block;font-size: 1.2em;">
-        <i class="material-icons small" style="vertical-align: bottom; margin-right: 10px;">attach_money</i>Orçamentos (4)
-      </span>
-      </div>
-    </div>
-    <div *ngIf="!hasBudgets && !newBudgetFormOpened" id="" class="center-align no-select">
+    <!-- <div *ngIf="!hasBudgets && !newBudgetFormOpened" id="" class="center-align no-select"> -->
+    <div *ngIf="(!budgets || !budgets.length) && !newBudgetFormOpened" id="" class="center-align no-select">
       <i class="material-icons medium grey-text text-darken-5" style="display: block;">add_shopping_cart</i>
       <span class="grey-text text-darken-5" style="font-size: 1.2rem;">
         <span style="font-weight: bold;">Clique no '+'</span><br>para solicitar orçamento para um fornecedor
       </span>
     </div>
-    <!-- <div *ngIf="true" class="budgets-lists"> -->
-    <div *ngIf="project.p" class="budgets-lists">
+
+    <!-- <div *ngIf="hasBudgets" class="row"> -->
+    <!-- <div *ngIf="!budgets || !budgets.length" class="row">
+      <div class="u-col s12">
+        <span class="dim-text" style="text-transform: uppercase;display: inline-block;font-size: 1.2em;">
+        <i class="material-icons small" style="vertical-align: bottom; margin-right: 10px;">attach_money</i>Orçamentos ({{budgets.length}})
+      </span>
+      </div>
+    </div> -->
+
+    <div *ngIf="budgets && budgets.length" class="budgets-lists">
       <div class="u-row">
         <div class="u-col s12">
-          <span class="dim-text" style="text-transform: uppercase; display: inline-block; margin: 0 12px;">
-            Solicitações de orçamento
+          <span class="black-secondary-text" style="text-transform: uppercase; display: inline-block; font-size: 1.2em;">
+            <!-- <i class="material-icons" style="margin-right: 10px; font-size: 28px; vertical-align: bottom">attach_money</i> -->
+            Solicitações de orçamento ({{budgets.length}})
           </span>
         </div>
       </div>
-      <mz-collapsible class="products-collapsible" [popout]="true">
-        <mz-collapsible-item>
-          <mz-collapsible-item-header>
-            Mesa e cadeiras
-          </mz-collapsible-item-header>
-          <mz-collapsible-item-body>
-            <div class="u-col s12">
-              <label class="readonly-value-label">Fornecedor</label>
-              <h5>Deca</h5>
-            </div>
-            <div class="u-col s12">
-              <label class="readonly-value-label">Filiais</label>
-              <h5>Alphaville, JK, Morumbi, Vila Olímpia</h5>
-            </div>
-            <div class="u-col s12">
-              <label class="readonly-value-label">Produto</label>
-              <h5>Sofá 'L'</h5>
-            </div>
-          </mz-collapsible-item-body>
-        </mz-collapsible-item>
-        <mz-collapsible-item>
-          <mz-collapsible-item-header>
-            Armário
-          </mz-collapsible-item-header>
-          <mz-collapsible-item-body>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          </mz-collapsible-item-body>
-        </mz-collapsible-item>
-      </mz-collapsible>
-      <!-- <div class="u-row">
-        <div class="u-col s12">
-          <span class="dim-text" style="text-transform: uppercase; display: inline-block; margin: 0 12px;">
-            Sala
-          </span>
-        </div>
+      <div [ngClass]="{'scale-in': firstAdded}"
+        class="card-panel grey lighten-5 scale-transition scale-out" 
+        style="padding: .75em 1em;">
+        <table class="">
+          <thead class="black-secondary-text">
+            <tr>
+              <th>
+                <span>
+                  <input type="checkbox" class="filled-in" id="filled-in-box" checked="checked" />
+                  <label for="filled-in-box"></label>
+                </span>
+              </th>
+              <th>Produto</th>
+              <th>Fornecedor</th>
+              <th>Filiais</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let b of budgets; let i = index;">
+              <td>
+                <span>
+                  <input type="checkbox" class="filled-in" id="filled-in-box-{{i}}" checked="checked" />
+                  <label for="filled-in-box-{{i}}"></label>
+                </span>
+              </td>
+              <td>{{b.product.description}}</td>
+              <td>{{b.supplier.name}}</td>
+              <td>
+                <span *ngFor="let sub of b.subsidiaries; let i = index;">
+                  {{sub.name}}<ng-container *ngIf="(i+1) < b.subsidiaries.length">, </ng-container>
+                </span>
+              </td>
+              <td class="right-align">
+                <!-- <a [mdMenuTriggerFor]="appMenu" href="javascript:void(0)" title="Ações" class="btn-floating btn-small waves-effect waves-dark transparent"
+                  style="box-shadow: none; line-height: 1; height: inherit;">
+                  <i class="material-icons mv-red-light-text">more_vert</i>
+                </a> -->
+                <button [mdMenuTriggerFor]="appMenu"
+                  title="Ações" 
+                  class="btn-floating btn-small waves-effect waves-dark transparent"
+                  style="box-shadow: none; line-height: 1; height: inherit;">
+                  <i class="material-icons mv-red-light-text">more_vert</i>
+                </button>
+              </td>
+              <md-menu #appMenu="mdMenu">
+                <button md-menu-item (click)="deleteBudget(b.id)" class="mv-wine-text"><i class="material-icons">delete</i>Excluir</button>
+                <button md-menu-item (click)="openBudgetEditionMode(b.id)" class="mv-wine-text"><i class="material-icons">edit</i>Editar</button>
+              </md-menu>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- <div class="divider row"></div> -->
+        <!-- <div class="right-align">
+          <a class="btn">Enviar</a>
+        </div> -->
       </div>
-      <mz-collapsible class="products-collapsible" [popout]="true">
-        <mz-collapsible-item>
-          <mz-collapsible-item-header>
-            Mesa e cadeiras
-          </mz-collapsible-item-header>
-          <mz-collapsible-item-body>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          </mz-collapsible-item-body>
-        </mz-collapsible-item>
-        <mz-collapsible-item>
-          <mz-collapsible-item-header>
-            Armário
-          </mz-collapsible-item-header>
-          <mz-collapsible-item-body>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          </mz-collapsible-item-body>
-        </mz-collapsible-item>
-      </mz-collapsible> -->
     </div>
+
+    <!-- <mz-collapsible [ngClass]="{'scale-in': firstAdded}"  class="products-collapsible scale-transition scale-out" [popout]="true" style="display: block"> -->
+    <!-- <mz-collapsible class="products-collapsible" [popout]="true">
+        
+      <mz-collapsible-item *ngFor="let b of budgets">
+        <mz-collapsible-item-header>
+          {{b.product.description}}
+        </mz-collapsible-item-header>
+        <mz-collapsible-item-body>
+          <div class="u-col s12">
+            <label class="readonly-value-label">Fornecedor</label>
+            <h5>{{b.supplier.name}}</h5>
+          </div>
+          <div class="u-col s12">
+            <label class="readonly-value-label">Filiais</label>
+            <h5>
+              <ng-container *ngFor="let sub of b.subsidiaries">
+                {{sub.name}}
+              </ng-container>
+            </h5>
+          </div>
+          <div class="u-col s12">
+            <label class="readonly-value-label">Produto</label>
+            <h5>{{b.product.description}}</h5>
+          </div>
+        </mz-collapsible-item-body>
+      </mz-collapsible-item>
+    </mz-collapsible> -->
   </section>
 
+  <!-- 
+    <md2-tabs selectedIndex="0" class="mv-tabs">
+      <md2-tab label="Cozinha">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </md2-tab>
+      <md2-tab label1="Sala">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </md2-tab>
+      <md2-tab label="Quarto">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </md2-tab>
+      <md2-tab label="Jantar">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </md2-tab>
+    </md2-tabs> -->
 
-  <!-- <md2-tabs selectedIndex="0" class="mv-tabs">
-    <md2-tab label="Cozinha">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    </md2-tab>
-    <md2-tab label="Sala">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    </md2-tab>
-    <md2-tab label="Quarto">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    </md2-tab>
-    <md2-tab label="Jantar">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    </md2-tab>
-  </md2-tabs>
-  <ul id="productCollection" class="collection collapsible-wrapper with-header z-depth-2">
+
+
+  <!-- <ul id="productCollection" class="collection collapsible-wrapper with-header z-depth-2">
     <li class="collection-header">
       <h4 style="margin: 0;">Cozinha</h4>
     </li>

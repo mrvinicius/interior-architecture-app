@@ -17,7 +17,7 @@
     <div class="col s12">
         <ng-container *ngIf="projects !== undefined && clients !== undefined">
             <table *ngIf="projects.length" id="projectsList" class="highlight fixed-header">
-                <thead class="grey-text text-darken-1">
+                <thead class="black-secondary-text">
                     <tr>
                         <th data-field="title">Projeto</th>
                         <th data-field="client" class="hide-on-small-only">Cliente</th>
@@ -53,7 +53,7 @@
                             <td (click)="redirectToProject(p.title)" class="pointer right-align"><span>{{p.activeProposal.costFinal | currency:'BRL':true}}</span></td>
                             <!--<td (click)="redirectToProject(p.title)" class="pointer right-align"><span *ngIf="p.received">{{p.received}}</span></td>-->
                             <td class="right-align">
-                                <a (click)="disableProject(p.id)" title="Excluir" class="btn-floating btn-small waves-effect waves-dark transparent table-action-cell" style="box-shadow: none; line-height: 1; height: inherit;">
+                                <a (click)="disableProject(p.id)" title="Excluir" class="btn-floating btn-small waves-effect waves-dark transparent" style="box-shadow: none; line-height: 1; height: inherit;">
                                     <i class="material-icons mv-red-light-text">delete</i>
                                 </a>
                             </td>

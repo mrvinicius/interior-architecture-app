@@ -544,6 +544,7 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
             });
         }
       });
+      
       const bankAccountCpfCnpjChange$ = this.bankAccountForm.get('accountCpfCnpj').valueChanges;
       bankAccountCpfCnpjChange$.debounceTime(500)
         .takeUntil(this.ngUnsubscribe)

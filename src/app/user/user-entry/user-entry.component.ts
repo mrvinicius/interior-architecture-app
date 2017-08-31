@@ -17,7 +17,7 @@ import { SpinnerService } from '../../core/spinner/spinner.service';
 import { UserService } from '../../core/user.service';
 
 @Component({
-  selector: 'mbx-user-entry',
+  selector: 'abx-user-entry',
   templateUrl: './user-entry.component.html',
   styleUrls: ['./user-entry.component.scss']
 })

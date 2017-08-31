@@ -9,7 +9,7 @@ export class Ambience {
     area?: number;
     private _servicesGroup?: ServicesGroup;
     private _services?: Service[];
-    budgets?: Budget;
+    budgets?: Budget[];
     cost?: number;
     comments?: string;
     isActive: boolean;
@@ -40,7 +40,6 @@ export class Ambience {
         if (this._servicesGroup === undefined) {
             this.serviceGroup = this.setServicesGroup(this._services);
         }
-
     }
 
     setServicesGroup(services: Service[]): ServicesGroup {

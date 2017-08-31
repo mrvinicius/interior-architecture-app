@@ -31,6 +31,7 @@ export class ProjectBudgetManagerComponent implements OnInit {
 
   productsAutocomplete: Autocomplete;
   suppliersAutocomplete: Autocomplete;
+  suppliersAutocompleteData: { [key: string]: string };
 
   hasBudgets;
   newBudgetForm: FormGroup;
@@ -45,11 +46,16 @@ export class ProjectBudgetManagerComponent implements OnInit {
     requireDecimal: true
   });
   errorMessageResource = {
-    supplier: {
-      alreadyExists: 'Este fornecedor já está na lista',
-      required: 'Campo obrigatório'
-    }
+    // supplier: {
+    //   alreadyExists: 'Este fornecedor já está na lista',
+    //   required: 'Campo obrigatório'
+    // }
+    supplier: 'Não conhecemos este fornecedor'
   };
+  existingSupplier: boolean;
+  budgets: Budget[];
+  firstAdded: boolean;
+
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
@@ -59,20 +65,93 @@ export class ProjectBudgetManagerComponent implements OnInit {
     private supplierService: SupplierService
   ) {
     this.newBudgetForm = this.createBudgetForm();
+
+    this.budgets = [];
+
+  }
+
+  deleteBudget(id: string) {
+    console.log(id);
+    
   }
 
   ngOnInit() {
-    this.setAutocomplete();
+    this.supplierService.getAll()
+      .subscribe((suppliers: Supplier[]) => {
+        if (this.suppliersAutocompleteData === undefined) {
+          this.suppliersAutocompleteData = {}
+        }
+
+        suppliers.forEach(s => {
+          this.suppliersAutocompleteData[s.name] = null;
+        });
+
+        this.setAutocomplete();
+      });
+
+    this.project.ambiences.forEach(a => {
+      // a.budgets.forEach(b => this.budgets.push(b))
+    });
+
     this.newBudgetForm.get('supplier').valueChanges
-      .debounceTime(500)
+      .debounceTime(250)
       .takeUntil(this.ngUnsubscribe)
       .subscribe(val => {
         if (val && val.length) {
-          // Fetch subsidiaries
+          // Validate
+          this.supplierService.getOneByName(val)
+            .subscribe(supplier => {
+              if (supplier) {
+                this.existingSupplier = true;
+                this.newBudgetForm.get('supplierEmail').disable();
+              } else {
+                this.existingSupplier = false;
+                this.newBudgetForm.get('supplierEmail').enable();
+              }
+            });
+
+          // Fetch Subsidiaries
+
+          // Fetch Products
+
         } else {
+          this.existingSupplier = false;
+          this.newBudgetForm.get('supplierEmail').enable();
+
           // Clear subsidiaries
         }
+      });
+
+    this.newBudgetForm.get('quantityUnity').valueChanges
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(val => {
+        this.newBudgetForm.get('units').disable();
+        this.newBudgetForm.get('weight').disable();
+        this.newBudgetForm.get('measurement2d').disable();
+        this.newBudgetForm.get('measurement3d').disable();
+
+        switch (val) {
+          case 'unidade':
+            this.newBudgetForm.get('units').enable();
+            break;
+          case 'peso':
+            this.newBudgetForm.get('weight').enable();
+            break;
+          case 'medida2d':
+            this.newBudgetForm.get('measurement2d').enable();
+            break;
+          case 'medida3d':
+            this.newBudgetForm.get('measurement3d').enable();
+            break;
+          default:
+            break;
+        }
       })
+  }
+
+  logThis(that) {
+    console.log(that);
+    return true;
   }
 
   ngOnDestroy() {
@@ -80,110 +159,13 @@ export class ProjectBudgetManagerComponent implements OnInit {
     this.ngUnsubscribe.complete();
   }
 
-  openNewSupplierModal() {
-    this.modalService.open(NewSupplierModal, {})
+  openBudgetEditionMode(id: string) {
+    console.log(id);
+    
   }
 
-  sendBudgetRequest(formData: any) {
-    let budget: Budget,
-      product: Product,
-      quantityUnity: any;
-
-    // Identifying quantity unit
-    switch (formData.quantityUnity) {
-      case 'unidade':
-        let units: number = Number(formData.units);
-        quantityUnity = units;
-
-        break;
-      case 'peso':
-        let weight: number = UtilsService.parseKilogramString(formData.weight);
-        quantityUnity = weight;
-
-        break;
-      case 'medida2d':
-        let measurement2d = formData.measurement2d;
-        quantityUnity = measurement2d;
-
-        break;
-      case 'medida3d':
-        let measurement3d = formData.measurement3d;
-        quantityUnity = measurement3d;
-
-        break;
-      default:
-        console.error('Unidade quantitativa desconhecida');
-        break;
-    }
-
-    this.supplierService.getOneByName(name)
-      .subscribe(supplier => {
-        if (supplier) {
-          // this.newBudgetForm.get('productDesc').enable();
-          // this.newBudgetForm.controls
-        } else {
-          // Trigger nonexistent supplier error, please provide supplier email
-          // Não conhecemos esse fornecedor, por favor informe email dele
-        }
-      })
-
-    // switch (formData.quantityUnity) {
-    //   case 'unidade':
-    //     let units: number = Number(formData.units);
-
-    //     if (units !== NaN && units > 0) {
-    //       quantityUnity = units;
-    //     } else {
-    //       console.error('is not a valid quantity');
-    //     }
-
-    //     break;
-    //   case 'peso':
-    //     let weight: number = UtilsService.parseKilogramString(formData.weight);
-
-    //     if (weight !== NaN && weight > 0) {
-    //       quantityUnity = weight;
-    //     } else {
-    //       console.error('is not a valid weight')
-    //     }
-
-    //     break;
-    //   case 'medida2d':
-    //     let measurement2d = formData.measurement2d;
-
-    //     if (measurement2d
-    //       && typeof measurement2d === 'string'
-    //       && measurement2d.length) {
-    //       quantityUnity = measurement2d;
-    //     } else {
-    //       console.error('is not a valid measurement (2d)')
-    //     }
-
-    //     break;
-    //   case 'medida3d':
-    //     let measurement3d = formData.measurement3d;
-
-    //     if (measurement3d
-    //       && typeof measurement3d === 'string'
-    //       && measurement3d.length) {
-    //       quantityUnity = measurement3d;
-    //     } else {
-    //       console.error('is not a valid measurement (3d)')
-    //     }
-
-    //     break;
-    //   default:
-    //     console.error('Unidade quantitativa desconhecida');
-    //     break;
-    // }
-    // validar se o texto fornecedor está na lista
-    // 
-
-    // product = new Product();
-    // budget = new Budget();
-
-    console.log(formData);
-    console.log(quantityUnity);
+  openNewSupplierModal() {
+    this.modalService.open(NewSupplierModal, {})
   }
 
   toggleNewBudgetForm() {
@@ -210,33 +192,162 @@ export class ProjectBudgetManagerComponent implements OnInit {
     }
   }
 
+  validateAndSendBudgetForm(formData: any, validatedSupplier?: Supplier) {
+    let budget: Budget,
+      supplier: Supplier,
+      product: Product,
+      quantity: string | number;
+
+    // Validating and Get Supplier
+    if (this.existingSupplier && !validatedSupplier) {
+      this.supplierService.getOneByName(formData.supplier)
+        .subscribe(sup => {
+          if (sup) {
+            this.validateAndSendBudgetForm(formData, sup)
+          } else {
+            console.error('Erro ao buscar fornecedor');
+          }
+        });
+
+      return;
+    } else if (this.existingSupplier && validatedSupplier) {
+      supplier = validatedSupplier;
+    } else if (formData.supplier && formData.supplier.length) {
+      supplier = new Supplier(formData.supplier, formData.supplierEmail);
+    } else {
+      console.error('Informe o fornecedor desta solicitação')
+      return;
+    }
+
+    // // Validating Supplier email 
+    // if (!this.existingSupplier && (!formData.supplierEmail || !(formData.supplierEmail.length > 0))) {
+    //   console.error('Fornecedor novo aqui no Archabox? Informe o email dele')
+    //   // console.error('É um fornecedor novo? Informe o email dele')
+    //   return;
+    // }
+
+    // TODO: Validate and Get Subsidiaries
+
+    // Identifying and Validating quantity unit and Get Quantity 
+    switch (formData.quantityUnity) {
+      case 'unidade':
+        let units: number = Number(formData.units);
+
+        if (units !== NaN && units > 0) {
+          quantity = units;
+        } else {
+          console.error('is not a valid quantity');
+          return;
+        }
+
+        break;
+      case 'peso':
+        let weight: number = UtilsService.parseKilogramString(formData.weight);
+
+        if (weight !== NaN && weight > 0) {
+          quantity = weight;
+        } else {
+          console.error('is not a valid weight')
+          return;
+        }
+
+        break;
+      case 'medida2d':
+        let measurement2d = formData.measurement2d;
+
+        if (measurement2d
+          && typeof measurement2d === 'string'
+          && measurement2d.length) {
+          quantity = measurement2d;
+        } else {
+          console.error('is not a valid measurement (2d)')
+          return;
+        }
+
+        break;
+      case 'medida3d':
+        let measurement3d = formData.measurement3d;
+
+        if (measurement3d
+          && typeof measurement3d === 'string'
+          && measurement3d.length) {
+          quantity = measurement3d;
+        } else {
+          console.error('is not a valid measurement (3d)')
+          return;
+        }
+
+        break;
+      default:
+        console.error('Unidade quantitativa desconhecida');
+        return;
+    }
+
+    product = new Product(
+      formData.productDesc,
+      supplier,
+      formData.quantityUnity,
+      quantity
+    );
+    product.color = formData.color;
+    product.note = formData.note;
+
+
+    budget = new Budget(supplier, product, 'Waiting');
+    budget.id = 'f933jt';
+    budget.subsidiaries = formData.subsidiaries.map(s => {
+      return {
+        id: s.value,
+        name: s.display,
+      }
+    });
+    budget.supplier.subsidiaries = budget.subsidiaries;
+
+    this.sendBudgetRequest(budget);
+  }
+
   private createBudgetForm(budget?): FormGroup {
-    let supplierId = '0';
     let chipsData: { value: string; display: string }[] = [];
 
-    return this.fb.group({
+    let budgetForm = this.fb.group({
       supplier: ['', [
         Validators.required
       ]],
-      subsidiary: [chipsData],
+      supplierEmail: ['', [
+        // Validators.required,
+        Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
+      ]],
+      subsidiaries: [chipsData],
       productDesc: ['', [
         Validators.required
       ]],
       quantityUnity: ['unidade'],
-      units: [0, Validators.required],
-      weight: [0.0, Validators.required],
+      units: [1, Validators.required],
+      weight: [1, Validators.required],
       measurement2d: ['', Validators.required],
       measurement3d: ['', Validators.required],
       color: [],
       note: []
     });
+
+    budgetForm.get('units').disable();
+    budgetForm.get('weight').disable();
+    budgetForm.get('measurement2d').disable();
+    budgetForm.get('measurement3d').disable();
+
+    return budgetForm;
   }
 
-  private updateFormData(val: any, absControl: AbstractControl) {
-    absControl.setValue(val, {
-      onlySelf: false,
-      emitEvent: false
-    });
+  private sendBudgetRequest(budget: Budget) {
+    this.toggleNewBudgetForm();
+    // this.newBudgetForm.reset();
+    if (this.budgets.length === 0) {
+      window.setTimeout(() => this.firstAdded = true, 350)
+    }
+
+    this.budgets.push(budget);
+    console.log(this.budgets);
+    
   }
 
   private setAutocomplete() {
@@ -252,18 +363,18 @@ export class ProjectBudgetManagerComponent implements OnInit {
     };
 
     this.suppliersAutocomplete = {
-      data: {
-        'Deca': null,
-        'Ornare': null,
-        'Breton': null,
-        'Coral': null,
-        'BrentWood': null,
-        "Bell' arte": null
-      },
+      data: this.suppliersAutocompleteData,
       limit: 5,
-      minLength: 1,
+      minLength: 0,
       onAutocomplete: (val) =>
         this.updateFormData(val, this.newBudgetForm.get('supplier'))
     };
+  }
+
+  private updateFormData(val: any, absControl: AbstractControl) {
+    absControl.setValue(val, {
+      onlySelf: false,
+      emitEvent: true
+    });
   }
 }

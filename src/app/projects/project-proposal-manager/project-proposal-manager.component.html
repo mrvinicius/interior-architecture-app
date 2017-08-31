@@ -404,13 +404,19 @@
           <section *ngIf="setPartnersForm()">
             <form *ngIf="partnersForm" [formGroup]="partnersForm">
               <tag-input id="tagInputContainer"
-                #partnersInput 
+                #partnersInput
                 formControlName="partners"
-                [ngModel]="partnersForm.value.partners" [secondaryPlaceholder]="project.atnProject ? 'outros integrantes da equipe' : 'outros profissionais ou escritórios participantes'"
+                [ngModel]="partnersForm.value.partners"
                 [placeholder]="project.atnProject ? 'outros integrantes da equipe' : 'outros profissionais ou escritórios participantes'"
+                [secondaryPlaceholder]="project.atnProject ? 'outros integrantes da equipe' : 'outros profissionais ou escritórios participantes'"
                 [onlyFromAutocomplete]="true">
-                <tag-input-dropdown id="tagInputDropdown" [displayBy]="'name'" [limitItemsTo]="6" [identifyBy]="'id'" [showDropdownIfEmpty]="true"
-                  [focusFirstElement]="true" [autocompleteItems]="[{id: 'new', name: project.atnProject ? '- adicionar integrante -' : '- adicionar profissional -'}].concat(professionals)">
+                <tag-input-dropdown id="tagInputDropdown"
+                  [displayBy]="'name'"
+                  [limitItemsTo]="6"
+                  [identifyBy]="'id'"
+                  [showDropdownIfEmpty]="true"
+                  [focusFirstElement]="true"
+                  [autocompleteItems]="[{id: 'new', name: project.atnProject ? '- adicionar integrante -' : '- adicionar profissional -'}].concat(professionals)">
                 </tag-input-dropdown>
               </tag-input>
             </form>

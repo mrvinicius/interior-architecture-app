@@ -1,16 +1,22 @@
 import { Product } from './product';
+import { Supplier } from './supplier';
 
 type BudgetStatus = 'Waiting' | 'Budgeted';
 
 export class Budget {
     id: string;
-    supplier: string;
-    subsidiaries?: string[];
+    supplier: Supplier;
+    subsidiaries?: {
+        id?: string,
+        name?: string,
+        email: string,
+        tel?: string
+    }[];
     product: Product;
     status: BudgetStatus;
 
     constructor(
-        supplier: string,
+        supplier: Supplier,
         product: Product,
         status: BudgetStatus
     ) {

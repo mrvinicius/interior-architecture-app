@@ -43,7 +43,7 @@
         width: 100%;
         border: none;
         border-bottom: $input-border;
-        font-family: Questrial;
+        font-family: $body-font;
         border-radius: 0;
         outline: none;
     }
@@ -206,3 +206,6 @@ ng2-dropdown-menu {
     position: absolute;
     width: 100%;
 }
+
+/* 8. Input feedback
+========================================================================== */

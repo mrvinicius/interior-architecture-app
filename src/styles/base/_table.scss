@@ -2,8 +2,10 @@ table {
     thead {
         th {
             font-weight: 500;
-            font-size: 1.2rem;
-        }
-        // color: #9E9E9E;
+            // font-size: 1.2rem;
+        } // color: #9E9E9E;
+    }
+    input[type="checkbox"]+label {
+        vertical-align: middle;
     }
 }

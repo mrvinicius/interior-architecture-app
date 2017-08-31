@@ -1,9 +1,11 @@
+import { Supplier } from './supplier';
+
 type QuantityUnity = 'unidade' | 'peso' | 'medida2d' | 'medida3d';
 
 export class Product {
 	id?: string;
 	description: string;
-	supplier: string;
+	supplier: Supplier;
 	quantityUnity: QuantityUnity;
 	quantity: string | number;
 	color?: string;
@@ -11,7 +13,7 @@ export class Product {
 
 	constructor(
 		description: string,
-		supplier: string,
+		supplier: Supplier,
 		quantityUnity: QuantityUnity,
 		quantity: string | number
 	) {
