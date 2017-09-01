@@ -8,7 +8,7 @@ import { BillingInfo } from './billing-info';
 
 @Injectable()
 export class BillingService {
-  private readonly baseUrl: string = 'http://52.67.21.201/muuving/api/pagamento';
+  private readonly baseUrl: string = 'https://archaboxapi.azurewebsites.net/api/pagamento';
   // Observable string sources
   private billingInfoUpdatedSource = new Subject<boolean>();
   // Observable string streams

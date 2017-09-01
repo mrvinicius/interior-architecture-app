@@ -310,7 +310,7 @@ export class ProjectsService implements Resolve<string>{
     'a46058ac-d651-4266-83bf-41b747364c6e': 13
   };
 
-  private readonly baseUrl = 'http://52.67.21.201/muuving/api/projeto';
+  private readonly baseUrl = 'https://archaboxapi.azurewebsites.net/api/projeto';
   // Observable string sources
   private newProjectTitleDefinedSource = new Subject<string>();
   // Observable string streams

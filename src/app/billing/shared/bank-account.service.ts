@@ -13,7 +13,7 @@ import { ProfessionalService } from '../../core/professional.service';
 @Injectable()
 export class BankAccountService {
   private bankAccounts: BankAccount[] = [];
-  private readonly baseUrl: string = 'http://52.67.21.201/muuving/api/conta';
+  private readonly baseUrl: string = 'https://archaboxapi.azurewebsites.net/api/conta';
 
   constructor(
     private auth: AuthService,

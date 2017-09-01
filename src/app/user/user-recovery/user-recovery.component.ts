@@ -35,18 +35,17 @@ export class UserRecoveryComponent implements OnInit {
     console.log(email);
 
     // this.spinnerService.toggleLoadingIndicator(true);
+    this.profService.sendResetRequest(email)
+      .first()
+      .subscribe(resp => {
+        this.spinnerService.toggleLoadingIndicator(false);
 
-    // this.profService.sendResetRequest(email)
-    //   .first()
-    //   .subscribe(resp => {
-    //     this.spinnerService.toggleLoadingIndicator(false);
-
-    //     if (resp.hasError) {
-    //       this.toastService.show(resp.errorMessage, 3000, 'red');
-    //     } else {
-    //       this.toastService.show('Link de redefinição de senha enviado para o seu email', 5000, 'green')
-    //     }
-    //   });
+        if (resp.hasError) {
+          this.toastService.show(resp.errorMessage, 3000, 'red');
+        } else {
+          this.toastService.show('Link de redefinição de senha enviado para o seu email', 5000, 'green')
+        }
+      });
   }
 
   private createForm() {

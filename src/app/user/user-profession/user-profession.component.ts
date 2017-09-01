@@ -1,11 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { AuthService } from '../../core/auth.service';
 import { Professional } from './../../core/professional';
@@ -14,7 +9,7 @@ import { SpinnerService } from './../../core/spinner/spinner.service';
 import { UserService } from '../../core/user.service';
 
 @Component({
-  selector: 'mbx-user-profession',
+  selector: 'abx-user-profession',
   templateUrl: './user-profession.component.html',
   styleUrls: ['./user-profession.component.scss']
 })
