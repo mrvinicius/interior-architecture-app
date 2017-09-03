@@ -42,21 +42,21 @@ export class AppComponent implements OnInit {
     let that = this;
     let intervalId;
 
-    intervalId = setInterval(function () {
-      let gtm = (<any>this.window).google_tag_manager;
+    // intervalId = setInterval(function () {
+    //   let gtm = (<any>this.window).google_tag_manager;
       
-      if (gtm !== undefined
-        && gtm.dataLayer.gtmDom
-        && gtm.dataLayer.gtmDom) {
+    //   if (gtm !== undefined
+    //     && gtm.dataLayer.gtmDom
+    //     && gtm.dataLayer.gtmDom) {
 
-        let intercomLoad = that.bootIntercom()
+    //     let intercomLoad = that.bootIntercom()
 
-        if (intercomLoad) {
-          (<any>window).intercomBooted = true;
-          clearInterval(intervalId);
-        }
-      }
-    }, 500);
+    //     if (intercomLoad) {
+    //       (<any>window).intercomBooted = true;
+    //       clearInterval(intervalId);
+    //     }
+    //   }
+    // }, 500);
 
   }
 }
