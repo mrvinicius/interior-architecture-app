@@ -403,7 +403,12 @@
         <div *ngIf="professionals" class="col s12 m6">
           <section *ngIf="setPartnersForm()">
             <form *ngIf="partnersForm" [formGroup]="partnersForm">
-              <tag-input id="tagInputContainer" #partnersInput formControlName="partners" [ngModel]="partnersForm.value.partners" [secondaryPlaceholder]="project.atnProject ? 'outros integrantes da equipe' : 'outros profissionais ou escritórios participantes'"
+              <tag-input
+                id="tagInputContainer"
+                #partnersInput
+                formControlName="partners"
+                [ngModel]="partnersForm.value.partners"
+                [secondaryPlaceholder]="project.atnProject ? 'outros integrantes da equipe' : 'outros profissionais ou escritórios participantes'"
                 [placeholder]="project.atnProject ? 'outros integrantes da equipe' : 'outros profissionais ou escritórios participantes'"
                 [onlyFromAutocomplete]="true">
                 <tag-input-dropdown id="tagInputDropdown" [displayBy]="'name'" [limitItemsTo]="6" [identifyBy]="'id'" [showDropdownIfEmpty]="true"

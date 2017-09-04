@@ -14,6 +14,7 @@ import { GalleryModule, GalleryConfig } from 'ng-gallery';
 import { AmbienceService } from './shared/ambience.service';
 import { BudgetService } from './shared/budget.service';
 import { LayoutModule } from '../layout/layout.module';
+import { NewBudgetModalComponent } from './new-budget-modal/new-budget-modal.component';
 import { NewPartnerModalComponent } from './project-proposal-manager/new-partner-modal.component';
 import { NewProjectModalComponent } from './project-list/new-project-modal.component';
 import { ProjectsService } from './shared/projects.service';
@@ -49,7 +50,6 @@ export const galleryConfig: GalleryConfig = {
     "text": true,
     "counter": true
   },
-  "bullets": false,
   "player": {
     "autoplay": false,
     "speed": 3000
@@ -60,7 +60,6 @@ export const galleryConfig: GalleryConfig = {
     "position": "top",
     "space": 20
   },
-  "navigation": true
 }
 
 
@@ -85,6 +84,7 @@ export const galleryConfig: GalleryConfig = {
     ProjectsRoutingModule
   ],
   declarations: [
+    NewBudgetModalComponent,
     NewPartnerModalComponent,
     NewProjectModalComponent,
     ProjectsComponent,
