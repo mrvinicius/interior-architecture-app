@@ -1,24 +1,49 @@
 <abx-layout>
   <main class="layout-content left-space" style="padding-top: .75rem;">
-    <form *ngIf="professional && profProfileForm" [formGroup]="profProfileForm" class="row">
-      <div class="col s12 m6 l5">
+    <form *ngIf="professional && profProfileForm" [formGroup]="profProfileForm" class="u-row">
+      <div class="col s12 row">
+        <span class="black-secondary-text" style="text-transform: uppercase; display: inline-block;">
+            <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">vpn_key</i>Acesso
+        </span>
+      </div>
+      <div class="col s12 m6 u-row">
         <mz-input-container>
-          <input mz-input formControlName="name" label="nome profissional *" name='BusinessName' id='businessName' type='text'>
+          <input mz-input formControlName="email" [disabled]="true" label="email" id='email' type='email'>
         </mz-input-container>
 
-        <!--<mz-input-container class="u-col s12">
+        <mz-input-container class="u-col s12">
           <input mz-input label='senha' formControlName="password" [attr.type]="profProfileForm.value.showPassword ? 'text' : 'password'"
             id="password">
         </mz-input-container>
         <div class="u-col s12 row">
           <div class="switch">
             <label style="display: flex; align-items: center;">
-                <input type="checkbox" formControlName="showPassword">
-                <span class="lever" style="margin-left: 0;"></span>
-                <i class="material-icons" [ngClass]="{'mv-wine-text': profProfileForm.value.showPassword}">visibility</i>
-              </label>
+              <input type="checkbox" formControlName="showPassword"> 
+              <span class="lever" style="margin-left: 0;"></span>
+              <i class="material-icons" [ngClass]="{'mv-wine-text': profProfileForm.value.showPassword}">visibility</i>
+            </label>
           </div>
-        </div>-->
+        </div>
+      </div>
+
+      <div class="row col s12">
+        <div class="divider"></div>
+      </div>
+
+      <div class="col s12 row">
+        <span class="black-secondary-text" style="text-transform: uppercase; display: inline-block;">
+            <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">business</i>Profissional
+        </span>
+      </div>
+      <div class="col s12 m6 u-row">
+        <mz-input-container>
+          <input mz-input formControlName="name" label="nome profissional *" name='BusinessName' id='businessName' type='text' style="margin-bottom:0;">
+        </mz-input-container>
+        <span class="small-font dim-text" style="font-size: .8rem">Seu nome ou nome do escritório</span>
+        <mz-textarea-container>
+          <textarea mz-textarea formControlName="description" [value]="professional.description" label='descrição profissional (opcional)'
+            id='businessDescription' length='400'></textarea>
+        </mz-textarea-container>
         <div class="u-radio-group">
           <label>profissão</label>
           <mz-radio-button-container>
@@ -35,33 +60,100 @@
           </mz-radio-button-container>
         </div>
         <mz-input-container>
-          <input mz-input formControlName="celular" [textMask]="{mask: celularMask, placeholderChar: '\u2000', keepCharPositions: true}"
-            label="celular *" id='celular' type='text'>
+          <input mz-input formControlName="CAU" [textMask]="{mask: cauMask, placeholderChar: '\u2000', keepCharPositions: true}" label="CAU (opcional)"
+            id='cau' type='text'>
         </mz-input-container>
+      </div>
+
+      <div class="row col s12">
+        <div class="divider"></div>
+      </div>
+
+      <div class="col s12 u-row">
+        <span class="black-secondary-text" style="text-transform: uppercase; display: inline-block;">
+            <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">person</i>Pessoal
+        </span>
+      </div>
+      <div class="col s12 m6 row">
         <mz-select-container>
           <select mz-select formControlName="maritalStatus" id='maritalStatus' placeholder="estado cívil *">
-            <option [value]="'Solteiro(a)'">Solteiro(a)</option>
-            <option [value]="'Casado(a)'">Casado(a)</option>
-            <option [value]="'Separado(a)'">Separado(a)</option>
-            <option [value]="'Divorciado(a)'">Divorciado(a)</option>
-            <option [value]="'Viúvo(a)'">Viúvo(a)</option>
-          </select>
+                <option [value]="'Solteiro(a)'">Solteiro(a)</option>
+                <option [value]="'Casado(a)'">Casado(a)</option>
+                <option [value]="'Separado(a)'">Separado(a)</option>
+                <option [value]="'Divorciado(a)'">Divorciado(a)</option>
+                <option [value]="'Viúvo(a)'">Viúvo(a)</option>
+              </select>
         </mz-select-container>
         <div>
           <label>gênero (opcional)</label>
           <mz-radio-button-container>
-            <input mz-radio-button [checked]="profProfileForm.value.genderOpt === 'F' ? true : null"
-            formControlName="genderOpt" label="Feminino" id='femaleOpt' value="F" type="radio" />
+            <input mz-radio-button [checked]="profProfileForm.value.genderOpt === 'F' ? true : null" formControlName="genderOpt" label="Feminino"
+              id='femaleOpt' value="F" type="radio" />
           </mz-radio-button-container>
           <mz-radio-button-container>
-            <input mz-radio-button [checked]="profProfileForm.value.genderOpt === 'M' ? true : null"
-            formControlName="genderOpt" label="Masculino" id='maleOpt' value="M" type="radio" />
+            <input mz-radio-button [checked]="profProfileForm.value.genderOpt === 'M' ? true : null" formControlName="genderOpt" label="Masculino"
+              id='maleOpt' value="M" type="radio" />
           </mz-radio-button-container>
         </div>
       </div>
 
-      <div class="col s12 m6 l5">
-        <!--<div class="file-field input-field">
+      <div class="row col s12">
+        <div class="divider"></div>
+      </div>
+
+      <div class="col s12 row">
+        <span class="black-secondary-text" style="text-transform: uppercase; display: inline-block;">
+            <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">location_on</i>Localização
+        </span>
+      </div>
+      <div class="col s12 m6 u-row">
+        <mz-input-container>
+          <input mz-input formControlName="CEP" [textMask]="{mask: cepMask, placeholderChar: '\u2000'}" label="CEP *" id='cep' type='text'>
+        </mz-input-container>
+        <div class="u-row">
+          <mz-input-container class="col s10" style="padding-left: 0;">
+            <input mz-input formControlName="addressArea" [attr.disabled]="addressFieldsDisabled ? addressFieldsDisabled : null" label="logradouro *"
+              id='addressArea' type='text'>
+          </mz-input-container>
+          <mz-input-container class="u-col s2">
+            <input mz-input formControlName="addressNumber" label="número *" id='addressNumber' type='text'>
+          </mz-input-container>
+        </div>
+      </div>
+
+      <div class="row col s12">
+        <div class="divider"></div>
+      </div>
+
+      <div class="col s12 row">
+        <span class="black-secondary-text" style="text-transform: uppercase; display: inline-block;">
+            <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">phone</i>Contato
+        </span>
+      </div>
+      <div class="col s12 m6 u-row">
+        <mz-input-container>
+          <input mz-input formControlName="celular" [textMask]="{mask: celularMask, placeholderChar: '\u2000', keepCharPositions: true}"
+            label="celular *" id='celular' type='text'>
+        </mz-input-container>
+      </div>
+
+      <div class="row col s12">
+        <div class="divider"></div>
+      </div>
+
+      <div class="col s12 row">
+        <span class="black-secondary-text" style="text-transform: uppercase; display: inline-block;">
+            <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">portrait</i>Documentação
+        </span>
+      </div>
+      <div class="col s12 m6 u-row">
+        <mz-input-container>
+          <input mz-input formControlName="cpfCnpj" label="CPF/CPNJ *" name='Cpf' id='cpf' type='text'>
+        </mz-input-container>
+      </div>
+
+      <!-- <div class="col s12 m6 l5">
+        <div class="file-field input-field">
           <div class="btn disabled">
             <i class="material-icons white-text">file_upload</i>
             <input type="file">
@@ -69,52 +161,23 @@
           <div class="file-path-wrapper">
             <input [value]="" disabled class="file-path validate" placeholder="selecione sua logo" type="text">
           </div>
-        </div>-->
-        <mz-textarea-container>
-          <textarea mz-textarea formControlName="description" [value]="professional.description"
-          label='descrição profissional (opcional)' id='businessDescription' length='400'></textarea>
-        </mz-textarea-container>
-        <mz-input-container>
-          <input mz-input formControlName="CEP" [textMask]="{mask: cepMask, placeholderChar: '\u2000'}"
-            label="CEP *" id='cep' type='text'>
-        </mz-input-container>
-        <div class="u-row">
-          <mz-input-container class="u-col s10">
-            <input mz-input formControlName="addressArea" [attr.disabled]="addressFieldsDisabled ? addressFieldsDisabled : null"
-              label="logradouro *" id='addressArea' type='text'>
-          </mz-input-container>
-          <mz-input-container class="u-col s2">
-            <input mz-input formControlName="addressNumber" label="número *"
-              id='addressNumber' type='text'>
-          </mz-input-container>
         </div>
-
-
-        <mz-input-container>
-          <input mz-input formControlName="cpfCnpj" label="CPF/CPNJ *" name='Cpf' id='cpf' type='text'>
-        </mz-input-container>
-        <!--<mz-input-container>
-          <input mz-input formControlName="rg" label="RG" id='rg' type='text'>
-        </mz-input-container>-->
-        <mz-input-container>
-          <input mz-input formControlName="CAU" [textMask]="{mask: cauMask, placeholderChar: '\u2000', keepCharPositions: true}"
-            label="CAU (opcional)" id='cau' type='text'>
-        </mz-input-container>
+      </div> -->
+      <div class="row col s12">
+        <div class="divider"></div>
       </div>
     </form>
+
     <div class="row">
       <div class="col s12">
-        <p class="black-secondary-text">* Campos obrigatórios para geração de propostas</p>    
-      </div>
-      <div class="col s12">
-        <div class="divider"></div>
+        <span class="black-secondary-text">* Campos obrigatórios para geração de propostas</span>
       </div>
     </div>
     <div class="row">
       <div class="col s12">
         <div class="u-col s9 right-align right">
           <button (click)="saveProfile()" type="button" [disabled]="!profProfileFormHasChange || profProfileForm.invalid" class="btn waves-effect">
-          Salvar
+          Salvar mudanças
         </button>
         </div>
       </div>

@@ -278,12 +278,9 @@ export class ProfessionalService {
       NumeroLogradouro: this._professional.addressNumber
     };
 
-
     if (prof.password) {
       data.Senha = this._professional.password;
     }
-
-    // console.log(data);
 
     return this.http.post(this.baseUrl + '/update', data, options)
       .map(response => {
