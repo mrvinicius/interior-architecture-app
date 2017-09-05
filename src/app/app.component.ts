@@ -27,24 +27,32 @@ export class AppComponent implements OnInit {
     this.window = winRef.getNativeWindow();
   }
 
-  bootIntercom(): boolean {
-    if ((<any>this.window).Intercom) {
-      (<any>this.window).Intercom("boot", {
-        app_id: "r2fwsspu"
-      });
-      return true;
-    }
-    console.error('Intercom not avaliable')
-    return false;
+  bootIntercom(appId) {
+    let intervalId;
+
+    intervalId = setInterval(function () {
+      console.log('trying boot intercom...');
+
+      if ((<any>this.window).Intercom) {
+        (<any>this.window).Intercom("boot", {
+          app_id: appId
+        });
+        console.log('Intercom booted!');
+        
+        clearInterval(intervalId);
+      }
+    }, 750);
   }
 
   ngOnInit() {
-    let that = this;
-    let intervalId;
-
+    // let that = this;
+    // let intervalId;
+    
+    this.bootIntercom('h3dn7m3s');
     // intervalId = setInterval(function () {
     //   let gtm = (<any>this.window).google_tag_manager;
-      
+    //   console.log('trying boot intercom...');
+
     //   if (gtm !== undefined
     //     && gtm.dataLayer.gtmDom
     //     && gtm.dataLayer.gtmDom) {
@@ -52,7 +60,9 @@ export class AppComponent implements OnInit {
     //     let intercomLoad = that.bootIntercom()
 
     //     if (intercomLoad) {
-    //       (<any>window).intercomBooted = true;
+    //       // (<any>window).intercomBooted = true;
+    //       console.log('booted!');
+
     //       clearInterval(intervalId);
     //     }
     //   }

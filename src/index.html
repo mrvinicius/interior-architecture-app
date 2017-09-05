@@ -17,18 +17,6 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="manifest" href="/manifest.json">
 
-  <style>
-    .button_10 {
-      width: 56px !important;
-      height: 56px !important;
-      box-shadow: 0 16px 24px 2px rgba(0, 0, 0, .14), 0 6px 30px 5px rgba(0, 0, 0, .12), 0 8px 10px -5px rgba(0, 0, 0, .3) !important;
-    }
-
-    .iconWrap_2n {
-      box-shadow: none;
-    }
-  </style>
-
   <!-- Google Tag Manager -->
   <script>
     (function (w, d, s, l, i) { w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f); })(window, document, 'script', 'dataLayer', 'GTM-MRJJF28');
@@ -44,26 +32,19 @@
       alert('Habilite os Cookies no seu navegador para que a plataforma funcione corretamente.')
     }
 
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/sw.js').then(function (registration) {
-          // Registratin was successful
-          console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }).catch(function (err) {
-          // registration failed :(
-          console.log('ServiceWorker registration failed: ', err);
-        });
-      });
-    }
+    // if ('serviceWorker' in navigator) {
+    //   window.addEventListener('load', function () {
+    //     navigator.serviceWorker.register('/sw.js').then(function (registration) {
+    //       // Registratin was successful
+    //       console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    //     }).catch(function (err) {
+    //       // registration failed :(
+    //       console.log('ServiceWorker registration failed: ', err);
+    //     });
+    //   });
+    // }
   </script>
 
-  <script type='text/javascript'>
-    (function () {
-      var widget_id = 'ur5tL9xhyt'; var d = document; var w = window; function l() {
-        var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//code.jivosite.com/script/widget/' + widget_id; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);
-      } if (d.readyState == 'complete') { l(); } else { if (w.attachEvent) { w.attachEvent('onload', l); } else { w.addEventListener('load', l, false); } }
-    })();
-  </script>
 
 </head>
 
