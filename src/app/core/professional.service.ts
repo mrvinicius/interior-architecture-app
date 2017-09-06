@@ -273,7 +273,6 @@ export class ProfessionalService {
       Nacionalidade: this._professional.nacionality,
       Genero: this._professional.gender,
       EstadoCivil: this._professional.maritalStatus,
-      Cau: this._professional.CAU,
       Logradouro: this._professional.addressArea,
       NumeroLogradouro: this._professional.addressNumber
     };

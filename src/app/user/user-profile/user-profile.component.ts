@@ -38,9 +38,7 @@ export class UserProfileComponent implements OnInit {
     private profService: ProfessionalService,
     private toastService: MzToastService,
     private spinnerService: SpinnerService
-  ) {
-
-  }
+  ) { }
 
   ngOnInit() {
     this.profService.getCurrentProfessional().subscribe(prof => {
@@ -63,9 +61,8 @@ export class UserProfileComponent implements OnInit {
         .debounceTime(250)
         .subscribe((cpfCnpj: string) => {
           // console.log('cpfCnpj', cpfCnpj);
-          let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
-
-          let mask;
+          let cleanCpfCnpj = cpfCnpj.replace(/\D/g, ''),
+            mask;
 
           if (cleanCpfCnpj.length < 12) {
             mask = UtilsService.cpfMask;
@@ -142,7 +139,7 @@ export class UserProfileComponent implements OnInit {
     let description = prof.description ? prof.description : '';
 
     return this.fb.group({
-      email: [{value: prof.email, disabled: true}],
+      email: [{ value: prof.email, disabled: true }],
       password: [this.fakePasswordHidden],
       name: [prof.name],
       description: [description],
