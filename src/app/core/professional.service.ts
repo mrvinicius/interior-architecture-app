@@ -231,6 +231,17 @@ export class ProfessionalService {
       }).catch(this.handleError);
   }
 
+  sendResetRequest(email: string): Observable<any> {
+    let options = new RequestOptions({ headers: this.getHeaders() });
+    let data = {
+      email: email
+    };
+
+    return this.http.post(this.baseUrl + '/resetPassword', data, options)
+      .map(resp => resp)
+      .catch(this.handleError)
+  }
+
   // Update data base and local Professional User
   update(prof: Professional): Observable<any> {
     let options = new RequestOptions({ headers: this.getHeaders() });
@@ -267,7 +278,6 @@ export class ProfessionalService {
       Nacionalidade: this._professional.nacionality,
       Genero: this._professional.gender,
       EstadoCivil: this._professional.maritalStatus,
-      Cau: this._professional.CAU,
       Logradouro: this._professional.addressArea,
       NumeroLogradouro: this._professional.addressNumber
     };
@@ -275,7 +285,6 @@ export class ProfessionalService {
     if (prof.password) {
       data.Senha = this._professional.password;
     }
-    // console.log(data);
 
     return this.http.post(this.baseUrl + '/update', data, options)
       .map(response => {

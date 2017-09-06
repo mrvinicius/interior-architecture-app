@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { MzToastService } from 'ng2-materialize';
 
 import { AuthService } from '../../core/auth.service';
 import { Professional } from '../../core/professional';
-import { ProfessionalService } from './../../core/professional.service';
-import { SpinnerService } from './../../core/spinner/spinner.service';
+import { ProfessionalService } from '../../core/professional.service';
+import { SpinnerService } from '../../core/spinner/spinner.service';
 import { UserService } from '../../core/user.service';
 
 @Component({
@@ -23,9 +24,10 @@ export class UserPasswordComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private fb: FormBuilder,
+    private toastService: MzToastService,
+    private profService: ProfessionalService,
     private route: ActivatedRoute,
     private router: Router,
-    private profService: ProfessionalService,
     private spinnerService: SpinnerService
   ) {
     this.createForm();
@@ -47,7 +49,6 @@ export class UserPasswordComponent implements OnInit {
     //   let id = params['id'];
     //   let email = params['email'];
     //   console.log(id, email);
-
     // })
   }
 
@@ -64,8 +65,6 @@ export class UserPasswordComponent implements OnInit {
     this.auth.login(prof);
 
     if (this.professional.profession === undefined) {
-      console.log('no profession');
-
       this.spinnerService.toggleLoadingIndicator(false);
       // this.router.navigate(['/profissao?id=' + this.id + '&email=' + this.email,]);
       console.log(this.id, this.email);
@@ -80,25 +79,31 @@ export class UserPasswordComponent implements OnInit {
       this.professional = prof;
       this.profService.professional = prof;
       console.log(prof);
-
       // this.auth.setCurrentUser(prof);
     });
   }
 
   definePassword() {
     this.spinnerService.toggleLoadingIndicator(true);
-    console.log(this.passwordForm.value.password);
-
     this.professional.id = this.id;
     this.professional.password = this.passwordForm.value.password;
     this.professional.profession = 0;
-    this.profService.update(this.professional).subscribe(resp => {
-      console.log('password resp: ', resp);
-      this.professional.profession = undefined;
-      this.authenticate(this.professional);
-    });
-  }
 
+    this.profService.update(this.professional)
+      .subscribe(resp => {
+        console.log(this.professional);
+
+        if (!!!!!!true) {
+          this.professional.profession = undefined;
+          this.authenticate(this.professional);
+        } else {
+          this.spinnerService.toggleLoadingIndicator(false);
+          window.setTimeout(() => this.router.navigate(['/entrar']), 3000);
+          this.toastService.show('Senha redefinida!', 3000, 'green');
+        }
+
+      });
+  }
 
   private createForm() {
     this.passwordForm = this.fb.group({

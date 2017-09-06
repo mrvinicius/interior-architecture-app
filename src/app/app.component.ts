@@ -38,35 +38,28 @@ export class AppComponent implements OnInit {
           app_id: appId
         });
         console.log('Intercom booted!');
-        
+
         clearInterval(intervalId);
       }
     }, 750);
   }
 
   ngOnInit() {
-    // let that = this;
-    // let intervalId;
-    
-    this.bootIntercom('h3dn7m3s');
-    // intervalId = setInterval(function () {
-    //   let gtm = (<any>this.window).google_tag_manager;
-    //   console.log('trying boot intercom...');
+    let that = this,
+      intervalId;
 
-    //   if (gtm !== undefined
-    //     && gtm.dataLayer.gtmDom
-    //     && gtm.dataLayer.gtmDom) {
+    // Use este caso queira usar o intercom sem G TagManager 
+    // this.bootIntercom('h3dn7m3s'); 
 
-    //     let intercomLoad = that.bootIntercom()
-
-    //     if (intercomLoad) {
-    //       // (<any>window).intercomBooted = true;
-    //       console.log('booted!');
-
-    //       clearInterval(intervalId);
-    //     }
-    //   }
-    // }, 500);
+    intervalId = setInterval(function () {
+      let gtm = (<any>that.window).google_tag_manager;
+      if (gtm !== undefined
+        && gtm.dataLayer.gtmDom
+        && gtm.dataLayer.gtmDom) {
+          that.bootIntercom('h3dn7m3s');
+        clearInterval(intervalId);
+      }
+    }, 500);
 
   }
 }

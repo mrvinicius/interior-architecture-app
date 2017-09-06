@@ -17,7 +17,7 @@ import { SpinnerService } from '../../core/spinner/spinner.service';
 import { UserService } from '../../core/user.service';
 
 @Component({
-  selector: 'mbx-user-entry',
+  selector: 'abx-user-entry',
   templateUrl: './user-entry.component.html',
   styleUrls: ['./user-entry.component.scss']
 })
@@ -87,8 +87,12 @@ export class UserEntryComponent implements OnInit {
   }
 
   private createForm() {
+    const emailPattern = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     this.loginForm = this.fb.group({
-      email: ['', Validators.required],
+      email: ['', [
+        Validators.required,
+        Validators.pattern(emailPattern)
+      ]],
       password: ['', Validators.required]
     });
   }
