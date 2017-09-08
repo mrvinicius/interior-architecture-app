@@ -41,51 +41,52 @@ export class UserProfileComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.profService.getCurrentProfessional().subscribe(prof => {
-      this.professional = prof;
-      this.profProfileForm = this.createUserProfileForm(this.professional);
-      this.profProfileFormChangesSubscription = this.subscribeToFormChanges(this.profProfileForm, (formData) => {
-        this.profProfileFormHasChange = true;
-      });
-
-      this.profProfileForm.get('CEP').valueChanges
-        .takeUntil(this.ngUnsubscribe)
-        .debounceTime(200)
-        .subscribe((cep: string) => {
-          let cleanCep = cep.replace(/\D/g, '');
-          this.findLocationByCEP(cleanCep);
+    this.profService.getCurrentProfessional()
+      .subscribe(prof => {
+        this.professional = prof;
+        this.profProfileForm = this.createUserProfileForm(this.professional);
+        this.profProfileFormChangesSubscription = this.subscribeToFormChanges(this.profProfileForm, (formData) => {
+          this.profProfileFormHasChange = true;
         });
 
-
-      this.profProfileForm.get('cpfCnpj').valueChanges
-        .takeUntil(this.ngUnsubscribe)
-        .debounceTime(250)
-        .subscribe((cpfCnpj: string) => {
-          // console.log('cpfCnpj', cpfCnpj);
-          let cleanCpfCnpj = cpfCnpj.replace(/\D/g, ''),
-            mask;
-
-          if (cleanCpfCnpj.length < 12) {
-            mask = UtilsService.cpfMask;
-          } else {
-            mask = UtilsService.cnpjMask;
-          }
-
-          let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
-            guide: false,
-            placeholderChar: '\u2000'
+        this.profProfileForm.get('CEP').valueChanges
+          .takeUntil(this.ngUnsubscribe)
+          .debounceTime(200)
+          .subscribe((cep: string) => {
+            let cleanCep = cep.replace(/\D/g, '');
+            this.findLocationByCEP(cleanCep);
           });
-          // console.log('conformedCpfCnpj', conformedCpfCnpj);
-          // console.log(!(/\D/).test(cpfCnpj.slice(-1)));
-          // if (!(/\D/).test(cpfCnpj.slice(-1))) {
-          //   console.log('mask!');
-          this.profProfileForm.get('cpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
-            onlySelf: false,
-            emitEvent: false
-          })
-        });
 
-    });
+
+        this.profProfileForm.get('cpfCnpj').valueChanges
+          .takeUntil(this.ngUnsubscribe)
+          .debounceTime(250)
+          .subscribe((cpfCnpj: string) => {
+            // console.log('cpfCnpj', cpfCnpj);
+            let cleanCpfCnpj = cpfCnpj.replace(/\D/g, ''),
+              mask;
+
+            if (cleanCpfCnpj.length < 12) {
+              mask = UtilsService.cpfMask;
+            } else {
+              mask = UtilsService.cnpjMask;
+            }
+
+            let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
+              guide: false,
+              placeholderChar: '\u2000'
+            });
+            // console.log('conformedCpfCnpj', conformedCpfCnpj);
+            // console.log(!(/\D/).test(cpfCnpj.slice(-1)));
+            // if (!(/\D/).test(cpfCnpj.slice(-1))) {
+            //   console.log('mask!');
+            this.profProfileForm.get('cpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
+              onlySelf: false,
+              emitEvent: false
+            })
+          });
+
+      });
   }
 
   ngOnDestroy() {

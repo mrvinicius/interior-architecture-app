@@ -31,6 +31,14 @@ mz-modal {
     }
 }
 
+mz-modal {
+    &.no-content-padding-bottom {
+        .modal-content {
+            padding-bottom: 0;
+        }
+    }
+}
+
 .modal.medium-modal,
 mz-modal.medium-modal .modal {
     width: 40%;
