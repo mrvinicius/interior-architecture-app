@@ -40,6 +40,9 @@
           <input mz-input formControlName="name" label="nome profissional *" name='BusinessName' id='businessName' type='text' style="margin-bottom:0;">
         </mz-input-container>
         <span class="small-font dim-text" style="font-size: .8rem">Seu nome ou nome do escritório</span>
+        <mz-input-container>
+          <input mz-input formControlName="lastName" label="sobrenome *" name='LastName' id='lastName' type='text'>
+        </mz-input-container>
         <mz-textarea-container>
           <textarea mz-textarea formControlName="description" [value]="professional.description" label='descrição profissional (opcional)'
             id='businessDescription' length='400'></textarea>
