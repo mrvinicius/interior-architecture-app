@@ -1,4 +1,3 @@
-import { ProfessionalService } from './professional.service';
 import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
@@ -7,8 +6,10 @@ import {
   RouterStateSnapshot,
   CanActivateChild
 } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+
 import { AuthService } from './auth.service';
+import { Observable } from 'rxjs/Observable';
+import { ProfessionalService } from './professional.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild {

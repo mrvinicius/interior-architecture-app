@@ -21,7 +21,7 @@ export class ProfessionalService {
     'EST': 0,
     'ARQ': 1,
     'DES': 2,
-  }
+  };
   professionalChange$: Subject<Professional> = new Subject<Professional>();
   professionalAdded$: Subject<Professional> = new Subject<Professional>();
   modalDismissed$: Subject<Professional> = new Subject<Professional>();
@@ -36,7 +36,7 @@ export class ProfessionalService {
     if (localStorage.getItem('currentUser')) {
       this.getOne(this.auth.getCurrentUser().id).subscribe((currentProf: Professional) => {
         this._professional = currentProf;
-
+        this.auth.setCurrentUser(this._professional);
         this.professionalChange$.next(this._professional);
       });
     }
@@ -192,13 +192,6 @@ export class ProfessionalService {
         let profResp = JSON.parse(response.text());
         let prof: Professional = new Professional();
 
-        // prof.id = 'c11752b0-0475-4d31-9c01-223d1a98aa9f';
-        // prof.name = 'Raphael Tristão';
-        // prof.email = 'raphael@muuving.com.br';
-        // prof.profession = ProfessionalService.professionIds[0];
-        // prof.description = 'Escritório de interiores criado por Raphael Tristão';
-
-
         if (!profResp.HasError) {
           prof = new Professional(
             profResp.Nome,
@@ -220,8 +213,6 @@ export class ProfessionalService {
           this._professional = prof;
           this.auth.login(prof);
         }
-
-
 
         return {
           HasError: profResp.HasError,
@@ -262,6 +253,8 @@ export class ProfessionalService {
     if (prof.maritalStatus) this._professional.maritalStatus = prof.maritalStatus;
     if (prof.addressArea) this._professional.addressArea = prof.addressArea;
     if (prof.addressNumber) this._professional.addressNumber = prof.addressNumber;
+
+    this.auth.setCurrentUser(this.professional);
 
     let data: any = {
       id: this._professional.id,

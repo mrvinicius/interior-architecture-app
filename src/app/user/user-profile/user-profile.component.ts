@@ -28,7 +28,6 @@ export class UserProfileComponent implements OnInit {
   celularMask = UtilsService.celularMask;
   cauMask = UtilsService.cauMask;
   cepMask = UtilsService.cepMask;
-  addressFieldsDisabled: boolean = false;
   fakePasswordHidden: string = '******';
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -165,10 +164,10 @@ export class UserProfileComponent implements OnInit {
       return;
     }
 
-    this.addressFieldsDisabled = true;
-
+    this.profProfileForm.get('addressArea').disable();
+    
     cep(cepCode).then(CEP => {
-      this.addressFieldsDisabled = false;
+      this.profProfileForm.get('addressArea').enable();
       this.profProfileForm.get('addressArea')
         .setValue(CEP.street, { onlySelf: false, emitEvent: false });
       Materialize.updateTextFields();

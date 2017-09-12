@@ -6,31 +6,61 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/delay';
 
-import { User } from './user';
 import { Professional } from './professional';
+import { User } from './user';
+import { WindowRef } from './window-ref.service';
+
 
 @Injectable()
 export class AuthService {
+  redirectUrl: string;
+  window: any;
   private currentUser: User;
   // public token: string;
   // public currentUser: Professional;
 
   // isLoggedIn: boolean = false;
   // store the URL so we can redirect after logging in
-  redirectUrl: string;
 
   constructor(
     private http: Http,
-    private router: Router
+    private router: Router,
+    private winRef: WindowRef
   ) {
+    this.window = winRef.getNativeWindow();
     // console.log(localStorage.getItem('currentUser'));
   }
 
   getCurrentUser(): User {
     if (!this.currentUser) {
       let userData: any = JSON.parse(localStorage.getItem('currentUser'));
+
       if (userData) {
-        return new User(userData.name, userData.email, userData.id);
+        this.currentUser = new User(userData.name, userData.email, userData.id);
+
+        if ((<any>this.window).Intercom && (<any>this.window).Intercom.booted) {
+          (<any>this.window).Intercom("update", {
+            name: this.currentUser.name,
+            email: this.currentUser.email
+          });
+          console.log('Intercom User updated!');
+        } else {
+          let intervalId,
+            that = this;
+          intervalId = setInterval(function () {
+            console.log('trying to update intercom...');
+
+            if ((<any>that.window).Intercom && (<any>this.window).Intercom.booted) {
+              (<any>that.window).Intercom("update", {
+                name: that.currentUser.name,
+                email: that.currentUser.email
+              });
+
+              clearInterval(intervalId);
+            }
+          }, 2000);
+        }
+        return this.currentUser;
       }
 
       return null;
@@ -52,12 +82,16 @@ export class AuthService {
   }
 
   login(user: User) {
-    console.log(user);
-
     this.setCurrentUser(user);
+
+    (<any>this.window).Intercom("update", {
+      name: user.name,
+      email: user.email
+    });
   }
 
   logout(): void {
+    (<any>this.window).Intercom("shutdown");
     localStorage.removeItem('currentUser');
   }
 

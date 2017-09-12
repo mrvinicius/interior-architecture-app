@@ -88,18 +88,33 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
       });
   }
 
+  updateBilling(billingInfo: BillingInfo) {
+    this.billingService.addBillingInfo(billingInfo)
+      .subscribe(resp => {
+        this.spinnerService.toggleLoadingIndicator(false);
+
+        if (resp.HasError) {
+          this.errorMessages = resp.errorMessages;
+          this.cancelBilling();
+        } else {
+          this.toastService.show('Você se tornou assinante', 3000, 'green');
+          this.billingService.billingInfoUpdated(true);
+          this.modalComponent.close();
+        }
+      })
+  }
+
   saveBillingInfo(formData) {
     let billingInfo: BillingInfo;
-
-    this.spinnerService.toggleLoadingIndicator(true);
-    this.errorMessages = [];
-    console.log(formData);
-
     let cardNumber: string = formData.cardNumber.replace(/ /g, '');
     let dateSlashIndex = formData.expirationDate.indexOf('/');
     let month: number = Number(formData.expirationDate.substr(0, dateSlashIndex));
     let year: number = Number("20" + formData.expirationDate.substr(dateSlashIndex + 1, ));
     let CVC: number = Number(formData.CVC);
+
+    this.spinnerService.toggleLoadingIndicator(true);
+    this.errorMessages = [];
+
 
     if (Boolean(formData.cpfCnpj)) {
       if (formData.cpfCnpj.trim().length !== 14
@@ -156,35 +171,22 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
       })
   }
 
-  updateBilling(billingInfo: BillingInfo) {
-    this.billingService.addBillingInfo(billingInfo)
-      .subscribe(resp => {
-        this.spinnerService.toggleLoadingIndicator(false);
-
-        if (resp.HasError) {
-          this.errorMessages = resp.errorMessages;
-          this.cancelBilling();
-        } else {
-          this.toastService.show('Pronto! Agora você é um assinante', 3000, 'green');
-          this.billingService.billingInfoUpdated(true);
-          this.modalComponent.close();
-        }
-      })
-  }
-
-  cancelBilling() {
+  private cancelBilling() {
     this.profService.professional.paying = false;
     this.profService.update(this.profService.professional)
-      .subscribe(resp => {
-        this.spinnerService.toggleLoadingIndicator(false);
-      })
+      .subscribe(resp => this.spinnerService.toggleLoadingIndicator(false));
   }
 
   private createBillingForm(prof: Professional): FormGroup {
     let lastName: string = '';
 
-    if (prof.lastName != undefined && prof.lastName.length > 0)
-      lastName = prof.lastName;
+    if (prof.lastName != undefined && prof.lastName.length > 0) {
+      lastName = prof.lastName;      
+    }
+
+    if (prof.CEP !== undefined && prof.CEP.length > 0) {
+      this.handleCEP(prof.CEP.replace(/\D/g, ''));
+    }
 
     return this.fb.group({
       planIdentifier: ['plano_mensal', Validators.required],

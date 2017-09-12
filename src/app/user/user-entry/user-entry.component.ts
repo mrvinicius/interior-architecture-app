@@ -30,7 +30,6 @@ export class UserEntryComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private spinnerService: SpinnerService,
-    // private userService: UserService,
     private profService: ProfessionalService
   ) {
     this.createForm();
@@ -43,9 +42,9 @@ export class UserEntryComponent implements OnInit {
       return;
     } else {
       let values = this.loginForm.value;
+
       this.errorMessage = '';
       this.spinnerService.toggleLoadingIndicator(true);
-
       this.profService.login(values.email, values.password)
         .subscribe(resObj => {
           this.spinnerService.toggleLoadingIndicator(false);
