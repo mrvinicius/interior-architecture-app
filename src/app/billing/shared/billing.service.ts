@@ -53,7 +53,7 @@ export class BillingService {
     switch (data.PlanIdentifier) {
       case "plano_mensal":
         data.IdPlano = "BCC49F83A0D4475D9F4A8874CA5C95BD";
-        data.Valor = 149.00;
+        data.Valor = 99.90;
         now.setMonth(now.getMonth() + 1)
         break;
 
@@ -63,17 +63,10 @@ export class BillingService {
         now.setMonth(now.getMonth() + 3)
         break;
 
-      case "teste_producao":
-        data.IdPlano = "C570805D9D7A43F0899CEEE79CE8998A";
-        data.Valor = 1.00;
-
-        now.setMonth(now.getMonth() + 1)
-        break;
-
       case "teste_producao2":
         data.IdPlano = "105A5EE5905F4D0B92FE21D18A5CD32E";
         data.Valor = 1.00;
-        now.setDate(now.getDate()) // today test
+        now.setDate(now.getDate() + 7) // today test
         break;
       default:
         console.error('plano não identificado');

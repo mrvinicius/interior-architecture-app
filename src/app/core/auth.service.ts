@@ -48,7 +48,6 @@ export class AuthService {
           let intervalId,
             that = this;
           intervalId = setInterval(function () {
-            console.log('trying to update intercom...');
 
             if ((<any>that.window).Intercom && (<any>this.window).Intercom.booted) {
               (<any>that.window).Intercom("update", {
