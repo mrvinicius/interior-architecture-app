@@ -184,7 +184,7 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
       lastName = prof.lastName;      
     }
 
-    if (prof.CEP !== undefined && prof.CEP.length > 0) {
+    if (prof.CEP && prof.CEP.length > 0) {
       this.handleCEP(prof.CEP.replace(/\D/g, ''));
     }
 
