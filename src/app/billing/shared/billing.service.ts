@@ -44,8 +44,10 @@ export class BillingService {
     // currentDate.getDate();
     let zerofill = (dateOrMonth: number | string): string => {
       let filled: string = String(dateOrMonth).trim();
-      if (filled.length === 1)
+      
+      if (filled.length === 1) {
         filled = "0" + filled;
+      }
 
       return filled;
     }
@@ -59,7 +61,7 @@ export class BillingService {
 
       case "plano_trimestral":
         data.IdPlano = "6C943E378CC64999906B553C3072AF48";
-        data.Valor = 119.90;
+        data.Valor = 149.90;
         now.setMonth(now.getMonth() + 3)
         break;
 
@@ -87,7 +89,6 @@ export class BillingService {
         if (billingResp.HasError) {
           let errorMessages = [],
             msg; // Aux to larger messages
-          console.log(billingResp.ErrorMessage);
 
           let zerofill = (dateOrMonth: number | string): string => {
             let filled: string = String(dateOrMonth).trim();
