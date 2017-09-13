@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/delay';
@@ -23,8 +21,6 @@ export class AuthService {
   // store the URL so we can redirect after logging in
 
   constructor(
-    private http: Http,
-    private router: Router,
     private winRef: WindowRef
   ) {
     this.window = winRef.getNativeWindow();

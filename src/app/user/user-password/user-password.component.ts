@@ -87,13 +87,13 @@ export class UserPasswordComponent implements OnInit {
     this.spinnerService.toggleLoadingIndicator(true);
     this.professional.id = this.id;
     this.professional.password = this.passwordForm.value.password;
-    this.professional.profession = 0;
+    // this.professional.profession = 0;
 
     this.profService.update(this.professional)
       .subscribe(resp => {
         console.log(this.professional);
 
-        if (!!!!!!true) {
+        if (!!true) {
           this.professional.profession = undefined;
           this.authenticate(this.professional);
         } else {

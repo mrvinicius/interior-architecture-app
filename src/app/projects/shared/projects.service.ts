@@ -10,6 +10,8 @@ import { UploadOutput } from 'ngx-uploader';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from "rxjs/Subject";
 
+import { environment } from '../../../environments/environment';
+
 import { Ambience } from './ambience';
 import { AmbienceDescription } from './ambience-description.enum';
 import { AmbienceService } from './ambience.service';
@@ -309,7 +311,7 @@ export class ProjectsService implements Resolve<string>{
     'a46058ac-d651-4266-83bf-41b747364c6e': 13
   };
 
-  private readonly baseUrl = 'https://archaboxapi.azurewebsites.net/api/projeto';
+  private readonly baseUrl = `${environment.apiBaseUrl}projeto`;
   private newProjectTitleDefinedSource = new Subject<string>();
   newProjectTitleDefined$ = this.newProjectTitleDefinedSource.asObservable();
   private newAtnProjectTitleDefinedSource = new Subject<string>();

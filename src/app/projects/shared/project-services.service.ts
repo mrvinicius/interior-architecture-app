@@ -6,13 +6,15 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch'
 import 'rxjs/add/operator/toPromise';
 
+import { environment } from '../../../environments/environment';
+
 // import { ServiceType } from './service-type';
 import { UtilsService } from './../../shared/utils/utils.service';
 
 @Injectable()
 export class ProjectServicesService {
   // public readonly serviceTypes: ServiceType[] = [];
-  private readonly typeBaseUrl = 'https://archaboxapi.azurewebsites.net/api/tipoServico';
+  private readonly typeBaseUrl = `${environment.apiBaseUrl}tipoServico`;
 
   constructor(
     private http: Http

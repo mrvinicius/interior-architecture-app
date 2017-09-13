@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
+import { environment } from '../../../environments/environment';
+
 import { AuthService } from '../../core/auth.service';
 import { ClientService } from '../../client/shared/client.service';
 import { ProfessionalService } from '../../core/professional.service';
@@ -9,7 +11,7 @@ import { Project } from './project';
 
 @Injectable()
 export class ProposalService {
-  private readonly baseUrl = 'https://archaboxapi.azurewebsites.net/api/proposta';
+  private readonly baseUrl = `${environment.apiBaseUrl}proposta`;
 
   constructor(
     private auth: AuthService,
