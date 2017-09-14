@@ -115,7 +115,6 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
     this.spinnerService.toggleLoadingIndicator(true);
     this.errorMessages = [];
 
-
     if (Boolean(formData.cpfCnpj)) {
       if (formData.cpfCnpj.trim().length !== 14
         && formData.cpfCnpj.trim().length !== 18) {
@@ -130,8 +129,6 @@ export class BillingModalComponent extends MzBaseModal implements OnInit {
     }
 
     if (Boolean(formData.CEP)) {
-      console.log(formData.CEP);
-
       if (formData.CEP.trim().length !== 9) {
         this.spinnerService.toggleLoadingIndicator(false);
         this.errorMessages.push('Digite um CEP válido');
