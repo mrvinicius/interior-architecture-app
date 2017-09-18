@@ -86,7 +86,7 @@ export class AuthService {
   }
 
   logout(): void {
-    (<any>this.window).Intercom("shutdown");
+    (<any>this.window).Intercom('shutdown');
     localStorage.removeItem('currentUser');
   }
 

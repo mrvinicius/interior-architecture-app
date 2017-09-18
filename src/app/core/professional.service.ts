@@ -1,3 +1,4 @@
+import { CEP } from 'cep-promise';
 import { Injectable } from '@angular/core';
 import { RequestOptions, Http, Headers, Response } from '@angular/http';
 import 'rxjs/add/operator/catch';
@@ -143,8 +144,27 @@ export class ProfessionalService {
       obs.subscribe((currentProf: Professional) => {
         this._professional = currentProf;
 
+        if ((<any>this.window).Intercom && (<any>this.window).Intercom.booted) {
+          (<any>this.window).Intercom("update", {
+            name: this._professional.name,
+            email: this._professional.email
+          });
+        } else {
+          let intervalId,
+            that = this;
 
+          intervalId = setInterval(() => {
+            if ((<any>that.window).Intercom && (<any>this.window).Intercom.booted) {
+              (<any>that.window).Intercom("update", {
+                name: that._professional.name,
+                email: that._professional.email
+              });
 
+              clearInterval(intervalId);
+            }
+          }, 2000);
+        }
+          
         this.professionalChange$.next(this._professional);
       });
       return obs;
@@ -268,7 +288,9 @@ export class ProfessionalService {
 
   // Update data base and local Professional User
   update(prof: Professional): Observable<any> {
-    let options = new RequestOptions({ headers: this.getHeaders() });
+    let options = new RequestOptions({ headers: this.getHeaders() }),
+      intercomData: any,
+      data: any;
 
     if (prof.name) this._professional.name = prof.name;
     if (prof.lastName) this._professional.lastName = prof.lastName;
@@ -287,13 +309,39 @@ export class ProfessionalService {
     if (prof.addressArea) this._professional.addressArea = prof.addressArea;
     if (prof.addressNumber) this._professional.addressNumber = prof.addressNumber;
 
-    (<any>this.window).Intercom("update", {
+    intercomData = {
       name: this._professional.name,
       email: this._professional.email,
-      validation: this._professional.validated
-    });
+      validation: this._professional.validated,
+      celular: this._professional.celular,
+      CEP: this._professional.CEP,
+      cpf_ou_cnpj: this._professional.cpfCnpj,
+      gender: this._professional.gender,
+      payed_users: this._professional.paying,
+      description: this._professional.description,
+      address: this._professional.addressArea,
+      address_number: this._professional.addressNumber,
+      country: this._professional.nacionality,
+      profession: ''
+    }
 
-    let data: any = {
+    switch (this._professional.profession) {
+      case 0:
+        intercomData.profession = 'EST';
+        break;
+      case 1:
+        intercomData.profession = 'ARQ';
+        break;
+      case 2:
+        intercomData.profession = 'DES';
+        break;
+      default:
+        break;
+    }
+
+    (<any>this.window).Intercom('update', intercomData);
+
+    data = {
       id: this._professional.id,
       Nome: this._professional.name,
       Sobrenome: this._professional.lastName,
