@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
 import { Client } from '../client/shared/client';
 import { Professional } from './professional';
 import { Profession } from '../shared/profession.enum';
+import { WindowRef } from './window-ref.service';
 
 @Injectable()
 export class ProfessionalService {
@@ -26,16 +27,43 @@ export class ProfessionalService {
   professionalAdded$: Subject<Professional> = new Subject<Professional>();
   modalDismissed$: Subject<Professional> = new Subject<Professional>();
   allProfessionalsChange$: Subject<Professional[]> = new Subject<Professional[]>();
+  window;
   private readonly baseUrl: string = 'https://archaboxapi.azurewebsites.net/api/profissional';
   private _professional: Professional;
 
   constructor(
     private auth: AuthService,
-    private http: Http
+    private http: Http,
+    private winRef: WindowRef
   ) {
+    this.window = this.winRef.getNativeWindow()
+
     if (localStorage.getItem('currentUser')) {
       this.getOne(this.auth.getCurrentUser().id).subscribe((currentProf: Professional) => {
         this._professional = currentProf;
+
+        if ((<any>this.window).Intercom && (<any>this.window).Intercom.booted) {
+          (<any>this.window).Intercom("update", {
+            name: this._professional.name,
+            email: this._professional.email,
+            validation: this._professional.validated
+          });
+        } else {
+          let intervalId,
+            that = this;
+          intervalId = setInterval(() => {
+            if ((<any>that.window).Intercom && (<any>this.window).Intercom.booted) {
+              (<any>that.window).Intercom("update", {
+                name: this._professional.name,
+                email: this._professional.email,
+                validation: this._professional.validated
+              });
+
+              clearInterval(intervalId);
+            }
+          }, 2000);
+        }
+
         this.auth.setCurrentUser(this._professional);
         this.professionalChange$.next(this._professional);
       });
@@ -62,7 +90,8 @@ export class ProfessionalService {
     return this.http.post(this.baseUrl + '/activate', data, options)
       .map((response: Response) => {
         return response;
-      }).catch(this.handleError)
+      })
+      .catch(this.handleError)
   }
 
   // Adiciona um novo profissional à base e atualiza os dados locais
@@ -110,8 +139,11 @@ export class ProfessionalService {
   getCurrentProfessional(): Observable<Professional> {
     if (this._professional === undefined) {
       let obs = this.getOne(this.auth.getCurrentUser().id);
+
       obs.subscribe((currentProf: Professional) => {
         this._professional = currentProf;
+
+
 
         this.professionalChange$.next(this._professional);
       });
@@ -174,6 +206,7 @@ export class ProfessionalService {
         professional.CAU = body.Cau;
         professional.addressArea = body.Logradouro;
         professional.addressNumber = body.NumeroLogradouro;
+        professional.validated = body.Validado;
 
         return professional;
       })
@@ -254,7 +287,11 @@ export class ProfessionalService {
     if (prof.addressArea) this._professional.addressArea = prof.addressArea;
     if (prof.addressNumber) this._professional.addressNumber = prof.addressNumber;
 
-    this.auth.setCurrentUser(this.professional);
+    (<any>this.window).Intercom("update", {
+      name: this._professional.name,
+      email: this._professional.email,
+      validation: this._professional.validated
+    });
 
     let data: any = {
       id: this._professional.id,

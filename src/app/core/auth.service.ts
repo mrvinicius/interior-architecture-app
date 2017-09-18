@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Router } from '@angular/router';
+
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
@@ -38,27 +39,27 @@ export class AuthService {
       if (userData) {
         this.currentUser = new User(userData.name, userData.email, userData.id);
 
-        if ((<any>this.window).Intercom && (<any>this.window).Intercom.booted) {
-          (<any>this.window).Intercom("update", {
-            name: this.currentUser.name,
-            email: this.currentUser.email
-          });
-          console.log('Intercom User updated!');
-        } else {
-          let intervalId,
-            that = this;
-          intervalId = setInterval(function () {
+        // if ((<any>this.window).Intercom && (<any>this.window).Intercom.booted) {
+        //   (<any>this.window).Intercom("update", {
+        //     name: this.currentUser.name,
+        //     email: this.currentUser.email
+        //   });
+        //   console.log('Intercom User updated!');
+        // } else {
+        //   let intervalId,
+        //     that = this;
+        //   intervalId = setInterval(function () {
 
-            if ((<any>that.window).Intercom && (<any>this.window).Intercom.booted) {
-              (<any>that.window).Intercom("update", {
-                name: that.currentUser.name,
-                email: that.currentUser.email
-              });
+        //     if ((<any>that.window).Intercom && (<any>this.window).Intercom.booted) {
+        //       (<any>that.window).Intercom("update", {
+        //         name: that.currentUser.name,
+        //         email: that.currentUser.email
+        //       });
 
-              clearInterval(intervalId);
-            }
-          }, 2000);
-        }
+        //       clearInterval(intervalId);
+        //     }
+        //   }, 2000);
+        // }
         return this.currentUser;
       }
 
@@ -74,7 +75,7 @@ export class AuthService {
       id: user.id,
       name: user.name,
       email: user.email
-    }
+    };
 
     this.currentUser = new User(userData.name, userData.email, userData.id);
     localStorage.setItem('currentUser', JSON.stringify(userData));
@@ -82,11 +83,6 @@ export class AuthService {
 
   login(user: User) {
     this.setCurrentUser(user);
-
-    (<any>this.window).Intercom("update", {
-      name: user.name,
-      email: user.email
-    });
   }
 
   logout(): void {

@@ -93,7 +93,7 @@ export class UserPasswordComponent implements OnInit {
       .subscribe(resp => {
         console.log(this.professional);
 
-        if (!!!!!!true) {
+        if (!!true) {
           this.professional.profession = undefined;
           this.authenticate(this.professional);
         } else {

@@ -6,6 +6,7 @@ export class User {
     password?: string;
     cpfCnpj?: string;
     gender?: string;
+    validated?: string; 
     
     constructor(name?: string, email?: string, id?: string) {
         this.name = name;
