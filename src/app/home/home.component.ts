@@ -36,21 +36,24 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.errorMessage = 'Preencha todos os campos'
       return;
     } else {
+      let values = this.registerForm.value,
+        prof: Professional = new Professional(values.name, values.email);
+
       this.errorMessage = undefined;
       this.spinnerService.toggleLoadingIndicator(true);
-      let values = this.registerForm.value;
-      let prof: Professional =
-        new Professional(values.name, values.email);
-
       this.profService.add(prof, true)
         .takeUntil(this.ngUnsubscribe)
         .subscribe(response => {
           this.spinnerService.toggleLoadingIndicator(false);
 
-
           if (response.hasError) {
             this.errorMessage = response.errorMessage;
           } else {
+            (<any>window).Intercom('update', {
+              email: this.registerForm.value.email,
+              name: this.registerForm.value.name
+            });
+
             this.router.navigate(['quase-la']);
           }
         });
@@ -85,7 +88,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   openSignupModal() {
     let modalRef = this.modalService.open(SignupModalComponent, {});
-
   }
 
 }

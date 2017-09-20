@@ -137,43 +137,6 @@ export class ProfessionalService {
     this._professional.clients.concat(clients);
   }
 
-  getCurrentProfessional(): Observable<Professional> {
-    if (this._professional === undefined) {
-      let obs = this.getOne(this.auth.getCurrentUser().id);
-
-      obs.subscribe((currentProf: Professional) => {
-        this._professional = currentProf;
-
-        if ((<any>this.window).Intercom && (<any>this.window).Intercom.booted) {
-          (<any>this.window).Intercom("update", {
-            name: this._professional.name,
-            email: this._professional.email
-          });
-        } else {
-          let intervalId,
-            that = this;
-
-          intervalId = setInterval(() => {
-            if ((<any>that.window).Intercom && (<any>this.window).Intercom.booted) {
-              (<any>that.window).Intercom("update", {
-                name: that._professional.name,
-                email: that._professional.email
-              });
-
-              clearInterval(intervalId);
-            }
-          }, 2000);
-        }
-          
-        this.professionalChange$.next(this._professional);
-      });
-      return obs;
-    } else {
-      return Observable.of(this._professional);
-    }
-
-  }
-
   getAll(take: number = 999, skip?: number): Observable<Professional[]> {
     let options = new RequestOptions({ headers: this.getHeaders() });
     let data = {
@@ -201,6 +164,43 @@ export class ProfessionalService {
       return Observable.of(this.allProfessionals);
     }
 
+
+  }
+
+  getCurrentProfessional(): Observable<Professional> {
+    if (this._professional === undefined) {
+      let obs = this.getOne(this.auth.getCurrentUser().id);
+
+      obs.subscribe((currentProf: Professional) => {
+        this._professional = currentProf;
+
+        if ((<any>this.window).Intercom && (<any>this.window).Intercom.booted) {
+          (<any>this.window).Intercom("update", {
+            name: this._professional.name,
+            email: this._professional.email
+          });
+        } else {
+          let intervalId,
+            that = this;
+
+          intervalId = setInterval(() => {
+            if ((<any>that.window).Intercom && (<any>this.window).Intercom.booted) {
+              (<any>that.window).Intercom("update", {
+                name: that._professional.name,
+                email: that._professional.email
+              });
+
+              clearInterval(intervalId);
+            }
+          }, 2000);
+        }
+
+        this.professionalChange$.next(this._professional);
+      });
+      return obs;
+    } else {
+      return Observable.of(this._professional);
+    }
 
   }
 
