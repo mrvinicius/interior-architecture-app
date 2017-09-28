@@ -3549,9 +3549,9 @@ ng2-material-dropdown@0.7.7:
   version "0.7.7"
   resolved "https://registry.yarnpkg.com/ng2-material-dropdown/-/ng2-material-dropdown-0.7.7.tgz#5f107cbd99c8c6362d869e0ac99e85b8c59aceab"
 
-ng2-materialize@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/ng2-materialize/-/ng2-materialize-1.5.1.tgz#91ef387a050a1f9de488596e71b233ed51d5cf4f"
+ng2-materialize@1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/ng2-materialize/-/ng2-materialize-1.5.2.tgz#0c573abbf010654ccac05c3ae0bd9f3b436f311a"
   dependencies:
     "@types/jquery" "^2.0.47"
     "@types/materialize-css" "0.98.0"

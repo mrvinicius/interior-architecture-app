@@ -1,6 +1,12 @@
-.mat-menu-item {
-    i.material-icons {
-        vertical-align: middle;
-        margin-right: 16px;
+.mat-menu-panel {
+    .mat-menu-content {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    .mat-menu-item {
+        i.material-icons {
+            vertical-align: middle;
+            margin-right: 16px;
+        }
     }
 }

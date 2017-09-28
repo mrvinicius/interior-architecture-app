@@ -198,8 +198,9 @@
                 </button>
               </td>
               <md-menu #appMenu="mdMenu">
-                <button md-menu-item (click)="deleteBudget(b.id)" class="mv-wine-text"><i class="material-icons">delete</i>Excluir</button>
-                <button md-menu-item (click)="openBudgetEditionMode(b.id)" class="mv-wine-text"><i class="material-icons">edit</i>Editar</button>
+                <button md-menu-item class="mv-wine-text"><i class="material-icons">send</i>Enviar ao cliente</button>
+                <!-- <button md-menu-item (click)="openBudgetEditionMode(b.id)" class="mv-wine-text"><i class="material-icons">edit</i>Editar</button> -->
+                <button md-menu-item (click)="deleteBudget(b.id)" class="mv-wine-text"><i class="material-icons">delete</i>Remover</button>
               </md-menu>
             </tr>
           </tbody>
@@ -212,8 +213,13 @@
       </div>
     </div>
 
-    <!-- <mz-collapsible [ngClass]="{'scale-in': firstAdded}"  class="products-collapsible scale-transition scale-out" [popout]="true" style="display: block"> -->
-    <!-- <mz-collapsible class="products-collapsible" [popout]="true">
+    <mz-collapsible
+      [ngClass]="{'scale-in': firstAdded}"
+      class="products-collapsible scale-transition scale-out"
+      *ngIf="budgets.length > 0"
+      [popout]="true"
+      style="display: block">
+    <!-- <mz-collapsible *ngIf="budgets.length > 0" class="products-collapsible" [popout]="true"> -->
         
       <mz-collapsible-item *ngFor="let b of budgets">
         <mz-collapsible-item-header>
@@ -236,73 +242,14 @@
             <label class="readonly-value-label">Produto</label>
             <h5>{{b.product.description}}</h5>
           </div>
-        </mz-collapsible-item-body>
-      </mz-collapsible-item>
-    </mz-collapsible> -->
-  </section>
-
-  <!-- 
-    <md2-tabs selectedIndex="0" class="mv-tabs">
-      <md2-tab label="Cozinha">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      </md2-tab>
-      <md2-tab label1="Sala">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      </md2-tab>
-      <md2-tab label="Quarto">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      </md2-tab>
-      <md2-tab label="Jantar">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      </md2-tab>
-    </md2-tabs> -->
-
-
-
-  <!-- <ul id="productCollection" class="collection collapsible-wrapper with-header z-depth-2">
-    <li class="collection-header">
-      <h4 style="margin: 0;">Cozinha</h4>
-    </li>
-    <mz-collapsible [onClose]="closeFunctionCallback">
-      <mz-collapsible-item>
-        <mz-collapsible-item-header>
-          Mesa e cadeiras
-        </mz-collapsible-item-header>
-        <mz-collapsible-item-body>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </mz-collapsible-item-body>
-      </mz-collapsible-item>
-      <mz-collapsible-item>
-        <mz-collapsible-item-header>
-          Armário
-        </mz-collapsible-item-header>
-        <mz-collapsible-item-body>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          <div class="divider"></div>
+          <div>
+            <button class="btn-flat waves-effect waves-dark">Excluir</button>
+            <button class="btn-flat waves-effect waves-dark">Enviar ao cliente</button>
+          </div>
         </mz-collapsible-item-body>
       </mz-collapsible-item>
     </mz-collapsible>
-  </ul> -->
-
+  </section>
 
 </div>
-<!-- <ul class="collection collection-flat">
-  <li class="collection-item">
-    <span class="collection-title">Title</span>
-    <p>First Line <br> Second Line
-    </p>
-    <a class="secondary-content"><i class="material-icons">more_vert</i></a>
-  </li>
-  <li class="collection-item u-row">
-    <span class="collection-title">Title</span>
-    <p>First Line <br> Second Line
-    </p>
-    <a class="secondary-content"><i class="material-icons">more_vert</i></a>
-  </li>
-  <li class="collection-item avatar">
-    <i class="material-icons circle red">play_arrow</i>
-    <span class="collection-title">Title</span>
-    <p>First Line <br> Second Line
-    </p>
-    <a class="secondary-content"><i class="material-icons">more_vert</i></a>
-  </li>
-</ul> -->

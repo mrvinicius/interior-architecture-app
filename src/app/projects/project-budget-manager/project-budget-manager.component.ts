@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, Validators } from '@angular/forms';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { MzModalService } from 'ng2-materialize';
@@ -62,7 +62,8 @@ export class ProjectBudgetManagerComponent implements OnInit {
     private bgService: BudgetService,
     private fb: FormBuilder,
     private modalService: MzModalService,
-    private supplierService: SupplierService
+    private supplierService: SupplierService,
+    private cdRef: ChangeDetectorRef
   ) {
     this.newBudgetForm = this.createBudgetForm();
 
@@ -72,7 +73,7 @@ export class ProjectBudgetManagerComponent implements OnInit {
 
   deleteBudget(id: string) {
     console.log(id);
-    
+
   }
 
   ngOnInit() {
@@ -161,7 +162,6 @@ export class ProjectBudgetManagerComponent implements OnInit {
 
   openBudgetEditionMode(id: string) {
     console.log(id);
-    
   }
 
   openNewSupplierModal() {
@@ -218,13 +218,14 @@ export class ProjectBudgetManagerComponent implements OnInit {
       console.error('Informe o fornecedor desta solicitação')
       return;
     }
-
-    // // Validating Supplier email 
-    // if (!this.existingSupplier && (!formData.supplierEmail || !(formData.supplierEmail.length > 0))) {
-    //   console.error('Fornecedor novo aqui no Archabox? Informe o email dele')
-    //   // console.error('É um fornecedor novo? Informe o email dele')
-    //   return;
-    // }
+    /*
+        // Validating Supplier email 
+        if (!this.existingSupplier && (!formData.supplierEmail || !(formData.supplierEmail.length > 0))) {
+          console.error('Fornecedor novo aqui no Archabox? Informe o email dele')
+          // console.error('É um fornecedor novo? Informe o email dele')
+          return;
+        }
+    */
 
     // TODO: Validate and Get Subsidiaries
 
@@ -292,7 +293,6 @@ export class ProjectBudgetManagerComponent implements OnInit {
     product.color = formData.color;
     product.note = formData.note;
 
-
     budget = new Budget(supplier, product, 'Waiting');
     budget.id = 'f933jt';
     budget.subsidiaries = formData.subsidiaries.map(s => {
@@ -340,14 +340,19 @@ export class ProjectBudgetManagerComponent implements OnInit {
 
   private sendBudgetRequest(budget: Budget) {
     this.toggleNewBudgetForm();
+    let bgts = [];
     // this.newBudgetForm.reset();
     if (this.budgets.length === 0) {
       window.setTimeout(() => this.firstAdded = true, 350)
     }
 
-    this.budgets.push(budget);
-    console.log(this.budgets);
-    
+    bgts = this.budgets;
+    bgts.push(budget);
+
+    this.budgets = []
+    this.cdRef.detectChanges();
+    this.budgets = bgts;
+    this.cdRef.detectChanges();
   }
 
   private setAutocomplete() {
