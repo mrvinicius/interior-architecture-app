@@ -48,12 +48,7 @@ export class UserEntryComponent implements OnInit {
       this.profService.login(values.email, values.password)
         .subscribe(resObj => {
           this.spinnerService.toggleLoadingIndicator(false);
-          // if (resObj.HasError) {
           if (resObj.HasError) {
-            // TODO: implement correct feedbacks
-            // email nao cadastrado
-            // senha incorreta
-            // outros erros
             switch (resObj.ErrorMessage) {
               case "Email não cadastrado":
                 this.errorMessage = resObj.ErrorMessage

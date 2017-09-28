@@ -115,7 +115,10 @@ export class ProfessionalService {
           prof.profession = ProfessionalService.professionIds[profResp.ProfissaoId];
 
           if (!isSignUp) {
-            if (!this.allProfessionals) this.allProfessionals = [];
+            if (!this.allProfessionals) {
+              this.allProfessionals = [];
+            }
+            
             this.allProfessionals.push(prof);
             this.allProfessionalsChange$.next(this.allProfessionals);
             this.professionalAdded$.next(prof);
@@ -177,7 +180,8 @@ export class ProfessionalService {
         if ((<any>this.window).Intercom && (<any>this.window).Intercom.booted) {
           (<any>this.window).Intercom("update", {
             name: this._professional.name,
-            email: this._professional.email
+            email: this._professional.email,
+            validation: this._professional.validated
           });
         } else {
           let intervalId,
@@ -187,7 +191,8 @@ export class ProfessionalService {
             if ((<any>that.window).Intercom && (<any>this.window).Intercom.booted) {
               (<any>that.window).Intercom("update", {
                 name: that._professional.name,
-                email: that._professional.email
+                email: that._professional.email,
+                validation: this._professional.validated
               });
 
               clearInterval(intervalId);
