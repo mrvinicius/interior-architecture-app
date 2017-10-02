@@ -619,7 +619,7 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
       if (this.formData.autoUpload) {
         const event: UploadInput = {
           type: 'uploadAll',
-          url: 'https://archaboxapi.azurewebsites.net/api/projeto/saveFile',
+          url: 'http://52.67.21.201/muuving/api/projeto/saveFile',
           method: 'POST',
           data: {
             projetoID: this.project.id

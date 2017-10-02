@@ -11,7 +11,7 @@ import { ProfessionalService } from '../../core/professional.service';
 @Injectable()
 export class BankService {
   private allBanks: Bank[] = [];
-  private readonly baseUrl: string = 'https://archaboxapi.azurewebsites.net/api/banco';
+  private readonly baseUrl: string = 'http://52.67.21.201/muuving/api/banco';
 
   constructor(
     private http: Http,
