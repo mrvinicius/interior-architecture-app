@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component, OnInit, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Input, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, Validators } from '@angular/forms';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
-import { MzModalService } from 'ng2-materialize';
+import { MzModalService, MzToastService } from 'ng2-materialize';
+import { TagInputComponent, TagInputDropdown } from 'ng2-tag-input';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 
@@ -55,6 +56,8 @@ export class ProjectBudgetManagerComponent implements OnInit {
   existingSupplier: boolean;
   budgets: Budget[];
   firstAdded: boolean;
+  storeAddSuggested: boolean = false;
+  storesChipdata: { id: string, name: string }[] = [];
 
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -63,17 +66,20 @@ export class ProjectBudgetManagerComponent implements OnInit {
     private fb: FormBuilder,
     private modalService: MzModalService,
     private supplierService: SupplierService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private toastService: MzToastService
   ) {
     this.newBudgetForm = this.createBudgetForm();
-
+    // this.newBudgetForm.get('stores').setValue([{id: 'ex', name: 'Ponto+'}], {
+    //   onlySelf: false,
+    //   emitEvent: false
+    // })
     this.budgets = [];
 
   }
 
   deleteBudget(id: string) {
     console.log(id);
-
   }
 
   ngOnInit() {
@@ -102,24 +108,40 @@ export class ProjectBudgetManagerComponent implements OnInit {
           // Validate
           this.supplierService.getOneByName(val)
             .subscribe(supplier => {
+
+              // Clear Stores
+              this.newBudgetForm.get('stores').setValue([{ value: 'ex', display: '+ponto de venda', id: 'ex', name: 'Ponto+' }], {
+                onlySelf: false,
+                emitEvent: false
+              })
+
+              // Fetch Stores
               if (supplier) {
                 this.existingSupplier = true;
-                this.newBudgetForm.get('supplierEmail').disable();
+
+                if (supplier.stores && supplier.stores.length) {
+                  this.storesChipdata = supplier.stores.map(s => {
+
+                    return {
+                      id: s.email,
+                      name: s.name,
+                    }
+                  })
+
+                } else {
+                  this.storesChipdata = [];
+                }
+
               } else {
+                this.storesChipdata = [];
                 this.existingSupplier = false;
-                this.newBudgetForm.get('supplierEmail').enable();
               }
             });
-
-          // Fetch Subsidiaries
-
           // Fetch Products
 
         } else {
+          this.storesChipdata = []
           this.existingSupplier = false;
-          this.newBudgetForm.get('supplierEmail').enable();
-
-          // Clear subsidiaries
         }
       });
 
@@ -168,6 +190,11 @@ export class ProjectBudgetManagerComponent implements OnInit {
     this.modalService.open(NewSupplierModal, {})
   }
 
+  removeBudget(id: string) {
+    let index = this.budgets.findIndex(b => b.id === id);
+    this.budgets.splice(index, 1);
+  }
+
   toggleNewBudgetForm() {
     let $formContainer = $('#newBudgetFormContainer');
 
@@ -198,6 +225,14 @@ export class ProjectBudgetManagerComponent implements OnInit {
       product: Product,
       quantity: string | number;
 
+      console.log(formData);
+
+    // Remove Tag Input examlpe
+    let exampleIndex = formData.stores.findIndex(s => s.id === 'ex');
+    if (exampleIndex > -1) {
+      formData.stores.splice(exampleIndex, 1);
+    }
+
     // Validating and Get Supplier
     if (this.existingSupplier && !validatedSupplier) {
       this.supplierService.getOneByName(formData.supplier)
@@ -227,7 +262,14 @@ export class ProjectBudgetManagerComponent implements OnInit {
         }
     */
 
-    // TODO: Validate and Get Subsidiaries
+    // TODO: Validate and Get Stores
+    if (formData.stores.length) {
+    } else {
+      this.toastService
+        .show('Informe algum ponto de venda', 3000, 'red');
+      return;
+    }
+
 
     // Identifying and Validating quantity unit and Get Quantity 
     switch (formData.quantityUnity) {
@@ -286,38 +328,49 @@ export class ProjectBudgetManagerComponent implements OnInit {
 
     product = new Product(
       formData.productDesc,
-      supplier,
-      formData.quantityUnity,
-      quantity
+      supplier
     );
-    product.color = formData.color;
-    product.note = formData.note;
 
-    budget = new Budget(supplier, product, 'Waiting');
+    budget = new Budget(
+      supplier,
+      product,
+      formData.quantityUnity,
+      quantity,
+      'Waiting'
+    );
     budget.id = 'f933jt';
-    budget.subsidiaries = formData.subsidiaries.map(s => {
+    budget.color = formData.color;
+    budget.note = formData.note;
+    budget.supplier.stores = formData.stores.map(s => {
       return {
         id: s.value,
         name: s.display,
       }
     });
-    budget.supplier.subsidiaries = budget.subsidiaries;
 
     this.sendBudgetRequest(budget);
   }
 
   private createBudgetForm(budget?): FormGroup {
-    let chipsData: { value: string; display: string }[] = [];
+    let chipsData: any[] = [
+      { value: 'ex', display: 'Ponto+', id: 'ex', name: 'Ponto+' }
+    ];
+
+    // chipsData = this.getPartnersByIds(ids).map((prof: any) => {
+    //   prof.value = prof.id;
+    //   prof.display = prof.name;
+    //   return prof;
+    // });
 
     let budgetForm = this.fb.group({
       supplier: ['', [
         Validators.required
       ]],
-      supplierEmail: ['', [
-        // Validators.required,
-        Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
-      ]],
-      subsidiaries: [chipsData],
+      // supplierEmail: ['', [
+      //   // Validators.required,
+      //   Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
+      // ]],
+      stores: [chipsData],
       productDesc: ['', [
         Validators.required
       ]],
@@ -340,19 +393,22 @@ export class ProjectBudgetManagerComponent implements OnInit {
 
   private sendBudgetRequest(budget: Budget) {
     this.toggleNewBudgetForm();
-    let bgts = [];
-    // this.newBudgetForm.reset();
+    // let bgts = [];
     if (this.budgets.length === 0) {
       window.setTimeout(() => this.firstAdded = true, 350)
     }
 
-    bgts = this.budgets;
-    bgts.push(budget);
+    this.budgets.push(budget);
+    this.toastService.show('Solicitação enviada', 3000, 'green');
+    // this.newBudgetForm.reset();
 
-    this.budgets = []
-    this.cdRef.detectChanges();
-    this.budgets = bgts;
-    this.cdRef.detectChanges();
+    // bgts = this.budgets;
+    // bgts.push(budget);
+
+    // this.budgets = []
+    // this.cdRef.detectChanges();
+    // this.budgets = bgts;
+    // this.cdRef.detectChanges();
   }
 
   private setAutocomplete() {

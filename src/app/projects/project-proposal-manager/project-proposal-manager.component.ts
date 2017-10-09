@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, Input, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { MdlExpansionPanelComponent } from '@angular-mdl/expansion-panel';
 import { conformToMask } from 'angular2-text-mask';
 import { default as cep, CEP } from 'cep-promise';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
@@ -999,7 +998,7 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
   }
 
   private createPartnersForm(ids: any[], currentProfId: string): FormGroup {
-    let chipsData: { value: string; display: string }[] = [];
+    let chipsData: { value: string, display: string }[] = [];
     
     if (ids && ids.length) {
       let index = ids.indexOf(currentProfId);

@@ -3,10 +3,15 @@ body {
     font-family: $body-font;
 }
 
-// Apply font family to all mdl components
+// Apply font family to all MDL components
 [class*="mdl-"] {
     font-family: $body-font;
 }
+
+// Apply font family to all Angular Material components
+[class*="mat-"] {
+    font-family: $body-font;
+} 
 
 @media #{$large-and-up} {
     h1 { font-size: $h1-fontsize; line-height: 110%; margin: ($h1-fontsize / 2) 0 ($h1-fontsize / 2.5) 0;}

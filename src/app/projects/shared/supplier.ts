@@ -2,9 +2,9 @@ export class Supplier {
     id: string;
     name: string;
     // email: string;
-    subsidiaries?: {
+    stores?: {
         id?: string,
-        name?: string,
+        name: string,
         email: string,
         tel?: string
     }[];

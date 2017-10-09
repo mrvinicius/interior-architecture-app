@@ -406,16 +406,15 @@
               <tag-input id="tagInputContainer"
                 #partnersInput
                 formControlName="partners"
-                [ngModel]="partnersForm.value.partners"
                 [placeholder]="project.atnProject ? 'outros integrantes da equipe' : 'outros profissionais ou escritórios participantes'"
                 [secondaryPlaceholder]="project.atnProject ? 'outros integrantes da equipe' : 'outros profissionais ou escritórios participantes'"
                 [onlyFromAutocomplete]="true">
                 <tag-input-dropdown id="tagInputDropdown"
+                  [identifyBy]="'id'"
                   [displayBy]="'name'"
                   [limitItemsTo]="6"
-                  [identifyBy]="'id'"
                   [showDropdownIfEmpty]="true"
-                  [focusFirstElement]="true"
+                  [focusFirstElement]="false"
                   [autocompleteItems]="[{id: 'new', name: project.atnProject ? '- adicionar integrante -' : '- adicionar profissional -'}].concat(professionals)">
                 </tag-input-dropdown>
               </tag-input>

@@ -447,7 +447,7 @@ export class ProjectsService implements Resolve<string>{
                   return Service[Service[ProjectsService.servicesIds[service.TipoServicoId]]]
                 });
 
-                
+
 
                 amb.services = services;
 
@@ -853,7 +853,7 @@ export class ProjectsService implements Resolve<string>{
 
       });
   }
-  
+
   private getFromBackEnd(id: string): Observable<Project> {
     let options = new RequestOptions({ headers: this.getHeaders() });
 
@@ -972,6 +972,7 @@ export class ProjectsService implements Resolve<string>{
 
         let currentUser = this.auth.getCurrentUser(),
           currentProf: Professional;
+
         if (currentUser) {
           currentProf =
             new Professional(

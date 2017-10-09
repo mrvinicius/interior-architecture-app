@@ -15,32 +15,47 @@
     }
 }
 
-.mdl-expansion-panel {
-    .mdl-expansion-panel__header {
-        cursor: pointer;
+// .mdl-expansion-panel {
+//     .mdl-expansion-panel__header {
+//         cursor: pointer;
+//     }
+// }
+
+// mdl-expansion-panel {
+//     &:not(.expanded) {
+//         .mdl-expansion-panel__content {
+//             display: none;
+//         }
+//     }
+// }
+
+// mz-collapsible {
+//     &.collapsible-flat {
+//         .collapsible {
+//             margin-top: 0;
+//             box-shadow: none;
+//         }
+//     }
+// }
+
+// .collapsible {
+//     &.collapsible-flat {
+//         margin-top: 0;
+//         box-shadow: none;
+//     }
+// }
+
+// Angular Material 2 accordion
+.mat-accordion {
+    display: block;
+    margin: .5rem 0 1rem 0;
+    .mat-expansion-panel-header-title {
+        flex-basis: 0;
+    }
+    .mat-expansion-panel-header-description {
+        justify-content: space-between;
+        flex-basis: 0;
+        align-items: center;
     }
 }
 
-mdl-expansion-panel {
-    &:not(.expanded) {
-        .mdl-expansion-panel__content {
-            display: none;
-        }
-    }
-}
-
-mz-collapsible {
-    &.collapsible-flat {
-        .collapsible {
-            margin-top: 0;
-            box-shadow: none;
-        }
-    }
-}
-
-.collapsible {
-    &.collapsible-flat {
-        margin-top: 0;
-        box-shadow: none;
-    }
-}
