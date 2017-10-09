@@ -2,7 +2,6 @@ import { GalleryService } from 'ng-gallery';
 import { Component, OnInit, OnDestroy, ViewChild, Input, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { MdlExpansionPanelComponent } from '@angular-mdl/expansion-panel';
 import { conformToMask } from 'angular2-text-mask';
 import { default as cep, CEP } from 'cep-promise';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
