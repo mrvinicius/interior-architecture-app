@@ -30,20 +30,11 @@
         <div class="col m10 l8" style="padding: 0;">
   
           <form *ngIf="newBudgetForm" [formGroup]="newBudgetForm" novalidate>
-            <!-- <div style="display: flex; align-items: center; padding-left: 0;" class="col s12 m6"> -->
             <div style="padding-left: 0;" class="col s12 m6">
               <mz-input-container class="float-dropdown">
                 <input mz-input formControlName="supplier" [label]="'fornecedor'" [autocomplete]="suppliersAutocomplete" id="supplier" class="custom-error"
                   type="text">
-                <!-- <span class="feedback red-text">{{errorMessageResource.supplier}}</span> -->
               </mz-input-container>
-              <!-- <mz-input-container [ngClass]="{'hide': existingSupplier}">
-                <input mz-input formControlName="supplierEmail" label="email do fornecedor" id='supplierEmail' type='email'>
-              </mz-input-container> -->
-              <!-- <a (click)="openNewSupplierModal()" title="Adicionar fornecedor"
-                class="btn-floating btn-small waves-effect waves-dark transparent mv-red-light-text z-depth-0">
-                <i class="material-icons inherit-color">add</i>
-              </a> -->
             </div>
             <tag-input class="col s12 m6"
               formControlName="stores"
@@ -130,10 +121,9 @@
       <div class="divider row"></div>
     </section>
   
-  
     <section>
       <!-- <div *ngIf="!hasBudgets && !newBudgetFormOpened" id="" class="center-align no-select"> -->
-      <div *ngIf="(!budgets || !budgets.length) && !newBudgetFormOpened" id="" class="center-align no-select">
+      <div *ngIf="(!budgetRequests || !budgetRequests.length) && !newBudgetFormOpened" id="" class="center-align no-select">
         <i class="material-icons medium grey-text text-darken-5" style="display: block;">add_shopping_cart</i>
         <span class="grey-text text-darken-5" style="font-size: 1.2rem;">
           <span style="font-weight: bold;">Clique no '+'</span><br>para solicitar orçamento para um fornecedor
@@ -148,10 +138,10 @@
         </div>
       </div> -->
       
-      <div *ngIf="budgets && budgets.length" class="u-row">
+      <div *ngIf="budgetRequests && budgetRequests.length" class="u-row">
         <div class="u-col s12">
           <span class="black-secondary-text" style="text-transform: uppercase; display: inline-block;">
-            Solicitações de orçamento ({{budgets.length}})
+            Solicitações de orçamento ({{budgetRequests.length}})
           </span>
         </div>
       </div>
@@ -159,82 +149,124 @@
       <md-accordion
         [ngClass]="{'scale-in': firstAdded}"
         class="scale-transition scale-out"
-        *ngIf="budgets && budgets.length">
-        <md-expansion-panel class="grey lighten-5" *ngFor="let b of budgets" hideToggle="true">
+        *ngIf="budgetRequests && budgetRequests.length">
+        <md-expansion-panel class="grey lighten-5" *ngFor="let bReq of budgetRequests" hideToggle="true">
           <md-expansion-panel-header>
             <md-panel-title>
-                <span class="truncate">{{b.product.description}}</span>
+                <span class="truncate">{{bReq.product.description}}</span>
             </md-panel-title>
             <md-panel-description>
-              {{b.supplier.name}}
-              <ng-container [ngSwitch]="b.status">
+              {{bReq.supplier.name}}
+              <ng-container [ngSwitch]="bReq.status">
                 <i *ngSwitchCase="'Waiting'" class="material-icons">schedule</i>
                 <i *ngSwitchCase="'Budgeted'" class="material-icons">done</i>
                 <i *ngSwitchCase="'All_Budgeted'" class="material-icons">done_all</i>
               </ng-container>
             </md-panel-description>
           </md-expansion-panel-header>
-          <div class="u-col s12">
-            <label class="readonly-value-label">Fornecedor</label>
-            <h5>{{b.supplier.name}}</h5>
-          </div>
-          <div class="u-col s12">
-            <label class="readonly-value-label">Pontos de venda</label>
-            <h5>
-              <ng-container *ngFor="let sub of b.supplier.stores; let i = index;">
-                {{sub.name}}<ng-container *ngIf="(i+1) < b.supplier.stores.length">, </ng-container>
-              </ng-container>
-            </h5>
-          </div>
-          <div class="u-col s12">
-            <label class="readonly-value-label">Produto</label>
-            <h5>{{b.product.description}}</h5>
-          </div>
-          <div class="u-col s12">
-            <label class="readonly-value-label">Quantidade</label>
-            <h5>
-              <ng-container *ngIf="b.quantityUnity !== 'peso'">{{b.quantity}}</ng-container>
-              <ng-container *ngIf="b.quantityUnity === 'peso'">{{b.quantity | brNumberFormat}} kg</ng-container>
-            </h5>
-          </div>
-  
-          <div *ngIf="b.color && b.color.length" class="u-col s12">
-            <label class="readonly-value-label">Cor</label>
-            <h5>{{b.color}}</h5>
-          </div>
-          <div *ngIf="b.note && b.note.length" class="u-col s12">
-            <label class="readonly-value-label">Observações</label>
-            <h5>{{b.note}}</h5>
+          <div class="row">
+            <div class="u-col s6">
+              <label class="readonly-value-label">Fornecedor</label>
+              <h5>{{bReq.supplier.name}}</h5>
+            </div>
+            <div class="u-col s6">
+              <label class="readonly-value-label">Pontos de venda</label>
+              <h5>
+                <ng-container *ngFor="let sub of bReq.supplier.stores; let i = index;">
+                  {{sub.name}}<ng-container *ngIf="(i+1) < bReq.supplier.stores.length">, </ng-container>
+                </ng-container>
+              </h5>
+            </div>
+            <div class="u-col s6">
+              <label class="readonly-value-label">Produto</label>
+              <h5>{{bReq.product.description}}</h5>
+            </div>
+            <div class="u-col s6">
+              <label class="readonly-value-label">Quantidade</label>
+              <h5>
+                <ng-container *ngIf="bReq.quantityUnity !== 'peso'">{{bReq.quantity}}</ng-container>
+                <ng-container *ngIf="bReq.quantityUnity === 'peso'">{{bReq.quantity | brNumberFormat}} kg</ng-container>
+              </h5>
+            </div>
+            <div *ngIf="bReq.color && bReq.color.length" class="u-col s6">
+              <label class="readonly-value-label">Cor</label>
+              <h5>{{bReq.color}}</h5>
+            </div>
+            <div *ngIf="bReq.note && bReq.note.length" class="u-col s6">
+              <label class="readonly-value-label">Observações</label>
+              <h5>{{bReq.note}}</h5>
+            </div>
           </div>
 
-          <div>
+          <div class="row">
             <div class="u-col s12">
               <div class="divider row"></div>
               <span class="black-secondary-text" style="display: inline-block; margin-bottom: 0.5rem; text-transform: uppercase;">
                 Orçamentos
               </span>
             </div>
-            <div class="card" style="margin: 0; box-shadow: 0 1px 2px rgba(0,0,0,.23);">
-              <div class="card-content" style="padding: 8px;">
-                <span class="black-primary-text" style="font-size: 1.2em;">Morumbi</span>
-                <br>
-                <br>
-                <p>Não temos o produto.</p>
-                <p class="grey-text text-darken-2"><b>R$ 10.000,00</b></p>
-              </div>
+            <div class="u-col s12">
+              <md-table #table [dataSource]="getBudgetDataSource(bReq.id)" style="box-shadow: 0 1px 2px rgba(0,0,0,.23);">
+                <ng-container mdColumnDef="storeName">
+                  <md-header-cell *mdHeaderCellDef >Ponto de venda</md-header-cell>
+                  <md-cell *mdCellDef="let row"> {{row.storeName}} </md-cell>
+                </ng-container>
+            
+                <ng-container mdColumnDef="quantity">
+                  <md-header-cell *mdHeaderCellDef >Quant.</md-header-cell>
+                  <md-cell *mdCellDef="let row"> {{row.quantity}} </md-cell>
+                </ng-container>
+
+                <ng-container mdColumnDef="unitPrice">
+                    <md-header-cell *mdHeaderCellDef >Preço Unit.</md-header-cell>
+                    <md-cell *mdCellDef="let row"> {{row.unitPrice}} </md-cell>
+                  </ng-container>
+            
+                <ng-container mdColumnDef="totalPrice">
+                  <md-header-cell *mdHeaderCellDef >Preço Total</md-header-cell>
+                  <md-cell *mdCellDef="let row"> {{row.totalPrice}} </md-cell>
+                </ng-container>
+
+                <ng-container mdColumnDef="color">
+                  <md-header-cell *mdHeaderCellDef >Cor</md-header-cell>
+                  <md-cell *mdCellDef="let row"> {{row.color}} </md-cell>
+                </ng-container>
+
+                <ng-container mdColumnDef="note">
+                  <md-header-cell *mdHeaderCellDef >Observações</md-header-cell>
+                  <md-cell *mdCellDef="let row"> {{row.note}} </md-cell>
+                </ng-container>
+            
+                <md-header-row *mdHeaderRowDef="displayedColumns"></md-header-row>
+                <md-row *mdRowDef="let row; columns: displayedColumns;"></md-row>
+              </md-table>
             </div>
-            <p class="grey-text text-darken-1" style="font-size: .8em; margin-bottom: 0;">Dec 31, 2016 at 12:46 AM</p>
+<!-- 
+            <div class="u-col s12">
+              <div class="card" style="margin: 0; box-shadow: 0 1px 2px rgba(0,0,0,.23);">
+                <div class="card-content" style="padding: 8px;">
+                  <span class="black-primary-text" style="font-size: 1.2em;">Morumbi</span>
+                  <br>
+                  <br>
+                  <p>Não temos o produto.</p>
+                  <p class="grey-text text-darken-2"><b>R$ 10.000,00</b></p>
+                </div>
+              </div>
+              <p class="grey-text text-darken-1" style="font-size: .8em; margin-bottom: 0;">Dec 31, 2016 at 12:46 AM</p>
+            </div>
             <div class="divider row" style="margin-top: 0.5rem;"></div>
-            <div class="card" style="margin: 0; box-shadow: 0 1px 2px rgba(0,0,0,.23);">
-              <div class="card-content" style="padding: 8px;">
-                <span class="black-primary-text" style="font-size: 1.2em;">Berrini</span>                  
-                <p>Este produto estará disponível em duas semanas.</p>
+            <div class="u-col s12">
+              <div class="card" style="margin: 0; box-shadow: 0 1px 2px rgba(0,0,0,.23);">
+                <div class="card-content" style="padding: 8px;">
+                  <span class="black-primary-text" style="font-size: 1.2em;">Berrini</span>                  
+                  <p>Este produto estará disponível em duas semanas.</p>
+                </div>
               </div>
-            </div>
-            <p class="grey-text text-darken-1" style="margin-bottom: 0; font-size: .8em;">Dec 31, 2016 at 12:46 AM</p>
+              <p class="grey-text text-darken-1" style="margin-bottom: 0; font-size: .8em;">Dec 31, 2016 at 12:46 AM</p>
+            </div> -->
           </div>
           <md-action-row>
-            <button (click)="removeBudget(b.id)" class="btn-flat">Remover</button>
+            <button (click)="removeBudget(bReq.id)" class="btn-flat">Remover</button>
             <button class="btn-flat">Especificar</button>
           </md-action-row>
         </md-expansion-panel>

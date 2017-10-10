@@ -1,7 +1,7 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MaterialModule, MdMenuModule, MdExpansionModule } from '@angular/material';
+import { MaterialModule, MdMenuModule, MdExpansionModule, MdTableModule } from '@angular/material';
 import { MdlLayoutModule } from '@angular-mdl/core';
 import { MdlPopoverModule } from '@angular-mdl/popover';
 import { MdlSelectModule } from '@angular-mdl/select';
@@ -77,6 +77,7 @@ export const galleryConfig: GalleryConfig = {
     MdlLayoutModule,
     MdlPopoverModule,
     MdlSelectModule,
+    MdTableModule,
     MaterialModule,
     MdMenuModule,
     MdExpansionModule,

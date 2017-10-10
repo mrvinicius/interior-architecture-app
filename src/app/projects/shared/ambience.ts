@@ -1,5 +1,4 @@
 import { AmbienceDescription } from './ambience-description.enum';
-import { Budget } from './budget';
 import { Service } from './service.enum';
 import { ServicesGroup } from './services-group.enum';
 
@@ -9,7 +8,6 @@ export class Ambience {
     area?: number;
     private _servicesGroup?: ServicesGroup;
     private _services?: Service[];
-    budgets?: Budget[];
     cost?: number;
     comments?: string;
     isActive: boolean;

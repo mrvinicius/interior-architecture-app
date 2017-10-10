@@ -1,16 +1,11 @@
+import { Store } from '../shared/store';
+
 export class Supplier {
     id: string;
     name: string;
-    // email: string;
-    stores?: {
-        id?: string,
-        name: string,
-        email: string,
-        tel?: string
-    }[];
+    stores?: Store[];
 
-    constructor(name: string, email: string) {
+    constructor(name: string) {
         this.name = name;
-        // this.email = email;
     }
 }

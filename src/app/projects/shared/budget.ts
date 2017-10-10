@@ -1,36 +1,18 @@
-import { Product } from './product';
-import { Supplier } from './supplier';
+import { Store } from './store';
 
-type BudgetStatus = 'Waiting' | 'Budgeted' | 'All_Budgeted';
-type QuantityUnity = 'unidade' | 'peso' | 'medida2d' | 'medida3d';
+export type QuantityUnity = 'unidade' | 'peso' | 'medida2d' | 'medida3d';
 
 export class Budget {
-    id: string;
-    
-    supplier: Supplier;
-
-    product: Product;
-
+    store: Store;
     quantityUnity: QuantityUnity;
-	quantity: string | number;
-	color?: string;
+    quantity: string | number;
+    unitPrice?: number;
+    totalPrice?: number;
+    color?: string;
     note?: string;
-    
-    replies?: string;
-        
-    status: BudgetStatus;
+    status: 'Waiting' | 'Budgeted';
 
-    constructor(
-        supplier: Supplier,
-        product: Product,
-		quantityUnity: QuantityUnity,
-		quantity: string | number,
-        status: BudgetStatus
-    ) {
-        this.supplier = supplier;
-        this.product = product;
-        this.status = status;
-        this.quantityUnity = quantityUnity;
-		this.quantity = quantity;
+    constructor() {
+        
     }
 }

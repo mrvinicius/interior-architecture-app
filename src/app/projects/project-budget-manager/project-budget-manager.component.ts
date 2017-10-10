@@ -1,3 +1,4 @@
+import { DataSource } from '@angular/cdk/collections';
 import { ChangeDetectorRef, Component, OnInit, Input, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, Validators } from '@angular/forms';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
@@ -7,6 +8,7 @@ import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 
 import { Budget } from '../shared/budget';
+import { BudgetRequest } from '../shared/budget-request';
 import { BudgetService } from '../shared/budget.service';
 import { NewSupplierModal } from './new-supplier-modal.component';
 import { Product } from '../shared/product';
@@ -46,18 +48,12 @@ export class ProjectBudgetManagerComponent implements OnInit {
     // allowLeadingZeroes: true,
     requireDecimal: true
   });
-  errorMessageResource = {
-    // supplier: {
-    //   alreadyExists: 'Este fornecedor já está na lista',
-    //   required: 'Campo obrigatório'
-    // }
-    supplier: 'Não conhecemos este fornecedor'
-  };
   existingSupplier: boolean;
-  budgets: Budget[];
+  budgetRequests: BudgetRequest[];
   firstAdded: boolean;
   storeAddSuggested: boolean = false;
   storesChipdata: { id: string, name: string }[] = [];
+  displayedColumns = ['storeName', 'quantity', 'unitPrice', 'totalPrice', 'color', 'note'];
 
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -67,19 +63,17 @@ export class ProjectBudgetManagerComponent implements OnInit {
     private modalService: MzModalService,
     private supplierService: SupplierService,
     private cdRef: ChangeDetectorRef,
-    private toastService: MzToastService
+    private toastService: MzToastService,
+    private budgetService: BudgetService
   ) {
     this.newBudgetForm = this.createBudgetForm();
-    // this.newBudgetForm.get('stores').setValue([{id: 'ex', name: 'Ponto+'}], {
-    //   onlySelf: false,
-    //   emitEvent: false
-    // })
-    this.budgets = [];
-
+    this.budgetRequests = [];
   }
 
-  deleteBudget(id: string) {
-    console.log(id);
+  getBudgetDataSource(requestId: string): BudgetDataSource {
+    let budgetDataProvider =
+      new BudgetDataProvider(this.budgetService, requestId);
+    return new BudgetDataSource(budgetDataProvider);
   }
 
   ngOnInit() {
@@ -182,17 +176,9 @@ export class ProjectBudgetManagerComponent implements OnInit {
     this.ngUnsubscribe.complete();
   }
 
-  openBudgetEditionMode(id: string) {
-    console.log(id);
-  }
-
-  openNewSupplierModal() {
-    this.modalService.open(NewSupplierModal, {})
-  }
-
   removeBudget(id: string) {
-    let index = this.budgets.findIndex(b => b.id === id);
-    this.budgets.splice(index, 1);
+    let index = this.budgetRequests.findIndex(b => b.id === id);
+    this.budgetRequests.splice(index, 1);
   }
 
   toggleNewBudgetForm() {
@@ -220,12 +206,12 @@ export class ProjectBudgetManagerComponent implements OnInit {
   }
 
   validateAndSendBudgetForm(formData: any, validatedSupplier?: Supplier) {
-    let budget: Budget,
+    let budgetRequest: BudgetRequest,
       supplier: Supplier,
       product: Product,
       quantity: string | number;
 
-      console.log(formData);
+    console.log(formData);
 
     // Remove Tag Input examlpe
     let exampleIndex = formData.stores.findIndex(s => s.id === 'ex');
@@ -248,18 +234,18 @@ export class ProjectBudgetManagerComponent implements OnInit {
     } else if (this.existingSupplier && validatedSupplier) {
       supplier = validatedSupplier;
     } else if (formData.supplier && formData.supplier.length) {
-      supplier = new Supplier(formData.supplier, formData.supplierEmail);
+      supplier = new Supplier(formData.supplier);
     } else {
       console.error('Informe o fornecedor desta solicitação')
       return;
     }
     /*
-        // Validating Supplier email 
-        if (!this.existingSupplier && (!formData.supplierEmail || !(formData.supplierEmail.length > 0))) {
-          console.error('Fornecedor novo aqui no Archabox? Informe o email dele')
-          // console.error('É um fornecedor novo? Informe o email dele')
-          return;
-        }
+      // Validating Supplier email 
+      if (!this.existingSupplier && (!formData.supplierEmail || !(formData.supplierEmail.length > 0))) {
+        console.error('Fornecedor novo aqui no Archabox? Informe o email dele')
+        // console.error('É um fornecedor novo? Informe o email dele')
+        return;
+      }
     */
 
     // TODO: Validate and Get Stores
@@ -331,24 +317,26 @@ export class ProjectBudgetManagerComponent implements OnInit {
       supplier
     );
 
-    budget = new Budget(
+    budgetRequest = new BudgetRequest(
       supplier,
       product,
       formData.quantityUnity,
       quantity,
       'Waiting'
     );
-    budget.id = 'f933jt';
-    budget.color = formData.color;
-    budget.note = formData.note;
-    budget.supplier.stores = formData.stores.map(s => {
-      return {
-        id: s.value,
-        name: s.display,
-      }
-    });
 
-    this.sendBudgetRequest(budget);
+    budgetRequest.id = 'f933jt';
+    budgetRequest.color = formData.color;
+    budgetRequest.note = formData.note;
+    budgetRequest.supplier.stores =
+      formData.stores.map(s => {
+        return {
+          id: s.value,
+          name: s.display,
+        }
+      });
+
+    this.sendBudgetRequest(budgetRequest);
   }
 
   private createBudgetForm(budget?): FormGroup {
@@ -391,14 +379,14 @@ export class ProjectBudgetManagerComponent implements OnInit {
     return budgetForm;
   }
 
-  private sendBudgetRequest(budget: Budget) {
+  private sendBudgetRequest(budget: BudgetRequest) {
     this.toggleNewBudgetForm();
     // let bgts = [];
-    if (this.budgets.length === 0) {
+    if (this.budgetRequests.length === 0) {
       window.setTimeout(() => this.firstAdded = true, 350)
     }
 
-    this.budgets.push(budget);
+    this.budgetRequests.push(budget);
     this.toastService.show('Solicitação enviada', 3000, 'green');
     // this.newBudgetForm.reset();
 
@@ -438,4 +426,47 @@ export class ProjectBudgetManagerComponent implements OnInit {
       emitEvent: true
     });
   }
+}
+
+/** An example database that the data source uses to retrieve data for the table. */
+export class BudgetDataProvider {
+
+  get data(): Observable<Budget[]> {
+    return this.budgetService.getRequestReplies(this.requestId);
+  }
+
+  constructor(private budgetService: BudgetService, private requestId: string) {
+
+  }
+}
+
+/**
+ * Data source to provide what data should be rendered in the table. Note that the data source
+ * can retrieve its data in any way. In this case, the data source is provided a reference
+ * to a common data base, ExampleDatabase. It is not the data source's responsibility to manage
+ * the underlying data. Instead, it only needs to take the data and send the table exactly what
+ * should be rendered.
+ */
+export class BudgetDataSource extends DataSource<any> {
+
+  constructor(private budgetProvider: BudgetDataProvider) {
+    super();
+  }
+
+  connect(): Observable<any[]> {
+    const source = this.budgetProvider.data;
+    return source.map(budgets => budgets.map(b => {
+      return {
+        storeName: b.store.name,
+        quantityUnity: b.quantityUnity,
+        quantity: b.quantity,
+        unitPrice: b.unitPrice,
+        totalPrice: b.totalPrice,
+        color: b.color,
+        note: b.note
+      }
+    }));
+  }
+
+  disconnect() { }
 }
