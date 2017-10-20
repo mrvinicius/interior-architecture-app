@@ -5,17 +5,17 @@
       <div class="row" style="position: relative;">
         <div class="divider">
         </div>
-        <a (click)="toggleNewBudgetForm()" [ngClass]="{'pulse': !budgets || !budgets.length && !newBudgetFormOpened}" class="btn-floating waves-effect waves-light z-depth-2 add-button-on-divider hide-on-med-and-up"
+        <a (click)="toggleNewBudgetForm()" title="Solicitar orçamento" [ngClass]="{'pulse': !budgets || !budgets.length && !newBudgetFormOpened}" class="btn-floating z-depth-2 add-button-on-divider hide-on-med-and-up"
           id="newBudgetButton">
           <i class="large material-icons" [ngClass]="{'spin-left': newBudgetFormOpened, 'spin-right': !newBudgetFormOpened}">add</i>
         </a>
-        <a (click)="toggleNewBudgetForm()" [ngClass]="{'pulse': !budgets || !budgets.length && !newBudgetFormOpened}" class="btn-floating waves-effect waves-light btn-large z-depth-2 add-button-on-divider hide-on-small-only"
+        <a (click)="toggleNewBudgetForm()" title="Solicitar orçamento" [ngClass]="{'pulse': !budgets || !budgets.length && !newBudgetFormOpened}" class="btn-floating btn-large z-depth-2 add-button-on-divider hide-on-small-only"
           id="newBudgetButton">
           <i class="large material-icons" [ngClass]="{'spin-left': newBudgetFormOpened, 'spin-right': !newBudgetFormOpened}">add</i>
         </a>
       </div>
     </section>
-  
+    
     <section id="newBudgetFormContainer" style="display: none;">
       <div class="row">
         <div class="u-col s12">
@@ -55,7 +55,7 @@
               <div class="col s12 m8" style="align-items: center; padding-left: 0;">
                 <mz-input-container class="float-dropdown" style="flex: auto;">
                   <input mz-input mz-validation formControlName="productDesc" [formControlDisabled]="!newBudgetForm.controls['supplier'].value"
-                    [label]="'produto'" [autocomplete]="productsAutocomplete" id="productDesc" type="text">
+                    [label]="'produto'" autocomplete="off" [autocomplete]="productsAutocomplete" id="productDesc" type="text">
                 </mz-input-container>
                 <!-- <a title="Adicionar produto" [ngClass]="{ 'disabled': newBudgetForm.controls['productDesc'].disabled }"  class="btn-floating btn-small waves-effect waves-dark transparent mv-red-light-text" style="box-shadow: none;">
                   <i class="material-icons inherit-color">add</i>
@@ -120,7 +120,8 @@
       </div>
       <div class="divider row"></div>
     </section>
-  
+
+
     <section>
       <!-- <div *ngIf="!hasBudgets && !newBudgetFormOpened" id="" class="center-align no-select"> -->
       <div *ngIf="(!budgetRequests || !budgetRequests.length) && !newBudgetFormOpened" id="" class="center-align no-select">
@@ -137,6 +138,8 @@
         </span>
         </div>
       </div> -->
+
+
       
       <div *ngIf="budgetRequests && budgetRequests.length" class="u-row">
         <div class="u-col s12">
@@ -150,7 +153,7 @@
         [ngClass]="{'scale-in': firstAdded}"
         class="scale-transition scale-out"
         *ngIf="budgetRequests && budgetRequests.length">
-        <md-expansion-panel class="grey lighten-5" *ngFor="let bReq of budgetRequests" hideToggle="true">
+        <md-expansion-panel (opened)="closeBudgetForm()" class="grey lighten-5" *ngFor="let bReq of budgetRequests" hideToggle="true">
           <md-expansion-panel-header>
             <md-panel-title>
                 <span class="truncate">{{bReq.product.description}}</span>
@@ -158,13 +161,13 @@
             <md-panel-description>
               {{bReq.supplier.name}}
               <ng-container [ngSwitch]="bReq.status">
-                <i *ngSwitchCase="'Waiting'" class="material-icons">schedule</i>
-                <i *ngSwitchCase="'Budgeted'" class="material-icons">done</i>
-                <i *ngSwitchCase="'All_Budgeted'" class="material-icons">done_all</i>
+                <i title="Ninguém respondeu ainda" *ngSwitchCase="'Waiting'" class="material-icons">schedule</i>
+                <i title="Alguns responderam" *ngSwitchCase="'Budgeted'" class="material-icons">done</i>
+                <i title="Todos responderam" *ngSwitchCase="'All_Budgeted'" class="material-icons mv-red">done_all</i>
               </ng-container>
             </md-panel-description>
           </md-expansion-panel-header>
-          <div class="row">
+          <!-- <div class="u-row">
             <div class="u-col s6">
               <label class="readonly-value-label">Fornecedor</label>
               <h5>{{bReq.supplier.name}}</h5>
@@ -196,11 +199,10 @@
               <label class="readonly-value-label">Observações</label>
               <h5>{{bReq.note}}</h5>
             </div>
-          </div>
-
-          <div class="row">
+          </div> -->
+          <div class="u-row">
             <div class="u-col s12">
-              <div class="divider row"></div>
+              <!-- <div class="divider row"></div> -->
               <span class="black-secondary-text" style="display: inline-block; margin-bottom: 0.5rem; text-transform: uppercase;">
                 Orçamentos
               </span>
@@ -218,9 +220,9 @@
                 </ng-container>
 
                 <ng-container mdColumnDef="unitPrice">
-                    <md-header-cell *mdHeaderCellDef >Preço Unit.</md-header-cell>
-                    <md-cell *mdCellDef="let row"> {{row.unitPrice}} </md-cell>
-                  </ng-container>
+                  <md-header-cell *mdHeaderCellDef >Preço Unit.</md-header-cell>
+                  <md-cell *mdCellDef="let row"> {{row.unitPrice}} </md-cell>
+                </ng-container>
             
                 <ng-container mdColumnDef="totalPrice">
                   <md-header-cell *mdHeaderCellDef >Preço Total</md-header-cell>
@@ -236,38 +238,15 @@
                   <md-header-cell *mdHeaderCellDef >Observações</md-header-cell>
                   <md-cell *mdCellDef="let row"> {{row.note}} </md-cell>
                 </ng-container>
-            
+
                 <md-header-row *mdHeaderRowDef="displayedColumns"></md-header-row>
                 <md-row *mdRowDef="let row; columns: displayedColumns;"></md-row>
               </md-table>
             </div>
-<!-- 
-            <div class="u-col s12">
-              <div class="card" style="margin: 0; box-shadow: 0 1px 2px rgba(0,0,0,.23);">
-                <div class="card-content" style="padding: 8px;">
-                  <span class="black-primary-text" style="font-size: 1.2em;">Morumbi</span>
-                  <br>
-                  <br>
-                  <p>Não temos o produto.</p>
-                  <p class="grey-text text-darken-2"><b>R$ 10.000,00</b></p>
-                </div>
-              </div>
-              <p class="grey-text text-darken-1" style="font-size: .8em; margin-bottom: 0;">Dec 31, 2016 at 12:46 AM</p>
-            </div>
-            <div class="divider row" style="margin-top: 0.5rem;"></div>
-            <div class="u-col s12">
-              <div class="card" style="margin: 0; box-shadow: 0 1px 2px rgba(0,0,0,.23);">
-                <div class="card-content" style="padding: 8px;">
-                  <span class="black-primary-text" style="font-size: 1.2em;">Berrini</span>                  
-                  <p>Este produto estará disponível em duas semanas.</p>
-                </div>
-              </div>
-              <p class="grey-text text-darken-1" style="margin-bottom: 0; font-size: .8em;">Dec 31, 2016 at 12:46 AM</p>
-            </div> -->
           </div>
           <md-action-row>
             <button (click)="removeBudget(bReq.id)" class="btn-flat">Remover</button>
-            <button class="btn-flat">Especificar</button>
+            <button (click)="specifyBudget(bReq.replies)" class="btn">Especificar</button>
           </md-action-row>
         </md-expansion-panel>
       </md-accordion>
@@ -275,3 +254,4 @@
     </section>
   
   </div>
+

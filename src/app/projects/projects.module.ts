@@ -25,7 +25,7 @@ import { ProjectsRoutingModule } from './projects-routing.module';
 import { ProposalService } from './shared/proposal.service';
 import { ProjectProposalPreviewComponent } from './project-proposal-preview/project-proposal-preview.component';
 import { ProjectProposalManagerComponent } from './project-proposal-manager/project-proposal-manager.component';
-import { ProjectBudgetManagerComponent } from './project-budget-manager/project-budget-manager.component';
+import { ProjectBudgetManagerComponent, StoreBudgetSelectModal } from './project-budget-manager/project-budget-manager.component';
 import { ProjectGalleryComponent } from './project-gallery/project-gallery.component';
 import { SharedModule } from '../shared/shared.module';
 import { SupplierService } from './shared/supplier.service';
@@ -85,7 +85,6 @@ export const galleryConfig: GalleryConfig = {
     ReactiveFormsModule,
     NgUploaderModule,
     GalleryModule.forRoot(galleryConfig),
-
     BrowserAnimationsModule,
     ProjectsRoutingModule
   ],
@@ -99,13 +98,15 @@ export const galleryConfig: GalleryConfig = {
     ProjectProposalPreviewComponent,
     ProjectProposalManagerComponent,
     ProjectBudgetManagerComponent,
+    StoreBudgetSelectModal,
     ProjectGalleryComponent
   ],
   providers: [],
   entryComponents: [
     NewPartnerModalComponent,
     NewProjectModalComponent,
-    NewSupplierModal
+    NewSupplierModal,
+    StoreBudgetSelectModal
   ]
 })
 export class ProjectsModule {

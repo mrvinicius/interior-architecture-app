@@ -10,9 +10,9 @@
     source-map "^0.5.6"
     typescript "^2.3.3"
 
-"@angular-mdl/core@^4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@angular-mdl/core/-/core-4.0.3.tgz#9c52c8da1f8094db4d1b01d7d2faa366f6f35159"
+"@angular-mdl/core@^4.0.8":
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/@angular-mdl/core/-/core-4.0.8.tgz#01dee7c6f92663a57ba79f248d85e6f233eba073"
 
 "@angular-mdl/popover@^0.6.3":
   version "0.6.3"

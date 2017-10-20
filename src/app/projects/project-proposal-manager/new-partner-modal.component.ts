@@ -11,7 +11,6 @@ import { ProjectsService } from '../shared/projects.service';
         <mz-modal class="small-modal">
             <mz-modal-header>
                 Adicionar profissional
-                
             </mz-modal-header>
             <mz-modal-content>
                 <form #newPartnerForm="ngForm">
@@ -41,7 +40,6 @@ import { ProjectsService } from '../shared/projects.service';
         </mz-modal>
     `
 })
-
 export class NewPartnerModalComponent extends MzBaseModal {
     partnerName: string;
     partnerEmail: string;

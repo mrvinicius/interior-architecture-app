@@ -2,7 +2,7 @@ import { DataSource } from '@angular/cdk/collections';
 import { ChangeDetectorRef, Component, OnInit, Input, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, Validators } from '@angular/forms';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
-import { MzModalService, MzToastService } from 'ng2-materialize';
+import { MzModalService, MzToastService, MzBaseModal } from 'ng2-materialize';
 import { TagInputComponent, TagInputDropdown } from 'ng2-tag-input';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
@@ -68,6 +68,13 @@ export class ProjectBudgetManagerComponent implements OnInit {
   ) {
     this.newBudgetForm = this.createBudgetForm();
     this.budgetRequests = [];
+
+  }
+
+  closeBudgetForm() {
+    if (this.newBudgetFormOpened) {
+      this.toggleNewBudgetForm();
+    }
   }
 
   getBudgetDataSource(requestId: string): BudgetDataSource {
@@ -104,7 +111,7 @@ export class ProjectBudgetManagerComponent implements OnInit {
             .subscribe(supplier => {
 
               // Clear Stores
-              this.newBudgetForm.get('stores').setValue([{ value: 'ex', display: '+ponto de venda', id: 'ex', name: 'Ponto+' }], {
+              this.newBudgetForm.get('stores').setValue([{ value: 'ex', display: '+ponto de venda', id: 'ex', name: '+ponto de venda' }], {
                 onlySelf: false,
                 emitEvent: false
               })
@@ -181,6 +188,36 @@ export class ProjectBudgetManagerComponent implements OnInit {
     this.budgetRequests.splice(index, 1);
   }
 
+  specifyBudget(replies: Budget[]) {
+    if (!replies || !replies.length) {
+      console.error('Nenhum orçamento de ponto de venda');
+      return;
+    }
+
+    if (replies.length > 1) {
+      console.log(replies);
+      
+      let budgetedReplies =
+        replies.filter(budget => budget.status === 'Budgeted');
+
+      if (budgetedReplies.length < 1) {
+        this.toastService.show('Nenhuma loja orçou ainda', 3000);
+        return;
+      }
+
+
+      this.modalService.open(StoreBudgetSelectModal, {a: 'b'})
+
+    } else if (replies.length === 1) {
+      if (replies[0].status === 'Waiting') {
+        this.toastService.show('Produto ainda não foi orçado', 3000);
+        return;
+      }
+
+      // send request
+    }
+  }
+
   toggleNewBudgetForm() {
     let $formContainer = $('#newBudgetFormContainer');
 
@@ -210,8 +247,6 @@ export class ProjectBudgetManagerComponent implements OnInit {
       supplier: Supplier,
       product: Product,
       quantity: string | number;
-
-    console.log(formData);
 
     // Remove Tag Input examlpe
     let exampleIndex = formData.stores.findIndex(s => s.id === 'ex');
@@ -335,13 +370,14 @@ export class ProjectBudgetManagerComponent implements OnInit {
           name: s.display,
         }
       });
+    budgetRequest.replies = this.bgService.replies;
 
     this.sendBudgetRequest(budgetRequest);
   }
 
   private createBudgetForm(budget?): FormGroup {
     let chipsData: any[] = [
-      { value: 'ex', display: 'Ponto+', id: 'ex', name: 'Ponto+' }
+      { value: 'ex', display: '+ponto de venda', id: 'ex', name: '+ponto de venda' }
     ];
 
     // chipsData = this.getPartnersByIds(ids).map((prof: any) => {
@@ -435,9 +471,10 @@ export class BudgetDataProvider {
     return this.budgetService.getRequestReplies(this.requestId);
   }
 
-  constructor(private budgetService: BudgetService, private requestId: string) {
-
-  }
+  constructor(
+    private budgetService: BudgetService,
+    private requestId: string
+  ) { }
 }
 
 /**
@@ -457,6 +494,7 @@ export class BudgetDataSource extends DataSource<any> {
     const source = this.budgetProvider.data;
     return source.map(budgets => budgets.map(b => {
       return {
+        id: b.id,
         storeName: b.store.name,
         quantityUnity: b.quantityUnity,
         quantity: b.quantity,
@@ -469,4 +507,28 @@ export class BudgetDataSource extends DataSource<any> {
   }
 
   disconnect() { }
+}
+
+@Component({
+  selector: 'abx-store-budget-select-modal',
+  template: `
+    <mz-modal [fixedFooter]="true" class="small-modal">
+      <mz-modal-header>
+        Escolha o orçamento
+      </mz-modal-header>
+      <mz-modal-content>
+        <ng-template #budgetSelectInputContainer>
+
+        </ng-template>
+      </mz-modal-content>
+      <mz-modal-footer>
+      <button mz-button [flat]="true" mz-modal-close>Enviar</button>
+        <button mz-button [flat]="true" mz-modal-close>Disagree</button>
+      </mz-modal-footer>
+    </mz-modal>
+  `,
+})
+export class StoreBudgetSelectModal extends MzBaseModal {
+  @ViewChild('budgetSelectInputContainer') budgetSelectInputContainer;
+
 }

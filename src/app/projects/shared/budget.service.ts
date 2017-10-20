@@ -7,8 +7,10 @@ import { BudgetRequest } from './budget-request';
 @Injectable()
 export class BudgetService {
   private readonly baseUrl = 'https://archaboxapi.azurewebsites.net/api/orcamento';
-  private replies: Budget[] = [
+  // private replies: Budget[] = [
+  replies: Budget[] = [
     {
+      id: '45r35f4',
       store: { name: 'Água Rasa', email: 'agrasa@loja.com' },      
       quantityUnity: 'peso',
       quantity: 22.3,
@@ -19,6 +21,7 @@ export class BudgetService {
       status: 'Waiting'
     },
     {
+      id: 'f8w3sd',
       store: { name: 'Tatuapé', email: 'tatu@loja.com' },
       quantityUnity: 'unidade',
       quantity: 2,

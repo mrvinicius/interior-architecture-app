@@ -3,6 +3,7 @@ import { Store } from './store';
 export type QuantityUnity = 'unidade' | 'peso' | 'medida2d' | 'medida3d';
 
 export class Budget {
+    id: string;
     store: Store;
     quantityUnity: QuantityUnity;
     quantity: string | number;

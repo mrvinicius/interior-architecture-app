@@ -97,9 +97,9 @@
                     <div class="col s12 m6" style="margin-bottom: 0.75rem;">
                       <mz-select-container>
                         <select mz-select formControlName="services" id='servicesSelect' placeholder="serviços do ambiente" multiple>
-                            <option *ngFor="let sv of services"
-                                [value]="services.indexOf(sv)"
-                                [selected]="amb.services.includes(services.indexOf(sv))">{{sv}}</option>
+                          <option *ngFor="let sv of services"
+                            [value]="services.indexOf(sv)"
+                            [selected]="amb.services.includes(services.indexOf(sv))">{{sv}}</option>
                         </select>
                       </mz-select-container>
                     </div>
