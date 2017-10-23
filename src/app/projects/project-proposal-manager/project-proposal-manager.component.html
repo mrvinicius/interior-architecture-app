@@ -14,8 +14,8 @@
             </ng-container>
             <mz-select-container class="has-add-option">
               <select mz-select #clientSelectInput formControlName="clientId" id='clientSelect' label="cliente">
-                  <option [value]="0">- adicionar cliente -</option>
-                  <option *ngFor="let c of allClients()"
+                <option [value]="0">- adicionar cliente -</option>
+                <option *ngFor="let c of allClients()"
                   [value]="c.id"
                   [selected]="c.id === project.client.id">{{c.name}}</option>
               </select>
@@ -207,8 +207,6 @@
                 <gallery></gallery>
               </div>
             </div>
-
-
           </ng-container>
 
 
@@ -316,9 +314,9 @@
                   <div class="col s8 m4">
                     <mz-select-container>
                       <select mz-select formControlName="deadlineTimeUnity" id='deliveryTmeUnitySelect' placeholder="tempo">
-                          <option [value]="0">Dia(s)</option>
-                          <option [value]="1">Semana(s)</option>
-                          <option [value]="2">Mês(es)</option>
+                        <option [value]="0">Dia(s)</option>
+                        <option [value]="1">Semana(s)</option>
+                        <option [value]="2">Mês(es)</option>
                       </select>
                     </mz-select-container>
                   </div>
