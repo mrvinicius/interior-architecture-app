@@ -1,5 +1,16 @@
 {
+    "editor.fontSize": 13,
+    "typescript.check.workspaceVersion": false,
+    "window.zoomLevel": -1,
+    "workbench.activityBar.visible": true,
+    "workbench.statusBar.visible": true,
+    "editor.fontFamily": "Monaco", // Monaco
+    "terminal.integrated.fontFamily": "Ubuntu Mono",
+    "workbench.iconTheme": "vscode-icons",
+    "typescript.check.tscVersion": false,
+    "workbench.colorTheme": "Monokai",
     "vsicons.presets.angular": true,
     "editor.snippetSuggestions": "top",
-    "typescript.tsdk": "node_modules/typescript/lib"
+    "vsicons.presets.angular": true,
+    "typescript.tsdk": "node_modules/typescript/lib",
 }
