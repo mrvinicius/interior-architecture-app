@@ -9,14 +9,12 @@ import {
 
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs/Observable';
-import { ProfessionalService } from './professional.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild {
 
   constructor(
     private authService: AuthService,
-    private profService: ProfessionalService,
     private router: Router
   ) { }
 

@@ -1,7 +1,7 @@
 {
     "editor.fontSize": 13,
     "typescript.check.workspaceVersion": false,
-    "window.zoomLevel": 0,
+    "window.zoomLevel": -1,
     "workbench.activityBar.visible": true,
     "workbench.statusBar.visible": true,
     "editor.fontFamily": "Monaco", // Monaco
