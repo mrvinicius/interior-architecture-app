@@ -9,11 +9,13 @@ import {
   ReflectiveInjector
 } from '@angular/core';
 
-import { ProjectProposalManagerComponent } from '../../projects/project-proposal-manager/project-proposal-manager.component';
+// import { ProjectProposalManagerComponent } from '../../projects/project-proposal-manager/project-proposal-manager.component';
 
 @Component({
   selector: 'abx-layout-tab-content-container',
-  entryComponents: [ProjectProposalManagerComponent],
+  entryComponents: [
+    // ProjectProposalManagerComponent
+  ],
   template: `
     <div #dynamicComponentContainer></div>
   `,

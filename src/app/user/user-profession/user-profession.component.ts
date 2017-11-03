@@ -44,7 +44,7 @@ export class UserProfessionComponent implements OnInit {
       console.log('update resp: ', resp);
       this.spinnerService.toggleLoadingIndicator(false);
 
-      this.router.navigate(['/projetos']);
+      // this.router.navigate(['/projetos']);
 
 
     });

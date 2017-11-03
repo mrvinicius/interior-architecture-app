@@ -30,7 +30,7 @@ export class NoAuthGuard implements CanActivate {
 
     if (localStorage.getItem('currentUser')) {
       if (NoAuthGuard.noAuthUrls.includes(url)) {
-        this.router.navigate(['/projetos']);
+        // this.router.navigate(['/projetos']);
         return false;
       }
     }

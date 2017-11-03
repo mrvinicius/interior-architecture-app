@@ -74,7 +74,7 @@ export class UserEntryComponent implements OnInit {
             }
 
           } else {
-            this.router.navigate(['/projetos']);
+            // this.router.navigate(['/projetos']);
           }
 
           console.log(resObj);

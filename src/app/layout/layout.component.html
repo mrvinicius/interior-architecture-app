@@ -1,30 +1,30 @@
 <!--mdl-layout-fixed-drawer-->
 <mdl-layout mdl-layout-fixed-header mdl-layout-fixed-drawer #mdlLayout1="mdlLayout">
     <mdl-layout-drawer *ngIf="showSidebar" class="side-bar z-depth-4">
-        <!-- <mdl-layout-title class="title truncate">{{userName}}</mdl-layout-title> -->
         <div style="display: flex">
             <img src="/assets/images/icon-96x96.png" class="responsive-img" style="margin: 0 auto;" alt="Logo Archabox">
-
         </div>
         <nav class="mdl-navigation">
-            <a class="mdl-navigation__link side-bar__link has-icon black-text" routerLink="/projetos" (click)="mdlLayout1.closeDrawer()">
+            <a class="mdl-navigation__link side-bar__link has-icon black-text" routerLink="/orcamentos">
+                <img src="/assets/images/budget.svg" class="detailed-icons medium">
+                <span class="link-label">Orçamentos</span>
+            </a>
+            <!-- <a class="mdl-navigation__link side-bar__link has-icon black-text" routerLink="/projetos" (click)="mdlLayout1.closeDrawer()">
                 <img src="/assets/images/project.svg" class="detailed-icons medium" alt="Projetos">
                 <span class="link-label">Propostas</span>
-            </a>
+            </a> -->
             <a class="mdl-navigation__link side-bar__link has-icon black-text" routerLink="/clientes">
                 <img src="/assets/images/clients.svg" class="detailed-icons medium" alt="Clientes">
                 <span class="link-label">Clientes</span>
             </a>
             <div class="divider"></div>
-            <a class="mdl-navigation__link side-bar__link has-icon black-text pointer" routerLink="/perfil" (click)="mdlLayout1.closeDrawer()"> 
+            <a class="mdl-navigation__link side-bar__link has-icon black-text pointer" routerLink="/perfil" (click)="mdlLayout1.closeDrawer()">
                 <img src="/assets/images/user.svg" class="detailed-icons medium" alt="Perfil">
                 <span class="link-label">Perfil</span>
-                <!--<i class="material-icons right">navigate_next</i>-->
             </a>
-            <a class="mdl-navigation__link side-bar__link has-icon black-text pointer" routerLink="/assinatura" (click)="mdlLayout1.closeDrawer()"> 
+            <a class="mdl-navigation__link side-bar__link has-icon black-text pointer" routerLink="/assinatura" (click)="mdlLayout1.closeDrawer()">
                 <img src="/assets/images/bill.svg" class="detailed-icons medium" alt="Assinatura">
                 <span class="link-label">Assinatura</span>
-                <!--<i class="material-icons right">navigate_next</i>-->
             </a>
             <a class="mdl-navigation__link side-bar__link has-icon black-text pointer" (click)="logout(); mdlLayout1.closeDrawer();">
                 <img src="/assets/images/power.svg" class="detailed-icons medium" alt="Sair">

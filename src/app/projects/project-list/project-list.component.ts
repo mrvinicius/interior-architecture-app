@@ -133,6 +133,6 @@ export class ProjectListComponent implements OnInit {
   }
 
   private redirectToProject(title: string): void {
-    this.router.navigate(['/projetos', UtilsService.slugify(title)]);
+    // this.router.navigate(['/projetos', UtilsService.slugify(title)]);
   }
 }
