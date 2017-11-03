@@ -1,14 +1,14 @@
 Arguments: 
-  /home/vinicius/.nvm/versions/node/v8.5.0/bin/node /home/vinicius/.nvm/versions/node/v8.5.0/bin/yarn add @angular-mdl/icon
+  /home/vinicius/.nvm/versions/node/v8.7.0/bin/node /home/vinicius/.nvm/versions/node/v8.7.0/bin/yarn add @angular/{animations,common,compiler,core,forms,http,platform-browser,platform-browser-dynamic, platform-server,router,compiler-cli}@4.4.6
 
 PATH: 
-  /home/vinicius/.nvm/versions/node/v8.5.0/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
+  /home/vinicius/.nvm/versions/node/v8.7.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 
 Yarn version: 
-  1.0.2
+  1.2.1
 
 Node version: 
-  8.5.0
+  8.7.0
 
 Platform: 
   linux x64
@@ -28,7 +28,7 @@ npm manifest:
     },
     "private": true,
     "dependencies": {
-      "@angular-mdl/core": "^4.0.3",
+      "@angular-mdl/core": "^4.0.8",
       "@angular-mdl/popover": "^0.6.3",
       "@angular-mdl/select": "^0.10.4",
       "@angular/animations": "^4.0.2",
@@ -94,9 +94,9 @@ Lockfile:
       source-map "^0.5.6"
       typescript "^2.3.3"
   
-  "@angular-mdl/core@^4.0.3":
-    version "4.0.3"
-    resolved "https://registry.yarnpkg.com/@angular-mdl/core/-/core-4.0.3.tgz#9c52c8da1f8094db4d1b01d7d2faa366f6f35159"
+  "@angular-mdl/core@^4.0.8":
+    version "4.0.8"
+    resolved "https://registry.yarnpkg.com/@angular-mdl/core/-/core-4.0.8.tgz#01dee7c6f92663a57ba79f248d85e6f233eba073"
   
   "@angular-mdl/popover@^0.6.3":
     version "0.6.3"
@@ -6186,14 +6186,14 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.8.16.tgz#ac31b6c418f88c0f918ad6acd8a402aca9313abb"
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@angular-mdl%2ficon: Not found
-      at Request.params.callback [as _callback] (/home/vinicius/.nvm/versions/node/v8.5.0/lib/node_modules/yarn/lib/cli.js:60302:18)
-      at Request.self.callback (/home/vinicius/.nvm/versions/node/v8.5.0/lib/node_modules/yarn/lib/cli.js:117370:22)
+  Error: https://registry.yarnpkg.com/@angular%2f%7Banimations,common,compiler,core,forms,http,platform-browser,platform-browser-dynamic,: Not found
+      at Request.params.callback [as _callback] (/home/vinicius/.nvm/versions/node/v8.7.0/lib/node_modules/yarn/lib/cli.js:62027:18)
+      at Request.self.callback (/home/vinicius/.nvm/versions/node/v8.7.0/lib/node_modules/yarn/lib/cli.js:123011:22)
       at emitTwo (events.js:125:13)
       at Request.emit (events.js:213:7)
-      at Request.<anonymous> (/home/vinicius/.nvm/versions/node/v8.5.0/lib/node_modules/yarn/lib/cli.js:118353:10)
+      at Request.<anonymous> (/home/vinicius/.nvm/versions/node/v8.7.0/lib/node_modules/yarn/lib/cli.js:123994:10)
       at emitOne (events.js:115:13)
       at Request.emit (events.js:210:7)
-      at IncomingMessage.<anonymous> (/home/vinicius/.nvm/versions/node/v8.5.0/lib/node_modules/yarn/lib/cli.js:118273:12)
+      at IncomingMessage.<anonymous> (/home/vinicius/.nvm/versions/node/v8.7.0/lib/node_modules/yarn/lib/cli.js:123914:12)
       at Object.onceWrapper (events.js:314:30)
       at emitNone (events.js:110:20)

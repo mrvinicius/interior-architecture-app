@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
 
     intervalId = setInterval(function () {
       let gtm = (<any>this.window).google_tag_manager;
-      
+
       if (gtm !== undefined
         && gtm.dataLayer.gtmDom
         && gtm.dataLayer.gtmDom) {

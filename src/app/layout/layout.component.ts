@@ -4,6 +4,8 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
 import { AuthService } from '../core/auth.service';
+import { BreadcrumbsService } from './shared/breadcrumbs.service';
+import { IBreadcrumb } from './shared/breadcrumb';
 import { LayoutContentService, Tab } from './shared/layout-content.service';
 import { LayoutHeaderService } from './shared/layout-header.service';
 import { LayoutSidebarService } from './shared/layout-sidebar.service';
@@ -15,54 +17,62 @@ import { ProfessionalService } from '../core/professional.service';
   styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent implements OnInit, OnDestroy {
+  breadcrumbs: IBreadcrumb[];
   overflowY: string = 'auto';
-  userName: string;
   showHeader: boolean = true;
   showSidebar: boolean = true;
   showLoadingToast: boolean = false;
   tabsInChild: boolean = false;
+  userName: string;
   private ngUnsubscribe: Subject<any> = new Subject<any>();
 
   constructor(
     private activeRoute: ActivatedRoute,
     private authService: AuthService,
+    private bcService: BreadcrumbsService,
     private profService: ProfessionalService,
-    private layoutContentService: LayoutContentService,
-    private headerService: LayoutHeaderService,
-    private sidebarService: LayoutSidebarService,
+    // private layoutContentService: LayoutContentService,
+    // private headerService: LayoutHeaderService,
+    // private sidebarService: LayoutSidebarService,
     private router: Router
   ) {
     this.router.events
-      .filter(event => event instanceof NavigationStart)
+      .filter(event => event instanceof NavigationEnd)
       .takeUntil(this.ngUnsubscribe)
       .subscribe(event => {
+        this.breadcrumbs = this.bcService.getBreadcrumbs(this.activeRoute.root);
+      })
+    // this.router.events
+    //   .filter(event => event instanceof NavigationStart)
+    //   .takeUntil(this.ngUnsubscribe)
+    //   .subscribe(event => {
 
-        // Reset
-        this.showHeader = true;
-        this.showSidebar = true;
-        this.overflowY = 'auto';
-        this.tabsInChild = false;
-      });
+    //     // Reset
+    //     this.showHeader = true;
+    //     this.showSidebar = true;
+    //     this.overflowY = 'auto';
+    //     this.tabsInChild = false;
+    //   });
 
-    this.headerService.headerHidden$
-      .takeUntil(this.ngUnsubscribe)
-      .subscribe(() => this.showHeader = false);
+    // this.headerService.headerHidden$
+    //   .takeUntil(this.ngUnsubscribe)
+    //   .subscribe(() => this.showHeader = false);
 
-    this.sidebarService.sidebarHidden$
-      .takeUntil(this.ngUnsubscribe)
-      .subscribe(() => this.showSidebar = false);
+    // this.sidebarService.sidebarHidden$
+    //   .takeUntil(this.ngUnsubscribe)
+    //   .subscribe(() => this.showSidebar = false);
 
-    this.layoutContentService.overflowYDefined$
-      .takeUntil(this.ngUnsubscribe)
-      .subscribe((val) => this.overflowY = val);
+    // this.layoutContentService.overflowYDefined$
+    //   .takeUntil(this.ngUnsubscribe)
+    //   .subscribe((val) => this.overflowY = val);
 
-    this.layoutContentService.tabAjusted$
-      .takeUntil(this.ngUnsubscribe)
-      .subscribe(() => this.tabsInChild = true);
+    // this.layoutContentService.tabAjusted$
+    //   .takeUntil(this.ngUnsubscribe)
+    //   .subscribe(() => this.tabsInChild = true);
 
-    this.layoutContentService.loadingToastToggled$
-      .takeUntil(this.ngUnsubscribe)
-      .subscribe((isVisible) => this.toggleLoadingToast(isVisible));
+    // this.layoutContentService.loadingToastToggled$
+    //   .takeUntil(this.ngUnsubscribe)
+    //   .subscribe((isVisible) => this.toggleLoadingToast(isVisible));
   }
 
   getRouteTabs(route: ActivatedRoute) {

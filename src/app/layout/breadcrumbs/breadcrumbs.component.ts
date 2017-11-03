@@ -38,34 +38,7 @@ import { BreadcrumbsService } from '../shared/breadcrumbs.service';
     </ul>
   `
 })
-export class BreadcrumbsComponent implements OnInit, OnDestroy {
+export class BreadcrumbsComponent  {
   @Input() prefix: string = ''; // Static initial Breadcrumb
-
-  public breadcrumbs: IBreadcrumb[];
-  public _urls: string[];
-  public _routerSubscription: any;
-  private ngUnsubscribe: Subject<any> = new Subject<any>();
-
-  constructor(
-    private router: Router,
-    private activeRoute: ActivatedRoute,
-    private bcService: BreadcrumbsService
-  ) {
-    this.breadcrumbs = [];
-  }
-
-  ngOnInit() {
-    this.router.events
-      .filter(event => event instanceof NavigationEnd)
-      .takeUntil(this.ngUnsubscribe)
-      .subscribe(event => {
-        this.breadcrumbs = this.bcService.getBreadcrumbs(this.activeRoute.root);
-      })
-  }
-
-
-  ngOnDestroy() {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-  }
+  @Input() breadcrumbs: IBreadcrumb[];
 }
