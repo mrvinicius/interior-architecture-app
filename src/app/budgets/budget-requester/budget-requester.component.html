@@ -9,7 +9,6 @@
               formControlName="supplier"
               id="supplier"
               materialize="autocomplete"
-              (keyup)="supplierChanged($event.target.value)"
               [materializeParams]="[supplierAutocompleteParams]" type="text">
             <label for="supplier" class="">fornecedor</label>
           </div>
@@ -25,7 +24,7 @@
         </div>
       </form>
       <div class="stepper-action row u-col s12 right-align">
-        <button class="btn waves-effect waves-light" matStepperNext>
+        <button (click)="logStores()" class="btn waves-effect waves-light" matStepperNext>
           Próximo
           <i class="material-icons right">navigate_next</i>
         </button>
@@ -62,7 +61,7 @@
 
           <ng-container *ngIf="productForm.controls['measureUnit'].value === 'kg'">
             <div class="input-field">
-              <input class="validate" formControlName="kg" id="kg" type="number" step="0.1" min="0.1" max="999999">
+              <input class="validate" formControlName="kg" id="kg" type="number" step="0.1" min="0.01" max="999999">
               <label class="active" for="kg">peso (kg)</label>
             </div>
           </ng-container>

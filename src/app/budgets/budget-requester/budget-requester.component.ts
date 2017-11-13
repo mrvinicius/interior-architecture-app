@@ -15,11 +15,14 @@ import { Product } from '../shared/product';
 export class BudgetRequesterComponent implements OnInit {
   @Input('suppliers')
   set suppliers(suppliers: Supplier[]) {
-    this._suppliers = suppliers;
-    this._suppliersKeys = {};
+    if (suppliers) {
+      this._suppliers = suppliers;
+      this._suppliersKeys = {};
 
-    suppliers.forEach(sup => this._suppliersKeys[sup.name] = null)
-    this.supplierAutocompleteParams.data = this._suppliersKeys;
+      suppliers.forEach(sup => this._suppliersKeys[sup.name] = null)
+      this.supplierAutocompleteParams.data = this._suppliersKeys;
+
+    }
   }
   @Input('products')
   set products(products: Product[]) {
@@ -39,8 +42,10 @@ export class BudgetRequesterComponent implements OnInit {
     data: this._suppliersKeys,
     limit: 5,
     minLength: 1,
-    onAutocomplete: (val) =>
-      this.supplierChanged(val)
+    // onAutocomplete: (val) => {
+    //   this.supplierChanged(val, 'autocomplete')
+    // }
+
   };
   storeChipsParams = {
     autocompleteOptions: { data: {}, limit: 5, minLength: 1 },
@@ -74,13 +79,19 @@ export class BudgetRequesterComponent implements OnInit {
       ]],
     });
 
+    this.supplierForm.get('supplier')
+      .valueChanges
+      .distinctUntilChanged()
+      .debounceTime(250)
+      .subscribe(val => this.supplierChanged(val))
+
     this.productForm = this.fb.group({
       productDesc: ['', [
         Validators.required
       ]],
       measureUnit: [initMeasureUnit, Validators.required],
       units: [1, Validators.required],
-      kg: [1, Validators.required],
+      kg: [0.1, Validators.required],
       measurement2d: ['', Validators.required],
       measurement3d: ['', Validators.required]
     });
@@ -117,6 +128,10 @@ export class BudgetRequesterComponent implements OnInit {
     this.handleMeasurementsFieldsControl(val)
   }
 
+  logStores() {
+
+  }
+
   supplierChanged(val): void {
     let supplier,
       stores;
@@ -130,8 +145,10 @@ export class BudgetRequesterComponent implements OnInit {
     }
 
     supplier = this.getSupplierStores(val, this._suppliersKeys, this._suppliers);
-    this.supplierChange.emit(supplier);
     stores = supplier.stores;
+
+
+    this.supplierChange.emit(supplier);
     this.storeChipsParams = this.getUpdatedStoreChips(stores, this.storeChipsParams);
 
     if (stores) {

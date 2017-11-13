@@ -10,7 +10,7 @@
             <abx-budget-requester *ngIf="suppliers"
                 (supplierChange)="fetchProducts($event)"
                 [suppliers]="suppliers"
-                [products]="products | async"></abx-budget-requester>
+                [products]="products$ | async"></abx-budget-requester>
             <!-- <span class="black-secondary-text" style="text-transform: uppercase; display: inline-block;">
                 Solicitações de orçamento (3)
             </span>
