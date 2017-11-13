@@ -1,0 +1,20 @@
+<abx-layout>
+    <main class="layout-content u-row" style="display:flex; flex-direction: column; padding-left: 28px;">
+        <div class="col s12">
+            <span class="dim-text" style="text-transform: uppercase; display: inline-block;">
+                <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">
+                    add_shopping_cart
+                </i>Solicitar orçamento
+                <span class="hide-on-small-only"> para fornecedor</span>
+            </span>
+            <abx-budget-requester *ngIf="suppliers"
+                (supplierChange)="fetchProducts($event)"
+                [suppliers]="suppliers"
+                [products]="products | async"></abx-budget-requester>
+            <!-- <span class="black-secondary-text" style="text-transform: uppercase; display: inline-block;">
+                Solicitações de orçamento (3)
+            </span>
+            <abx-budget-request-list></abx-budget-request-list> -->
+        </div>
+    </main>
+</abx-layout>

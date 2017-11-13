@@ -28,9 +28,9 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/cdk@^2.0.0-beta.10":
-  version "2.0.0-beta.10"
-  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-2.0.0-beta.10.tgz#7ffcc430d6f67dfde1df25e1fa693c188e4da08a"
+"@angular/cdk@^2.0.0-beta.12":
+  version "2.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-2.0.0-beta.12.tgz#3a243cb62b93f4e039120ba70f900dc9e235622e"
   dependencies:
     tslib "^1.7.1"
 
@@ -141,9 +141,9 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/material@^2.0.0-beta.10":
-  version "2.0.0-beta.10"
-  resolved "https://registry.yarnpkg.com/@angular/material/-/material-2.0.0-beta.10.tgz#23f5887d5e34da89dd6da1fe4da0b3f779da4807"
+"@angular/material@^2.0.0-beta.12":
+  version "2.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@angular/material/-/material-2.0.0-beta.12.tgz#71b6d0b7b021891e5d0e3688c1d4bd78c7457f58"
   dependencies:
     tslib "^1.7.1"
 
@@ -311,6 +311,10 @@ alphanum-sort@^1.0.1, alphanum-sort@^1.0.2:
 amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
+
+angular2-materialize@^15.1.10:
+  version "15.1.10"
+  resolved "https://registry.yarnpkg.com/angular2-materialize/-/angular2-materialize-15.1.10.tgz#775ecb4a0b39b5789e3a400e60c67bc48c8534df"
 
 angular2-text-mask@^8.0.1:
   version "8.0.1"

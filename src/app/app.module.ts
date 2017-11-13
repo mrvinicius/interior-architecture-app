@@ -11,12 +11,13 @@ import { AppComponent } from './app.component';
 
 /* Feature Modules */
 // import { BillingModule } from './billing/billing.module';
+// import { ProjectsModule } from './projects/projects.module';
+import { BudgetsModule } from './budgets/budgets.module';
 import { ClientModule } from './client/client.module';
 import { CoreModule } from './core/core.module';
 import { LayoutModule } from './layout/layout.module';
-// import { ProjectsModule } from './projects/projects.module';
+// import { SupplierModule } from './supplier/supplier.module';
 import { UserModule } from './user/user.module';
-import { BudgetsModule } from './budgets/budgets.module';
 
 import { SignupModalComponent } from './home/signup-modal.component';
 
@@ -44,6 +45,7 @@ import { HomeComponent } from './home/home.component';
     LayoutModule.forRoot(),
     // ProjectsModule.forRoot(),
     ClientModule.forRoot(),
+    // SupplierModule,
     // BillingModule.forRoot(),
   
     AppRoutingModule

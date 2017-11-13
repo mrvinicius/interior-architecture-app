@@ -1,0 +1,62 @@
+<mat-accordion>
+  <mat-expansion-panel class="grey lighten-5" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="truncate">Pedido de orçamento 1</span>
+      </mat-panel-title>
+      <mat-panel-description>
+        Descrição 1
+        <ng-container [ngSwitch]="1">
+          <i title="Ninguém respondeu ainda" *ngSwitchCase="0" class="material-icons">schedule</i>
+          <i title="Alguns responderam" *ngSwitchCase="1" class="material-icons">done</i>
+          <i title="Todos responderam" *ngSwitchCase="2" class="material-icons mv-red">done_all</i>
+        </ng-container>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-action-row>
+      <button class="btn-flat">Remover</button>
+      <button class="btn">Especificar</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+  <mat-expansion-panel class="grey lighten-5" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="truncate">Pedido de orçamento 2</span>
+      </mat-panel-title>
+      <mat-panel-description>
+        Descrição 2
+        <ng-container [ngSwitch]="2">
+          <i title="Ninguém respondeu ainda" *ngSwitchCase="0" class="material-icons">schedule</i>
+          <i title="Alguns responderam" *ngSwitchCase="1" class="material-icons">done</i>
+          <i title="Todos responderam" *ngSwitchCase="2" class="material-icons mv-red-light-text">done_all</i>
+        </ng-container>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-action-row>
+      <button class="btn-flat">Remover</button>
+      <button class="btn">Especificar</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+  <mat-expansion-panel class="grey lighten-5" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="truncate">Pedido de orçamento 3</span>
+      </mat-panel-title>
+      <mat-panel-description>
+        Descrição 3
+        <ng-container [ngSwitch]="2">
+          <i title="Ninguém respondeu ainda" *ngSwitchCase="0" class="material-icons">schedule</i>
+          <i title="Alguns responderam" *ngSwitchCase="1" class="material-icons">done</i>
+          <i title="Todos responderam" *ngSwitchCase="2" class="material-icons mv-red-light-text">done_all</i>
+        </ng-container>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-action-row>
+      <button class="btn-flat">Remover</button>
+      <button class="btn">Especificar</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
