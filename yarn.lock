@@ -2999,6 +2999,10 @@ jquery@^2.1.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-2.2.4.tgz#2c89d6889b5eac522a7eea32c14521559c6cbf02"
 
+"jquery@^3.0.0 || ^2.1.4":
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
+
 js-base64@^2.1.5, js-base64@^2.1.8, js-base64@^2.1.9:
   version "2.1.9"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.1.9.tgz#f0e80ae039a4bd654b5f281fc93f04a914a7fcce"
@@ -3384,13 +3388,20 @@ matcher-collection@^1.0.0:
   dependencies:
     minimatch "^3.0.2"
 
-materialize-css@0.98.2, materialize-css@^0.98.2:
+materialize-css@0.98.2:
   version "0.98.2"
   resolved "https://registry.yarnpkg.com/materialize-css/-/materialize-css-0.98.2.tgz#f9e4239fd27e2a917a0de379d74d508e2d92ec8e"
   dependencies:
     hammerjs "^2.0.4"
     jquery "^2.1.4"
     node-archiver "^0.3.0"
+
+materialize-css@^0.100.2:
+  version "0.100.2"
+  resolved "https://registry.yarnpkg.com/materialize-css/-/materialize-css-0.100.2.tgz#9ca32b24904c9a04491fc7d0a2e9402e7b1dae07"
+  dependencies:
+    hammerjs "^2.0.8"
+    jquery "^3.0.0 || ^2.1.4"
 
 math-expression-evaluator@^1.2.14:
   version "1.2.17"

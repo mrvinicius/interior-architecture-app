@@ -21,6 +21,7 @@ export class ProductService {
       responseType: 'json',
       // withCredentials: true
     }).map(data => {
+      
       return data;
     }).catch(this.handleError)
   }

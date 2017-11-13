@@ -32,7 +32,7 @@
     "cep-promise": "^2.0.5",
     "core-js": "^2.4.1",
     "hammerjs": "^2.0.8",
-    "materialize-css": "^0.98.2",
+    "materialize-css": "^0.100.2",
     "md2": "^0.0.25",
     "ng-gallery": "^0.7.1",
     "ng2-materialize": "1.5.2",

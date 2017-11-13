@@ -1,6 +1,6 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { MatStepperModule, MatExpansionModule } from '@angular/material';
+import { MatStepperModule, MatDialogModule, MatExpansionModule } from '@angular/material';
 // TODO: Move to SharedModule
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -22,6 +22,7 @@ import { SupplierModule } from '../supplier/supplier.module';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     MatStepperModule,
+    MatDialogModule,
     MatExpansionModule,
     MaterializeModule,
     LayoutModule,

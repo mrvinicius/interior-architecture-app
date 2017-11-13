@@ -11,7 +11,6 @@ export class Budget {
     totalPrice?: number;
     color?: string;
     note?: string;
-    status: 'Waiting' | 'Budgeted';
 
     constructor() {
         

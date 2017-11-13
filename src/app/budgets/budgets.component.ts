@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
 
 import { Observable } from 'rxjs';
 
+import { BudgetRequest } from './shared/budget-request';
 import { Product } from './shared/product';
 import { ProductService } from '../product/shared/product.service';
 import { Supplier } from './shared/supplier';
@@ -20,16 +22,11 @@ export class BudgetsComponent implements OnInit {
 
   constructor(
     private supplierServ: SupplierService,
-    private productServ: ProductService
+    private productServ: ProductService,
+    private dialogServ: MatDialog
 
   ) {
     supplierServ.getAll().subscribe(suppliers => this.suppliers = suppliers);
-
-    // this.suppliers$ = supplierServ.getAll().map(suppliers => {
-    //   let suppliersKeys = {};
-    //   suppliers.forEach(sup => suppliersKeys[sup.name] = null)
-    //   return Observable.of(suppliersKeys);
-    // });
   }
 
 
@@ -39,13 +36,12 @@ export class BudgetsComponent implements OnInit {
    */
   fetchProducts(supplier: Supplier) {
     this.products$ = this.productServ.getAllBySupplier(supplier.id);
+  }
 
 
-    // this.suppliers$ = supplierServ.getAll().map(suppliers => {
-    //   let suppliersKeys = {};
-    //   suppliers.forEach(sup => suppliersKeys[sup.name] = null)
-    //   return Observable.of(suppliersKeys);
-    // });
+  handleBudgetRequest(budgetRequest: BudgetRequest) {
+    console.log(budgetRequest);
+    
   }
 
   ngOnInit() {

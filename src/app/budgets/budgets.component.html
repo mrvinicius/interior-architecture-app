@@ -9,6 +9,7 @@
             </span>
             <abx-budget-requester *ngIf="suppliers"
                 (supplierChange)="fetchProducts($event)"
+                (budgetRequestSubmit)="handleBudgetRequest($event)"
                 [suppliers]="suppliers"
                 [products]="products$ | async"></abx-budget-requester>
             <!-- <span class="black-secondary-text" style="text-transform: uppercase; display: inline-block;">
