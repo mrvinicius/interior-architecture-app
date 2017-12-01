@@ -1,3 +1,14 @@
+.mat-menu-item {
+    font-family: Questrial;
+}
+
+.btn,
+.btn-flat {
+    &.short-pad {
+        padding: 0 1rem;
+    }
+}
+
 // button[md-raised-button],
 // a[md-raised-button] {
 //     text-transform: uppercase;
@@ -282,7 +293,3 @@
 // .btn-floating {
 //     &.b &.btn-large {}
 // }
-
-.mat-menu-item {
-    font-family: Questrial;
-}

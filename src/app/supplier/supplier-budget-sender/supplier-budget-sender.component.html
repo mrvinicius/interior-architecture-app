@@ -1,0 +1,41 @@
+<section class="u-row" style="padding-top: 24px;">
+  <h1 style="font-size: 3em;">Envie seu orçamento</h1>
+  <div class="u-col s5">
+    <label for="totalPrice" class="readonly-value-label">total</label>
+    <h5 id="totalPrice" style="font-size: 2rem">R$ 90,00</h5>
+  </div>
+  <div class="col s7">
+    <form>
+      <div class="switch" style="margin-bottom: 20px;">
+        <label>
+          Indisponível
+          <input type="checkbox">
+          <span class="lever"></span>
+          Disponível
+        </label>
+      </div>
+      <div class="input-field">
+        <input class="validate" id="productCode" type="text">
+        <label for="productCode">código do produto</label>
+      </div>
+      <div class="input-field">
+        <input class="validate" id="totalPrice" type="number" step="0.1" min="0.01" max="999999">
+        <label class="active" for="unitPrice">preço unitário (R$)</label>
+      </div>
+      <div class="input-field">
+        <input class="validate" id="color" type="text">
+        <label for="color">cores disponíveis (separe por vírgula)</label>
+      </div>
+      <div class="input-field">
+        <textarea id="note" class="materialize-textarea"></textarea>
+        <!-- Material/Acabamento, Link, Medida, Pagamento -->
+        <label for="note">outras informações (opcional)</label>
+      </div>
+      <div class="right-align">
+        <button class="btn" type="button">
+          <i class="material-icons left">reply</i>Responder
+        </button>
+      </div>
+    </form>
+  </div>
+</section>

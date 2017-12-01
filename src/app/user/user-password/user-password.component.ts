@@ -6,8 +6,6 @@ import { AuthService } from '../../core/auth.service';
 import { Professional } from '../../core/professional';
 import { ProfessionalService } from './../../core/professional.service';
 import { SpinnerService } from './../../core/spinner/spinner.service';
-import { UserService } from '../../core/user.service';
-
 @Component({
   selector: 'abx-user-password',
   templateUrl: './user-password.component.html',
@@ -42,18 +40,10 @@ export class UserPasswordComponent implements OnInit {
         this.getProfessional(this.id);
       }
     })
-
-    // this.activatedRoute.params.subscribe((params: Params) => {
-    //   let id = params['id'];
-    //   let email = params['email'];
-    //   console.log(id, email);
-
-    // })
   }
 
   activeProfessional(email) {
     this.profService.activate(email).subscribe(resp => {
-      console.log('activate response: ', resp);
 
       this.spinnerService.toggleLoadingIndicator(false);
     })
@@ -64,11 +54,9 @@ export class UserPasswordComponent implements OnInit {
     this.auth.login(prof);
 
     if (this.professional.profession === undefined) {
-      console.log('no profession');
 
       this.spinnerService.toggleLoadingIndicator(false);
       // this.router.navigate(['/profissao?id=' + this.id + '&email=' + this.email,]);
-      console.log(this.id, this.email);
 
       this.router.navigate(['/profissao',]);
     }
@@ -79,7 +67,6 @@ export class UserPasswordComponent implements OnInit {
       this.activeProfessional(this.email);
       this.professional = prof;
       this.profService.professional = prof;
-      console.log(prof);
 
       // this.auth.setCurrentUser(prof);
     });
@@ -87,13 +74,11 @@ export class UserPasswordComponent implements OnInit {
 
   definePassword() {
     this.spinnerService.toggleLoadingIndicator(true);
-    console.log(this.passwordForm.value.password);
 
     this.professional.id = this.id;
     this.professional.password = this.passwordForm.value.password;
     this.professional.profession = 0;
     this.profService.update(this.professional).subscribe(resp => {
-      console.log('password resp: ', resp);
       this.professional.profession = undefined;
       this.authenticate(this.professional);
     });

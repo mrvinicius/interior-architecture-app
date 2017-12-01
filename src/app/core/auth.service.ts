@@ -24,7 +24,6 @@ export class AuthService {
     private http: Http,
     private router: Router
   ) {
-    // console.log(localStorage.getItem('currentUser'));
   }
 
   getCurrentUser(): User {
@@ -53,8 +52,6 @@ export class AuthService {
   }
 
   login(user: User) {
-    console.log(user);
-
     this.setCurrentUser(user);
   }
 

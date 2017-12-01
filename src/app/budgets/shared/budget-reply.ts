@@ -7,11 +7,21 @@ export class BudgetReply {
     budget?: Budget;
     // budgetRequest?: BudgetRequest;
     store: Store;
-    repliedAt?: Date;
     status: 'Waiting' | 'Budgeted';
+    repliedAt?: Date;
 
-    constructor(store: Store) {
+    constructor(store: Store, status: string = 'Waiting') {
         this.store = store;
         this.status = 'Waiting';
+    }
+
+    static fromJson({ id, budget, store, status, repliedAt })
+        : BudgetReply {
+        let bReply = new BudgetReply(store, status);
+        bReply.id = id;
+        bReply.budget = budget;
+        bReply.repliedAt = repliedAt;
+
+        return bReply;
     }
 }

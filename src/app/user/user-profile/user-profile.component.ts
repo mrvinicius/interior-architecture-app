@@ -53,7 +53,6 @@ export class UserProfileComponent implements OnInit {
 
       const cpfCnpjChange$ = this.profProfileForm.get('cpfCnpj').valueChanges;
       cpfCnpjChange$.debounceTime(250).subscribe((cpfCnpj: string) => {
-        // console.log('cpfCnpj', cpfCnpj);
         let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
 
         let mask;
@@ -132,7 +131,7 @@ export class UserProfileComponent implements OnInit {
       Materialize.updateTextFields();
 
     }).catch(e => {
-      console.log(e);
+      console.error(e);
     });
   }
 

@@ -1,30 +1,21 @@
 <div class="row" style="margin-bottom: 0">
-  <mat-horizontal-stepper [linear]="true">
+  <mat-horizontal-stepper [linear]="true" style="margin: 0 -24px">
     <mat-step [stepControl]="supplierForm">
       <ng-template matStepLabel>Fornecedor</ng-template>
       <form [formGroup]="supplierForm">
-        <div class="col s6">
+        <div class="u-col s12 m6">
           <div class="input-field">
-            <input
-              autocomplete="off"
-              formControlName="supplier"
-              id="supplier"
-              materialize="autocomplete"
-              [materializeParams]="[supplierAutocompleteParams]"
+            <input autocomplete="off" formControlName="supplier" id="supplier" materialize="autocomplete" [materializeParams]="[supplierAutocompleteParams]"
               type="text">
             <label for="supplier" class="">fornecedor</label>
           </div>
-          <div materialize="material_chip"
-            [materializeParams]="[storeChipsParams]"
-            (chip.add)="addStoreChip($event.detail)"
-            (chip.delete)="deleteStoreChip($event.detail)"
-            [materializeActions]="chipsActions"
-            class="chips chips-autocomplete chips-placeholder"></div>
-            <input formControlName="stores" type="hidden">
+          <div materialize="material_chip" [materializeParams]="[storeChipsParams]" (chip.add)="addStoreChip($event.detail)" (chip.delete)="deleteStoreChip($event.detail)"
+            [materializeActions]="chipsActions" class="chips chips-autocomplete chips-placeholder"></div>
+          <input formControlName="stores" type="hidden">
         </div>
       </form>
       <div class="stepper-action row u-col s12 right-align">
-        <button (click)="logStores()" class="btn waves-effect waves-light" matStepperNext>
+        <button class="btn short-pad waves-effect waves-light" matStepperNext>
           Próximo
           <i class="material-icons right">navigate_next</i>
         </button>
@@ -33,35 +24,27 @@
     <mat-step [stepControl]="productForm">
       <ng-template matStepLabel>Detalhes do produto</ng-template>
       <form [formGroup]="productForm">
-        <div class="input-field col s12 m10">
-          <input
-            *ngIf="productAutocompleteParams"
-            autocomplete="off"
-            formControlName="productDesc"
-            id="produto"
-            materialize="autocomplete"
-            [materializeParams]="[productAutocompleteParams]"
-            type="text">
-          <input
-            *ngIf="!productAutocompleteParams"
-            autocomplete="off"
-            formControlName="productDesc"
-            id="produto"
-            materialize="autocomplete"
+        <div class="input-field">
+          <input *ngIf="productAutocompleteParams" autocomplete="off" formControlName="productDesc" id="produto" materialize="autocomplete"
+            [materializeParams]="[productAutocompleteParams]" type="text">
+          <input *ngIf="!productAutocompleteParams" autocomplete="off" formControlName="productDesc" id="produto" materialize="autocomplete"
             type="text">
           <label for="produto">produto</label>
         </div>
-        <div class="input-field col s12 m5" style="margin-bottom: 110px">
-          <select (change)="this.handleMeasurementsFieldsControl($event.target.value)" materialize="material_select" formControlName="measureUnit">
-            <option [value]="'units'" selected>Unidade</option>
-            <option [value]="'kg'">Peso (KG)</option>
-            <option [value]="'measurement2d'">Medida (2 dimensões)</option>
-            <option [value]="'measurement3d'">Medida (3 dimensões)</option>
-            <option [value]="'liter'">Líquido (Litro)</option>
-          </select>
-          <label>tipo de medida</label>
+        <div class="col s12 m6" style="padding-left: 0">
+          <div class="input-field">
+            <select (change)="this.handleMeasurementsFieldsControl($event.target.value)" materialize="material_select" formControlName="measureUnit">
+              <option [value]="'units'" selected>Unidade</option>
+              <option [value]="'kg'">Peso (KG)</option>
+              <option [value]="'measurement2d'">Medida (2 dimensões)</option>
+              <option [value]="'measurement3d'">Medida (3 dimensões)</option>
+              <option [value]="'liter'">Líquido (Litro)</option>
+            </select>
+            <label>tipo de medida</label>
+          </div>
         </div>
-        <div class="col s12 m5">
+
+        <div class="col s12 m6" style="padding: 0">
           <ng-container *ngIf="productForm.controls['measureUnit'].value === 'units'">
             <div class="input-field">
               <input class="validate" formControlName="units" id="units" type="number" min="1" max="999999">
@@ -91,19 +74,19 @@
           </ng-container>
 
           <ng-container *ngIf="productForm.controls['measureUnit'].value === 'liter'">
-            <div class="input-field">                
+            <div class="input-field">
               <input class="validate" formControlName="liter" id="liter" type="number" step="0.1" min="0.01" max="999999">
               <label class="active" for="liter">litros</label>
             </div>
           </ng-container>
         </div>
       </form>
-      <div class="stepper-action row u-col s12 right-align">
-        <button class="btn-flat waves-effect waves-dark" matStepperPrevious>
+      <div id="productsDetailsStepAction" class="stepper-action row u-col s12 right-align">
+        <button class="btn-flat short-pad waves-effect waves-dark" matStepperPrevious>
           Voltar
           <i class="material-icons left">navigate_before</i>
         </button>
-        <button class="btn waves-effect waves-light" mat-button matStepperNext>
+        <button class="btn short-pad waves-effect waves-light" mat-button matStepperNext>
           Próximo
           <i class="material-icons right">navigate_next</i>
         </button>
@@ -122,11 +105,11 @@
         </div>
       </form>
       <div class="stepper-action row u-col s12 right-align">
-        <button class="btn-flat waves-effect waves-dark" matStepperPrevious>
+        <button class="btn-flat short-pad waves-effect waves-dark" matStepperPrevious>
           Voltar
           <i class="material-icons left">navigate_before</i>
         </button>
-        <button (click)="sendRequest()" class="btn waves-effect waves-light" mat-button matStepperNext>
+        <button (click)="sendRequest()" class="btn short-pad waves-effect waves-light" mat-button matStepperNext>
           Enviar
           <i class="material-icons right">send</i>
         </button>

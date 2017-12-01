@@ -30,7 +30,6 @@ export class ClientEditorComponent implements OnInit, OnDestroy {
 
     const cpfCnpjChange$ = this.clientForm.get('cpfCnpj').valueChanges;
     this.cpfCnpjChangesSubscription$ = cpfCnpjChange$.debounceTime(250).subscribe((cpfCnpj: string) => {
-      // console.log('cpfCnpj', cpfCnpj);
       let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
 
       let mask;
@@ -78,12 +77,9 @@ export class ClientEditorComponent implements OnInit, OnDestroy {
   }
 
   disableClient(clientId: string) {
-    console.log(clientId);
-
 
     this.clientService.disableClient(clientId, this.auth.getCurrentUser().id)
       .subscribe(response => {
-        console.log(response);
 
       });
 
@@ -103,7 +99,6 @@ export class ClientEditorComponent implements OnInit, OnDestroy {
     
     if (Boolean(c.cpfCnpj) && Boolean(c.email) && Boolean(c.name) && Boolean(c.gender)) {
       this.update.emit(c);
-      console.log('valid data');
 
       this.clientService.update(c, this.auth.getCurrentUser().id)
         .subscribe(clientResp => {

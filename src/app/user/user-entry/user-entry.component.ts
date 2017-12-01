@@ -14,7 +14,6 @@ import {
 import { AuthService } from '../../core/auth.service';
 import { ProfessionalService } from '../../core/professional.service';
 import { SpinnerService } from '../../core/spinner/spinner.service';
-import { UserService } from '../../core/user.service';
 
 @Component({
   selector: 'abx-user-entry',
@@ -30,7 +29,6 @@ export class UserEntryComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private spinnerService: SpinnerService,
-    // private userService: UserService,
     private profService: ProfessionalService
   ) {
     this.createForm();
@@ -49,12 +47,7 @@ export class UserEntryComponent implements OnInit {
       this.profService.login(values.email, values.password)
         .subscribe(resObj => {
           this.spinnerService.toggleLoadingIndicator(false);
-          // if (resObj.HasError) {
           if (resObj.HasError) {
-            // TODO: implement correct feedbacks
-            // email nao cadastrado
-            // senha incorreta
-            // outros erros
             switch (resObj.ErrorMessage) {
               case "Email não cadastrado":
                 this.errorMessage = resObj.ErrorMessage
@@ -74,16 +67,11 @@ export class UserEntryComponent implements OnInit {
             }
 
           } else {
-            // this.router.navigate(['/projetos']);
+            this.router.navigate(['/orcamentos']);
           }
 
-          console.log(resObj);
         });
     }
-  }
-
-  searchUser(email: string) {
-
   }
 
   private createForm() {

@@ -3,23 +3,38 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 
 import { Observable } from 'rxjs';
 
-import { Supplier } from './supplier';
+import { User } from './user';
 
 @Injectable()
-export class SupplierService {
-  private readonly baseUrl = 'http://localhost:8000/api/supplier';
+export class UserService {
+  private readonly baseUrl = 'http://localhost:8000/api/user';
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<Supplier[]> {
-    return this.http.get<Supplier[]>(`${this.baseUrl}/getAll`, {
+  add(user: User): Observable<User> {
+    let postData = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      lastname: user.lastname
+    };
+
+    return this.http.post<User>(`${this.baseUrl}/create`, postData, {
       headers: this.getHeaders(),
       observe: 'body',
       responseType: 'json',
       // withCredentials: true
     }).map(data => {
       return data;
-    }).catch(this.handleError)
+    }).catch(this.handleError);
+  }
+
+  getOne(id: string): Observable<User> {
+    return this.http.get<User>(`${this.baseUrl}/getOne?id=${id}`, {
+      headers: this.getHeaders(),
+      observe: 'body',
+      responseType: 'json'
+    }).catch(this.handleError);
   }
 
   private getHeaders(): HttpHeaders {
@@ -47,3 +62,4 @@ export class SupplierService {
     return Observable.throw(error)
   }
 }
+

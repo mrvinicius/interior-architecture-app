@@ -22,13 +22,10 @@ export class BreadcrumbsService {
     }
 
     for (let child of children) {
-      // console.log(child.snapshot.data);
-      // console.log(child.snapshot.data.hasOwnProperty(routeDataLabel));
 
       // verify the custom data property "breadcrumb" is specified on the route
       if (!child.snapshot.data.hasOwnProperty(routeDataLabel)
         || !child.snapshot.data[routeDataLabel]) {
-        // console.log('no bc data', child.snapshot);
         return this.getBreadcrumbs(child, url, breadcrumbs);
 
       }

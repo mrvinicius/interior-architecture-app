@@ -12,7 +12,6 @@ import { NoAuthGuard } from './no-auth.guard';
 import { ProfessionalService } from './professional.service';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { SpinnerService } from './spinner/spinner.service';
-import { UserService } from './user.service';
 import { WindowRef } from './window-ref.service';
 
 @NgModule({
@@ -46,7 +45,6 @@ export class CoreModule {
         NoAuthGuard,
         ProfessionalService,
         SpinnerService,
-        UserService,
         WindowRef
       ]
     };

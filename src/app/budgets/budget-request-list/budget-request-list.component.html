@@ -1,5 +1,72 @@
 <mat-accordion>
-  <mat-expansion-panel class="grey lighten-5" hideToggle="true">
+  <ng-container *ngFor="let req of (requests | async); let i = index;">
+    <mat-expansion-panel class="grey lighten-5" hideToggle="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <span class="truncate">{{req.supplier.name}}</span>
+        </mat-panel-title>
+        <mat-panel-description>
+          {{req.product.name}}
+          <ng-container [ngSwitch]="req.status">
+            <i title="Nenhum orçamento" *ngSwitchCase="'Waiting'" class="material-icons">schedule</i>
+            <i title="Alguns responderam" *ngSwitchCase="'Budgeted'" class="material-icons">done</i>
+            <i title="Todos responderam" *ngSwitchCase="'All_Budgeted'" class="material-icons">done_all</i>
+            <i title="Enviado ao cliente" *ngSwitchCase="'specified'" class="material-icons">assignment_turned_in</i>
+          </ng-container>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+
+      <div class="black-secondary-text" style="display: inline-block; margin-bottom: 0.5rem; text-transform: uppercase;">
+        Orçamentos
+      </div>
+      <!-- <div>
+        <mat-table *ngIf="replies[i]" #table [dataSource]="replies[i]" style="box-shadow: 0 1px 2px rgba(0,0,0,.23);">
+          <ng-container matColumnDef="storeName">
+            <mat-header-cell *matHeaderCellDef>Ponto de venda</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.storeName}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="quantity">
+            <mat-header-cell *matHeaderCellDef>Quant.</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.quantity}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="unitPrice">
+            <mat-header-cell *matHeaderCellDef>Preço Unit.</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.unitPrice}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="totalPrice">
+            <mat-header-cell *matHeaderCellDef>Preço Total</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.totalPrice}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="color">
+            <mat-header-cell *matHeaderCellDef>Cor</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.color}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="note">
+            <mat-header-cell *matHeaderCellDef>Observações</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.note}} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+      </div> -->
+
+
+      <mat-action-row>
+        <button class="btn-flat">Remover</button>
+      </mat-action-row>
+      <!-- <button class="btn" [class.disabled]="req.status === 'Waiting'">Especificar</button> -->
+    </mat-expansion-panel>
+
+  </ng-container>
+
+  <!-- <mat-expansion-panel class="grey lighten-5" hideToggle="true">
     <mat-expansion-panel-header>
       <mat-panel-title>
         <span class="truncate">Pedido de orçamento 1</span>
@@ -13,13 +80,47 @@
         </ng-container>
       </mat-panel-description>
     </mat-expansion-panel-header>
+    <div class="black-secondary-text" style="display: inline-block; margin-bottom: 0.5rem; text-transform: uppercase;">
+      Orçamentos
+    </div>
+    <div>
+      <mat-table #table [dataSource]="dataSource" style="box-shadow: 0 1px 2px rgba(0,0,0,.23);">
+        <ng-container matColumnDef="storeName">
+          <mat-header-cell *matHeaderCellDef>Ponto de venda</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.storeName}} </mat-cell>
+        </ng-container>
 
-    <mat-action-row>
-      <button class="btn-flat">Remover</button>
-      <button class="btn">Especificar</button>
-    </mat-action-row>
-  </mat-expansion-panel>
-  <mat-expansion-panel class="grey lighten-5" hideToggle="true">
+        <ng-container matColumnDef="quantity">
+          <mat-header-cell *matHeaderCellDef>Quant.</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.quantity}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="unitPrice">
+          <mat-header-cell *matHeaderCellDef>Preço Unit.</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.unitPrice}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="totalPrice">
+          <mat-header-cell *matHeaderCellDef>Preço Total</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.totalPrice}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="color">
+          <mat-header-cell *matHeaderCellDef>Cor</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.color}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="note">
+          <mat-header-cell *matHeaderCellDef>Observações</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.note}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+    </div>
+  </mat-expansion-panel> -->
+  <!-- <mat-expansion-panel class="grey lighten-5" hideToggle="true">
     <mat-expansion-panel-header>
       <mat-panel-title>
         <span class="truncate">Pedido de orçamento 2</span>
@@ -58,5 +159,5 @@
       <button class="btn-flat">Remover</button>
       <button class="btn">Especificar</button>
     </mat-action-row>
-  </mat-expansion-panel>
+  </mat-expansion-panel> -->
 </mat-accordion>

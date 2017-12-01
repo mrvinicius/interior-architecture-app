@@ -77,7 +77,6 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   getRouteTabs(route: ActivatedRoute) {
     const routeDataLabel: string = 'tabs';
-    console.log(route.snapshot.data[routeDataLabel]);
 
     if (!route.snapshot.data.hasOwnProperty(routeDataLabel)) {
       return route.snapshot.data[routeDataLabel];
@@ -107,8 +106,6 @@ export class LayoutComponent implements OnInit, OnDestroy {
     } else {
       this.showLoadingToast = !this.showLoadingToast;
     }
-
-    console.log(this.showLoadingToast);
 
     if (this.showLoadingToast) {
       let toastHtml = `

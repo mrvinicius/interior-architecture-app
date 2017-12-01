@@ -44,8 +44,10 @@ export class BudgetRequesterComponent implements OnInit {
     }
   }
 
-  @Output() supplierChange = new EventEmitter<Supplier>();
-  @Output() budgetRequestSubmit = new EventEmitter<BudgetRequest>();
+  @Output()
+  supplierChange = new EventEmitter<Supplier>();
+  @Output()
+  budgetRequestSubmit = new EventEmitter<BudgetRequest>();
 
   _suppliersKeys: { [name: string]: string };
   _suppliers: Supplier[];
@@ -55,10 +57,7 @@ export class BudgetRequesterComponent implements OnInit {
   supplierAutocompleteParams = {
     data: this._suppliersKeys,
     limit: 5,
-    minLength: 1,
-    // onAutocomplete: (val) => {
-    //   this.supplierChanged(val, 'autocomplete')
-    // }
+    minLength: 1
   };
   storeChipsParams = {
     autocompleteOptions: { data: {}, limit: 5, minLength: 1 },
@@ -156,11 +155,6 @@ export class BudgetRequesterComponent implements OnInit {
     storesValue.splice(removedIndex, 1);
     this.supplierForm.get('stores')
       .setValue(storesValue, { onlySelf: false, emitEvent: false })
-    // selectStoreChip(chipData): void { }
-  }
-
-  logStores() {
-    console.log(this.supplierForm.get('stores').value, this.supplierForm.get('stores').errors);
   }
 
   getSupplier(name: string, supplierKeys, suppliers: Supplier[]): Supplier {
@@ -193,14 +187,16 @@ export class BudgetRequesterComponent implements OnInit {
 
   productChanged(val: string): void {
     this.selectedProduct = this.getProduct(val, this._productsKeys, this._products);
+
   }
 
-  sendRequest() {
-    console.log('selected supplier', this.selectedSupplier);
-    console.log('selected product', this.selectedProduct);
+  sendRequest(): void {
     let budgetRequest: BudgetRequest,
       measureUnit = this.productForm.get('measureUnit').value,
-      quantity;
+      quantity,
+      product: Product,
+      storeChips: any[],
+      selectedStores: Store[];
 
     switch (measureUnit) {
       case 'units':
@@ -224,17 +220,27 @@ export class BudgetRequesterComponent implements OnInit {
 
     budgetRequest = new BudgetRequest(
       this.selectedSupplier,
-      this.selectedProduct,
       measureUnit,
       quantity
     );
-    budgetRequest.replies = this.selectedSupplier.stores.map(store => new BudgetReply(store));
+
+    if (this.selectedProduct) {
+      budgetRequest.product = this.selectedProduct;
+    } else {
+      budgetRequest.newProductName = this.productForm.get('productDesc').value;
+    }
+
+    storeChips = this.supplierForm.get('stores').value;
+
+    selectedStores = storeChips.map(chipData =>
+      this.selectedSupplier.stores.find(store => store.name === chipData.tag)
+    );
+
+    budgetRequest.budgetReplies = selectedStores.map(store => new BudgetReply(store));
     budgetRequest.color = this.noteForm.get('color').value;
     budgetRequest.note = this.noteForm.get('note').value;
 
     this.budgetRequestSubmit.emit(budgetRequest);
-    // console.log(this.selectedSupplier);
-
   }
 
   supplierChanged(val: string): void {

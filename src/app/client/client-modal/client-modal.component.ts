@@ -43,11 +43,9 @@ export class ClientModalComponent extends MzBaseModal implements OnInit {
       gender: this.clientForm.value.newClientGenderOpt
     }
 
-    console.log(c);
 
 
     if (Boolean(c.cpfCnpj) && Boolean(c.email) && Boolean(c.name) && Boolean(c.gender)) {
-      console.log('valid data');
 
       this.clientService.addByProfessional(c, this.auth.getCurrentUser().id)
         .subscribe(resp => {
@@ -75,7 +73,6 @@ export class ClientModalComponent extends MzBaseModal implements OnInit {
 
     const cpfCnpjChange$ = this.clientForm.get('cpfCnpj').valueChanges;
     cpfCnpjChange$.debounceTime(250).subscribe((cpfCnpj: string) => {
-      // console.log('cpfCnpj', cpfCnpj);
       let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
 
       let mask;

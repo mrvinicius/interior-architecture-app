@@ -7,7 +7,6 @@ import {
 } from '@angular/forms';
 
 import { AuthService } from '../../core/auth.service';
-import { UserService } from '../../core/user.service';
 
 @Component({
   selector: 'mbx-user-recovery',
@@ -21,8 +20,7 @@ export class UserRecoveryComponent implements OnInit {
 
   constructor(
     private auth: AuthService,
-    private fb: FormBuilder,
-    private userService: UserService,
+    private fb: FormBuilder
   ) {
     this.createForm();
   }
