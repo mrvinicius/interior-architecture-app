@@ -8,11 +8,11 @@
     </label>
   </div>
   <div *ngIf="senderFormGroup.controls['totalPrice']" class="input-field">
-    <input [textMask]="{mask: currencyMask, placeholderChar: '\u2000'}" formControlName="totalPrice" id="totalPrice" type="text">
+    <input (input)="priceChanged($event.target.value)" [textMask]="{mask: currencyMask, placeholderChar: '\u2000'}" formControlName="totalPrice" id="totalPrice" type="text">
     <label class="active" for="totalPrice">preço total *</label>
   </div>
   <div *ngIf="senderFormGroup.controls['unitPrice']" class="input-field">
-    <input [textMask]="{mask: currencyMask, placeholderChar: '\u2000'}" formControlName="unitPrice" id="unitPrice" type="text">
+    <input (input)="priceChanged($event.target.value)" [textMask]="{mask: currencyMask, placeholderChar: '\u2000'}" formControlName="unitPrice" id="unitPrice" type="text">
     <label class="active" for="unitPrice">preço unitário *</label>
   </div>
   <div>

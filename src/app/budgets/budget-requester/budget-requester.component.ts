@@ -1,7 +1,9 @@
-import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, Validators, ValidatorFn } from '@angular/forms';
 
 import { MaterializeAction } from "angular2-materialize";
+
+import { Subject } from 'rxjs/Subject';
 
 import { BudgetReply } from '../shared/budget-reply';
 import { BudgetRequest } from '../shared/budget-request';
@@ -14,7 +16,7 @@ import { Supplier } from '../shared/supplier';
   templateUrl: './budget-requester.component.html',
   styleUrls: ['./budget-requester.component.scss']
 })
-export class BudgetRequesterComponent implements OnInit {
+export class BudgetRequesterComponent implements OnInit, OnDestroy {
   @Input('suppliers')
   set suppliers(suppliers: Supplier[]) {
     if (suppliers) {
@@ -43,17 +45,15 @@ export class BudgetRequesterComponent implements OnInit {
       this._products = products;
     }
   }
-
   @Output()
   supplierChange = new EventEmitter<Supplier>();
   @Output()
   budgetRequestSubmit = new EventEmitter<BudgetRequest>();
 
-  _suppliersKeys: { [name: string]: string };
-  _suppliers: Supplier[];
   supplierForm: FormGroup;
   selectedSupplier: Supplier;
   selectedProduct: Product;
+  private _suppliersKeys: { [name: string]: string };
   supplierAutocompleteParams = {
     data: this._suppliersKeys,
     limit: 5,
@@ -65,15 +65,16 @@ export class BudgetRequesterComponent implements OnInit {
     secondaryPlaceholder: '+ponto de venda',
     data: []
   };
-
-  _productsKeys: { [name: string]: string };
-  _products: Product[];
   productForm: FormGroup;
   productAutocompleteParams = {};
-
+  
   noteForm: FormGroup;
   readonly chipsActions = new EventEmitter<string | MaterializeAction>();
-
+  private _suppliers: Supplier[];
+  private _products: Product[];
+  private _productsKeys: { [name: string]: string };
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
+  
   constructor(private fb: FormBuilder) {
     let initMeasureUnit = 'units';
 
@@ -90,24 +91,26 @@ export class BudgetRequesterComponent implements OnInit {
 
     this.supplierForm.get('supplier')
       .valueChanges
+      .takeUntil(this.ngUnsubscribe)
       .debounceTime(250)
       .distinctUntilChanged()
       .subscribe(val => this.supplierChanged(val));
-
-    this.productForm = this.fb.group({
-      productDesc: ['', [
-        Validators.required
-      ]],
-      measureUnit: [initMeasureUnit, Validators.required],
-      units: [1, Validators.required],
-      kg: [0.1, Validators.required],
-      measurement2d: ['', Validators.required],
-      measurement3d: ['', Validators.required],
-      liter: [0.1, Validators.required]
-    });
-
-    this.productForm.get('productDesc')
+      
+      this.productForm = this.fb.group({
+        productDesc: ['', [
+          Validators.required
+        ]],
+        measureUnit: [initMeasureUnit, Validators.required],
+        units: [1, Validators.required],
+        kg: [0.1, Validators.required],
+        measurement2d: ['', Validators.required],
+        measurement3d: ['', Validators.required],
+        liter: [0.1, Validators.required]
+      });
+      
+      this.productForm.get('productDesc')
       .valueChanges
+      .takeUntil(this.ngUnsubscribe)
       .debounceTime(500)
       .distinctUntilChanged()
       .subscribe(val => this.productChanged(val))
@@ -122,6 +125,11 @@ export class BudgetRequesterComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   addStoreChip(chipData): void {

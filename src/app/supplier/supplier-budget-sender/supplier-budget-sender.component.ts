@@ -1,7 +1,9 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { MaterializeAction } from 'angular2-materialize';
+
+import { Subject } from 'rxjs/Subject';
 
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 
@@ -9,7 +11,7 @@ import createNumberMask from 'text-mask-addons/dist/createNumberMask';
   selector: 'abx-supplier-budget-sender',
   templateUrl: './supplier-budget-sender.component.html'
 })
-export class SupplierBudgetSenderComponent implements OnInit {
+export class SupplierBudgetSenderComponent implements OnInit, OnDestroy {
   @Output()
   budgetSubmit = new EventEmitter<any>();
   @Output()
@@ -19,15 +21,15 @@ export class SupplierBudgetSenderComponent implements OnInit {
     if (formGroup) {
       let formControlName = formGroup.controls['totalPrice'] ? 'totalPrice' : 'unitPrice';
       this._senderFormGroup = formGroup;
-      this._senderFormGroup.get(formControlName)
-        .valueChanges
-        .subscribe(val => this.priceChange.emit(val))
+      // this._senderFormGroup.get(formControlName)
+      //   .valueChanges
+      //   .takeUntil(this.ngUnsubscribe)
+      //   .subscribe(val => this.priceChange.emit(val))
     }
   }
   get senderFormGroup(): FormGroup {
     return this._senderFormGroup;
   }
-  private _senderFormGroup: FormGroup;
 
   currencyMask = createNumberMask({
     prefix: 'R$ ',
@@ -35,18 +37,12 @@ export class SupplierBudgetSenderComponent implements OnInit {
     decimalSymbol: ',', // allowLeadingZeroes: true,
     allowDecimal: true, // requireDecimal: true
   });
-
   readonly chipsActions = new EventEmitter<string | MaterializeAction>();
-  readonly colorChipsParams = {
-    placeholder: 'digite + ENTER',
-    secondaryPlaceholder: '+cor'
-  };
+  readonly colorChipsParams = { placeholder: 'cor + ENTER', secondaryPlaceholder: '+cor' };
+  private _senderFormGroup: FormGroup;
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor() { }
-
-  ngOnInit() {
-
-  }
 
   addStoreChip(chipData, form): void {
     let colorsValue = form.value['colors'] ? form.value['colors'] : []
@@ -67,4 +63,14 @@ export class SupplierBudgetSenderComponent implements OnInit {
       .setValue(colorsValue, { onlySelf: false, emitEvent: false })
   }
 
+  ngOnInit() { }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
+
+  priceChanged(value, formControlName) {
+    this.priceChange.emit(value);
+  }
 }
