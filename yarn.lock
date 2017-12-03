@@ -5397,9 +5397,9 @@ term-size@^0.1.0:
   dependencies:
     execa "^0.4.0"
 
-text-mask-addons@^3.5.1:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/text-mask-addons/-/text-mask-addons-3.6.0.tgz#a9eeaf8cf696d75cfec5f3080b10691d90d8748f"
+text-mask-addons@^3.7.1:
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/text-mask-addons/-/text-mask-addons-3.7.1.tgz#8304f5c952533ab76533053e4f90cb4fdaa3995b"
 
 text-mask-core@^5.0.0:
   version "5.0.1"

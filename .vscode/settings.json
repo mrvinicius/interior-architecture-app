@@ -12,5 +12,5 @@
     "vsicons.presets.angular": true,
     "editor.snippetSuggestions": "top",
     "vsicons.presets.angular": true,
-    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.tsdk": "node_modules/typescript/lib"
 }

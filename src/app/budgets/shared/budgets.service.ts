@@ -35,19 +35,36 @@ export class BudgetsService {
         headers: this.getHeaders()
         // withCredentials: true
       })
-      .map(data => { return data; })
+      .map(data => data)
+      .catch(this.handleError);
+  }
+
+  enableRequest(id): Observable<any> {
+    return this.http
+      .post(`${this.baseUrl}/enable`,
+      { id: id },
+      {
+        headers: this.getHeaders()
+      })
+      .map(data => data)
       .catch(this.handleError);
   }
 
   getAll(userId, syncBackend?: boolean): Observable<BudgetRequest[]> {
     if (syncBackend) {
-      this.http.get(`${this.baseUrl}/getAll`, {
+      return this.http.get<BudgetRequest[]>(`${this.baseUrl}/getAll?userId=${userId}`, {
         headers: this.getHeaders(),
         observe: 'body',
         responseType: 'json',
         // withCredentials: true
-      }).map(requestData => {
+      }).map(budgetReqData => {
+        let handledData = budgetReqData.map(req => {
+          req['supplier'] = (<any>req.product).supplier;
+          return req
+        })
 
+        this.budgetRequests = handledData;
+        return handledData;
       }).catch(this.handleError)
     }
 

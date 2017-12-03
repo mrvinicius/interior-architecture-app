@@ -1,41 +1,42 @@
-<section class="u-row" style="padding-top: 24px;">
-  <h1 style="font-size: 3em;">Envie seu orçamento</h1>
-  <div class="u-col s5">
-    <label for="totalPrice" class="readonly-value-label">total</label>
-    <h5 id="totalPrice" style="font-size: 2rem">R$ 90,00</h5>
+<form *ngIf="senderFormGroup" [formGroup]="senderFormGroup">
+  <div class="switch" style="margin-bottom: 20px;">
+    <label>
+      indisponível
+      <input formControlName="availability" id="availability" type="checkbox">
+      <span class="lever"></span>
+      disponível
+    </label>
   </div>
-  <div class="col s7">
-    <form>
-      <div class="switch" style="margin-bottom: 20px;">
-        <label>
-          Indisponível
-          <input type="checkbox">
-          <span class="lever"></span>
-          Disponível
-        </label>
-      </div>
-      <div class="input-field">
-        <input class="validate" id="productCode" type="text">
-        <label for="productCode">código do produto</label>
-      </div>
-      <div class="input-field">
-        <input class="validate" id="totalPrice" type="number" step="0.1" min="0.01" max="999999">
-        <label class="active" for="unitPrice">preço unitário (R$)</label>
-      </div>
-      <div class="input-field">
-        <input class="validate" id="color" type="text">
-        <label for="color">cores disponíveis (separe por vírgula)</label>
-      </div>
-      <div class="input-field">
-        <textarea id="note" class="materialize-textarea"></textarea>
-        <!-- Material/Acabamento, Link, Medida, Pagamento -->
-        <label for="note">outras informações (opcional)</label>
-      </div>
-      <div class="right-align">
-        <button class="btn" type="button">
-          <i class="material-icons left">reply</i>Responder
-        </button>
-      </div>
-    </form>
+  <div *ngIf="senderFormGroup.controls['totalPrice']" class="input-field">
+    <input [textMask]="{mask: currencyMask, placeholderChar: '\u2000'}" formControlName="totalPrice" id="totalPrice" type="text">
+    <label class="active" for="totalPrice">preço total *</label>
   </div>
-</section>
+  <div *ngIf="senderFormGroup.controls['unitPrice']" class="input-field">
+    <input [textMask]="{mask: currencyMask, placeholderChar: '\u2000'}" formControlName="unitPrice" id="unitPrice" type="text">
+    <label class="active" for="unitPrice">preço unitário *</label>
+  </div>
+  <div>
+    <label class="active" for="colorChips">cores disponíveis (opcional)</label>
+    <div id="colorChips"
+      materialize="material_chip"
+      [materializeParams]="[colorChipsParams]"
+      [materializeActions]="chipsActions"
+      (chip.add)="addStoreChip($event.detail, senderFormGroup)"
+      (chip.delete)="deleteStoreChip($event.detail, senderFormGroup)"
+      class="chips chips-autocomplete chips-placeholder"></div>
+    <input formControlName="colors" id="colors" type="hidden">
+  </div>
+  <div class="input-field">
+    <input formControlName="productCode" id="productCode" type="text">
+    <label for="productCode">código do produto (opcional)</label>
+  </div>
+  <div class="input-field">
+    <textarea placeholder="detalhes do produto, formas de pagamento aceitas, links, etc." formControlName="note" id="note" class="materialize-textarea"></textarea>
+    <label for="note">outras informações (opcional)</label>
+  </div>
+  <div class="right-align">
+    <button [ngClass]="{'disabled': senderFormGroup.invalid}" class="btn" title="Responder" type="button">
+      <i class="material-icons left">reply</i>Responder
+    </button>
+  </div>
+</form>

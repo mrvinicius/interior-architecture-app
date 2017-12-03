@@ -48,9 +48,6 @@ export class SupplierBudgetComponent implements OnInit {
 
   ngOnInit() {
     this.budgetRequest$ = this._budgetRequest.asObservable();
-    // this.budgetRequest$.subscribe(a => console.log(a))
-    // this.budgetRequest$ = Observable.of(this.budgetRequest);
-    // this.budgetRequest$.subscribe(b => console.log(b))
   }
 
 }

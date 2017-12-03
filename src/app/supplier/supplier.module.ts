@@ -1,6 +1,12 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+// TODO: Move to SharedModule
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+
+import { MaterializeModule } from 'angular2-materialize';
+
+import { SharedModule } from '../shared/shared.module';
 
 import { SupplierRoutingModule } from './supplier-routing.module';
 import { SupplierService } from './shared/supplier.service';
@@ -12,8 +18,10 @@ import { SupplierBudgetSenderContainerComponent } from './supplier-budget-sender
 
 @NgModule({
   imports: [
-    CommonModule,
+    SharedModule,
     HttpClientModule,
+    ReactiveFormsModule,
+    MaterializeModule,
     // Routing Module
     SupplierRoutingModule
   ],

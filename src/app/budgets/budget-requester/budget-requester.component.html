@@ -9,9 +9,17 @@
               type="text">
             <label for="supplier" class="">fornecedor</label>
           </div>
-          <div materialize="material_chip" [materializeParams]="[storeChipsParams]" (chip.add)="addStoreChip($event.detail)" (chip.delete)="deleteStoreChip($event.detail)"
-            [materializeActions]="chipsActions" class="chips chips-autocomplete chips-placeholder"></div>
-          <input formControlName="stores" type="hidden">
+          <div>
+            <label class="active" for="storeChips">pontos de venda</label>
+            <div id="storeChips"
+              materialize="material_chip"
+              [materializeParams]="[storeChipsParams]"
+              (chip.add)="addStoreChip($event.detail)"
+              (chip.delete)="deleteStoreChip($event.detail)"
+              [materializeActions]="chipsActions"
+              class="chips chips-autocomplete chips-placeholder"></div>
+            <input formControlName="stores" type="hidden">
+          </div>
         </div>
       </form>
       <div class="stepper-action row u-col s12 right-align">
@@ -75,7 +83,7 @@
 
           <ng-container *ngIf="productForm.controls['measureUnit'].value === 'liter'">
             <div class="input-field">
-              <input class="validate" formControlName="liter" id="liter" type="number" step="0.1" min="0.01" max="999999">
+              <input formControlName="liter" id="liter" type="number" min="0.01" max="999999">
               <label class="active" for="liter">litros</label>
             </div>
           </ng-container>

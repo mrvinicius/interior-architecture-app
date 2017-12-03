@@ -213,8 +213,9 @@ export class BudgetRequesterComponent implements OnInit {
         break;
       case 'liter':
         quantity = this.productForm.get('liter').value;
+        break;
       default:
-        console.error('invalid measure unit', measureUnit)
+        console.error('invalid measure unit: ', measureUnit)
         break;
     }
 

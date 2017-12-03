@@ -40,13 +40,9 @@ export class BudgetsComponent implements OnInit {
 
   ngOnInit() {
     this.budgetRequests$ = this.budgetsServ
-      .getAll(this.authServ.getCurrentUser().id);
+      .getAll(this.authServ.getCurrentUser().id, true);
   }
 
-  /**
-   * 
-   * @param supplier 
-   */
   fetchProducts(supplier: Supplier): void {
     this.products$ = this.productServ.getAllBySupplier(supplier.id);
   }
@@ -54,35 +50,37 @@ export class BudgetsComponent implements OnInit {
   handleBudgetRequest(budgetRequest: BudgetRequest): void {
     this.openConfirmDialog(budgetRequest, this.dialogServ)
       .subscribe(confirm => {
-        if (confirm) {
-          const currentUser = this.authServ.getCurrentUser();
+        if (!confirm) {
+          return;
+        }
 
-          Materialize.toast('Enviando...', 20000);
+        const currentUser = this.authServ.getCurrentUser();
 
-          this.checkUser(currentUser.id, this.userServ).subscribe(
-            (user) => {
-              this.budgetsServ
-                .sendBudgetRequest(budgetRequest, user.id)
+        Materialize.toast('Enviando...', 20000);
+
+        this.checkUser(currentUser.id, this.userServ).subscribe(
+          (user) => {
+            this.budgetsServ
+              .sendBudgetRequest(budgetRequest, user.id)
+              .subscribe(req => {
+                (<any>Materialize).Toast.removeAll();
+                Materialize.toast('Solicitação enviada!', 3000);
+
+              });
+          },
+          (err) => {
+            // Não encontrado pelo ID
+            if (err.status === 404) {
+              this.userServ
+                .add(currentUser)
+                .flatMap(user => this.budgetsServ.sendBudgetRequest(budgetRequest, user.id))
                 .subscribe(req => {
                   (<any>Materialize).Toast.removeAll();
                   Materialize.toast('Solicitação enviada!', 3000);
 
                 });
-            },
-            (err) => {
-              // Não encontrado pelo ID
-              if (err.status === 404) {
-                this.userServ
-                  .add(currentUser)
-                  .flatMap(user => this.budgetsServ.sendBudgetRequest(budgetRequest, user.id))
-                  .subscribe(req => {
-                    (<any>Materialize).Toast.removeAll();
-                    Materialize.toast('Solicitação enviada!', 3000);
-
-                  });
-              }
-            });
-        }
+            }
+          });
       });
   }
 
