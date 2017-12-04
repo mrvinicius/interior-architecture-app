@@ -18,14 +18,13 @@ import { BudgetRequest } from './shared/budget-request';
       </div>
       <div class="u-col s6">
         <label for="quantity" class="readonly-value-label">
-          quantidade
           <ng-container *ngIf="budgetRequest">
             <ng-container [ngSwitch]="budgetRequest.measureUnit">
-              <ng-container *ngSwitchCase="'units'">(unidade)</ng-container>
-              <ng-container *ngSwitchCase="'kg'">(kg)</ng-container>
-              <ng-container *ngSwitchCase="'measurement2d'">(2D)</ng-container>
-              <ng-container *ngSwitchCase="'measurement3d'">(3D)</ng-container>
-              <ng-container *ngSwitchCase="'liter'">(Litros)</ng-container>
+              <ng-container *ngSwitchCase="'units'">unidades</ng-container>
+              <ng-container *ngSwitchCase="'kg'">quilos</ng-container>
+              <ng-container *ngSwitchCase="'measurement2d'">medida</ng-container>
+              <ng-container *ngSwitchCase="'measurement3d'">medida</ng-container>
+              <ng-container *ngSwitchCase="'liter'">litros</ng-container>
             </ng-container>
           </ng-container>
         </label>

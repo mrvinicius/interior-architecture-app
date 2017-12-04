@@ -15,18 +15,6 @@ export class BudgetsService {
 
   constructor(private http: HttpClient) { }
 
-  getByReply(replyId): Observable<BudgetRequest> {
-    return this.http
-      .get<BudgetRequest>(`${this.baseUrl}/getByReply/${replyId}`, {
-        headers: this.getHeaders(),
-        observe: 'body',
-        responseType: 'json',
-        // withCredentials: true
-      })
-      .map(requestData => requestData)
-      .catch(this.handleError);
-  }
-
   disableRequest(id): Observable<any> {
     return this.http
       .post(`${this.baseUrl}/disable`,
@@ -69,6 +57,30 @@ export class BudgetsService {
     }
 
     return Observable.of(this.budgetRequests);
+  }
+
+  getByReply(replyId): Observable<BudgetRequest> {
+    return this.http
+      .get<BudgetRequest>(`${this.baseUrl}/getByReply/${replyId}`, {
+        headers: this.getHeaders(),
+        observe: 'body',
+        responseType: 'json',
+        // withCredentials: true
+      })
+      .map(requestData => requestData)
+      .catch(this.handleError);
+  }
+
+  replyBudgetRequest(budgetReply: BudgetReply) {
+    let putData;
+    return this.http
+      .put(`${this.baseUrl}/reply/${budgetReply.id}`,
+      putData,
+      {
+        headers: this.getHeaders()
+      })
+      .map(data => data)
+      .catch(this.handleError);
   }
 
   sendBudgetRequest(budgetReq: BudgetRequest, userId): Observable<BudgetRequest> {

@@ -35,7 +35,12 @@
     <label for="note">outras informações (opcional)</label>
   </div>
   <div class="right-align">
-    <button [ngClass]="{'disabled': senderFormGroup.invalid}" class="btn" title="Responder" type="button">
+    <button
+      [ngClass]="{'disabled': senderFormGroup.invalid}"
+      (click)="submit()"
+      class="btn"
+      title="Responder"
+      type="button">
       <i class="material-icons left">reply</i>Responder
     </button>
   </div>

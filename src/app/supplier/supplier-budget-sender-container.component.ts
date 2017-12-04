@@ -44,7 +44,7 @@ export class SupplierBudgetSenderContainerComponent implements OnInit {
   ) { }
 
   budgetSubmited(data): void {
-
+    console.log(data)
   }
 
   priceChanged(stringValue): void {
@@ -57,7 +57,7 @@ export class SupplierBudgetSenderContainerComponent implements OnInit {
     this.totalPrice = price;
   }
 
-  createBudgetForm(budgetRequest: BudgetRequest, formBuilder, perUnit: boolean = true): FormGroup {
+  createBudgetForm(budgetRequest, formBuilder, perUnit: boolean = true): FormGroup {
     let formGroupObj = {
       availability: [],
       colors: [],

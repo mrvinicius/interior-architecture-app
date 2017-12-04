@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { MaterializeAction } from 'angular2-materialize';
@@ -11,25 +11,14 @@ import createNumberMask from 'text-mask-addons/dist/createNumberMask';
   selector: 'abx-supplier-budget-sender',
   templateUrl: './supplier-budget-sender.component.html'
 })
-export class SupplierBudgetSenderComponent implements OnInit, OnDestroy {
+export class SupplierBudgetSenderComponent implements OnInit {
+  @Input()
+  senderFormGroup: FormGroup;
+  
   @Output()
   budgetSubmit = new EventEmitter<any>();
   @Output()
   priceChange = new EventEmitter<string>();
-  @Input()
-  set senderFormGroup(formGroup: FormGroup) {
-    if (formGroup) {
-      let formControlName = formGroup.controls['totalPrice'] ? 'totalPrice' : 'unitPrice';
-      this._senderFormGroup = formGroup;
-      // this._senderFormGroup.get(formControlName)
-      //   .valueChanges
-      //   .takeUntil(this.ngUnsubscribe)
-      //   .subscribe(val => this.priceChange.emit(val))
-    }
-  }
-  get senderFormGroup(): FormGroup {
-    return this._senderFormGroup;
-  }
 
   currencyMask = createNumberMask({
     prefix: 'R$ ',
@@ -39,7 +28,6 @@ export class SupplierBudgetSenderComponent implements OnInit, OnDestroy {
   });
   readonly chipsActions = new EventEmitter<string | MaterializeAction>();
   readonly colorChipsParams = { placeholder: 'cor + ENTER', secondaryPlaceholder: '+cor' };
-  private _senderFormGroup: FormGroup;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor() { }
@@ -65,12 +53,11 @@ export class SupplierBudgetSenderComponent implements OnInit, OnDestroy {
 
   ngOnInit() { }
 
-  ngOnDestroy() {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-  }
-
   priceChanged(value, formControlName) {
     this.priceChange.emit(value);
+  }
+
+  submit() {
+    this.budgetSubmit.emit(this.senderFormGroup.value)
   }
 }
