@@ -1,12 +1,12 @@
 <form *ngIf="senderFormGroup" [formGroup]="senderFormGroup">
-  <div class="switch" style="margin-bottom: 20px;">
+  <!-- <div class="switch" style="margin-bottom: 20px;">
     <label>
       indisponível
       <input formControlName="availability" id="availability" type="checkbox">
       <span class="lever"></span>
       disponível
     </label>
-  </div>
+  </div> -->
   <div *ngIf="senderFormGroup.controls['totalPrice']" class="input-field">
     <input (input)="priceChanged($event.target.value)" [textMask]="{mask: currencyMask, placeholderChar: '\u2000'}" formControlName="totalPrice" id="totalPrice" type="text">
     <label class="active" for="totalPrice">preço total *</label>

@@ -13,6 +13,7 @@ import { BudgetRequestListComponent } from './budget-request-list/budget-request
 import { BudgetsComponent, RequestConfirmationComponent } from './budgets.component';
 import { BudgetsRoutingModule } from './budgets-routing.module';
 import { BudgetsService } from './shared/budgets.service';
+import { ReplyService } from './shared/reply.service';
 import { LayoutModule } from '../layout/layout.module';
 import { ProductModule } from './../product/product.module';
 import { SupplierModule } from '../supplier/supplier.module';
@@ -39,7 +40,8 @@ import { SupplierModule } from '../supplier/supplier.module';
     RequestConfirmationComponent
   ],
   providers: [
-    BudgetsService
+    BudgetsService,
+    ReplyService
   ],
   entryComponents: [RequestConfirmationComponent]
 })

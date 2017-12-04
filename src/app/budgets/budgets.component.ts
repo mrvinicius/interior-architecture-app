@@ -38,9 +38,13 @@ export class BudgetsComponent implements OnInit {
     supplierServ.getAll().subscribe(suppliers => this.suppliers = suppliers);
   }
 
-  ngOnInit() {
-    this.budgetRequests$ = this.budgetsServ
-      .getAll(this.authServ.getCurrentUser().id, true);
+  checkUser(userId, userService: UserService): Observable<any> {
+    return userService.getOne(userId);
+  }
+
+  disableRequest(id) {
+    this.budgetsServ.disable(id).subscribe()
+    // TODO: Show UNDO
   }
 
   fetchProducts(supplier: Supplier): void {
@@ -84,15 +88,16 @@ export class BudgetsComponent implements OnInit {
       });
   }
 
+  ngOnInit() {
+    this.budgetRequests$ = this.budgetsServ
+      .getAll(this.authServ.getCurrentUser().id, true);
+  }
+
   openConfirmDialog(budgetRequest: BudgetRequest, dialogServ): Observable<any> {
     return dialogServ.open(RequestConfirmationComponent, {
       width: '250px',
       data: budgetRequest
     }).afterClosed();
-  }
-
-  checkUser(userId, userService: UserService): Observable<any> {
-    return userService.getOne(userId);
   }
 }
 

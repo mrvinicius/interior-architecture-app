@@ -25,23 +25,23 @@
           <mat-cell *matCellDef="let row"> {{row.storeName}} </mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="quantity">
+        <!-- <ng-container matColumnDef="quantity">
           <mat-header-cell *matHeaderCellDef>Quant.</mat-header-cell>
           <mat-cell *matCellDef="let row"> {{row.quantity}} </mat-cell>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="unitPrice">
           <mat-header-cell *matHeaderCellDef>Preço Unit.</mat-header-cell>
-          <mat-cell *matCellDef="let row"> {{row.unitPrice}} </mat-cell>
+          <mat-cell *matCellDef="let row">R$ {{row.unitPrice}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="totalPrice">
           <mat-header-cell *matHeaderCellDef>Preço Total</mat-header-cell>
-          <mat-cell *matCellDef="let row"> {{row.totalPrice}} </mat-cell>
+          <mat-cell *matCellDef="let row">R$ {{row.totalPrice}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="color">
-          <mat-header-cell *matHeaderCellDef>Cor</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef>Cores disponíveis</mat-header-cell>
           <mat-cell *matCellDef="let row"> {{row.color}} </mat-cell>
         </ng-container>
 

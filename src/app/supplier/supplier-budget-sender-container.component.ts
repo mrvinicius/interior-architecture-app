@@ -5,12 +5,14 @@ import { UtilsService } from '../shared/utils/utils.service';
 
 import { BudgetsService } from '../budgets/shared/budgets.service';
 
+import { BudgetReply } from './shared/budget-reply';
 import { BudgetRequest } from './shared/budget-request';
+import { ReplyService } from '../budgets/shared/reply.service';
 
 @Component({
   selector: 'abx-supplier-budget-sender-container',
   template: `
-    <section class="u-row" style="padding-top: 24px;">
+    <section *ngIf="!replySent" class="u-row" style="padding-top: 24px;">
       <h1 style="font-size: 3em; margin-bottom: 0">Envie seu orçamento</h1>
       <div class="u-col s5">
         <label for="totalPrice" class="readonly-value-label">total</label>
@@ -36,15 +38,42 @@ export class SupplierBudgetSenderContainerComponent implements OnInit {
   budgetRequestLoad = new EventEmitter<BudgetRequest>();
   budgetSenderForm: FormGroup;
   totalPrice: number = 0;
+  replySent: boolean = false;
   private units: number;
 
   constructor(
     private budgetServ: BudgetsService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private replyServ: ReplyService
   ) { }
 
   budgetSubmited(data): void {
-    console.log(data)
+    let budgetReply = new BudgetReply();
+    budgetReply.id = this.replyId;
+    budgetReply.totalPrice = this.totalPrice;
+    budgetReply.unitPrice = Boolean(this.units) ?
+      UtilsService.parseMonetaryString(data.unitPrice) : budgetReply.totalPrice;
+    budgetReply.availability = data.availability;
+    budgetReply.productCode = data.productCode;
+    budgetReply.status = 'Budgeted';
+    budgetReply.note = data.note;
+    budgetReply.colors = data.colors
+      .map(chip => chip.tag)
+      .toString()
+      .replace(/[,]/g, ', ');
+
+    console.log(budgetReply)
+
+    this.replyServ
+      .replyBudgetRequest(budgetReply)
+      .subscribe(
+        () => {
+          this.replySent = true;
+        },
+        (err) => {
+        }
+      );
+
   }
 
   priceChanged(stringValue): void {

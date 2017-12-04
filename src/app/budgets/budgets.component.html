@@ -56,7 +56,7 @@
                 </mat-expansion-panel-header>
                 <abx-budget-request [request]="request"></abx-budget-request>
                 <mat-action-row>
-                    <button class="btn-flat">Remover</button>
+                    <button (click)="disableRequest(request.id)" class="btn-flat">Remover</button>
                 </mat-action-row>
             </mat-expansion-panel>
         </mat-accordion>

@@ -15,7 +15,6 @@ export interface ReplyData {
 
 export const displayedColumns = [
     'storeName',
-    'quantity',
     'unitPrice',
     'totalPrice',
     'color',
@@ -26,19 +25,24 @@ export class ReplyDataSource extends DataSource<any> {
 
     constructor(public replies: BudgetReply[]) {
         super();
+        console.log(replies)
     }
 
     connect(): Observable<ReplyData[]> {
         return Observable.of(
             this.replies.map(reply => {
-                return {
+                let data = {
                     storeName: reply.store.name,
-                    quantity: reply.budget ? reply.budget.quantity : '',
-                    unitPrice: reply.budget ? reply.budget.unitPrice : 0,
-                    totalPrice: reply.budget ? reply.budget.totalPrice : 0,
-                    color: reply.budget ? reply.budget.color : '',
-                    note: reply.budget ? reply.budget.note : ''
+                    quantity: reply ? reply.quantity : '',
+                    unitPrice: reply ? reply.unitPrice : 0,
+                    totalPrice: reply ? reply.totalPrice : 0,
+
+                    // TODO: Resolver o nome da coluna no BACK-END
+                    color: reply ? (<any>reply).color : '',
+                    note: reply ? reply.note : ''
                 }
+                
+                return data;
             })
         );
     }

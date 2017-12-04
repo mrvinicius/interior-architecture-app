@@ -15,7 +15,11 @@ export class BudgetsService {
 
   constructor(private http: HttpClient) { }
 
-  disableRequest(id): Observable<any> {
+  disable(id): Observable<any> {
+    let index = this.budgetRequests
+      .findIndex((budgetReq) => budgetReq.id === id);
+    this.budgetRequests.splice(index, 1)
+
     return this.http
       .post(`${this.baseUrl}/disable`,
       { id: id },
@@ -27,7 +31,7 @@ export class BudgetsService {
       .catch(this.handleError);
   }
 
-  enableRequest(id): Observable<any> {
+  enable(id): Observable<any> {
     return this.http
       .post(`${this.baseUrl}/enable`,
       { id: id },
@@ -68,18 +72,6 @@ export class BudgetsService {
         // withCredentials: true
       })
       .map(requestData => requestData)
-      .catch(this.handleError);
-  }
-
-  replyBudgetRequest(budgetReply: BudgetReply) {
-    let putData;
-    return this.http
-      .put(`${this.baseUrl}/reply/${budgetReply.id}`,
-      putData,
-      {
-        headers: this.getHeaders()
-      })
-      .map(data => data)
       .catch(this.handleError);
   }
 

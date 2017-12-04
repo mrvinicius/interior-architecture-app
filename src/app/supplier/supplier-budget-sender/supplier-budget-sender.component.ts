@@ -58,6 +58,9 @@ export class SupplierBudgetSenderComponent implements OnInit {
   }
 
   submit() {
+    if (this.senderFormGroup.invalid) {
+      return;
+    }
     this.budgetSubmit.emit(this.senderFormGroup.value)
   }
 }
