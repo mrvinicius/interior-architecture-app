@@ -67,14 +67,14 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
   };
   productForm: FormGroup;
   productAutocompleteParams = {};
-  
+
   noteForm: FormGroup;
   readonly chipsActions = new EventEmitter<string | MaterializeAction>();
   private _suppliers: Supplier[];
   private _products: Product[];
   private _productsKeys: { [name: string]: string };
   private ngUnsubscribe: Subject<void> = new Subject<void>();
-  
+
   constructor(private fb: FormBuilder) {
     let initMeasureUnit = 'units';
 
@@ -95,20 +95,20 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
       .debounceTime(250)
       .distinctUntilChanged()
       .subscribe(val => this.supplierChanged(val));
-      
-      this.productForm = this.fb.group({
-        productDesc: ['', [
-          Validators.required
-        ]],
-        measureUnit: [initMeasureUnit, Validators.required],
-        units: [1, Validators.required],
-        kg: [0.1, Validators.required],
-        measurement2d: ['', Validators.required],
-        measurement3d: ['', Validators.required],
-        liter: [0.1, Validators.required]
-      });
-      
-      this.productForm.get('productDesc')
+
+    this.productForm = this.fb.group({
+      productDesc: ['', [
+        Validators.required
+      ]],
+      measureUnit: [initMeasureUnit, Validators.required],
+      units: [1, Validators.required],
+      kg: [0.1, Validators.required],
+      measurement2d: ['', Validators.required],
+      measurement3d: ['', Validators.required],
+      liter: [0.1, Validators.required]
+    });
+
+    this.productForm.get('productDesc')
       .valueChanges
       .takeUntil(this.ngUnsubscribe)
       .debounceTime(500)
@@ -191,6 +191,33 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
     }
 
     return currentChips;
+  }
+
+  handleMeasurementsFieldsControl(controlName: string): void {
+    this.productForm.get('units').disable();
+    this.productForm.get('kg').disable();
+    this.productForm.get('measurement2d').disable();
+    this.productForm.get('measurement3d').disable();
+    this.productForm.get('liter').disable();
+
+    switch (controlName) {
+      case 'units':
+        this.productForm.get('units').enable();
+        break;
+      case 'kg':
+        this.productForm.get('kg').enable();
+        break;
+      case 'measurement2d':
+        this.productForm.get('measurement2d').enable();
+        break;
+      case 'measurement3d':
+        this.productForm.get('measurement3d').enable();
+        break;
+      case 'liter':
+        this.productForm.get('liter').enable();
+      default:
+        break;
+    }
   }
 
   productChanged(val: string): void {
@@ -299,30 +326,4 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
     }
   }
 
-  private handleMeasurementsFieldsControl(controlName: string): void {
-    this.productForm.get('units').disable();
-    this.productForm.get('kg').disable();
-    this.productForm.get('measurement2d').disable();
-    this.productForm.get('measurement3d').disable();
-    this.productForm.get('liter').disable();
-
-    switch (controlName) {
-      case 'units':
-        this.productForm.get('units').enable();
-        break;
-      case 'kg':
-        this.productForm.get('kg').enable();
-        break;
-      case 'measurement2d':
-        this.productForm.get('measurement2d').enable();
-        break;
-      case 'measurement3d':
-        this.productForm.get('measurement3d').enable();
-        break;
-      case 'liter':
-        this.productForm.get('liter').enable();
-      default:
-        break;
-    }
-  }
 }

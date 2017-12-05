@@ -95,10 +95,6 @@ export class BudgetsService {
       this.budgetRequests = []
     }
 
-    // this.budgetRequests.push(budgetReq);
-
-    // return Observable.of(budgetReq)
-
     return this.http.post<{ budgetRequest, product, budgetReplies }>(`${this.baseUrl}/sendRequest`, postData, {
       headers: this.getHeaders(),
       observe: 'body',

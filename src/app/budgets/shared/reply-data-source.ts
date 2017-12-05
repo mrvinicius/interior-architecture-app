@@ -25,7 +25,6 @@ export class ReplyDataSource extends DataSource<any> {
 
     constructor(public replies: BudgetReply[]) {
         super();
-        console.log(replies)
     }
 
     connect(): Observable<ReplyData[]> {

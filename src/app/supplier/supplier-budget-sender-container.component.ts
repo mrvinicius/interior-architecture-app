@@ -62,8 +62,6 @@ export class SupplierBudgetSenderContainerComponent implements OnInit {
       .toString()
       .replace(/[,]/g, ', ');
 
-    console.log(budgetReply)
-
     this.replyServ
       .replyBudgetRequest(budgetReply)
       .subscribe(
@@ -95,11 +93,11 @@ export class SupplierBudgetSenderContainerComponent implements OnInit {
     }
 
     if (perUnit) {
-      formGroupObj['unitPrice'] = [, [
+      formGroupObj['unitPrice'] = [0, [
         Validators.required
       ]];
     } else {
-      formGroupObj['totalPrice'] = [, [
+      formGroupObj['totalPrice'] = [0, [
         Validators.required
       ]];
     }
