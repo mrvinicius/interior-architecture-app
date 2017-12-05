@@ -16,7 +16,6 @@ export class UserRecoveryComponent implements OnInit {
   recoveryForm: FormGroup;
   errorMessage: string;
 
-
   constructor(
     private auth: AuthService,
     private fb: FormBuilder,
@@ -28,13 +27,10 @@ export class UserRecoveryComponent implements OnInit {
     this.createForm();
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   sendRequest(email: string) {
-    console.log(email);
-
-    // this.spinnerService.toggleLoadingIndicator(true);
+    this.spinnerService.toggleLoadingIndicator(true);
     this.profService.sendResetRequest(email)
       .first()
       .subscribe(resp => {
@@ -43,7 +39,7 @@ export class UserRecoveryComponent implements OnInit {
         if (resp.hasError) {
           this.toastService.show(resp.errorMessage, 3000, 'red');
         } else {
-          this.toastService.show('Link de redefinição de senha enviado para o seu email', 5000, 'green')
+          this.toastService.show('Link de recuperação enviado', 5000, 'green')
         }
       });
   }

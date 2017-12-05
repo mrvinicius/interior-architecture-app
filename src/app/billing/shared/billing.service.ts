@@ -3,12 +3,14 @@ import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 
+import { environment } from '../../../environments/environment';
+
 import { AuthService } from '../../core/auth.service';
 import { BillingInfo } from './billing-info';
 
 @Injectable()
 export class BillingService {
-  private readonly baseUrl: string = 'https://archaboxapi.azurewebsites.net/api/pagamento';
+  private readonly baseUrl: string = `${environment.apiBaseUrl}pagamento`;
   // Observable string sources
   private billingInfoUpdatedSource = new Subject<boolean>();
   // Observable string streams

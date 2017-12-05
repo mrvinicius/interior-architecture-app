@@ -5,6 +5,8 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch'
 
+import { environment } from '../../../environments/environment';
+
 import { AuthService } from '../../core/auth.service';
 import { Client } from './client';
 import { clients } from './mock-client';
@@ -21,7 +23,7 @@ export class ClientService {
   // clientAdded$ = this.clientAddedSource.asObservable();
   // public modalDismissedSource = new Subject<any>();
   // modalDismissed$ = this.modalDismissedSource.asObservable();
-  private readonly baseUrl: string = 'https://archaboxapi.azurewebsites.net/api/cliente';
+  private readonly baseUrl: string = `${environment.apiBaseUrl}cliente`;
 
   constructor(
     private auth: AuthService,

@@ -13,6 +13,8 @@ import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/distinctUntilChanged';
 
+import { environment } from '../../../environments/environment';
+
 import { Ambience } from '../shared/ambience';
 import { AmbienceDescription } from '../shared/ambience-description.enum';
 import { AmbienceService } from '../shared/ambience.service';
@@ -620,7 +622,7 @@ export class ProjectProposalManagerComponent implements OnInit, OnDestroy {
       if (this.formData.autoUpload) {
         const event: UploadInput = {
           type: 'uploadAll',
-          url: 'https://archaboxapi.azurewebsites.net/api/projeto/saveFile',
+          url: `${environment.apiBaseUrl}projeto/saveFile`,
           method: 'POST',
           data: {
             projetoID: this.project.id

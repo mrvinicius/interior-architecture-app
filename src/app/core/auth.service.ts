@@ -24,8 +24,6 @@ export class AuthService {
   // store the URL so we can redirect after logging in
 
   constructor(
-    private http: Http,
-    private router: Router,
     private winRef: WindowRef
   ) {
     this.window = winRef.getNativeWindow();

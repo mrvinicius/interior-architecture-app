@@ -3,6 +3,8 @@ import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from "rxjs/Subject";
 
+import { environment } from '../../../environments/environment';
+
 import { AuthService } from '../../core/auth.service';
 import { Bank } from './bank';
 import { BankAccount } from './bank-account';
@@ -13,7 +15,7 @@ import { ProfessionalService } from '../../core/professional.service';
 @Injectable()
 export class BankAccountService {
   private bankAccounts: BankAccount[] = [];
-  private readonly baseUrl: string = 'https://archaboxapi.azurewebsites.net/api/conta';
+  private readonly baseUrl: string = `${environment.apiBaseUrl}conta`;
 
   constructor(
     private auth: AuthService,

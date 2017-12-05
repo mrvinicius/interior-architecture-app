@@ -7,6 +7,8 @@ import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/toPromise';
 
+import { environment } from '../../environments/environment';
+
 import { AuthService } from './auth.service';
 import { Client } from '../client/shared/client';
 import { Professional } from './professional';
@@ -212,7 +214,7 @@ export class ProfessionalService {
   getOne(id: string): Observable<Professional> {
     let options = new RequestOptions({ headers: this.getHeaders() });
 
-    //https://archaboxapi.azurewebsites.net/api/profissional/getone?id=c11752b0-0475-4d31-9c01-223d1a98aa9f
+    //${environment.apiBaseUrl}profissional/getone?id=c11752b0-0475-4d31-9c01-223d1a98aa9f
     return this.http.get(this.baseUrl + '/getone?id=' + id, options)
       .map((response: Response) => {
         let body = JSON.parse(response.text());

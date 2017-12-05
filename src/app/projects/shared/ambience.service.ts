@@ -6,6 +6,8 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch'
 import 'rxjs/add/operator/toPromise';
 
+import { environment } from '../../../environments/environment';
+
 import { Ambience } from './ambience';
 import { Project } from './project';
 import { ProjectsService } from './projects.service';
@@ -14,7 +16,7 @@ import { ServicesGroup } from './services-group.enum';
 
 @Injectable()
 export class AmbienceService {
-  private static readonly baseUrl = 'https://archaboxapi.azurewebsites.net/api/comodo';
+  private static readonly baseUrl = `${environment.apiBaseUrl}comodo`;
   
   constructor(
     private projectsService: ProjectsService,
