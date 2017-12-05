@@ -20,37 +20,33 @@ export class BillingService {
   ) { }
 
   addBillingInfo(billingInfo: BillingInfo): Observable<any> {
-    let options = new RequestOptions({ headers: this.getHeaders() });
-    let now: Date = new Date();
-    let data = {
-      "IdPlano": "",
-      "ProfissionalId": billingInfo.professionalId,
-      "Descricao": "Assinatura",
-      "FirstName": billingInfo.firstName,
-      "LastName": billingInfo.lastName,
-      "Month": billingInfo.creditCardInfo.expirationMonth,
-      "Number": billingInfo.creditCardInfo.number,
-      "VerificationValue": billingInfo.creditCardInfo.cvc,
-      "Year": billingInfo.creditCardInfo.expirationYear,
-      "PlanIdentifier": billingInfo.planIdentifier,
-      "Valor": 1,
-      "Quantidade": 1,
-      "Recorrente": true,
-      "DataExpiracao": ""
-    };
+    let options = new RequestOptions({ headers: this.getHeaders() }),
+      now: Date = new Date(),
+      data = {
+        "IdPlano": "",
+        "ProfissionalId": billingInfo.professionalId,
+        "Descricao": "Assinatura",
+        "FirstName": billingInfo.firstName,
+        "LastName": billingInfo.lastName,
+        "Month": billingInfo.creditCardInfo.expirationMonth,
+        "Number": billingInfo.creditCardInfo.number,
+        "VerificationValue": billingInfo.creditCardInfo.cvc,
+        "Year": billingInfo.creditCardInfo.expirationYear,
+        "PlanIdentifier": billingInfo.planIdentifier,
+        "Valor": 1,
+        "Quantidade": 1,
+        "Recorrente": true,
+        "DataExpiracao": ""
+      },
+      zerofill = (dateOrMonth: number | string): string => {
+        let filled: string = String(dateOrMonth).trim();
 
-    // let year = now.getFullYear();
-    // currentDate.getMonth() + 1;
-    // currentDate.getDate();
-    let zerofill = (dateOrMonth: number | string): string => {
-      let filled: string = String(dateOrMonth).trim();
-      
-      if (filled.length === 1) {
-        filled = "0" + filled;
+        if (filled.length === 1) {
+          filled = "0" + filled;
+        }
+
+        return filled;
       }
-
-      return filled;
-    }
 
     switch (data.PlanIdentifier) {
       case "plano_mensal":
@@ -78,9 +74,6 @@ export class BillingService {
     data.DataExpiracao = zerofill(now.getMonth() + 1) + "/"
       + zerofill(now.getDate()) + "/"
       + now.getFullYear();
-
-    console.log(data);
-
 
     return this.http.post(this.baseUrl + '/AddProfissionalAssinatura', data, options)
       .map((response: Response) => {
@@ -135,6 +128,27 @@ export class BillingService {
 
   billingInfoUpdated(success: boolean) {
     this.billingInfoUpdatedSource.next(success);
+  }
+
+  suspendBilling(profId: string): Observable<any> {
+    let options = new RequestOptions({ headers: this.getHeaders() }),
+      data: any = {
+        "ProfissionalId": "5cb88ad2-e641-4da3-8b8b-9f6eb0f93317",
+        "IdPlano": "105A5EE5905F4D0B92FE21D18A5CD32E"
+      };
+
+    return this.http.post(this.baseUrl + '/AddProfissionalAssinatura', data, options)
+      .map((response: Response) => {
+        let billingResp = JSON.parse(response.text());
+
+        if (billingResp.HasError) {
+          let errorMessages = []
+        }
+
+        return billingResp;
+      })
+      .catch(this.handleError);
+
   }
 
   private getHeaders() {

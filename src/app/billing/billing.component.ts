@@ -3,6 +3,8 @@ import { MzModalService } from 'ng2-materialize';
 import { Subject } from 'rxjs/Subject';
 
 import { BillingModalComponent } from './billing-modal/billing-modal.component';
+import { BillingService } from './shared/billing.service';
+import { Professional } from './../core/professional';
 import { ProfessionalService } from './../core/professional.service';
 
 @Component({
@@ -16,16 +18,21 @@ import { ProfessionalService } from './../core/professional.service';
 })
 export class BillingComponent implements OnInit, OnDestroy {
   paying: boolean;
+  professional: Professional;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
 
   constructor(
     private profService: ProfessionalService,
     private modalService: MzModalService,
+    private billService: BillingService
   ) {
     console.log(this.profService.professional);
     this.profService.getCurrentProfessional()
-      .subscribe(prof => this.paying = prof.paying)
+      .subscribe(prof => {
+        this.paying = prof.paying;
+        this.professional = prof;
+      })
     // this.paying = false;
 
   }
@@ -43,6 +50,12 @@ export class BillingComponent implements OnInit, OnDestroy {
 
   openBillingModal() {
     let modalRef = this.modalService.open(BillingModalComponent, {});
+  }
+
+  suspendBilling() {
+    this.billService.suspendBilling(this.professional.id)
+      .subscribe(() => {})
+
   }
 
 }
