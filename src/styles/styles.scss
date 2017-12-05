@@ -4,7 +4,7 @@
 @import "abstract/abstract";
 
 /*** Vendors ***/
-// @import "vendors/angular-material-2";
+@import "vendors/angular-material-2";
 @import "vendors/angular2-mdl";
 @import "vendors/angular2-mdl-ext";
 @import "vendors/materialize-css";
@@ -33,9 +33,11 @@
 /*** Components ***/
 @import "components/accordion";
 @import "components/breadcrumbs";
-// @import "components/buttons";
+@import "components/buttons";
 @import "components/card";
+@import "components/card-page";
 @import "components/collection";
+@import "components/dropdown";
 @import "components/expansion-panel";
 @import "components/forms";
 @import "components/icons";
@@ -44,6 +46,8 @@
 @import "components/popover";
 @import "components/preloader";
 @import "components/select";
+@import "components/stepper";
+@import "components/table";
 @import "components/tabs";
 @import "components/toast";
 

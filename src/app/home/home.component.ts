@@ -74,7 +74,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.fromArchathon = params['archathon'];
 
         if (this.fromArchathon) {
-          console.log(this.fromArchathon);
         }
       })
 

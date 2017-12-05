@@ -6,7 +6,6 @@ import { AuthService } from '../../core/auth.service';
 import { Professional } from './../../core/professional';
 import { ProfessionalService } from './../../core/professional.service';
 import { SpinnerService } from './../../core/spinner/spinner.service';
-import { UserService } from '../../core/user.service';
 
 @Component({
   selector: 'abx-user-profession',
@@ -32,16 +31,11 @@ export class UserProfessionComponent implements OnInit {
 
   difineProfession() {
     this.spinnerService.toggleLoadingIndicator(true);
-    console.log(this.professionForm.value.professionOpt);
 
     this.professional.profession = this.professionForm.value.professionOpt;
     this.profService.update(this.professional).subscribe(resp => {
-      console.log('update resp: ', resp);
       this.spinnerService.toggleLoadingIndicator(false);
-
-      this.router.navigate(['/projetos']);
-
-
+      // this.router.navigate(['/projetos']);
     });
   }
 
@@ -50,7 +44,6 @@ export class UserProfessionComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.id = this.profService.professional.id;
       this.email = this.profService.professional.email;
-      console.log(this.id, this.email);
 
       this.getCurrentProf();
     })

@@ -56,6 +56,28 @@ export class UserProfileComponent implements OnInit {
             this.findLocationByCEP(cleanCep);
           });
 
+        const cpfCnpjChange$ = this.profProfileForm.get('cpfCnpj').valueChanges;
+        cpfCnpjChange$.debounceTime(250).subscribe((cpfCnpj: string) => {
+          let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
+
+          let mask;
+
+          if (cleanCpfCnpj.length < 12) {
+            mask = UtilsService.cpfMask;
+          } else {
+            mask = UtilsService.cnpjMask;
+          }
+
+          let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
+            guide: false,
+            placeholderChar: '\u2000'
+          });
+
+          this.profProfileForm.get('cpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
+            onlySelf: false,
+            emitEvent: false
+          })
+        });
 
         this.profProfileForm.get('cpfCnpj').valueChanges
           .takeUntil(this.ngUnsubscribe)
@@ -165,7 +187,7 @@ export class UserProfileComponent implements OnInit {
     }
 
     this.profProfileForm.get('addressArea').disable();
-    
+
     cep(cepCode).then(CEP => {
       this.profProfileForm.get('addressArea').enable();
       this.profProfileForm.get('addressArea')
@@ -173,7 +195,7 @@ export class UserProfileComponent implements OnInit {
       Materialize.updateTextFields();
 
     }).catch(e => {
-      console.log(e);
+      console.error(e);
     });
   }
 

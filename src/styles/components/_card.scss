@@ -12,3 +12,9 @@ mz-card {
         }
     }
 }
+
+.card-panel {
+    @media #{$small-and-down} {
+        padding: .75rem;
+    }
+}

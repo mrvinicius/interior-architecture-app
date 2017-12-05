@@ -54,7 +54,6 @@ export class UserPasswordComponent implements OnInit {
 
   activeProfessional(email) {
     this.profService.activate(email).subscribe(resp => {
-      console.log('activate response: ', resp);
 
       this.spinnerService.toggleLoadingIndicator(false);
     })
@@ -65,7 +64,10 @@ export class UserPasswordComponent implements OnInit {
     this.auth.login(prof);
 
     if (this.professional.profession === undefined) {
+
       this.spinnerService.toggleLoadingIndicator(false);
+      // this.router.navigate(['/profissao?id=' + this.id + '&email=' + this.email,]);
+
       this.router.navigate(['/profissao',]);
     } else {
       this.spinnerService.toggleLoadingIndicator(false);
@@ -84,22 +86,15 @@ export class UserPasswordComponent implements OnInit {
 
   definePassword() {
     this.spinnerService.toggleLoadingIndicator(true);
+
     this.professional.id = this.id;
     this.professional.password = this.passwordForm.value.password;
-    // this.professional.profession = 0;
+    this.professional.profession = 0;
 
     this.profService.update(this.professional)
       .subscribe(resp => {
+        this.professional.profession = undefined;
         this.authenticate(this.professional);
-
-        // if (!!true) {
-        //   this.professional.profession = undefined;
-        // } else {
-        //   this.spinnerService.toggleLoadingIndicator(false);
-        //   window.setTimeout(() => this.router.navigate(['/entrar']), 3000);
-        //   this.toastService.show('Senha redefinida!', 3000, 'green');
-        // }
-
       });
   }
 

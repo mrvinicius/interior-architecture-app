@@ -1,6 +1,6 @@
 // Mixins
 // @import "components/prefixer";
-@import "~materialize-css/sass/components/mixins";
+// @import "~materialize-css/sass/components/mixins";
 @import "~materialize-css/sass/components/color";
 
 // Variables;
@@ -11,7 +11,7 @@
 
 // components
 @import "~materialize-css/sass/components/global";
-@import "~materialize-css/sass/components/badges";
+// @import "~materialize-css/sass/components/badges";
 @import "~materialize-css/sass/components/icons-material-design";
 @import "~materialize-css/sass/components/grid";
 // @import "~materialize-css/sass/components/navbar";
@@ -27,7 +27,7 @@
 @import "~materialize-css/sass/components/waves";
 @import "~materialize-css/sass/components/modal";
 @import "~materialize-css/sass/components/collapsible";
-// @import "~materialize-css/sass/components/chips";
+@import "~materialize-css/sass/components/chips";
 // @import "~materialize-css/sass/components/materialbox";
 @import "~materialize-css/sass/components/forms/forms";
 @import "~materialize-css/sass/components/table_of_contents";

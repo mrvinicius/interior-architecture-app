@@ -55,7 +55,6 @@ export class ClientListComponent implements OnInit, OnDestroy {
   disableClient(clientId: string) {
     this.clientService.disableClient(clientId, this.auth.getCurrentUser().id)
       .subscribe(response => {
-        console.log(response);
 
       });
   }

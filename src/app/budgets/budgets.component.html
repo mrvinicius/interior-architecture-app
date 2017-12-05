@@ -1,0 +1,64 @@
+<style>
+    .layout-content {
+        padding-top: .75rem;
+        padding-right: .75rem;
+        padding-left: .75rem;
+    }
+
+    @media only screen and (min-width: 601px) {
+        .layout-content {
+            padding-left: 40px;
+        }
+    }
+</style>
+<abx-layout>
+    <main class="layout-content u-row" style="display:flex; flex-direction: column;">
+        <div *ngIf="suppliers">
+            <span class="dim-text" style="text-transform: uppercase; display: inline-block;">
+                <i class="material-icons" style="vertical-align: bottom; margin-right: 10px;">
+                    add_shopping_cart
+                </i>Solicitar orçamento
+                <span class="hide-on-small-only"> para fornecedor</span>
+            </span>
+            <abx-budget-requester
+                *ngIf="suppliers"
+                [suppliers]="suppliers"
+                [products]="products$ | async"
+                (supplierChange)="fetchProducts($event)"
+                (budgetRequestSubmit)="handleBudgetRequest($event)"></abx-budget-requester>
+        </div>
+
+        <!-- TODO: Explorar Lifecycle hooks para garantir que os dados sejam lidos complnent filho corretamente (ao invés de undefined) -->
+        <!-- <abx-budget-request-list
+            [requests]="budgetRequests$ | async"
+            class="u-col s12"></abx-budget-request-list> -->
+
+        <!-- <abx-budget-request
+            *ngFor="let req of budgetRequests$ | async"
+            [request]="req"></abx-budget-request> -->
+
+        <span class="dim-text" style="text-transform: uppercase; display: inline-block;">Solicitações de orçamento</span>            
+        <mat-accordion>
+            <mat-expansion-panel *ngFor="let request of budgetRequests$ | async" class="grey lighten-5">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <span class="truncate">{{request.supplier.name}}</span>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        {{request.product.name}}
+                        <ng-container [ngSwitch]="request.status">
+                        <i title="Nenhum orçamento" *ngSwitchCase="'Waiting'" class="material-icons">schedule</i>
+                        <i title="Alguns responderam" *ngSwitchCase="'Budgeted'" class="material-icons">done</i>
+                        <i title="Todos responderam" *ngSwitchCase="'All_Budgeted'" class="material-icons">done_all</i>
+                        <i title="Enviado ao cliente" *ngSwitchCase="'specified'" class="material-icons">assignment_turned_in</i>
+                        </ng-container>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <abx-budget-request [request]="request"></abx-budget-request>
+                <mat-action-row>
+                    <button (click)="disableRequest(request.id)" class="btn-flat">Remover</button>
+                </mat-action-row>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </main>
+</abx-layout>

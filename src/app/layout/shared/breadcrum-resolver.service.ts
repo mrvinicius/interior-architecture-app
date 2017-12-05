@@ -18,11 +18,9 @@ export class BreadcrumbResolver implements Resolve<string> {
     private breadcrumbLabelDefined$ = this.breadcrumbLabelDefinedSource.asObservable();
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        console.log(this.breadcrumbLabelDefined$);
         return Observable.of('Projeto qualquer')
         // return this.breadcrumbLabelDefined$;
         // return this.breadcrumbLabelDefined$.map((label: string) => {
-        //     console.log(label);
 
         //     return label;
         // }).first();

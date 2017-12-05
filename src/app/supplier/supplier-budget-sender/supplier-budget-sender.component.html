@@ -1,0 +1,47 @@
+<form *ngIf="senderFormGroup" [formGroup]="senderFormGroup">
+  <!-- <div class="switch" style="margin-bottom: 20px;">
+    <label>
+      indisponível
+      <input formControlName="availability" id="availability" type="checkbox">
+      <span class="lever"></span>
+      disponível
+    </label>
+  </div> -->
+  <div *ngIf="senderFormGroup.controls['totalPrice']" class="input-field">
+    <input (input)="priceChanged($event.target.value)" [textMask]="{mask: currencyMask, placeholderChar: '\u2000'}" formControlName="totalPrice" id="totalPrice" type="text">
+    <label class="active" for="totalPrice">preço total *</label>
+  </div>
+  <div *ngIf="senderFormGroup.controls['unitPrice']" class="input-field">
+    <input (input)="priceChanged($event.target.value)" [textMask]="{mask: currencyMask, placeholderChar: '\u2000'}" formControlName="unitPrice" id="unitPrice" type="text">
+    <label class="active" for="unitPrice">preço unitário *</label>
+  </div>
+  <div>
+    <label class="active" for="colorChips">cores disponíveis (opcional)</label>
+    <div id="colorChips"
+      materialize="material_chip"
+      [materializeParams]="[colorChipsParams]"
+      [materializeActions]="chipsActions"
+      (chip.add)="addStoreChip($event.detail, senderFormGroup)"
+      (chip.delete)="deleteStoreChip($event.detail, senderFormGroup)"
+      class="chips chips-autocomplete chips-placeholder"></div>
+    <input formControlName="colors" id="colors" type="hidden">
+  </div>
+  <div class="input-field">
+    <input formControlName="productCode" id="productCode" type="text">
+    <label for="productCode">código do produto (opcional)</label>
+  </div>
+  <div class="input-field">
+    <textarea placeholder="detalhes do produto, formas de pagamento aceitas, links, etc." formControlName="note" id="note" class="materialize-textarea"></textarea>
+    <label for="note">outras informações (opcional)</label>
+  </div>
+  <div class="right-align">
+    <button
+      [ngClass]="{'disabled': senderFormGroup.invalid}"
+      (click)="submit()"
+      class="btn"
+      title="Responder"
+      type="button">
+      <i class="material-icons left">reply</i>Responder
+    </button>
+  </div>
+</form>

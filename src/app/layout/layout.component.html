@@ -1,31 +1,28 @@
 <!--mdl-layout-fixed-drawer-->
 <mdl-layout mdl-layout-fixed-header mdl-layout-fixed-drawer #mdlLayout1="mdlLayout">
-    <mdl-layout-drawer *ngIf="showSidebar" class="side-bar z-depth-4">
-        <!-- <mdl-layout-title class="title truncate">{{userName}}</mdl-layout-title> -->
+    <mdl-layout-drawer class="side-bar z-depth-4">
         <div style="display: flex">
             <img src="/assets/images/icon-96x96.png" class="responsive-img" style="margin: 0 auto;" alt="Logo Archabox">
-
         </div>
         <nav class="mdl-navigation">
-            <a class="mdl-navigation__link side-bar__link has-icon black-text" routerLink="/projetos" (click)="mdlLayout1.closeDrawer()">
+            <a class="mdl-navigation__link side-bar__link has-icon black-text" routerLink="/orcamentos">
+                <img src="/assets/images/budget.svg" class="detailed-icons medium">
+                <span class="link-label">Orçamentos</span>
+            </a>
+            <!-- <a class="mdl-navigation__link side-bar__link has-icon black-text" routerLink="/projetos" (click)="mdlLayout1.closeDrawer()">
                 <img src="/assets/images/project.svg" class="detailed-icons medium" alt="Projetos">
                 <span class="link-label">Propostas</span>
-            </a>
-            <a class="mdl-navigation__link side-bar__link has-icon black-text" routerLink="/clientes">
+            </a> -->
+            <!-- <a class="mdl-navigation__link side-bar__link has-icon black-text" routerLink="/clientes">
                 <img src="/assets/images/clients.svg" class="detailed-icons medium" alt="Clientes">
                 <span class="link-label">Clientes</span>
-            </a>
+            </a> -->
             <div class="divider"></div>
-            <a class="mdl-navigation__link side-bar__link has-icon black-text pointer" routerLink="/perfil" (click)="mdlLayout1.closeDrawer()"> 
+            <a class="mdl-navigation__link side-bar__link has-icon black-text pointer" routerLink="/perfil" (click)="mdlLayout1.closeDrawer()">
                 <img src="/assets/images/user.svg" class="detailed-icons medium" alt="Perfil">
                 <span class="link-label">Perfil</span>
-                <!--<i class="material-icons right">navigate_next</i>-->
             </a>
-            <a class="mdl-navigation__link side-bar__link has-icon black-text pointer" routerLink="/assinatura" (click)="mdlLayout1.closeDrawer()"> 
-                <img src="/assets/images/bill.svg" class="detailed-icons medium" alt="Assinatura">
-                <span class="link-label">Assinatura</span>
-                <!--<i class="material-icons right">navigate_next</i>-->
-            </a>
+
             <a class="mdl-navigation__link side-bar__link has-icon black-text pointer" (click)="logout(); mdlLayout1.closeDrawer();">
                 <img src="/assets/images/power.svg" class="detailed-icons medium" alt="Sair">
                 <span class="link-label">Sair</span>
@@ -33,11 +30,11 @@
         </nav>
     </mdl-layout-drawer>
 
-    <mdl-layout-header *ngIf="showHeader" [ngClass]="{'z-depth-0': tabsInChild}" class="top-bar">
+    <mdl-layout-header [ngClass]="{'z-depth-0': tabsInChild}" class="top-bar">
 
         <mdl-layout-header-row>
             <mdl-layout-title>
-                <abx-breadcrumb prefix="Início"></abx-breadcrumb>
+                <abx-breadcrumb *ngIf="breadcrumbs" [breadcrumbs]="breadcrumbs" prefix="Início"></abx-breadcrumb>
             </mdl-layout-title>
 
             <mdl-layout-spacer>
@@ -49,16 +46,7 @@
         </mdl-layout-header-row>-->
     </mdl-layout-header>
 
-    <mdl-layout-content [style.margin]="!showHeader ? 0 : null" [style.overflow-y]="overflowY" [ngClass]="{'showLoadingToast@@@': showLoadingToast}"
-        class="layout-content-container">
-
-        <!--<ng-container *ngIf=" tabs">
-            <mdl-layout-tab-panel *ngFor="let tab of tabs" mdl-layout-tab-panel-title="{{tab.title}}">
-                <ng-content select="tab.selectors"></ng-content>
-                <abx-layout-tab-content-container [componentData]="tab.componentData"></abx-layout-tab-content-container>
-            </mdl-layout-tab-panel>
-        </ng-container>-->
-
+    <mdl-layout-content class="layout-content-container">
         <ng-content select="router-outlet, .layout-content"></ng-content>
 
         <!--<ng-container>

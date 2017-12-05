@@ -38,7 +38,6 @@ export class UserRegisterComponent implements OnInit {
       this.profService.add(prof, true)
         .subscribe(response => {
           this.spinnerService.toggleLoadingIndicator(false);
-          console.log(response);
           if (response.HasError) {
             this.errorMessage = response.ErrorMessage;
           } else {
@@ -46,7 +45,7 @@ export class UserRegisterComponent implements OnInit {
           }
         }, (error) => {
           this.spinnerService.toggleLoadingIndicator(false);
-          console.log(error)
+          console.error(error)
         }
         );
     }
