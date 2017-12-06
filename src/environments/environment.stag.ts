@@ -1,4 +1,4 @@
 export const environment = {
-    apiBaseUrl: 'https://archabox-staging.herokuapp.com/api'
-  };
-  
+  production: false,
+  apiBaseUrl: 'https://archabox-staging.herokuapp.com/api'
+};
