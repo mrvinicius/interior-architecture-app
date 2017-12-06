@@ -27,7 +27,6 @@ export class AuthService {
     private winRef: WindowRef
   ) {
     this.window = winRef.getNativeWindow();
-    // console.log(localStorage.getItem('currentUser'));
   }
 
   getCurrentUser(): User {
@@ -42,7 +41,6 @@ export class AuthService {
         //     name: this.currentUser.name,
         //     email: this.currentUser.email
         //   });
-        //   console.log('Intercom User updated!');
         // } else {
         //   let intervalId,
         //     that = this;

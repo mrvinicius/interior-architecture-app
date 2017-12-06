@@ -3,12 +3,14 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 
 import { Observable } from 'rxjs';
 
+import { environment } from '../../../environments/environment';
+
 import { BudgetReply } from './budget-reply';
 
 @Injectable()
 export class ReplyService {
-  private readonly baseUrl = 'http://localhost:8000/api/reply';
-
+  private readonly baseUrl = `${environment.apiBaseUrl}/reply`;
+  
   constructor(private http: HttpClient) { }
 
   replyBudgetRequest(budgetReply: BudgetReply) {

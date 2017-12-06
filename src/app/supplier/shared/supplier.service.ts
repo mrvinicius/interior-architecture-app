@@ -3,15 +3,17 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 
 import { Observable } from 'rxjs';
 
+import { environment } from './../../../environments/environment';
+
 import { Supplier } from './supplier';
 
 @Injectable()
 export class SupplierService {
-  private readonly baseUrl = 'http://localhost:8000/api/supplier';
+  private readonly baseUrl = `${environment.apiBaseUrl}/supplier`;
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<Supplier[]> {
+  getAll(): Observable<Supplier[]> {        
     return this.http.get<Supplier[]>(`${this.baseUrl}/getAll`, {
       headers: this.getHeaders(),
       observe: 'body',

@@ -5,6 +5,5 @@
 
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://52.67.21.201/muuving/api/'
-  // apiBaseUrl: 'https://archaboxapi.azurewebsites.net/api/'
+  apiBaseUrl: 'http://localhost:8000/api'
 };

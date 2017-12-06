@@ -23,7 +23,9 @@
         </div>
       </form>
       <div class="stepper-action row u-col s12 right-align">
-        <button class="btn short-pad waves-effect waves-light" matStepperNext>
+        <button
+          [ngClass]="{'disabled': supplierForm.invalid}"
+          class="btn short-pad waves-effect waves-light" matStepperNext>
           Próximo
           <i class="material-icons right">navigate_next</i>
         </button>
@@ -94,7 +96,9 @@
           Voltar
           <i class="material-icons left">navigate_before</i>
         </button>
-        <button class="btn short-pad waves-effect waves-light" mat-button matStepperNext>
+        <button
+          [ngClass]="{'disabled': productForm.invalid}"
+          class="btn short-pad waves-effect waves-light" mat-button matStepperNext>
           Próximo
           <i class="material-icons right">navigate_next</i>
         </button>

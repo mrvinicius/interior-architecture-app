@@ -3,11 +3,14 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 
 import { Observable } from 'rxjs';
 
+import { environment } from './../../../environments/environment';
+
 import { Product } from './product';
 
 @Injectable()
 export class ProductService {
-  private readonly baseUrl = 'http://localhost:8000/api/product';
+  private readonly baseUrl = `${environment.apiBaseUrl}/product`;
+  
 
   constructor(private http: HttpClient) { }
 

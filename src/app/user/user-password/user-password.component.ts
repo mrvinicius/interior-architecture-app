@@ -48,7 +48,6 @@ export class UserPasswordComponent implements OnInit {
     // this.activatedRoute.params.subscribe((params: Params) => {
     //   let id = params['id'];
     //   let email = params['email'];
-    //   console.log(id, email);
     // })
   }
 

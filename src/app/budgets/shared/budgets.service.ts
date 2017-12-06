@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 
 import { Observable } from 'rxjs';
 
+import { environment } from '../../../environments/environment';
+
 import { Budget } from './budget';
 import { BudgetRequest } from './budget-request';
 import { BudgetReply } from './budget-reply';
@@ -10,7 +12,7 @@ import { Product } from './product';
 
 @Injectable()
 export class BudgetsService {
-  private readonly baseUrl = 'http://localhost:8000/api/budget';
+  private readonly baseUrl = `${environment.apiBaseUrl}/budget`;
   private budgetRequests: BudgetRequest[] = [];
 
   constructor(private http: HttpClient) { }
