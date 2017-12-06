@@ -8,8 +8,9 @@
   },
   "scripts": {
     "ng": "ng",
+    "preinstall": "rm -rf node_modules && npm cache clean --force",
     "start": "node index.js",
-    "postinstall": "ng build --aot --env=stag",
+    "postinstall": "ng build --aot=false --env=stag",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
