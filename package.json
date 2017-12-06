@@ -8,7 +8,6 @@
   },
   "scripts": {
     "ng": "ng",
-    "preinstall": "npm install -g @angular/cli @angular/compiler-cli typescript",
     "start": "node index.js",
     "postinstall": "ng build --aot --environment stag",
     "build": "ng build",
@@ -49,13 +48,14 @@
     "ngx-uploader": "^3.3.9",
     "rxjs": "5.4.2",
     "text-mask-addons": "^3.7.1",
-    "zone.js": "^0.8.4"
+    "zone.js": "^0.8.4",
+    "typescript": "2.3.3",
+    "@angular/compiler-cli": "4.4.6"
   },
   "devDependencies": {
     "@types/hammerjs": "^2.0.34",
     "@types/jasmine": "2.5.38",
     "@types/node": "~6.0.60",
-    "@angular/compiler-cli": "4.4.6",
     "codelyzer": "~2.0.0",
     "jasmine-core": "~2.5.2",
     "jasmine-spec-reporter": "~3.2.0",
@@ -67,7 +67,6 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "~5.1.0",
     "ts-node": "~2.0.0",
-    "tslint": "~4.5.0",
-    "typescript": "2.3.3"
+    "tslint": "~4.5.0"
   }
 }
