@@ -9,7 +9,7 @@
   "scripts": {
     "ng": "ng",
     "start": "node index.js",
-    "postinstall": "ng build --aot=false --env=prod",
+    "heroku-postbuild": "ng build --target=staging -e ${NG_ENV:-staging} --aot=false",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
