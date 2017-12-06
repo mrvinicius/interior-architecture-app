@@ -8,7 +8,8 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "postinstall": "ng build --aot -prod",
+    "start": "node index.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -36,6 +37,7 @@
     "angular2-text-mask": "^8.0.1",
     "cep-promise": "^2.0.5",
     "core-js": "^2.4.1",
+    "express": "^4.16.2",
     "hammerjs": "^2.0.8",
     "materialize-css": "^0.100.2",
     "md2": "^0.0.25",
