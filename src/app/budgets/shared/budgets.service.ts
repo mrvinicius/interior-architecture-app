@@ -15,36 +15,39 @@ export class BudgetsService {
   private readonly baseUrl = `${environment.apiBaseUrl}/budget`;
   private budgetRequests: BudgetRequest[] = [];
 
-  constructor(private http: HttpClient) { }
-
+  constructor(private http: HttpClient) {
+    
+  }
+  
   disable(id): Observable<any> {
     let index = this.budgetRequests
-      .findIndex((budgetReq) => budgetReq.id === id);
+    .findIndex((budgetReq) => budgetReq.id === id);
     this.budgetRequests.splice(index, 1)
-
+    
     return this.http
-      .post(`${this.baseUrl}/disable`,
-      { id: id },
-      {
-        headers: this.getHeaders()
-        // withCredentials: true
-      })
-      .map(data => data)
-      .catch(this.handleError);
+    .post(`${this.baseUrl}/disable`,
+    { id: id },
+    {
+      headers: this.getHeaders()
+      // withCredentials: true
+    })
+    .map(data => data)
+    .catch(this.handleError);
   }
-
+  
   enable(id): Observable<any> {
     return this.http
-      .post(`${this.baseUrl}/enable`,
-      { id: id },
-      {
-        headers: this.getHeaders()
-      })
-      .map(data => data)
-      .catch(this.handleError);
+    .post(`${this.baseUrl}/enable`,
+    { id: id },
+    {
+      headers: this.getHeaders()
+    })
+    .map(data => data)
+    .catch(this.handleError);
   }
-
+  
   getAll(userId, syncBackend?: boolean): Observable<BudgetRequest[]> {
+    console.log(environment.apiBaseUrl);
     if (syncBackend) {
       return this.http.get<BudgetRequest[]>(`${this.baseUrl}/getAll?userId=${userId}`, {
         headers: this.getHeaders(),
