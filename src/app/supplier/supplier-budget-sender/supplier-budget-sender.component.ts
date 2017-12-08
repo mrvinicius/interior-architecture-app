@@ -14,12 +14,11 @@ import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 export class SupplierBudgetSenderComponent implements OnInit {
   @Input()
   senderFormGroup: FormGroup;
-  
   @Output()
   budgetSubmit = new EventEmitter<any>();
   @Output()
   priceChange = new EventEmitter<string>();
-
+  buttonDisabled = false;
   currencyMask = createNumberMask({
     prefix: 'R$ ',
     thousandsSeparatorSymbol: '.',
@@ -61,6 +60,8 @@ export class SupplierBudgetSenderComponent implements OnInit {
     if (this.senderFormGroup.invalid) {
       return;
     }
+
+    this.buttonDisabled = true;
     this.budgetSubmit.emit(this.senderFormGroup.value)
   }
 }

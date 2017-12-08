@@ -9,7 +9,6 @@
   "scripts": {
     "ng": "ng",
     "start": "node index.js",
-    "heroku-postbuild": "ng build --target=production -e ${NG_ENV:-staging} --aot=false",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -23,7 +22,6 @@
     "@angular-mdl/select": "^0.10.4",
     "@angular/animations": "4.4.6",
     "@angular/cdk": "^2.0.0-beta.12",
-    "@angular/cli": "1.3",
     "@angular/common": "4.4.6",
     "@angular/compiler": "4.4.6",
     "@angular/core": "4.4.6",
@@ -49,8 +47,9 @@
     "rxjs": "5.4.2",
     "text-mask-addons": "^3.7.1",
     "zone.js": "^0.8.4",
-    "typescript": "2.3.3",
-    "@angular/compiler-cli": "4.4.6"
+    "@angular/cli": "1.3",
+    "@angular/compiler-cli": "4.4.6",
+    "typescript": "2.3.3"
   },
   "devDependencies": {
     "@types/hammerjs": "^2.0.34",

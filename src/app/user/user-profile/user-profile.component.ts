@@ -83,7 +83,6 @@ export class UserProfileComponent implements OnInit {
           .takeUntil(this.ngUnsubscribe)
           .debounceTime(250)
           .subscribe((cpfCnpj: string) => {
-            // console.log('cpfCnpj', cpfCnpj);
             let cleanCpfCnpj = cpfCnpj.replace(/\D/g, ''),
               mask;
 
@@ -97,10 +96,7 @@ export class UserProfileComponent implements OnInit {
               guide: false,
               placeholderChar: '\u2000'
             });
-            // console.log('conformedCpfCnpj', conformedCpfCnpj);
-            // console.log(!(/\D/).test(cpfCnpj.slice(-1)));
-            // if (!(/\D/).test(cpfCnpj.slice(-1))) {
-            //   console.log('mask!');
+
             this.profProfileForm.get('cpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
               onlySelf: false,
               emitEvent: false
@@ -135,7 +131,6 @@ export class UserProfileComponent implements OnInit {
     this.professional.CEP = this.profProfileForm.value.CEP;
 
     if (this.profProfileForm.value.password !== this.fakePasswordHidden) {
-      console.log(this.profProfileForm.value.password);
 
       if (!this.profProfileForm.value.password.length) {
         errorMessage = 'Nova senha recusada'
@@ -143,7 +138,6 @@ export class UserProfileComponent implements OnInit {
       } else {
 
         this.professional.password = this.profProfileForm.value.password;
-        console.log(this.professional);
       }
     }
 

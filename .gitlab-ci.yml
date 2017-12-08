@@ -1,0 +1,42 @@
+image: node:8.7.0
+
+cache:
+  paths:
+    - node_modules/
+
+before_script:
+  - npm install
+
+after_script:
+  - rm secrets
+
+stages:
+  - build
+# - test
+  - deploy
+
+angular_staging_build:
+  stage: build # Default: test; Jobs of the same stage are executed in parallel
+  script:
+  - npm install
+  - ng build --target=production --environment=staging --aot=false
+
+# staging:
+#   stage: deploy
+#   script:
+#     - heroku deploy
+#   only: # Defines a list of git refs for which job is created
+#     - develop
+#   except: # Defines a list of git refs for which job is not created
+#     - master
+#   environment: staging
+
+production:
+  stage: deploy
+  script:
+    - heroku deploy
+  only:
+    - master
+  except:
+    - develop
+  environment: production

@@ -26,17 +26,17 @@
       class="chips chips-autocomplete chips-placeholder"></div>
     <input formControlName="colors" id="colors" type="hidden">
   </div>
-  <div class="input-field">
+  <!-- <div class="input-field">
     <input formControlName="productCode" id="productCode" type="text">
     <label for="productCode">código do produto (opcional)</label>
-  </div>
+  </div> -->
   <div class="input-field">
     <textarea placeholder="detalhes do produto, formas de pagamento aceitas, links, etc." formControlName="note" id="note" class="materialize-textarea"></textarea>
-    <label for="note">outras informações (opcional)</label>
+    <label for="note">informações adicionais (opcional)</label>
   </div>
   <div class="right-align">
     <button
-      [ngClass]="{'disabled': senderFormGroup.invalid}"
+      [ngClass]="{'disabled': senderFormGroup.invalid || senderFormGroup.disabled || buttonDisabled }"
       (click)="submit()"
       class="btn"
       title="Responder"

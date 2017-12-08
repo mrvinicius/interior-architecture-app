@@ -13,6 +13,7 @@ export class BudgetReply {
     unitPrice?: number;
     totalPrice?: number;
     colors?: string;
+    color?: string;
     productCode?: string;
     note?: string;
     status: 'Waiting' | 'Budgeted';

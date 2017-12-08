@@ -12,10 +12,6 @@ import { BudgetRequest } from './shared/budget-request';
         <label for="name" class="readonly-value-label">produto</label>
         <p id="name" *ngIf="budgetRequest">{{budgetRequest.product.name}}</p>
       </div>
-      <div class="u-col s6 hide">
-        <label for="000" class="readonly-value-label">segmento</label>
-        <p id="000">Tapetes</p>
-      </div>
       <div class="u-col s6">
         <label for="quantity" class="readonly-value-label">
           <ng-container *ngIf="budgetRequest">
@@ -32,11 +28,15 @@ import { BudgetRequest } from './shared/budget-request';
       </div>
       <div class="u-col s6">
         <label for="color" class="readonly-value-label">cor</label>
-        <p id="color" *ngIf="budgetRequest">{{budgetRequest.color}}</p>
+        <p id="color" *ngIf="budgetRequest">
+          {{budgetRequest.color || 'não especificado'}}
+        </p>
       </div>
       <div class="u-col s12">
         <label for="note" class="readonly-value-label">observações</label>
-        <p id="note" *ngIf="budgetRequest">{{budgetRequest.note}}</p>
+        <p id="note" *ngIf="budgetRequest">
+          {{budgetRequest.note || 'nenhuma observação'}}
+        </p>
       </div>
     
     </div>

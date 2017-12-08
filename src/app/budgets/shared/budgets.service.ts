@@ -47,7 +47,6 @@ export class BudgetsService {
   }
 
   getAll(userId, syncBackend?: boolean): Observable<BudgetRequest[]> {
-    console.log(environment);
     if (syncBackend) {
       return this.http.get<BudgetRequest[]>(`${this.baseUrl}/getAll?userId=${userId}`, {
         headers: this.getHeaders(),
@@ -88,7 +87,8 @@ export class BudgetsService {
       isNewProduct: budgetReq.isNewProduct,
       product: {
         id: budgetReq.isNewProduct ? '' : budgetReq.product.id,
-        name: budgetReq.isNewProduct ? budgetReq.newProductName : budgetReq.product.name
+        name: budgetReq.isNewProduct ? budgetReq.newProductName : budgetReq.product.name,
+        supplierCode: budgetReq.product.supplierCode
       },
       measureUnit: budgetReq.measureUnit,
       quantity: budgetReq.quantity,

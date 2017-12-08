@@ -26,13 +26,11 @@ export class AppComponent implements OnInit {
     let intervalId;
 
     intervalId = setInterval(function () {
-      console.log('trying boot intercom...');
 
       if ((<any>this.window).Intercom) {
         (<any>this.window).Intercom("boot", {
           app_id: appId
         });
-        console.log('Intercom booted!');
 
         clearInterval(intervalId);
       }
@@ -46,15 +44,15 @@ export class AppComponent implements OnInit {
     // Use este caso queira usar o intercom sem G TagManager 
     // this.bootIntercom('h3dn7m3s'); 
 
-    intervalId = setInterval(function () {
-      let gtm = (<any>that.window).google_tag_manager;
-      if (gtm !== undefined
-        && gtm.dataLayer.gtmDom
-        && gtm.dataLayer.gtmDom) {
-          that.bootIntercom('h3dn7m3s');
-        clearInterval(intervalId);
-      }
-    }, 500);
+    // intervalId = setInterval(function () {
+    //   let gtm = (<any>that.window).google_tag_manager;
+    //   if (gtm !== undefined
+    //     && gtm.dataLayer.gtmDom
+    //     && gtm.dataLayer.gtmDom) {
+    //       that.bootIntercom('h3dn7m3s');
+    //     clearInterval(intervalId);
+    //   }
+    // }, 500);
 
   }
 }
