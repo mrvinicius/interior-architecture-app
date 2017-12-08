@@ -1,0 +1,18 @@
+input.mat-chip-input {
+    all: unset !important;
+    width: 150px;
+    margin: 3px;
+
+    &:focus {
+        all: unset !important;
+        width: 150px !important;
+        margin: 3px !important;
+        flex: 1 0 150px !important;
+    }
+}
+
+.mat-chip-list {
+    .material-icons {
+        font-size: 18px;
+    }
+}

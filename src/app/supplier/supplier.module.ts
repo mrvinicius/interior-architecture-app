@@ -3,6 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 // TODO: Move to SharedModule
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatChipsModule, MatFormFieldModule } from '@angular/material';
 
 import { MaterializeModule } from 'angular2-materialize';
 
@@ -22,6 +23,8 @@ import { SupplierBudgetSenderContainerComponent } from './supplier-budget-sender
     HttpClientModule,
     ReactiveFormsModule,
     MaterializeModule,
+    MatFormFieldModule,
+    MatChipsModule,
     // Routing Module
     SupplierRoutingModule
   ],

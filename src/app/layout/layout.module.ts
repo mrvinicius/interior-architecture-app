@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MdlModule, MdlLayoutModule } from '@angular-mdl/core';
-import { MdlPopoverModule } from '@angular-mdl/popover';
 import { MaterializeModule } from 'ng2-materialize';
 
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
@@ -20,7 +19,6 @@ import { LayoutTabContentContainerComponent } from './layout-tab-content-contain
     MaterializeModule,
     MdlModule,
     MdlLayoutModule,
-    MdlPopoverModule,
     RouterModule
   ],
   exports: [LayoutComponent],
