@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { MatStepperModule, MatDialogModule, MatExpansionModule, MatTableModule } from '@angular/material';
 // TODO: Move to SharedModule
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { MaterializeModule } from 'angular2-materialize';
@@ -27,6 +28,7 @@ import { SupplierModule } from '../supplier/supplier.module';
     MatDialogModule,
     MatExpansionModule,
     MatTableModule,
+    HttpClientModule,
     MaterializeModule,
     LayoutModule,
     ProductModule,

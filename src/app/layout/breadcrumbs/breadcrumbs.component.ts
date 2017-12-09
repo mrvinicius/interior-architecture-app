@@ -26,16 +26,6 @@ import { BreadcrumbsService } from '../shared/breadcrumbs.service';
         <span *ngIf="last" class="breadcrumb">{{bc.label}}</span>      
       </ng-container>
     </div>
-
-    <!-- example -->
-    <ul *ngIf="false" [class.breadcrumb]="useBootstrap">
-      <li *ngFor="let url of _urls; let last = last" [ngClass]="{'breadcrumb-item': useBootstrap, 'active': last}"> <!-- disable link of last item -->
-        <a role="button" *ngIf="!last && url == prefix" (click)="navigateTo('/')">{{url}}</a>
-        <a role="button" *ngIf="!last && url != prefix" (click)="navigateTo(url)">{{friendlyName(url)}}</a>
-        <span *ngIf="last">{{friendlyName(url)}}</span>
-        <span *ngIf="last && url == prefix">{{friendlyName('/')}}</span>
-      </li>
-    </ul>
   `
 })
 export class BreadcrumbsComponent  {

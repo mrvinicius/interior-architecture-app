@@ -9,7 +9,6 @@ import { IBreadcrumb } from './shared/breadcrumb';
 import { LayoutContentService, Tab } from './shared/layout-content.service';
 import { LayoutHeaderService } from './shared/layout-header.service';
 import { LayoutSidebarService } from './shared/layout-sidebar.service';
-import { ProfessionalService } from '../core/professional.service';
 
 @Component({
   selector: 'abx-layout',
@@ -30,10 +29,6 @@ export class LayoutComponent implements OnInit, OnDestroy {
     private activeRoute: ActivatedRoute,
     private authService: AuthService,
     private bcService: BreadcrumbsService,
-    private profService: ProfessionalService,
-    // private layoutContentService: LayoutContentService,
-    // private headerService: LayoutHeaderService,
-    // private sidebarService: LayoutSidebarService,
     private router: Router
   ) {
     this.router.events

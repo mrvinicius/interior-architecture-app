@@ -6,8 +6,6 @@ import {
   MzInputContainerComponent
 } from 'ng2-materialize';
 
-import { Professional } from '../../core/professional';
-import { ProfessionalService } from '../../core/professional.service';
 import { SpinnerService } from '../../core/spinner/spinner.service';
 @Component({
   selector: 'mbx-user-register',
@@ -21,8 +19,7 @@ export class UserRegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private spinnerService: SpinnerService,
-    private profService: ProfessionalService
+    private spinnerService: SpinnerService
   ) {
     this.createForm();
   }
@@ -31,23 +28,23 @@ export class UserRegisterComponent implements OnInit {
     if (this.registerForm.invalid) {
       return;
     } else {
-      this.spinnerService.toggleLoadingIndicator(true);
-      let values = this.registerForm.value;
-      let prof: Professional = new Professional(values.name, values.email);
+      // this.spinnerService.toggleLoadingIndicator(true);
+      // let values = this.registerForm.value;
+      // let prof: Professional = new Professional(values.name, values.email);
 
-      this.profService.add(prof, true)
-        .subscribe(response => {
-          this.spinnerService.toggleLoadingIndicator(false);
-          if (response.HasError) {
-            this.errorMessage = response.ErrorMessage;
-          } else {
-            this.router.navigate(['quase-la']);
-          }
-        }, (error) => {
-          this.spinnerService.toggleLoadingIndicator(false);
-          console.error(error)
-        }
-        );
+      // this.profService.add(prof, true)
+      //   .subscribe(response => {
+      //     this.spinnerService.toggleLoadingIndicator(false);
+      //     if (response.HasError) {
+      //       this.errorMessage = response.ErrorMessage;
+      //     } else {
+      //       this.router.navigate(['quase-la']);
+      //     }
+      //   }, (error) => {
+      //     this.spinnerService.toggleLoadingIndicator(false);
+      //     console.error(error)
+      //   }
+      //   );
     }
   }
 

@@ -4,8 +4,6 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MzToastService } from 'ng2-materialize';
 
 import { AuthService } from '../../core/auth.service';
-import { Professional } from '../../core/professional';
-import { ProfessionalService } from '../../core/professional.service';
 import { SpinnerService } from '../../core/spinner/spinner.service';
 import { UserService } from '../../core/user.service';
 
@@ -16,7 +14,7 @@ import { UserService } from '../../core/user.service';
 })
 export class UserPasswordComponent implements OnInit {
   passwordForm: FormGroup;
-  professional: Professional;
+  professional;
   errorMessage: string;
   id: string;
   email: string;
@@ -25,7 +23,6 @@ export class UserPasswordComponent implements OnInit {
     private auth: AuthService,
     private fb: FormBuilder,
     private toastService: MzToastService,
-    private profService: ProfessionalService,
     private route: ActivatedRoute,
     private router: Router,
     private spinnerService: SpinnerService
@@ -52,14 +49,14 @@ export class UserPasswordComponent implements OnInit {
   }
 
   activeProfessional(email) {
-    this.profService.activate(email).subscribe(resp => {
+    // this.profService.activate(email).subscribe(resp => {
 
-      this.spinnerService.toggleLoadingIndicator(false);
-    })
+    //   this.spinnerService.toggleLoadingIndicator(false);
+    // })
   }
 
-  authenticate(prof: Professional) {
-    this.profService.professional = prof;
+  authenticate(prof) {
+    // this.profService.professional = prof;
     this.auth.login(prof);
 
     if (this.professional.profession === undefined) {
@@ -75,12 +72,12 @@ export class UserPasswordComponent implements OnInit {
   }
 
   getProfessional(id) {
-    this.profService.getOne(id).subscribe(prof => {
-      this.activeProfessional(this.email);
-      this.professional = prof;
-      this.profService.professional = prof;
-      // this.auth.setCurrentUser(prof);
-    });
+    // this.profService.getOne(id).subscribe(prof => {
+    //   this.activeProfessional(this.email);
+    //   this.professional = prof;
+    //   this.profService.professional = prof;
+    //   // this.auth.setCurrentUser(prof);
+    // });
   }
 
   definePassword() {
@@ -90,11 +87,11 @@ export class UserPasswordComponent implements OnInit {
     this.professional.password = this.passwordForm.value.password;
     this.professional.profession = 0;
 
-    this.profService.update(this.professional)
-      .subscribe(resp => {
-        this.professional.profession = undefined;
-        this.authenticate(this.professional);
-      });
+    // this.profService.update(this.professional)
+      // .subscribe(resp => {
+      //   this.professional.profession = undefined;
+      //   this.authenticate(this.professional);
+      // });
   }
 
   private createForm() {

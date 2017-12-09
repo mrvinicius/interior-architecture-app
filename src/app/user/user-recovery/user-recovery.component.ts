@@ -3,7 +3,6 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MzToastService } from 'ng2-materialize';
 
 import { AuthService } from '../../core/auth.service';
-import { ProfessionalService } from '../../core/professional.service';
 import { SpinnerService } from '../../core/spinner/spinner.service';
 import { UserService } from '../../core/user.service';
 
@@ -19,7 +18,6 @@ export class UserRecoveryComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private fb: FormBuilder,
-    private profService: ProfessionalService,
     private spinnerService: SpinnerService,
     private toastService: MzToastService,
     private userService: UserService,
@@ -31,17 +29,17 @@ export class UserRecoveryComponent implements OnInit {
 
   sendRequest(email: string) {
     this.spinnerService.toggleLoadingIndicator(true);
-    this.profService.sendResetRequest(email)
-      .first()
-      .subscribe(resp => {
-        this.spinnerService.toggleLoadingIndicator(false);
+    // this.profService.sendResetRequest(email)
+    //   .first()
+    //   .subscribe(resp => {
+    //     this.spinnerService.toggleLoadingIndicator(false);
 
-        if (resp.hasError) {
-          this.toastService.show(resp.errorMessage, 3000, 'red');
-        } else {
-          this.toastService.show('Link de recuperação enviado', 5000, 'green')
-        }
-      });
+    //     if (resp.hasError) {
+    //       this.toastService.show(resp.errorMessage, 3000, 'red');
+    //     } else {
+    //       this.toastService.show('Link de recuperação enviado', 5000, 'green')
+    //     }
+    //   });
   }
 
   private createForm() {

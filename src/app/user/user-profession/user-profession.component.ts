@@ -3,8 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { AuthService } from '../../core/auth.service';
-import { Professional } from './../../core/professional';
-import { ProfessionalService } from './../../core/professional.service';
 import { SpinnerService } from './../../core/spinner/spinner.service';
 
 @Component({
@@ -14,7 +12,6 @@ import { SpinnerService } from './../../core/spinner/spinner.service';
 })
 export class UserProfessionComponent implements OnInit {
   professionForm: FormGroup;
-  professional: Professional;
   errorMessage: string;
   id: string;
   email: string;
@@ -23,7 +20,6 @@ export class UserProfessionComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private profService: ProfessionalService,
     private spinnerService: SpinnerService
   ) {
     this.createForm();
@@ -32,28 +28,28 @@ export class UserProfessionComponent implements OnInit {
   difineProfession() {
     this.spinnerService.toggleLoadingIndicator(true);
 
-    this.professional.profession = this.professionForm.value.professionOpt;
-    this.profService.update(this.professional).subscribe(resp => {
-      this.spinnerService.toggleLoadingIndicator(false);
-      // this.router.navigate(['/projetos']);
-    });
+    // this.professional.profession = this.professionForm.value.professionOpt;
+    // this.profService.update(this.professional).subscribe(resp => {
+    //   this.spinnerService.toggleLoadingIndicator(false);
+    //   // this.router.navigate(['/projetos']);
+    // });
   }
 
   ngOnInit() {
     this.spinnerService.toggleLoadingIndicator(true);
-    this.route.queryParams.subscribe(params => {
-      this.id = this.profService.professional.id;
-      this.email = this.profService.professional.email;
+    // this.route.queryParams.subscribe(params => {
+    //   this.id = this.profService.professional.id;
+    //   this.email = this.profService.professional.email;
 
-      this.getCurrentProf();
-    })
+    //   this.getCurrentProf();
+    // })
   }
 
   getCurrentProf() {
-    this.profService.getCurrentProfessional().subscribe((prof: Professional) => {
-      this.professional = prof
-      this.spinnerService.toggleLoadingIndicator(false);
-    });
+    // this.profService.getCurrentProfessional().subscribe((prof: Professional) => {
+    //   this.professional = prof
+    //   this.spinnerService.toggleLoadingIndicator(false);
+    // });
   }
 
   private createForm() {

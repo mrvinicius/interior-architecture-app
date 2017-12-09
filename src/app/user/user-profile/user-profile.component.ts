@@ -9,8 +9,6 @@ import 'rxjs/add/operator/takeUntil';
 
 import { AuthService } from '../../core/auth.service';
 import { Profession } from '../../shared/profession.enum';
-import { Professional } from '../../core/professional';
-import { ProfessionalService } from '../../core/professional.service';
 import { SpinnerService } from '../../core/spinner/spinner.service';
 import { User } from '../../core/user';
 import { UtilsService } from '../../shared/utils/utils.service';
@@ -21,7 +19,7 @@ import { UtilsService } from '../../shared/utils/utils.service';
   styleUrls: ['./user-profile.component.scss']
 })
 export class UserProfileComponent implements OnInit {
-  professional: Professional;
+  professional;
   profProfileForm: FormGroup;
   profProfileFormHasChange: boolean;
   profProfileFormChangesSubscription: Subscription;
@@ -34,76 +32,76 @@ export class UserProfileComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private profService: ProfessionalService,
+    // private profService: ProfessionalService,
     private toastService: MzToastService,
     private spinnerService: SpinnerService
   ) { }
 
   ngOnInit() {
-    this.profService.getCurrentProfessional()
-      .subscribe(prof => {
-        this.professional = prof;
-        this.profProfileForm = this.createUserProfileForm(this.professional);
-        this.profProfileFormChangesSubscription = this.subscribeToFormChanges(this.profProfileForm, (formData) => {
-          this.profProfileFormHasChange = true;
-        });
+    // this.profService.getCurrentProfessional()
+    //   .subscribe(prof => {
+    //     this.professional = prof;
+    //     this.profProfileForm = this.createUserProfileForm(this.professional);
+    //     this.profProfileFormChangesSubscription = this.subscribeToFormChanges(this.profProfileForm, (formData) => {
+    //       this.profProfileFormHasChange = true;
+    //     });
 
-        this.profProfileForm.get('CEP').valueChanges
-          .takeUntil(this.ngUnsubscribe)
-          .debounceTime(200)
-          .subscribe((cep: string) => {
-            let cleanCep = cep.replace(/\D/g, '');
-            this.findLocationByCEP(cleanCep);
-          });
+    //     this.profProfileForm.get('CEP').valueChanges
+    //       .takeUntil(this.ngUnsubscribe)
+    //       .debounceTime(200)
+    //       .subscribe((cep: string) => {
+    //         let cleanCep = cep.replace(/\D/g, '');
+    //         this.findLocationByCEP(cleanCep);
+    //       });
 
-        const cpfCnpjChange$ = this.profProfileForm.get('cpfCnpj').valueChanges;
-        cpfCnpjChange$.debounceTime(250).subscribe((cpfCnpj: string) => {
-          let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
+    //     const cpfCnpjChange$ = this.profProfileForm.get('cpfCnpj').valueChanges;
+    //     cpfCnpjChange$.debounceTime(250).subscribe((cpfCnpj: string) => {
+    //       let cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
 
-          let mask;
+    //       let mask;
 
-          if (cleanCpfCnpj.length < 12) {
-            mask = UtilsService.cpfMask;
-          } else {
-            mask = UtilsService.cnpjMask;
-          }
+    //       if (cleanCpfCnpj.length < 12) {
+    //         mask = UtilsService.cpfMask;
+    //       } else {
+    //         mask = UtilsService.cnpjMask;
+    //       }
 
-          let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
-            guide: false,
-            placeholderChar: '\u2000'
-          });
+    //       let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
+    //         guide: false,
+    //         placeholderChar: '\u2000'
+    //       });
 
-          this.profProfileForm.get('cpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
-            onlySelf: false,
-            emitEvent: false
-          })
-        });
+    //       this.profProfileForm.get('cpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
+    //         onlySelf: false,
+    //         emitEvent: false
+    //       })
+    //     });
 
-        this.profProfileForm.get('cpfCnpj').valueChanges
-          .takeUntil(this.ngUnsubscribe)
-          .debounceTime(250)
-          .subscribe((cpfCnpj: string) => {
-            let cleanCpfCnpj = cpfCnpj.replace(/\D/g, ''),
-              mask;
+    //     this.profProfileForm.get('cpfCnpj').valueChanges
+    //       .takeUntil(this.ngUnsubscribe)
+    //       .debounceTime(250)
+    //       .subscribe((cpfCnpj: string) => {
+    //         let cleanCpfCnpj = cpfCnpj.replace(/\D/g, ''),
+    //           mask;
 
-            if (cleanCpfCnpj.length < 12) {
-              mask = UtilsService.cpfMask;
-            } else {
-              mask = UtilsService.cnpjMask;
-            }
+    //         if (cleanCpfCnpj.length < 12) {
+    //           mask = UtilsService.cpfMask;
+    //         } else {
+    //           mask = UtilsService.cnpjMask;
+    //         }
 
-            let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
-              guide: false,
-              placeholderChar: '\u2000'
-            });
+    //         let conformedCpfCnpj = conformToMask(cleanCpfCnpj, mask, {
+    //           guide: false,
+    //           placeholderChar: '\u2000'
+    //         });
 
-            this.profProfileForm.get('cpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
-              onlySelf: false,
-              emitEvent: false
-            })
-          });
+    //         this.profProfileForm.get('cpfCnpj').setValue(conformedCpfCnpj.conformedValue, {
+    //           onlySelf: false,
+    //           emitEvent: false
+    //         })
+    //       });
 
-      });
+    //   });
   }
 
   ngOnDestroy() {
@@ -141,19 +139,19 @@ export class UserProfileComponent implements OnInit {
       }
     }
 
-    return this.profService
-      .update(this.professional)
-      .subscribe(resp => {
-        this.spinnerService.toggleLoadingIndicator(false);
-        this.profProfileFormHasChange = false;
-        this.toastService.show('Dados atualizados!', 3000, 'green')
-        if (error) {
-          this.toastService.show(errorMessage, 3000, 'red')
-        }
-      });
+    // return this.profService
+    //   .update(this.professional)
+    //   .subscribe(resp => {
+    //     this.spinnerService.toggleLoadingIndicator(false);
+    //     this.profProfileFormHasChange = false;
+    //     this.toastService.show('Dados atualizados!', 3000, 'green')
+    //     if (error) {
+    //       this.toastService.show(errorMessage, 3000, 'red')
+    //     }
+    //   });
   }
 
-  private createUserProfileForm(prof: Professional): FormGroup {
+  private createUserProfileForm(prof): FormGroup {
     let description = prof.description ? prof.description : '';
 
     return this.fb.group({

@@ -12,7 +12,6 @@ import {
 } from 'ng2-materialize';
 
 import { AuthService } from '../../core/auth.service';
-import { ProfessionalService } from '../../core/professional.service';
 import { SpinnerService } from '../../core/spinner/spinner.service';
 
 @Component({
@@ -28,8 +27,7 @@ export class UserEntryComponent implements OnInit {
     private auth: AuthService,
     private fb: FormBuilder,
     private router: Router,
-    private spinnerService: SpinnerService,
-    private profService: ProfessionalService
+    private spinnerService: SpinnerService
   ) {
     this.createForm();
   }
@@ -44,33 +42,33 @@ export class UserEntryComponent implements OnInit {
 
       this.errorMessage = '';
       this.spinnerService.toggleLoadingIndicator(true);
-      this.profService.login(values.email, values.password)
-        .subscribe(resObj => {
-          this.spinnerService.toggleLoadingIndicator(false);
-          if (resObj.HasError) {
-            switch (resObj.ErrorMessage) {
-              case "Email não cadastrado":
-                this.errorMessage = resObj.ErrorMessage
-                break;
-              case "Senha incorreta":
-                this.errorMessage = resObj.ErrorMessage
-                break;
-              case "Usuário não validado":
-                this.errorMessage = "Confirme seu cadastro por email"
-                break;
-              case "Login não encontrado":
-                this.errorMessage = "Email não cadastrado"
-                break;
-              default:
-                this.errorMessage = "Houve um problema desconhecido"
-                break;
-            }
+      // this.profService.login(values.email, values.password)
+      //   .subscribe(resObj => {
+      //     this.spinnerService.toggleLoadingIndicator(false);
+      //     if (resObj.HasError) {
+      //       switch (resObj.ErrorMessage) {
+      //         case "Email não cadastrado":
+      //           this.errorMessage = resObj.ErrorMessage
+      //           break;
+      //         case "Senha incorreta":
+      //           this.errorMessage = resObj.ErrorMessage
+      //           break;
+      //         case "Usuário não validado":
+      //           this.errorMessage = "Confirme seu cadastro por email"
+      //           break;
+      //         case "Login não encontrado":
+      //           this.errorMessage = "Email não cadastrado"
+      //           break;
+      //         default:
+      //           this.errorMessage = "Houve um problema desconhecido"
+      //           break;
+      //       }
 
-          } else {
-            this.router.navigate(['/orcamentos']);
-          }
+      //     } else {
+      //       this.router.navigate(['/orcamentos']);
+      //     }
 
-        });
+      //   });
     }
   }
 
