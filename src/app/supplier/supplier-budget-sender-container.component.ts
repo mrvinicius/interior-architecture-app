@@ -21,7 +21,7 @@ import { ReplyService } from '../budgets/shared/reply.service';
         <div *ngIf="reply && reply.status !== 'Budgeted'">
           <label for="totalPrice" class="readonly-value-label">total</label>
           <h5 id="totalPrice" style="font-size: 2rem">
-            {{totalPrice | currencyFormat:'BRL':true}}
+            {{totalPrice | currency:'BRL':'symbol'}}
             <ng-container *ngIf="!totalPrice || totalPrice === 0">R$0,00</ng-container>
           </h5>
         </div>
@@ -29,7 +29,7 @@ import { ReplyService } from '../budgets/shared/reply.service';
           <div>
             <label for="000" class="readonly-value-label">preço total</label>
             <h5 id="000" style="font-size: 2rem">
-              {{reply.totalPrice | currencyFormat:'BRL':true}}
+              {{reply.totalPrice | currency:'BRL':'symbol'}}
             </h5>
             <p id="000"></p>
           </div>

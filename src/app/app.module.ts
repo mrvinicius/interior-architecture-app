@@ -1,5 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterializeModule } from 'ng2-materialize';
 
@@ -18,6 +20,8 @@ import { SignupModalComponent } from './home/signup-modal.component';
 /* Routing Module */
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './home/home.component';
+
+registerLocaleData(localePt, 'pt-BR');
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -38,7 +42,9 @@ import { HomeComponent } from './home/home.component';
     LayoutModule.forRoot(),
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'pt-BR' }
+  ],
   entryComponents: [SignupModalComponent]
 })
 export class AppModule { }
