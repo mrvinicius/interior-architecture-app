@@ -1,0 +1,19 @@
+.mat-form-field-ripple {
+    background-color: $secondary-color;
+}
+
+.mat-form-field-label {
+    color: $input-border-color;
+}
+
+.mat-focused .mat-form-field-label {
+    color: $secondary-color;
+}
+
+.mat-input-container {
+    width: 100%;
+}
+
+.mat-input-container:not(.mat-form-field-should-float):not(.mat-focused) .mat-form-field-infix {
+    padding: 0.7em 0;
+}

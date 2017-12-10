@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { conformToMask } from 'angular2-text-mask';
-import { default as cep, CEP } from 'cep-promise';
+// import { default as cep, CEP } from 'cep-promise';
 import { MzToastService } from 'ng2-materialize';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
@@ -180,15 +180,15 @@ export class UserProfileComponent implements OnInit {
 
     this.profProfileForm.get('addressArea').disable();
 
-    cep(cepCode).then(CEP => {
-      this.profProfileForm.get('addressArea').enable();
-      this.profProfileForm.get('addressArea')
-        .setValue(CEP.street, { onlySelf: false, emitEvent: false });
-      Materialize.updateTextFields();
+    // cep(cepCode).then(CEP => {
+    //   this.profProfileForm.get('addressArea').enable();
+    //   this.profProfileForm.get('addressArea')
+    //     .setValue(CEP.street, { onlySelf: false, emitEvent: false });
+    //   Materialize.updateTextFields();
 
-    }).catch(e => {
-      console.error(e);
-    });
+    // }).catch(e => {
+    //   console.error(e);
+    // });
   }
 
   private subscribeToFormChanges(form: FormGroup, doIt: (data?) => void, callback?: (data) => void): Subscription {

@@ -22,7 +22,6 @@ import { ReplyService } from '../budgets/shared/reply.service';
           <label for="totalPrice" class="readonly-value-label">total</label>
           <h5 id="totalPrice" style="font-size: 2rem">
             {{totalPrice | currency:'BRL':'symbol'}}
-            <ng-container *ngIf="!totalPrice || totalPrice === 0">R$0,00</ng-container>
           </h5>
         </div>
         <ng-container *ngIf="reply && reply.status === 'Budgeted'">
@@ -34,9 +33,9 @@ import { ReplyService } from '../budgets/shared/reply.service';
             <p id="000"></p>
           </div>
           <!--
-          <div *ngIf="budgetRequest.product.supplierCode">
+          <div *ngIf="budgetRequest.product.productCode">
             <label for="000" class="readonly-value-label">código do produto</label>
-            <p id="000">{{budgetRequest.product.supplierCode}}</p>
+            <p id="000">{{budgetRequest.product.productCode}}</p>
           </div>
           -->
           <div *ngIf="reply.color">
@@ -98,7 +97,6 @@ export class SupplierBudgetSenderContainerComponent implements OnInit {
     budgetReply.status = 'Budgeted';
     budgetReply.note = data.note;
     budgetReply.colors = data.colors
-      .map(chip => chip.tag)
       .toString()
       .replace(/[,]/g, ', ');
 
@@ -121,7 +119,7 @@ export class SupplierBudgetSenderContainerComponent implements OnInit {
   createBudgetForm(budgetRequest, formBuilder, perUnit: boolean = true): FormGroup {
     let formGroupObj = {
       availability: [],
-      colors: [],
+      colors: [[]],
       productCode: [],
       note: []
     }
