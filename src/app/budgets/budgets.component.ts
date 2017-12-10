@@ -57,34 +57,35 @@ export class BudgetsComponent implements OnInit {
         if (!confirm) {
           return;
         }
-
+        console.log(budgetRequest);
+        
         const currentUser = this.authServ.getCurrentUser();
 
         Materialize.toast('Enviando...', 20000);
 
-        this.checkUser(currentUser.id, this.userServ).subscribe(
-          (user) => {
-            this.budgetsServ
-              .sendBudgetRequest(budgetRequest, user.id)
-              .subscribe(req => {
-                (<any>Materialize).Toast.removeAll();
-                Materialize.toast('Solicitação enviada!', 3000);
+        // this.checkUser(currentUser.id, this.userServ).subscribe(
+        //   (user) => {
+        //     this.budgetsServ
+        //       .sendBudgetRequest(budgetRequest, user.id)
+        //       .subscribe(req => {
+        //         (<any>Materialize).Toast.removeAll();
+        //         Materialize.toast('Solicitação enviada!', 3000);
 
-              });
-          },
-          (err) => {
-            // Não encontrado pelo ID
-            if (err.status === 404) {
-              this.userServ
-                .add(currentUser)
-                .flatMap(user => this.budgetsServ.sendBudgetRequest(budgetRequest, user.id))
-                .subscribe(req => {
-                  (<any>Materialize).Toast.removeAll();
-                  Materialize.toast('Solicitação enviada!', 3000);
+        //       });
+        //   },
+        //   (err) => {
+        //     // Não encontrado pelo ID
+        //     if (err.status === 404) {
+        //       this.userServ
+        //         .add(currentUser)
+        //         .flatMap(user => this.budgetsServ.sendBudgetRequest(budgetRequest, user.id))
+        //         .subscribe(req => {
+        //           (<any>Materialize).Toast.removeAll();
+        //           Materialize.toast('Solicitação enviada!', 3000);
 
-                });
-            }
-          });
+        //         });
+        //     }
+        //   });
       });
   }
 
@@ -112,11 +113,9 @@ export class BudgetsComponent implements OnInit {
     </div>
     <div>
       <label class="readonly-value-label">pontos de venda</label>
-      <p>
-        <ng-container *ngFor="let sub of data.supplier.stores; let i = index;">
-          {{sub.name}}<ng-container *ngIf="(i+1) < data.supplier.stores.length">, </ng-container>
-        </ng-container>
-      <p>
+      <mat-chip-list>
+        <mat-chip *ngFor="let s of data.supplier.stores">{{s.name}}</mat-chip>
+      </mat-chip-list>
     </div>
     <div *ngIf="data.product">
       <label class="readonly-value-label">produto</label>

@@ -1,6 +1,6 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { MatStepperModule, MatDialogModule, MatExpansionModule, MatTableModule } from '@angular/material';
+import { MatChipsModule, MatStepperModule, MatDialogModule, MatExpansionModule, MatTableModule } from '@angular/material';
 import { HttpClientModule } from '@angular/common/http';
 
 import { SharedModule } from '../shared/shared.module';
@@ -20,6 +20,7 @@ import { SupplierModule } from '../supplier/supplier.module';
   imports: [
     SharedModule,
     BrowserAnimationsModule,
+    MatChipsModule,
     MatStepperModule,
     MatDialogModule,
     MatExpansionModule,
