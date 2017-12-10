@@ -7,7 +7,6 @@ import { SharedModule } from '../shared/shared.module';
 
 import { BudgetRequestComponent } from './budget-request/budget-request.component';
 import { BudgetRequesterComponent } from './budget-requester/budget-requester.component';
-import { BudgetRequestListComponent } from './budget-request-list/budget-request-list.component';
 import { BudgetsComponent, RequestConfirmationComponent } from './budgets.component';
 import { BudgetsRoutingModule } from './budgets-routing.module';
 import { BudgetsService } from './shared/budgets.service';
@@ -34,7 +33,6 @@ import { SupplierModule } from '../supplier/supplier.module';
     BudgetsComponent,
     BudgetRequesterComponent,
     BudgetRequestComponent,
-    BudgetRequestListComponent,
     RequestConfirmationComponent
   ],
   providers: [

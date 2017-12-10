@@ -71,7 +71,7 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
   }
   productForm: FormGroup;
   productAutocompleteParams = {};
-
+  supplierInvalid: boolean = false;
   noteForm: FormGroup;
   readonly storeAutocompleteActions = new EventEmitter<string | MaterializeAction>();
   private _suppliers: Supplier[];
@@ -80,33 +80,35 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(private fb: FormBuilder) {
-    let initMeasureUnit = 'units';
+    let initMeasureUnit = 'units',
+      storeInputControl;
 
     this.supplierForm = this.fb.group({
       supplier: ['', [
         Validators.required,
         this.existentSupplierValidator()
       ]],
-      storeInput: [],
+      storeInput: [{ value: '', disabled: true }],
       stores: [[], [
         Validators.required,
         this.chipRequiredValidator()
       ]],
     });
+    storeInputControl = this.supplierForm.get('storeInput');
 
     this.supplierForm.get('supplier')
       .valueChanges
       .takeUntil(this.ngUnsubscribe)
       .debounceTime(250)
       .distinctUntilChanged()
-      .subscribe(val => this.supplierChanged(val));
+      .subscribe(val => this.supplierChanged(val, storeInputControl));
 
-    this.supplierForm.get('storeInput')
+    storeInputControl
       .valueChanges
       .takeUntil(this.ngUnsubscribe)
       .debounceTime(100)
       .distinctUntilChanged()
-      .subscribe(val => this.storeInputChanged(val, this.supplierForm.get('storeInput')));
+      .subscribe(val => this.storeInputChanged(val, storeInputControl));
 
     this.productForm = this.fb.group({
       productDesc: ['', [
@@ -154,6 +156,21 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
 
     form.get('stores')
       .setValue([...storesValue, chipData], { onlySelf: false, emitEvent: false })
+  }
+
+  checkSupplierErrors() {
+    let inputControl = this.supplierForm.get('supplier');
+
+    if (inputControl.errors) {
+      if (!((inputControl.value || '').trim())) {
+        this.supplierInvalid = false;
+        return;
+      }
+
+    this.supplierInvalid = inputControl.errors.noexistent || false;
+    } else {
+      this.supplierInvalid = false;
+    }
   }
 
   getProduct(productDesc: string, productKeys, products: Product[]): Product | null {
@@ -319,10 +336,9 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
     }
   }
 
-  supplierChanged(val: string): void {
-    let storeInputControl = this.supplierForm.get('storeInput');
-
+  supplierChanged(val: string, storeInputControl: AbstractControl): void {
     if (this.supplierForm.get('supplier').errors) {
+      storeInputControl.disable()
       this.selectedSupplier = null;
       this.storeAutocompleteParams.data = {};
       this.updateAutocomplete(
@@ -335,7 +351,8 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
       this.productAutocompleteParams = null;
       return;
     }
-
+    storeInputControl.enable()
+    this.supplierInvalid = false;
     this.selectedSupplier = this.getSupplier(val, this._suppliersKeys, this._suppliers);
     this.supplierChange.emit(this.selectedSupplier);
 

@@ -1,0 +1,17 @@
+
+.input-field {
+    label {
+        width: 100%;
+    }
+
+    &.validate {
+        float: left;
+    }
+}
+
+input.invalid, input.valid {
+    &~ .autocomplete-content {
+        position: absolute;
+        width: 100%;
+    }
+}

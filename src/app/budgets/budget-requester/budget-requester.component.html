@@ -4,17 +4,20 @@
       <ng-template matStepLabel>Fornecedor</ng-template>
       <form [formGroup]="supplierForm">
         <div class="u-col s12 m6">
-          <div class="input-field">
+          <div class="input-field validate" style="width: 100%">
             <input
               autocomplete="off"
               formControlName="supplier"
               id="supplier"
               materialize="autocomplete"
               [materializeParams]="[supplierAutocompleteParams]"
-              type="text">
-            <label for="supplier" class="">fornecedor</label>
+              type="text"
+              [ngClass]="{'invalid': supplierInvalid}"
+              (blur)="checkSupplierErrors()"
+              class="">
+            <label for="supplier" data-error="fornecedor não encontrado">fornecedor</label>
           </div>
-          <div class="input-field">
+          <div class="input-field clearfix">
             <input
               autocomplete="off"
               formControlName="storeInput"
@@ -65,7 +68,7 @@
             id="produto"
             materialize="autocomplete"
             type="text">
-          <label for="produto">produto</label>
+          <label for="produto">produto (linha e descrição)</label>
         </div>
         <div class="col s12 m6" style="padding-left: 0">
           <div class="input-field">

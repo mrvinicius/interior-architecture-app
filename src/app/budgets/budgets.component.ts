@@ -55,7 +55,6 @@ export class BudgetsComponent implements OnInit {
         if (!confirm) {
           return;
         }
-        console.log(budgetRequest);
         
         const currentUser = this.authServ.getCurrentUser();
 
