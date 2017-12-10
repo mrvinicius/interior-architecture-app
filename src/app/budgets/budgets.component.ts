@@ -21,9 +21,7 @@ import { UserService } from '../user/shared/user.service';
 })
 export class BudgetsComponent implements OnInit {
   public suppliers: Supplier[];
-  // public products: Product[];
   public products$: Observable<Product[]>;
-  // public budgetRequests: BudgetRequest[] = [];
   public budgetRequests$: Observable<BudgetRequest[]>;
   globalActions = new EventEmitter<string | MaterializeAction>();
 
@@ -63,29 +61,29 @@ export class BudgetsComponent implements OnInit {
 
         Materialize.toast('Enviando...', 20000);
 
-        // this.checkUser(currentUser.id, this.userServ).subscribe(
-        //   (user) => {
-        //     this.budgetsServ
-        //       .sendBudgetRequest(budgetRequest, user.id)
-        //       .subscribe(req => {
-        //         (<any>Materialize).Toast.removeAll();
-        //         Materialize.toast('Solicitação enviada!', 3000);
+        this.checkUser(currentUser.id, this.userServ).subscribe(
+          (user) => {
+            this.budgetsServ
+              .sendBudgetRequest(budgetRequest, user.id)
+              .subscribe(req => {
+                (<any>Materialize).Toast.removeAll();
+                Materialize.toast('Solicitação enviada!', 3000);
 
-        //       });
-        //   },
-        //   (err) => {
-        //     // Não encontrado pelo ID
-        //     if (err.status === 404) {
-        //       this.userServ
-        //         .add(currentUser)
-        //         .flatMap(user => this.budgetsServ.sendBudgetRequest(budgetRequest, user.id))
-        //         .subscribe(req => {
-        //           (<any>Materialize).Toast.removeAll();
-        //           Materialize.toast('Solicitação enviada!', 3000);
+              });
+          },
+          (err) => {
+            // Não encontrado pelo ID
+            if (err.status === 404) {
+              this.userServ
+                .add(currentUser)
+                .flatMap(user => this.budgetsServ.sendBudgetRequest(budgetRequest, user.id))
+                .subscribe(req => {
+                  (<any>Materialize).Toast.removeAll();
+                  Materialize.toast('Solicitação enviada!', 3000);
 
-        //         });
-        //     }
-        //   });
+                });
+            }
+          });
       });
   }
 

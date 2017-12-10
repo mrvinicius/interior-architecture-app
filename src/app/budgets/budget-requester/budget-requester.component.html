@@ -35,17 +35,6 @@
               <i matChipRemove class="material-icons mat-chip-remove">cancel</i>
             </mat-chip>
           </mat-chip-list>
-          <!-- <div>
-            <input formControlName="stores" type="hidden">
-            <label class="active" for="storeChips">pontos de venda</label>
-            <div id="storeChips"
-              materialize="material_chip"
-              [materializeParams]="[storeChipsParams]"
-              (chip.add)="addStoreChip($event.detail)"
-              (chip.delete)="deleteStoreChip($event.detail)"
-              [materializeActions]="chipsActions"
-              class="chips chips-autocomplete chips-placeholder"></div>
-          </div> -->
         </div>
       </form>
       <div class="stepper-action row u-col s12 right-align">
@@ -80,7 +69,7 @@
         </div>
         <div class="col s12 m6" style="padding-left: 0">
           <div class="input-field">
-            <select (change)="this.handleMeasurementsFieldsControl($event.target.value)" materialize="material_select" formControlName="measureUnit">
+            <select (change)="handleMeasurementsFieldsControl($event.target.value)" materialize="material_select" formControlName="measureUnit">
               <option [value]="'units'" selected>Unidade</option>
               <option [value]="'kg'">Peso (KG)</option>
               <option [value]="'measurement2d'">Medida (2 dimensões)</option>
