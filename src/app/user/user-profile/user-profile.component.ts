@@ -116,7 +116,7 @@ export class UserProfileComponent implements OnInit {
     this.spinnerService.toggleLoadingIndicator(true);
 
     this.professional.name = this.profProfileForm.value.name;
-    this.professional.lastName = this.profProfileForm.value.lastName;
+    this.professional.lastname = this.profProfileForm.value.lastname;
     this.professional.description = this.profProfileForm.value.description;
     this.professional.cpfCnpj = this.profProfileForm.value.cpfCnpj;
     this.professional.CAU = this.profProfileForm.value.CAU;
@@ -158,7 +158,7 @@ export class UserProfileComponent implements OnInit {
       email: [{ value: prof.email, disabled: true }],
       password: [this.fakePasswordHidden],
       name: [prof.name],
-      lastName: [prof.lastName],
+      lastname: [prof.lastname],
       description: [description],
       cpfCnpj: [prof.cpfCnpj],
       CAU: [prof.CAU],

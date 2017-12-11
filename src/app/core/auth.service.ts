@@ -1,3 +1,4 @@
+import { environment } from './../../environments/environment.stag';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -28,6 +29,15 @@ export class AuthService {
   }
 
   getCurrentUser(): User {
+    if (environment.description === 'staging') {
+      return {
+        id: "59b4b919-4004-4f09-8f23-8f32f13855c7",
+        email: "vinicius.rocha@muuving.com.br",
+        name: "Vinicius",
+        lastname: "Rocha",
+      }
+    }
+
     if (!this.currentUser) {
       let userData: any = JSON.parse(localStorage.getItem('currentUser'));
 
