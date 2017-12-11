@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-// import { Headers, Http, Response, RequestOptions } from '@angular/http';
 // import { Observable } from 'rxjs/Rx';
 // import 'rxjs/add/operator/map';
 // import 'rxjs/add/operator/catch'
@@ -12,17 +11,7 @@ export class UserService {
   // public user: User;
 
   constructor(
-    // private http: Http
   ) { }
-
-  // add(email: string, name: string) {
-  //   let options = new RequestOptions({ headers: this.getHeaders() });
-
-  //   return this.http.put(this.baseUrl + 'profissional/add', { email: email, nome: name }, options)
-  //     .map(this.extractData)
-  //     .catch(this.handleError);
-  // }
-
 
   // private extractData(res: Response) {
   //   return res.json();

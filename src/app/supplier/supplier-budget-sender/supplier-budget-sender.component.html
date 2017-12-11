@@ -15,7 +15,7 @@
     <input (input)="priceChanged($event.target.value)" [textMask]="{mask: currencyMask, placeholderChar: '\u2000'}" formControlName="unitPrice" id="unitPrice" type="text">
     <label class="active" for="unitPrice">preço unitário *</label>
   </div>
-  <div>
+  <!-- <div>
     <label class="active" for="colorChips">cores disponíveis (opcional)</label>
     <div id="colorChips"
       materialize="material_chip"
@@ -25,31 +25,34 @@
       (chip.delete)="deleteStoreChip($event.detail, senderFormGroup)"
       class="chips chips-autocomplete chips-placeholder"></div>
     <input formControlName="colors" id="colors" type="hidden">
+  </div> -->
+  <div>
+    <input formControlName="colors" id="colors" type="hidden">  
+    <mat-form-field>
+      <mat-chip-list #chipList>
+        <mat-chip
+          *ngFor="let color of senderFormGroup.value['colors']"
+          [selectable]="true"
+          [removable]="true"
+          (remove)="removeColorChip(color, senderFormGroup)">
+          {{color}}
+          <i matChipRemove class="material-icons mat-chip-remove">cancel</i>
+        </mat-chip>
+        <input placeholder="cores disponíveis (opcional)"
+              [matChipInputFor]="chipList"
+              [matChipInputSeparatorKeyCodes]="chipsSeparatorKeysCodes"
+              [matChipInputAddOnBlur]="true"
+              (matChipInputTokenEnd)="addColorChip($event, senderFormGroup)" />
+      </mat-chip-list>
+    </mat-form-field>
   </div>
-  <!-- <mat-form-field style="width: 100%;">
-    <mat-chip-list #chipList>
-      <mat-chip
-        *ngFor="let fruit of fruits"
-        [selectable]="selectable"
-        [removable]="removable"
-        (remove)="remove(fruit)">
-        {{fruit.name}}
-        <i class="material-icons mat-chip-remove">cancel</i>
-      </mat-chip>
-      <input placeholder="New fruit..."
-             [matChipInputFor]="chipList"
-             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-             [matChipInputAddOnBlur]="addOnBlur"
-             (matChipInputTokenEnd)="add($event)" />
-    </mat-chip-list>
-  </mat-form-field> -->
-  <div class="input-field">
+  <!-- <div class="input-field">
     <input type="text">
     <label for="productCode">código do produto (opcional)</label>
-  </div>
+  </div> -->
   <div class="input-field">
     <textarea placeholder="detalhes do produto, formas de pagamento aceitas, links, etc." formControlName="note" id="note" class="materialize-textarea"></textarea>
-    <label for="note">informações adicionais (opcional)</label>
+    <label class="active" for="note">informações adicionais (opcional)</label>
   </div>
   <div class="right-align">
     <button

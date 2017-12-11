@@ -1,4 +1,4 @@
-<div class="background-image">
+<!-- <div class="background-image">
   <div id="entry-container">
     <main id="entry-card-wrapper">
       <div class="card z-depth-5" style="padding-bottom: 1px;">
@@ -14,11 +14,9 @@
           <p *ngIf="errorMessage && errorMessage.length" class="red-text">{{errorMessage}}</p>
           <form [formGroup]="loginForm" class="col s12">
             <mz-input-container class="col s12">
-              <!--<i mz-icon-mdi mz-input-prefix class="material-icons">email</i>-->
               <input mz-input label='email' formControlName="email" [validate]="true" name="Email" id="email" type="email">
             </mz-input-container>
             <mz-input-container class="col s12">
-              <!--<i mz-icon-mdi mz-input-prefix class="material-icons">lock</i>-->
               <input (keyup.enter)="login()" mz-input label='senha' formControlName="password" [validate]="true" name="Password" id="password"
                 type="password">
             </mz-input-container>
@@ -26,9 +24,7 @@
               <button mz-button (click)="login()" [disabled]="loginForm.invalid" type="button" style="width: 100%">Entrar</button>
             </div>
           </form>
-          <!--<div fxLayout="column" fxLayout.gt-sm="row" class="row">-->
           <div class="row">
-            <!--<div fxFlex="50%">-->
             <div class="u-col s7">
               <a routerLink="/recuperar">Esqueci minha senha</a>
             </div>
@@ -40,4 +36,4 @@
       </div>
     </main>
   </div>
-</div>
+</div> -->

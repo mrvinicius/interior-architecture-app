@@ -1,5 +1,5 @@
+import { environment } from './../../environments/environment.stag';
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
@@ -7,7 +7,6 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/delay';
 
-import { Professional } from './professional';
 import { User } from './user';
 import { WindowRef } from './window-ref.service';
 
@@ -30,6 +29,15 @@ export class AuthService {
   }
 
   getCurrentUser(): User {
+    if (environment.description === 'staging') {
+      return {
+        id: "59b4b919-4004-4f09-8f23-8f32f13855c7",
+        email: "vinicius.rocha@muuving.com.br",
+        name: "Vinicius",
+        lastname: "Rocha",
+      }
+    }
+
     if (!this.currentUser) {
       let userData: any = JSON.parse(localStorage.getItem('currentUser'));
 

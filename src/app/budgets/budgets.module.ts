@@ -1,15 +1,12 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { MatStepperModule, MatDialogModule, MatExpansionModule, MatTableModule } from '@angular/material';
-// TODO: Move to SharedModule
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { MatChipsModule, MatStepperModule, MatDialogModule, MatExpansionModule, MatTableModule } from '@angular/material';
+import { HttpClientModule } from '@angular/common/http';
 
-import { MaterializeModule } from 'angular2-materialize';
+import { SharedModule } from '../shared/shared.module';
 
 import { BudgetRequestComponent } from './budget-request/budget-request.component';
 import { BudgetRequesterComponent } from './budget-requester/budget-requester.component';
-import { BudgetRequestListComponent } from './budget-request-list/budget-request-list.component';
 import { BudgetsComponent, RequestConfirmationComponent } from './budgets.component';
 import { BudgetsRoutingModule } from './budgets-routing.module';
 import { BudgetsService } from './shared/budgets.service';
@@ -20,14 +17,14 @@ import { SupplierModule } from '../supplier/supplier.module';
 
 @NgModule({
   imports: [
-    CommonModule,
+    SharedModule,
     BrowserAnimationsModule,
-    ReactiveFormsModule,
+    MatChipsModule,
     MatStepperModule,
     MatDialogModule,
     MatExpansionModule,
     MatTableModule,
-    MaterializeModule,
+    HttpClientModule,
     LayoutModule,
     ProductModule,
     BudgetsRoutingModule
@@ -36,7 +33,6 @@ import { SupplierModule } from '../supplier/supplier.module';
     BudgetsComponent,
     BudgetRequesterComponent,
     BudgetRequestComponent,
-    BudgetRequestListComponent,
     RequestConfirmationComponent
   ],
   providers: [

@@ -12,7 +12,6 @@ export class BudgetReply implements Budget {
     unitPrice?: number;
     totalPrice?: number;
     colors?: string;
-    productCode?: string;
     note?: string;
     status: 'Waiting' | 'Budgeted';
     repliedAt?: Date;

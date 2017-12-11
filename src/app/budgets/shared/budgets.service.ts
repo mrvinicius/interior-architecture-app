@@ -87,8 +87,7 @@ export class BudgetsService {
       isNewProduct: budgetReq.isNewProduct,
       product: {
         id: budgetReq.isNewProduct ? '' : budgetReq.product.id,
-        name: budgetReq.isNewProduct ? budgetReq.newProductName : budgetReq.product.name,
-        supplierCode: budgetReq.product.supplierCode
+        name: budgetReq.isNewProduct ? budgetReq.newProductName : budgetReq.product.name
       },
       measureUnit: budgetReq.measureUnit,
       quantity: budgetReq.quantity,

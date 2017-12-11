@@ -6,7 +6,6 @@
 /*** Vendors ***/
 @import "vendors/angular-material-2";
 @import "vendors/angular2-mdl";
-@import "vendors/angular2-mdl-ext";
 @import "vendors/materialize-css";
 @import "vendors/socicon";
 
@@ -22,16 +21,15 @@
 /*** Base ***/
 @import "base/animation";
 @import "base/color";
-@import "base/components";
 // @import "base/global";
-@import "base/reset";
 @import "base/structure";
 @import "base/table";
 @import "base/theming";
 @import "base/typography";
 
 /*** Components ***/
-@import "components/accordion";
+// @import "components/accordion";
+@import "components/angular-material-2/forms";
 @import "components/breadcrumbs";
 @import "components/buttons";
 @import "components/card";
@@ -40,8 +38,9 @@
 @import "components/collection";
 @import "components/dropdown";
 @import "components/expansion-panel";
-@import "components/forms";
+// @import "components/forms";
 @import "components/icons";
+@import "components/materialize/forms";
 @import "components/modal";
 @import "components/overlay";
 @import "components/popover";
@@ -49,7 +48,7 @@
 @import "components/select";
 @import "components/stepper";
 @import "components/table";
-@import "components/tabs";
-@import "components/toast";
+// @import "components/tabs";
+// @import "components/toast";
 
 /*** Theme ***/

@@ -37,7 +37,7 @@
             *ngFor="let req of budgetRequests$ | async"
             [request]="req"></abx-budget-request> -->
 
-        <span class="dim-text" style="text-transform: uppercase; display: inline-block;">Solicitações de orçamento</span>            
+        <span *ngIf="(budgetRequests$ | async)?.length" class="dim-text" style="text-transform: uppercase; display: inline-block;">Solicitações de orçamento</span>            
         <mat-accordion>
             <mat-expansion-panel *ngFor="let request of budgetRequests$ | async" class="grey lighten-5">
                 <mat-expansion-panel-header>

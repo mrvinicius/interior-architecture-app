@@ -29,50 +29,61 @@ export class SupplierBudgetSenderComponent implements OnInit {
     decimalSymbol: ',', // allowLeadingZeroes: true,
     allowDecimal: true, // requireDecimal: true
   });
-
-  visible: boolean = true;
-  selectable: boolean = true;
-  removable: boolean = true;
-  addOnBlur: boolean = true;
-
-  // Enter, comma
-  separatorKeysCodes = [ENTER, COMMA];
-
-  fruits = [
-    { name: 'Lemon' },
-    { name: 'Lime' },
-    { name: 'Apple' },
-  ];
+  chipsSeparatorKeysCodes = [ENTER, COMMA];
 
 
-  add(event: MatChipInputEvent): void {
-    let input = event.input;
-    let value = event.value;
+  // add(event: MatChipInputEvent): void {
+  //   let input = event.input;
+  //   let value = event.value;
 
-    // Add our person
-    if ((value || '').trim()) {
-      this.fruits.push({ name: value.trim() });
-    }
+  //   // Add our person
+  //   if ((value || '').trim()) {
+  //     this.fruits.push({ name: value.trim() });
+  //   }
 
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
-  }
+  //   // Reset the input value
+  //   if (input) {
+  //     input.value = '';
+  //   }
+  // }
 
-  remove(fruit: any): void {
-    let index = this.fruits.indexOf(fruit);
+  // remove(fruit: any): void {
+  //   let index = this.fruits.indexOf(fruit);
 
-    if (index >= 0) {
-      this.fruits.splice(index, 1);
-    }
-  }
+  //   if (index >= 0) {
+  //     this.fruits.splice(index, 1);
+  //   }
+  // }
 
   readonly chipsActions = new EventEmitter<string | MaterializeAction>();
   readonly colorChipsParams = { placeholder: 'cor + ENTER', secondaryPlaceholder: '+cor' };
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor() { }
+
+  addColorChip(event: MatChipInputEvent, form: FormGroup): void {
+    let colorsValue = form.value['colors'] ? form.value['colors'] : [],
+      color = (event.value || '').trim();
+
+    if (color) {
+      form.get('colors')
+        .setValue([...colorsValue, color], { onlySelf: false, emitEvent: false });
+    }
+
+    if (event.input) {
+      event.input.value = '';
+    }
+  }
+
+  removeColorChip(removedColor, form: FormGroup) {
+    let colorsValue = form.value['colors'],
+      index = colorsValue.findIndex(color => color === removedColor);
+
+    colorsValue.splice(index, 1);
+
+    form.get('colors')
+      .setValue(colorsValue, { onlySelf: false, emitEvent: false })
+  }
 
   addStoreChip(chipData, form): void {
     let colorsValue = form.value['colors'] ? form.value['colors'] : []

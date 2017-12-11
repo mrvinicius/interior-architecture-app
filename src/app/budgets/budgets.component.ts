@@ -21,9 +21,7 @@ import { UserService } from '../user/shared/user.service';
 })
 export class BudgetsComponent implements OnInit {
   public suppliers: Supplier[];
-  // public products: Product[];
   public products$: Observable<Product[]>;
-  // public budgetRequests: BudgetRequest[] = [];
   public budgetRequests$: Observable<BudgetRequest[]>;
   globalActions = new EventEmitter<string | MaterializeAction>();
 
@@ -57,7 +55,7 @@ export class BudgetsComponent implements OnInit {
         if (!confirm) {
           return;
         }
-
+        
         const currentUser = this.authServ.getCurrentUser();
 
         Materialize.toast('Enviando...', 20000);
@@ -112,11 +110,9 @@ export class BudgetsComponent implements OnInit {
     </div>
     <div>
       <label class="readonly-value-label">pontos de venda</label>
-      <p>
-        <ng-container *ngFor="let sub of data.supplier.stores; let i = index;">
-          {{sub.name}}<ng-container *ngIf="(i+1) < data.supplier.stores.length">, </ng-container>
-        </ng-container>
-      <p>
+      <mat-chip-list>
+        <mat-chip *ngFor="let s of data.supplier.stores">{{s.name}}</mat-chip>
+      </mat-chip-list>
     </div>
     <div *ngIf="data.product">
       <label class="readonly-value-label">produto</label>

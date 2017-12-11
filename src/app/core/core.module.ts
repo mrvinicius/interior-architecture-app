@@ -3,13 +3,14 @@ import {
   Optional, SkipSelf
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+
 import { MaterializeModule } from 'ng2-materialize';
 
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { CanDeactivateGuard } from './can-deactivate-guard.service';
 import { NoAuthGuard } from './no-auth.guard';
-import { ProfessionalService } from './professional.service';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { SpinnerService } from './spinner/spinner.service';
 import { WindowRef } from './window-ref.service';
@@ -17,6 +18,7 @@ import { WindowRef } from './window-ref.service';
 @NgModule({
   imports: [
     CommonModule,
+    HttpClientModule,
     MaterializeModule.forRoot()
   ],
   declarations: [
@@ -43,7 +45,6 @@ export class CoreModule {
         AuthService,
         CanDeactivateGuard,
         NoAuthGuard,
-        ProfessionalService,
         SpinnerService,
         WindowRef
       ]

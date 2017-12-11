@@ -31,12 +31,12 @@ angular_staging_build:
 #     - master
 #   environment: staging
 
-production:
-  stage: deploy
-  script:
-    - heroku deploy
-  only:
-    - master
-  except:
-    - develop
-  environment: production
+# production:
+#   stage: deploy
+#   script:
+#     - heroku deploy
+#   only:
+#     - master
+#   except:
+#     - develop
+#   environment: production

@@ -11,6 +11,12 @@ import { Product } from '../shared/product';
 import { Store } from '../shared/store';
 import { Supplier } from '../shared/supplier';
 
+type AutocompleteParams = {
+  data: { [name: string]: string },
+  limit: number,
+  minLength: number
+}
+
 @Component({
   selector: 'abx-budget-requester',
   templateUrl: './budget-requester.component.html',
@@ -49,52 +55,60 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
   supplierChange = new EventEmitter<Supplier>();
   @Output()
   budgetRequestSubmit = new EventEmitter<BudgetRequest>();
-
   supplierForm: FormGroup;
   selectedSupplier: Supplier;
   selectedProduct: Product;
   private _suppliersKeys: { [name: string]: string };
-  supplierAutocompleteParams = {
+  supplierAutocompleteParams: AutocompleteParams = {
     data: this._suppliersKeys,
     limit: 5,
-    minLength: 1
+    minLength: 0
   };
-  storeChipsParams = {
-    autocompleteOptions: { data: {}, limit: 5, minLength: 1 },
-    placeholder: '+ponto de venda',
-    secondaryPlaceholder: '+ponto de venda',
-    data: []
-  };
+  storeAutocompleteParams: AutocompleteParams = {
+    data: {},
+    limit: 5,
+    minLength: 0
+  }
   productForm: FormGroup;
   productAutocompleteParams = {};
-
+  supplierInvalid: boolean = false;
   noteForm: FormGroup;
-  readonly chipsActions = new EventEmitter<string | MaterializeAction>();
+  readonly storeAutocompleteActions = new EventEmitter<string | MaterializeAction>();
   private _suppliers: Supplier[];
   private _products: Product[];
   private _productsKeys: { [name: string]: string };
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(private fb: FormBuilder) {
-    let initMeasureUnit = 'units';
+    let initMeasureUnit = 'units',
+      storeInputControl;
 
     this.supplierForm = this.fb.group({
       supplier: ['', [
         Validators.required,
         this.existentSupplierValidator()
       ]],
+      storeInput: [{ value: '', disabled: true }],
       stores: [[], [
         Validators.required,
         this.chipRequiredValidator()
       ]],
     });
+    storeInputControl = this.supplierForm.get('storeInput');
 
     this.supplierForm.get('supplier')
       .valueChanges
       .takeUntil(this.ngUnsubscribe)
       .debounceTime(250)
       .distinctUntilChanged()
-      .subscribe(val => this.supplierChanged(val));
+      .subscribe(val => this.supplierChanged(val, storeInputControl));
+
+    storeInputControl
+      .valueChanges
+      .takeUntil(this.ngUnsubscribe)
+      .debounceTime(100)
+      .distinctUntilChanged()
+      .subscribe(val => this.storeInputChanged(val, storeInputControl));
 
     this.productForm = this.fb.group({
       productDesc: ['', [
@@ -124,20 +138,39 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnInit() {
+  addStoreAutocompleteItem(name) {
+    this.storeAutocompleteParams.data[name] = null;
+    this.updateAutocomplete(
+      this.storeAutocompleteActions,
+      this.storeAutocompleteParams,
+      this.supplierForm.get('storeInput')
+    );
   }
 
-  ngOnDestroy() {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-  }
+  addStoreChip(store, form): void {
+    let storesValue = form.value['stores'] ? form.value['stores'] : [],
+      chipData = {
+        id: store.id,
+        name: store.name
+      }
 
-  addStoreChip(chipData): void {
-    let storesValue = this.supplierForm.value['stores'] ? this.supplierForm.value['stores'] : []
-
-    this.supplierForm.get('stores')
+    form.get('stores')
       .setValue([...storesValue, chipData], { onlySelf: false, emitEvent: false })
+  }
 
+  checkSupplierErrors() {
+    let inputControl = this.supplierForm.get('supplier');
+
+    if (inputControl.errors) {
+      if (!((inputControl.value || '').trim())) {
+        this.supplierInvalid = false;
+        return;
+      }
+
+    this.supplierInvalid = inputControl.errors.noexistent || false;
+    } else {
+      this.supplierInvalid = false;
+    }
   }
 
   getProduct(productDesc: string, productKeys, products: Product[]): Product | null {
@@ -156,18 +189,8 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
       products.find(product => product.name.toLowerCase() === descriptionLower) : null;
   }
 
-  deleteStoreChip(chipData): void {
-    let storesValue = this.supplierForm.value['stores'],
-      removedIndex = storesValue.findIndex(store => store.tag === chipData.tag);
-
-    storesValue.splice(removedIndex, 1);
-    this.supplierForm.get('stores')
-      .setValue(storesValue, { onlySelf: false, emitEvent: false })
-  }
-
   getSupplier(name: string, supplierKeys, suppliers: Supplier[]): Supplier {
-    let supplier,
-      nameLower = name.toLowerCase(),
+    let nameLower = name.toLowerCase(),
       existentSupplier: boolean;
 
     for (let prop in supplierKeys) {
@@ -179,18 +202,6 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
 
     return existentSupplier ?
       suppliers.find(sup => sup.name.toLowerCase() === nameLower) : null;
-  }
-
-  getUpdatedStoreChips(stores: Store[], currentChips): any {
-    if (stores && stores.length) {
-      stores.forEach(store => {
-        let chipData = { tag: store.name, id: store.id };
-        currentChips.autocompleteOptions.data[store.name] = null;
-        currentChips.data.push(chipData);
-      });
-    }
-
-    return currentChips;
   }
 
   handleMeasurementsFieldsControl(controlName: string): void {
@@ -220,9 +231,24 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
     }
   }
 
+  ngOnInit() { }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
+
   productChanged(val: string): void {
     this.selectedProduct = this.getProduct(val, this._productsKeys, this._products);
+  }
 
+  removeStoreChip(id, form): void {
+    let storesValue = form.value['stores'],
+      index = storesValue.findIndex(store => id.toLowerCase() === store.id.toLowerCase());
+
+    storesValue.splice(index, 1);
+    form.get('stores')
+      .setValue(storesValue, { onlySelf: false, emitEvent: false });
   }
 
   sendRequest(): void {
@@ -267,41 +293,77 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
     }
 
     storeChips = this.supplierForm.get('stores').value;
-
     selectedStores = storeChips.map(chipData =>
-      this.selectedSupplier.stores.find(store => store.name === chipData.tag)
+      this.selectedSupplier.stores.find(store => chipData.id === store.id)
     );
-
     budgetRequest.budgetReplies = selectedStores.map(store => new BudgetReply(store));
     budgetRequest.color = this.noteForm.get('color').value;
     budgetRequest.note = this.noteForm.get('note').value;
-
     this.budgetRequestSubmit.emit(budgetRequest);
   }
 
-  supplierChanged(val: string): void {
-    let supplier,
-      stores;
+  storeInputChanged(inputVal: string, storeInputControl: AbstractControl): void {
+    let value = inputVal.trim().toLowerCase(),
+      existentStoreOfSupplier: boolean,
+      store: Store,
+      selectedStoreName: string;
 
-    if (this.supplierForm.get('supplier').errors) {
-      this.selectedSupplier = null;
-      this.storeChipsParams.autocompleteOptions.data = {};
-      this.storeChipsParams.data = [];
-      this.supplierForm.get('stores').setValue([], { onlySelf: false, emitEvent: false });
-      this.productAutocompleteParams = null;
-      this.chipsActions.emit({ action: 'material_chip', params: [this.storeChipsParams] });
-      return;
+    for (let storeProp in this.storeAutocompleteParams.data) {
+      if (value === storeProp.toLowerCase()) {
+        selectedStoreName = storeProp;
+        existentStoreOfSupplier = true;
+        break;
+      }
     }
 
-    supplier = this.getSupplier(val, this._suppliersKeys, this._suppliers);
-    stores = supplier.stores;
-    this.selectedSupplier = supplier;
-    this.supplierChange.emit(supplier);
-    this.storeChipsParams = this.getUpdatedStoreChips(stores, this.storeChipsParams);
+    if (existentStoreOfSupplier) {
+      let storesValue, chipData;
+      store = this.selectedSupplier.stores.find(store => value === store.name.toLowerCase());
 
-    if (stores) {
-      this.chipsActions.emit({ action: 'material_chip', params: [this.storeChipsParams] });
-      stores.forEach(store => this.addStoreChip({ tag: store.name, id: store.id }));
+      if (!store) {
+        console.error('Loja presente na lista, mas não encontrada no Fornecedor Selecionado')
+        return;
+      }
+
+      this.addStoreChip(store, this.supplierForm);
+      delete this.storeAutocompleteParams.data[selectedStoreName];
+
+      this.updateAutocomplete(
+        this.storeAutocompleteActions,
+        this.storeAutocompleteParams,
+        storeInputControl
+      );
+    }
+  }
+
+  supplierChanged(val: string, storeInputControl: AbstractControl): void {
+    if (this.supplierForm.get('supplier').errors) {
+      storeInputControl.disable()
+      this.selectedSupplier = null;
+      this.storeAutocompleteParams.data = {};
+      this.updateAutocomplete(
+        this.storeAutocompleteActions,
+        this.storeAutocompleteParams,
+        storeInputControl
+      );
+
+      this.supplierForm.get('stores').setValue([], { onlySelf: false, emitEvent: false });
+      this.productAutocompleteParams = null;
+      return;
+    }
+    storeInputControl.enable()
+    this.supplierInvalid = false;
+    this.selectedSupplier = this.getSupplier(val, this._suppliersKeys, this._suppliers);
+    this.supplierChange.emit(this.selectedSupplier);
+
+    if (this.selectedSupplier.stores) {
+      this.storeAutocompleteParams.data = {};
+      this.selectedSupplier.stores.forEach(s => this.storeAutocompleteParams.data[s.name] = null)
+      this.updateAutocomplete(
+        this.storeAutocompleteActions,
+        this.storeAutocompleteParams,
+        storeInputControl
+      );
     }
   }
 
@@ -316,7 +378,7 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
       let existent, lowerValue = control.value.toLowerCase();
 
       for (let supProp in this._suppliersKeys) {
-        if (supProp.toLowerCase() === lowerValue) {
+        if (lowerValue === supProp.toLowerCase()) {
           existent = true;
           break;
         }
@@ -326,4 +388,8 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
     }
   }
 
+  private updateAutocomplete(actions, autocompleteParams, inputControl: AbstractControl): void {
+    inputControl.setValue('', { onlySelf: false, emitEvent: false });
+    actions.emit({ action: 'autocomplete', params: [autocompleteParams] });
+  }
 }

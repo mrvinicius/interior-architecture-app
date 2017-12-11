@@ -3,8 +3,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MzModalService, MzBaseModal } from 'ng2-materialize';
 
-import { Professional } from './../core/professional';
-import { ProfessionalService } from './../core/professional.service';
 import { SpinnerService } from './../core/spinner/spinner.service';
 
 @Component({
@@ -42,8 +40,7 @@ export class SignupModalComponent extends MzBaseModal {
         private fb: FormBuilder,
         private router: Router,
         private modalService: MzModalService,
-        private spinnerService: SpinnerService,
-        private profService: ProfessionalService
+        private spinnerService: SpinnerService
     ) {
         super();
         this.registerForm = this.createForm();
@@ -57,19 +54,19 @@ export class SignupModalComponent extends MzBaseModal {
             this.errorMessage = undefined;
             this.spinnerService.toggleLoadingIndicator(true);
             let values = this.registerForm.value;
-            let prof: Professional =
-                new Professional(values.name, values.email);
+            // let prof: Professional =
+            //     new Professional(values.name, values.email);
 
-            this.profService.add(prof, true)
-                .subscribe(response => {
-                    this.spinnerService.toggleLoadingIndicator(false);
+            // this.profService.add(prof, true)
+            //     .subscribe(response => {
+            //         this.spinnerService.toggleLoadingIndicator(false);
 
-                    if (response.hasError) {
-                        this.errorMessage = response.errorMessage;
-                    } else {
-                        this.router.navigate(['quase-la']);
-                    }
-                });
+            //         if (response.hasError) {
+            //             this.errorMessage = response.errorMessage;
+            //         } else {
+            //             this.router.navigate(['quase-la']);
+            //         }
+            //     });
         }
     }
 

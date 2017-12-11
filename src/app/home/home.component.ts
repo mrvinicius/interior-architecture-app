@@ -4,8 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MzModalService } from 'ng2-materialize';
 import { Subject } from 'rxjs/Subject';
 
-import { Professional } from '../core/professional';
-import { ProfessionalService } from '../core/professional.service';
 import { SignupModalComponent } from './signup-modal.component';
 import { SpinnerService } from '../core/spinner/spinner.service';
 
@@ -25,8 +23,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private modalService: MzModalService,
-    private spinnerService: SpinnerService,
-    private profService: ProfessionalService
+    private spinnerService: SpinnerService
   ) {
     this.registerForm = this.createForm();
   }
@@ -36,27 +33,27 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.errorMessage = 'Preencha todos os campos'
       return;
     } else {
-      let values = this.registerForm.value,
-        prof: Professional = new Professional(values.name, values.email);
+      // let values = this.registerForm.value,
+      //   prof: Professional = new Professional(values.name, values.email);
 
-      this.errorMessage = undefined;
-      this.spinnerService.toggleLoadingIndicator(true);
-      this.profService.add(prof, true)
-        .takeUntil(this.ngUnsubscribe)
-        .subscribe(response => {
-          this.spinnerService.toggleLoadingIndicator(false);
+      // this.errorMessage = undefined;
+      // this.spinnerService.toggleLoadingIndicator(true);
+      // this.profService.add(prof, true)
+      //   .takeUntil(this.ngUnsubscribe)
+      //   .subscribe(response => {
+      //     this.spinnerService.toggleLoadingIndicator(false);
 
-          if (response.hasError) {
-            this.errorMessage = response.errorMessage;
-          } else {
-            (<any>window).Intercom('update', {
-              email: this.registerForm.value.email,
-              name: this.registerForm.value.name
-            });
+      //     if (response.hasError) {
+      //       this.errorMessage = response.errorMessage;
+      //     } else {
+      //       (<any>window).Intercom('update', {
+      //         email: this.registerForm.value.email,
+      //         name: this.registerForm.value.name
+      //       });
 
-            this.router.navigate(['quase-la']);
-          }
-        });
+      //       this.router.navigate(['quase-la']);
+      //     }
+      //   });
     }
   }
 
