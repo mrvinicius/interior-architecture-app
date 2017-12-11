@@ -1,4 +1,5 @@
-
+/* 1. Basic Input
+========================================================================== */
 .input-field {
     label {
         width: 100%;
@@ -9,9 +10,11 @@
     }
 }
 
+/* 2. Autocomplete
+========================================================================== */
 input.invalid, input.valid {
     &~ .autocomplete-content {
-        position: absolute;
+        position: relative;
         width: 100%;
     }
 }

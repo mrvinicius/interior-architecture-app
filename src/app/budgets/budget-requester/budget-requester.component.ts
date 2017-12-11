@@ -62,12 +62,12 @@ export class BudgetRequesterComponent implements OnInit, OnDestroy {
   supplierAutocompleteParams: AutocompleteParams = {
     data: this._suppliersKeys,
     limit: 5,
-    minLength: 1
+    minLength: 0
   };
   storeAutocompleteParams: AutocompleteParams = {
     data: {},
     limit: 5,
-    minLength: 1
+    minLength: 0
   }
   productForm: FormGroup;
   productAutocompleteParams = {};
